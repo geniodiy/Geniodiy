@@ -1,0 +1,2002 @@
+<div class="module-panel" data-module="gaji">
+<style>
+  .gj-card{
+    border-radius: 14px;
+  }
+  .gj-periode-sec{
+    margin-bottom: 12px;
+    padding: 8px 14px;
+    border-radius: 12px;
+  }
+  .gj-hero-sec{
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .gj-dock-sec{
+    margin-bottom: 12px !important;
+  }
+  .gj-search-sec{
+    margin-bottom: 12px;
+  }
+  #gj-sectionLabelWrap{
+    margin-bottom: 10px;
+  }
+  #gj-desktopAnchor{
+    display: none !important;
+  }
+  .gj-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .gj-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .gj-hero-total-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .gj-hero-tutor-pill{
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .gj-hero-counter{
+    margin-top: 4px;
+  }
+  .gj-hero-sublabel{
+    display: block;
+    font-size: 9.5px;
+    opacity: .65;
+  }
+  .gj-hero-num-wrap{
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 1px;
+  }
+  .gj-hero-num{
+    font-size: 20px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .gj-hero-stats-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,.14);
+  }
+  .gj-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 10px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .gj-hero-stat-icon{
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .gj-hero-actions{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .gj-hero-cetak-btn{
+    width: 100%;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    color: #fff;
+    border-radius: 8px;
+    padding: 0 10px;
+    height: 28px;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .gj-hero-cetak-btn:hover{
+    background: rgba(255,255,255,.2);
+    border-color: rgba(255,255,255,.35);
+  }
+  .gj-hero-cetak-btn:active{
+    transform: scale(.97);
+  }
+
+  .gj-hero-hapus-btn{
+    width: 100%;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    color: #fff;
+    border-radius: 8px;
+    padding: 0 10px;
+    height: 28px;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .gj-hero-hapus-btn:hover{
+    background: rgba(255,255,255,.2);
+    border-color: rgba(255,255,255,.35);
+  }
+  .gj-hero-hapus-btn:active{
+    transform: scale(.97);
+  }
+
+  @media (min-width:900px){
+    .module-panel[data-module="gaji"][hidden]{ display:none !important; }
+    .module-panel[data-module="gaji"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+    }
+    .gj-periode-sec{
+      margin-bottom: 12px !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+    }
+    #gj-sectionLabelWrap{
+      margin-bottom: 8px !important;
+    }
+    .gj-hero-sec{
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+    }
+    .gj-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+    .gj-hero-badges{
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+    .gj-hero-total-pill,
+    .gj-hero-periode-pill{
+      font-size: 8.5px !important;
+      padding: 2px 7px !important;
+    }
+    .gj-hero-sublabel{
+      display: none !important;
+    }
+    .gj-hero-counter{
+      margin-top: 1px !important;
+    }
+    .gj-hero-num{
+      font-size: 18px !important;
+    }
+    .gj-hero-stats-row{
+      flex: 1 !important;
+      max-width: 580px;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 14px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+    }
+    .gj-hero-stat-card{
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+    }
+    .gj-hero-actions{
+      margin-top: 0 !important;
+      flex: none !important;
+      padding-left: 12px !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      display: flex !important;
+      flex-direction: row !important;
+      gap: 6px !important;
+      align-items: center !important;
+      min-width: auto !important;
+      justify-content: flex-end !important;
+    }
+    .gj-hero-cetak-btn,
+    .gj-hero-hapus-btn{
+      width: auto !important;
+      height: 26px !important;
+      padding: 0 9px !important;
+      font-size: 10px !important;
+      border-radius: 6px !important;
+      white-space: nowrap !important;
+    }
+
+    #gj-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:10px; }
+    #gj-toolbarRow .gj-dock-sec{ flex:none; width:auto; min-width:240px; margin-bottom:0 !important; }
+    #gj-toolbarRow .gj-search-sec{ flex:1; margin-bottom:0 !important; }
+
+    #gj-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+    #gj-list > .gj-card{ margin-bottom:0 !important; }
+    #gj-list > .gj-full-width{ grid-column:1/-1; }
+  }
+
+  /* Tab switcher: style biasa, rounded konten (10px), geser kanan-kiri murni */
+  .gj-dock{
+    position:relative;
+    display:flex; align-items:center;
+    background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px;
+    margin-bottom:10px;
+    height:38px; box-sizing:border-box;
+    touch-action:none; -webkit-user-select:none; user-select:none;
+  }
+  .gj-dock-glider{
+    position:absolute; top:3px; bottom:3px;
+    border-radius:8px; background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
+    transition:left .22s cubic-bezier(.2,0,0,1), width .22s cubic-bezier(.2,0,0,1);
+    z-index:1; pointer-events:none;
+  }
+  .gj-dock-btn{
+    position:relative; z-index:2; flex:1;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    background:none; border:none; cursor:pointer;
+    height:32px; padding:0 12px; font-size:11.5px; font-family:var(--font);
+    color:var(--ink-soft); font-weight:600; white-space:nowrap;
+    transition:color .18s ease;
+  }
+  .gj-dock-btn.gj-dock-active{ color:var(--ink); font-weight:700; }
+
+  .gj-status-badge{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:10.5px; font-weight:800; padding:0 11px; height:26px;
+    border-radius:999px; box-sizing:border-box; flex:none;
+  }
+  .gj-detail-row{ display:flex; justify-content:space-between; align-items:baseline; font-size:11.5px; }
+  .gj-detail-row + .gj-detail-row{ margin-top:8px; }
+  .gj-detail-row span:first-child{ color:#8e8e93; font-weight:600; text-transform:uppercase; font-size:9.5px; letter-spacing:.02em; }
+  .gj-detail-row span:last-child{ font-weight:800; color:#1c1c1e; }
+
+  /* Table View */
+  #gj-list.gj-view-table{
+    display: block !important;
+  }
+  .gj-table-card{
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+    margin-bottom: 16px;
+  }
+  .gj-table-wrap{
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .gj-table{
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: var(--font);
+    font-size: 11.5px;
+  }
+  .gj-table th{
+    padding: 6px 8px;
+    background: rgba(0,0,0,.025);
+    border-bottom: 1.5px solid var(--border);
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    white-space: nowrap;
+  }
+  .gj-table td{
+    padding: 5px 8px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    color: var(--ink);
+    vertical-align: middle;
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+  .gj-table tbody tr:last-child td{
+    border-bottom: none;
+  }
+  .gj-table tbody tr{
+    transition: background .12s ease;
+  }
+  .gj-table tbody tr:hover{
+    background: rgba(0,122,255,.03);
+  }
+  .gj-sort-th{
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background .12s ease, color .12s ease;
+  }
+  .gj-sort-th:hover{
+    background: rgba(0,0,0,.045) !important;
+    color: var(--ink) !important;
+  }
+  .gj-sort-th:hover svg{
+    opacity: .75 !important;
+  }
+  @keyframes gjPop{
+    0% { transform: scale(1); }
+    35% { transform: scale(1.18); }
+    70% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+  }
+  .gj-btn-pop{
+    animation: gjPop .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #gj-viewToggleBtn:active{
+    transform: scale(.9);
+  }
+
+  /* Status Pill & Action Buttons in Table — matching Presensi style */
+  .gj-table-status-pill{
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0 7px;
+    font-family: var(--font);
+    font-size: 9.5px;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    line-height: 1;
+    box-sizing: border-box;
+  }
+  .gj-table-status-pill .gj-status-dot{
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex: none;
+    margin-right: 4px;
+  }
+  .gj-table-status-pill .gj-status-label{
+    white-space: nowrap;
+  }
+
+  .gj-table-icon-btn{
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background .12s ease, border-color .12s ease, color .12s ease, transform .1s ease;
+  }
+  .gj-table-icon-btn:hover{
+    background: #fff;
+    border-color: #c7c7cc;
+    color: var(--ink);
+  }
+  .gj-table-icon-btn:active{
+    transform: scale(.95);
+  }
+  .gj-table-icon-btn.gj-batal-lunas-btn:hover{
+    color: #ff3b30 !important;
+    border-color: rgba(255,59,48,.35) !important;
+    background: rgba(255,59,48,.08) !important;
+  }
+
+  .gj-table .gj-transfer-btn{
+    height: 22px !important;
+    padding: 0 9px !important;
+    background: var(--surface) !important;
+    color: var(--ink) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+    font-family: var(--font) !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    transition: background .12s ease, border-color .12s ease, color .12s ease, transform .1s ease;
+  }
+  .gj-table .gj-transfer-btn:hover{
+    background: #e5e5ea !important;
+    border-color: #c7c7cc !important;
+    color: var(--ink) !important;
+  }
+  .gj-table .gj-transfer-btn:active{
+    transform: scale(.95);
+  }
+
+  .gj-card .gj-slip-btn{
+    height: 32px;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: opacity .15s ease;
+  }
+  .gj-card .gj-slip-btn:hover{
+    opacity: .9;
+  }
+  .gj-card .gj-slip-btn:active{
+    transform: scale(.98);
+  }
+
+  .gj-card .gj-batal-lunas-btn{
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .gj-card .gj-batal-lunas-btn:hover{
+    background: rgba(255,59,48,.08);
+    border-color: rgba(255,59,48,.35);
+    color: #ff3b30;
+  }
+
+  .gj-card .gj-transfer-btn{
+    width: 100%;
+    height: 32px;
+    margin-top: 8px;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background .12s ease, border-color .12s ease;
+  }
+  .gj-card .gj-transfer-btn:hover{
+    background: #e5e5ea;
+    border-color: #c7c7cc;
+  }
+
+  /* Preview & Confirm Modal Slip Gaji — persis gaya Presensi */
+  #gj-previewModal,
+  #gj-confirmModal{
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    opacity: 0; transition: opacity .24s ease;
+  }
+  #gj-previewModal.show,
+  #gj-confirmModal.show{ opacity: 1; }
+  #gj-previewModal .modal-sheet,
+  #gj-confirmModal .modal-sheet{
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    padding: 16px 18px 18px !important;
+    margin: 0 auto;
+    box-shadow: 0 14px 36px -8px rgba(20,22,43,.16);
+    transform: scale(.94) translateY(8px);
+    transition: transform .28s cubic-bezier(.16,1,.3,1);
+  }
+  #gj-previewModal .modal-sheet{
+    max-width: 500px !important;
+    width: 94% !important;
+    padding: 0 !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+  }
+  #gj-previewModal.show .modal-sheet,
+  #gj-confirmModal.show .modal-sheet{
+    transform: scale(1) translateY(0);
+  }
+  #gj-previewModal .btn,
+  #gj-confirmModal .btn{
+    font-size: 11.5px !important;
+    font-weight: 600 !important;
+    height: 32px !important;
+    padding: 0 14px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-family: var(--font) !important;
+  }
+  #gj-previewModal .modal-actions,
+  #gj-confirmModal .modal-actions{
+    gap: 8px !important;
+    margin-top: 12px !important;
+  }
+  @media (max-width: 600px){
+    #gj-previewModal,
+    #gj-confirmModal{
+      padding: 12px !important;
+    }
+    #gj-previewModal .modal-sheet,
+    #gj-confirmModal .modal-sheet{
+      max-width: 100% !important;
+      width: 100% !important;
+      padding: 14px 16px 16px !important;
+      border-radius: 16px !important;
+    }
+  }
+</style>
+
+  <!-- Header periode (persis pola Home/Presensi) -->
+  <div class="card gj-card gj-periode-sec" style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 14px; border-radius:12px;">
+    <div id="gj-periodeLabelWrap" style="min-width:0; cursor:pointer;" title="Pilih Periode">
+      <div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Periode Gaji</div>
+      <div style="font-size:13px; font-weight:700; margin-top:1px;" id="gj-periodeLabel">-</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; flex:none; position:relative;">
+      <button id="gj-refreshBtn" aria-label="Refresh data" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; color:var(--ink-soft);">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
+      </button>
+      <button id="gj-pilihPeriodeBtn" type="button" style="height:32px; border:1px solid var(--border); border-radius:8px; padding:0 10px; font-family:var(--font); font-size:11.5px; font-weight:600; color:var(--ink); background:var(--surface); display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;">
+        Pilih Bulan
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      </button>
+      <input type="month" id="gj-periodeInput" style="position:absolute; right:0; bottom:0; width:1px; height:1px; opacity:0; pointer-events:none; border:none;">
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="gj-hero-sec">
+    <div class="gj-hero-main-col">
+      <div class="gj-hero-badges">
+        <span class="gj-hero-total-pill">
+          <span style="width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block; flex:none;"></span>
+          REKAP GAJI TUTOR
+        </span>
+        <span class="gj-hero-tutor-pill" id="gj-heroTutorBadge">-</span>
+      </div>
+      <div class="gj-hero-counter">
+        <div class="gj-hero-sublabel">Total Anggaran Gaji Tutor</div>
+        <div class="gj-hero-num-wrap">
+          <span class="gj-hero-num" id="gj-heroTotal">Rp 0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gj-hero-stats-row">
+      <div class="gj-hero-stat-card">
+        <span class="gj-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div style="font-size:9px; opacity:.65;">Sudah Lunas</div>
+          <div style="font-size:12px; font-weight:800; margin-top:1px;" id="gj-heroLunas">Rp 0</div>
+          <div style="font-size:8.5px; opacity:.6; margin-top:1px;" id="gj-heroLunasCount">0 Tutor Terbayar</div>
+        </div>
+      </div>
+      <div class="gj-hero-stat-card">
+        <span class="gj-hero-stat-icon" style="background:rgba(255,149,0,.2); color:#ffc069;">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div style="font-size:9px; opacity:.65;">Belum Dibayar</div>
+          <div style="font-size:12px; font-weight:800; margin-top:1px;" id="gj-heroBelum">Rp 0</div>
+          <div style="font-size:8.5px; opacity:.6; margin-top:1px;" id="gj-heroBelumCount">0 Tutor Menunggu</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gj-hero-actions">
+      <button type="button" id="gj-cetakSemuaBtn" class="gj-hero-cetak-btn" title="Cetak semua slip gaji periode ini">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>Cetak Semua Slip Gaji</span>
+      </button>
+      <button type="button" id="gj-hapusSemuaBtn" class="gj-hero-hapus-btn" title="Hapus/reset semua slip gaji periode ini jika ada data yang perlu dirubah">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        <span>Hapus Semua Slip Gaji</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="gj-desktopAnchor"></div>
+
+  <!-- Tab switcher: dock + glider -->
+  <div class="gj-dock gj-dock-sec" id="gj-dock">
+    <div class="gj-dock-glider" id="gj-dockGlider"></div>
+    <button class="gj-dock-btn gj-tab-btn gj-dock-active" data-tab="belum">
+      <span>Belum Dibayar</span>
+      <span id="gj-belumCount" style="background:var(--red); color:#fff; font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+    </button>
+    <button class="gj-dock-btn gj-tab-btn" data-tab="lunas">
+      <span>Sudah Lunas</span>
+      <span id="gj-lunasCount" style="background:var(--border); color:var(--ink-soft); font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+    </button>
+  </div>
+
+  <!-- Search & View Toggle -->
+  <div class="gj-search-sec" style="display:flex; gap:8px;">
+    <div style="flex:1; display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--border); border-radius:8px; height:32px; padding:0 10px; box-sizing:border-box;">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="gj-searchInput" placeholder="Cari nama tutor, rekening, atau mapel..." style="border:none; outline:none; flex:1; font-size:11.5px; font-family:var(--font); background:none;">
+    </div>
+    <button id="gj-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+    </button>
+  </div>
+
+  <!-- Section label -->
+  <div id="gj-sectionLabelWrap" style="display:flex; align-items:center; justify-content:space-between;">
+    <div id="gj-sectionLabel"></div>
+    <div style="display:flex; align-items:center; gap:6px; flex:none;">
+      <span id="gj-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); font-size:10.5px; font-weight:600; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Tutor</span>
+      <button id="gj-sortBtn" style="display:inline-flex; align-items:center; justify-content:center; gap:5px; height:24px; background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:0 9px; cursor:pointer; font-family:var(--font); box-sizing:border-box;">
+        <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M6 12h12M9 18h6"/></svg>
+        <span id="gj-sortLabel" style="font-size:10.5px; font-weight:600; color:var(--ink);">Gaji Tertinggi</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="gj-list"></div>
+
+  <!-- Modal Preview Slip Gaji (persis seperti di Presensi) -->
+  <div class="modal-overlay" id="gj-previewModal" hidden style="z-index:90; justify-content:center;">
+    <div class="modal-sheet" style="max-width:500px; width:94%; padding:0; overflow:hidden; border-radius:16px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px 10px;">
+        <div style="min-width:0;">
+          <h3 id="gj-previewTitle" style="margin:0; font-size:13.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Slip Gaji Tutor</h3>
+          <div id="gj-previewSub" style="font-size:10.5px; color:var(--ink-soft); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+        </div>
+        <button type="button" id="gj-previewCloseX" aria-label="Tutup" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft); flex:none; margin-left:10px;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div id="gj-previewMediaBox" style="position:relative; width:100%; height:52vh; max-height:55vh; background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); border-left:none; border-right:none; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:0;">
+        <div id="gj-previewSpinner" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--ink-soft); font-size:11.5px; font-weight:600; padding:30px 20px;">
+          <span class="spinner" style="border-color:rgba(20,22,43,.2); border-top-color:var(--blue); width:22px; height:22px;"></span>
+          <span>Memuat berkas PDF...</span>
+        </div>
+        <iframe id="gj-previewIframe" style="display:none; width:100%; height:100%; border:none;" allowfullscreen></iframe>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; padding:10px 16px 14px; margin-top:0;">
+        <a id="gj-previewDirectLink" href="#" target="_blank" rel="noopener noreferrer" class="btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:12px; height:36px; padding:0 16px; flex:1; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:9px; font-weight:600; box-sizing:border-box; box-shadow:0 1px 2px rgba(0,0,0,.04);">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Buka di Tab Baru
+        </a>
+        <button type="button" class="btn" id="gj-previewDeleteBtn" style="font-size:12px; height:36px; padding:0 16px; background:rgba(255,59,48,.1); color:#ff3b30; border:1px solid rgba(255,59,48,.25); border-radius:9px; font-weight:600; flex:1; display:inline-flex; align-items:center; justify-content:center; gap:5px; box-sizing:border-box; box-shadow:0 1px 2px rgba(255,59,48,.08);" title="Hapus file slip gaji ini dari Google Drive & sistem">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          Hapus Slip
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Hapus Slip Gaji -->
+  <div class="modal-overlay" id="gj-confirmModal" hidden style="z-index:95; justify-content:center;">
+    <div class="modal-sheet" style="max-width:360px; width:90%; text-align:center;">
+      <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <h3 id="gj-confirmModalTitle" style="margin:0 0 4px; font-size:13.5px; font-weight:700; color:var(--ink);">Hapus Slip Gaji Tabel Ini?</h3>
+      <p id="gj-confirmModalDesc" style="font-size:11px; color:var(--ink-soft); margin:0 0 12px; line-height:1.45;">File PDF slip gaji yang sedang tampil di tabel akan dihapus dari Google Drive dan database.</p>
+      <div class="modal-actions" style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-outline" id="gj-confirmCancelBtn" style="flex:1; height:36px; font-size:12px; border-radius:9px;">Batal</button>
+        <button type="button" class="btn" id="gj-confirmOkBtn" style="flex:1; height:36px; font-size:12px; border-radius:9px; background:#ff3b30; color:#fff;">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['gaji'] = function () { gjInit(); };
+
+  var gjState = {
+    tab: 'belum',
+    periode: null,
+    rows: [],
+    jamMap: {},
+    mapelMap: {},
+    search: '',
+    sortDesc: true,
+    sortField: 'total_gaji',
+    viewMode: localStorage.getItem('genio_gj_view_mode') || 'cards'
+  };
+
+  function gjInit() {
+    if (!gjState.periode) {
+      var now = new Date();
+      gjState.periode = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    }
+    gjUpdatePeriodeLabel();
+
+    var savedView = localStorage.getItem('genio_gj_view_mode');
+    if (savedView === 'table' || savedView === 'cards') {
+      gjState.viewMode = savedView;
+    }
+    gjUpdateViewToggleUI();
+
+    function gjOpenPeriodePicker() {
+      if (typeof genioOpenMonthYearPicker === 'function') {
+        genioOpenMonthYearPicker({
+          currentValue: gjState.periode,
+          title: 'Periode Gaji',
+          onSelect: function (val) {
+            gjState.periode = val;
+            document.getElementById('gj-periodeInput').value = val;
+            gjUpdatePeriodeLabel();
+            gjLoadAll();
+          }
+        });
+      } else {
+        var input = document.getElementById('gj-periodeInput');
+        try { input.showPicker(); } catch (e) { input.click(); }
+      }
+    }
+    document.getElementById('gj-pilihPeriodeBtn').onclick = gjOpenPeriodePicker;
+    var gjLabelWrap = document.getElementById('gj-periodeLabelWrap') || document.getElementById('gj-periodeLabel');
+    if (gjLabelWrap) gjLabelWrap.onclick = gjOpenPeriodePicker;
+    document.getElementById('gj-periodeInput').onchange = function (e) {
+      if (e.target.value) { gjState.periode = e.target.value; gjUpdatePeriodeLabel(); gjLoadAll(); }
+    };
+    document.getElementById('gj-refreshBtn').onclick = function () {
+      var icon = this.querySelector('svg');
+      if (icon) {
+        icon.style.transition = 'transform .4s cubic-bezier(.34,1.56,.64,1)';
+        icon.style.transform = 'rotate(360deg)';
+        setTimeout(function () {
+          icon.style.transition = 'none';
+          icon.style.transform = 'none';
+        }, 450);
+      }
+      gjLoadAll();
+    };
+
+    document.getElementById('gj-searchInput').oninput = function (e) {
+      gjState.search = e.target.value.toLowerCase();
+      gjRenderList();
+    };
+    document.getElementById('gj-sortBtn').onclick = function () {
+      gjState.sortField = 'total_gaji';
+      gjState.sortDesc = !gjState.sortDesc;
+      document.getElementById('gj-sortLabel').textContent = gjState.sortDesc ? 'Gaji Tertinggi' : 'Gaji Terendah';
+      gjRenderList();
+    };
+
+    var toggleBtn = document.getElementById('gj-viewToggleBtn');
+    if (toggleBtn) {
+      toggleBtn.onclick = function () {
+        gjToggleViewMode();
+      };
+    }
+
+    var cetakSemuaBtn = document.getElementById('gj-cetakSemuaBtn');
+    if (cetakSemuaBtn) {
+      cetakSemuaBtn.onclick = function () {
+        gjProcessBatchSlip();
+      };
+    }
+
+    var hapusSemuaBtn = document.getElementById('gj-hapusSemuaBtn');
+    if (hapusSemuaBtn) {
+      hapusSemuaBtn.onclick = function () {
+        var visibleRows = gjGetVisibleRows();
+        var targetRows = visibleRows.filter(function (r) { return !!r.pdf_url; });
+        if (targetRows.length === 0) {
+          if (visibleRows.length === 0) {
+            genioToast('Tidak ada data pada tabel yang tampil saat ini.', 'info');
+          } else {
+            genioToast('Belum ada slip gaji yang dicetak pada data tabel yang tampil saat ini.', 'info');
+          }
+          return;
+        }
+        gjOpenConfirmModal(targetRows);
+      };
+    }
+
+    var confirmCancelBtn = document.getElementById('gj-confirmCancelBtn');
+    if (confirmCancelBtn) confirmCancelBtn.onclick = gjCloseConfirmModal;
+    var confirmOkBtn = document.getElementById('gj-confirmOkBtn');
+    if (confirmOkBtn) {
+      confirmOkBtn.onclick = async function () {
+        if (typeof gjConfirmCallback === 'function') {
+          var cb = gjConfirmCallback;
+          gjConfirmCallback = null;
+          await cb();
+        } else {
+          await gjHandleDeleteAllSlips();
+        }
+      };
+    }
+    var confirmModal = document.getElementById('gj-confirmModal');
+    if (confirmModal) {
+      confirmModal.onclick = function (e) {
+        if (e.target === this) gjCloseConfirmModal();
+      };
+    }
+
+    var prevCloseBtn = document.getElementById('gj-previewCloseBtn');
+    if (prevCloseBtn) prevCloseBtn.onclick = gjCloseSlipPreview;
+    var prevCloseX = document.getElementById('gj-previewCloseX');
+    if (prevCloseX) prevCloseX.onclick = gjCloseSlipPreview;
+    var prevDeleteBtn = document.getElementById('gj-previewDeleteBtn');
+    if (prevDeleteBtn) prevDeleteBtn.onclick = gjHandleDeleteSingleSlip;
+    var prevModal = document.getElementById('gj-previewModal');
+    if (prevModal) {
+      prevModal.onclick = function (e) {
+        if (e.target === this) gjCloseSlipPreview();
+      };
+    }
+
+    initGjTabScrubbing();
+    setTimeout(gjUpdateDockGlider, 50);
+    window.addEventListener('resize', gjUpdateDockGlider);
+
+    gjApplyResponsiveLayout();
+    var gjLayoutResizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(gjLayoutResizeTimer);
+      gjLayoutResizeTimer = setTimeout(gjApplyResponsiveLayout, 150);
+    });
+
+    gjLoadAll();
+  }
+
+  /* Layout desktop: Tab switcher + Search/Filter jadi satu baris toolbar.
+     Di mobile semua balik ke urutan asli. */
+  var GJ_MOBILE_ORDER = ['.gj-dock-sec', '.gj-search-sec'];
+
+  function gjApplyResponsiveLayout() {
+    var anchor = document.getElementById('gj-desktopAnchor');
+    if (!anchor) return;
+    var isDesktop = window.matchMedia('(min-width:900px)').matches;
+    var toolbarRow = document.getElementById('gj-toolbarRow');
+
+    if (isDesktop) {
+      if (!toolbarRow) {
+        toolbarRow = document.createElement('div');
+        toolbarRow.id = 'gj-toolbarRow';
+        anchor.parentNode.insertBefore(toolbarRow, anchor.nextSibling);
+      }
+      var dockEl = document.querySelector('.gj-dock-sec');
+      if (dockEl) toolbarRow.appendChild(dockEl);
+      var searchEl = document.querySelector('.gj-search-sec');
+      if (searchEl) toolbarRow.appendChild(searchEl);
+    } else if (toolbarRow) {
+      var cursor = anchor;
+      GJ_MOBILE_ORDER.forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (el) { cursor.parentNode.insertBefore(el, cursor.nextSibling); cursor = el; }
+      });
+      toolbarRow.remove();
+    }
+  }
+
+  function gjUpdatePeriodeLabel() {
+    var parts = gjState.periode.split('-');
+    var namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][parseInt(parts[1], 10) - 1];
+    document.getElementById('gj-periodeLabel').textContent = namaBulan + ' ' + parts[0];
+  }
+
+  var GJ_TABS = ['belum', 'lunas'];
+
+  function gjSwitchTab(tab) {
+    gjState.tab = tab;
+    document.querySelectorAll('.gj-dock-btn').forEach(function (b) {
+      b.classList.toggle('gj-dock-active', b.dataset.tab === tab);
+    });
+    gjUpdateDockGlider();
+    gjRenderList();
+  }
+
+  function gjUpdateDockGlider() {
+    var activeBtn = document.querySelector('.gj-dock-btn.gj-dock-active');
+    var glider = document.getElementById('gj-dockGlider');
+    if (!activeBtn || !glider) return;
+    glider.style.left = activeBtn.offsetLeft + 'px';
+    glider.style.width = activeBtn.offsetWidth + 'px';
+  }
+
+  /* Drag/geser + animasi zoom-tahan — sama mekanisme seperti Presensi & bottom bar */
+  function initGjTabScrubbing() {
+    var dock = document.getElementById('gj-dock');
+    var glider = document.getElementById('gj-dockGlider');
+    if (!dock || !glider || dock._gjScrubBound) return;
+    dock._gjScrubBound = true;
+
+    var isPointerDown = false, isDragging = false, hasDragged = false, suppressClick = false;
+    var startX = 0, startY = 0, pointerId = null;
+    var cachedLeft = 0, cachedWidth = 0, cachedGliderWidth = 0, targetTab = gjState.tab;
+    var DRAG_THRESHOLD = 8;
+
+    dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    dock.addEventListener('click', function (e) {
+      if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+
+    dock.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
+      pointerId = e.pointerId; startX = e.clientX; startY = e.clientY;
+      var rect = dock.getBoundingClientRect();
+      cachedLeft = rect.left; cachedWidth = rect.width;
+      cachedGliderWidth = glider.offsetWidth || (rect.width / GJ_TABS.length);
+      targetTab = gjState.tab;
+    });
+
+    dock.addEventListener('pointermove', function (e) {
+      if (!isPointerDown) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!hasDragged) {
+        if (Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+          isDragging = true; hasDragged = true; suppressClick = true;
+          try { dock.setPointerCapture(pointerId); } catch (_) {}
+        }
+      }
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        var relX = e.clientX - cachedLeft;
+        var clampedPx = Math.max(0, Math.min(cachedWidth - cachedGliderWidth, relX - cachedGliderWidth / 2));
+        glider.style.transition = 'none';
+        glider.style.left = clampedPx + 'px';
+        var ratio = Math.max(0, Math.min(0.999, relX / cachedWidth));
+        var newIdx = Math.min(GJ_TABS.length - 1, Math.max(0, Math.floor(ratio * GJ_TABS.length)));
+        targetTab = GJ_TABS[newIdx];
+        document.querySelectorAll('.gj-dock-btn').forEach(function (b) {
+          b.classList.toggle('gj-dock-active', b.dataset.tab === targetTab);
+        });
+      }
+    });
+
+    function endScrub() {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      glider.style.transition = '';
+      if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+      if (hasDragged) {
+        isDragging = false;
+        gjSwitchTab(targetTab);
+        setTimeout(function () { suppressClick = false; }, 80);
+      } else {
+        suppressClick = false;
+      }
+    }
+    dock.addEventListener('pointerup', endScrub);
+    dock.addEventListener('pointercancel', function () {
+      endScrub();
+    });
+
+    document.querySelectorAll('.gj-tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (!hasDragged) gjSwitchTab(btn.dataset.tab);
+      });
+    });
+  }
+
+  function gjPeriodeDateRange() {
+    var parts = gjState.periode.split('-');
+    var year = parseInt(parts[0], 10), month = parseInt(parts[1], 10);
+    var start = gjState.periode + '-01';
+    var lastDay = new Date(year, month, 0).getDate();
+    var end = gjState.periode + '-' + String(lastDay).padStart(2, '0');
+    return { start: start, end: end };
+  }
+
+  async function gjLoadAll() {
+    var listEl = document.getElementById('gj-list');
+    try {
+      var s = genioGetSession();
+      var range = gjPeriodeDateRange();
+
+      var results = await Promise.all([
+        supaRest('slip_gaji?periode=eq.' + gjState.periode + '&select=id,tutor_id,total_pertemuan,total_gaji,status,tanggal_dibayar,pdf_url,users!slip_gaji_tutor_id_fkey(nama,foto_profil_url,tutor_profile(nama_bank,no_rekening))&order=total_gaji.desc', s.access_token),
+        supaRest('users?role=eq.tutor&status=eq.aktif&select=id', s.access_token),
+        supaRest('presensi?tanggal=gte.' + range.start + '&tanggal=lte.' + range.end + '&status=in.(diterima,visit)&select=id,nominal_dibayar,kontrak_tutor_id,kontrak_tutor(tutor_id,mapel,jadwal(hari,jam_mulai,jam_selesai))', s.access_token)
+      ]);
+
+      gjState.rows = results[0];
+      var totalTutorTerdaftar = results[1].length;
+      var presensiRows = results[2];
+
+      var GJ_HARI = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+      var jamMap = {};
+      var mapelMap = {};
+      var tutorLiveStats = {};
+      presensiRows.forEach(function (r) {
+        var kt = r.kontrak_tutor;
+        if (!kt || !kt.tutor_id) return;
+        var tid = kt.tutor_id;
+
+        // Akumulasi sesi & nominal aktual dari presensi diterima & visit
+        if (!tutorLiveStats[tid]) {
+          tutorLiveStats[tid] = { pertemuan: 0, totalGaji: 0 };
+        }
+        tutorLiveStats[tid].pertemuan += 1;
+        tutorLiveStats[tid].totalGaji += parseFloat(r.nominal_dibayar || 0);
+
+        var jw = kt.jadwal && kt.jadwal[0];
+        var durasiJam = 1.5;
+        if (jw) {
+          var mulai = jw.jam_mulai.split(':'), selesai = jw.jam_selesai.split(':');
+          var menit = (parseInt(selesai[0], 10) * 60 + parseInt(selesai[1], 10)) - (parseInt(mulai[0], 10) * 60 + parseInt(mulai[1], 10));
+          durasiJam = menit / 60;
+        }
+        jamMap[tid] = (jamMap[tid] || 0) + durasiJam;
+        if (kt.mapel) {
+          mapelMap[tid] = mapelMap[tid] || {};
+          mapelMap[tid][kt.mapel] = true;
+        }
+      });
+      gjState.jamMap = jamMap;
+      gjState.mapelMap = mapelMap;
+      gjState.tutorLiveStats = tutorLiveStats;
+
+      // SINKRONISASI OTOMATIS:
+      // Untuk setiap baris gaji yang belum ditransfer ('belum_dibayar'),
+      // selalu update total_pertemuan dan total_gaji sesuai akumulasi presensi riil terbaru
+      gjState.rows.forEach(function (row) {
+        if (row.status === 'belum_dibayar') {
+          var live = tutorLiveStats[row.tutor_id];
+          if (live) {
+            var diff = (row.total_pertemuan !== live.pertemuan) || (Math.round(row.total_gaji) !== Math.round(live.totalGaji));
+            if (diff) {
+              row.total_pertemuan = live.pertemuan;
+              row.total_gaji = live.totalGaji;
+              // Sinkronkan ke Supabase di latar belakang
+              supaRest('slip_gaji?id=eq.' + row.id, s.access_token, {
+                method: 'PATCH',
+                headers: { 'Prefer': 'return=minimal' },
+                body: JSON.stringify({
+                  total_pertemuan: live.pertemuan,
+                  total_gaji: live.totalGaji
+                })
+              }).catch(function (err) {
+                console.warn('Gagal sinkronisasi data gaji ke database:', err);
+              });
+            }
+          }
+        }
+      });
+
+      document.getElementById('gj-heroTutorBadge').textContent = totalTutorTerdaftar + ' Tutor Terdaftar';
+
+      var totalAnggaran = gjState.rows.reduce(function (sum, r) { return sum + parseFloat(r.total_gaji || 0); }, 0);
+      var lunasRows = gjState.rows.filter(function (r) { return r.status === 'sudah_dibayar'; });
+      var belumRows = gjState.rows.filter(function (r) { return r.status === 'belum_dibayar'; });
+      var totalLunas = lunasRows.reduce(function (sum, r) { return sum + parseFloat(r.total_gaji || 0); }, 0);
+      var totalBelum = belumRows.reduce(function (sum, r) { return sum + parseFloat(r.total_gaji || 0); }, 0);
+
+      document.getElementById('gj-heroTotal').textContent = gjFormatRp(totalAnggaran);
+      document.getElementById('gj-heroLunas').textContent = gjFormatRp(totalLunas);
+      document.getElementById('gj-heroLunasCount').textContent = lunasRows.length + ' Tutor Terbayar';
+      document.getElementById('gj-heroBelum').textContent = gjFormatRp(totalBelum);
+      document.getElementById('gj-heroBelumCount').textContent = belumRows.length + ' Tutor Menunggu';
+
+      document.getElementById('gj-belumCount').textContent = belumRows.length;
+      document.getElementById('gj-lunasCount').textContent = lunasRows.length;
+
+      gjRenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="gj-card gj-full-width" style="padding:24px; text-align:center; color:var(--red); font-size:13px;">Gagal memuat data: ' + genioEscapeHtml(err.message) + '</div>';
+    }
+  }
+
+  function gjFormatRp(n) {
+    return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+  }
+
+  function gjUpdateViewToggleUI() {
+    var btn = document.getElementById('gj-viewToggleBtn');
+    if (!btn) return;
+    var isTable = gjState.viewMode === 'table';
+    if (isTable) {
+      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Kartu');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
+    } else {
+      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Tabel');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+    }
+  }
+
+  function gjToggleViewMode() {
+    var btn = document.getElementById('gj-viewToggleBtn');
+    if (btn) {
+      btn.classList.remove('gj-btn-pop');
+      void btn.offsetWidth;
+      btn.classList.add('gj-btn-pop');
+    }
+    gjState.viewMode = (gjState.viewMode === 'table') ? 'cards' : 'table';
+    try {
+      localStorage.setItem('genio_gj_view_mode', gjState.viewMode);
+    } catch (e) {}
+    gjUpdateViewToggleUI();
+    gjRenderList();
+  }
+
+  function gjGetSortIcon(field) {
+    if (gjState.sortField === field) {
+      if (!gjState.sortDesc) {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+      } else {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
+      }
+    }
+    return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; opacity:.2; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+  }
+
+  function gjSortTable(field) {
+    if (gjState.sortField === field) {
+      gjState.sortDesc = !gjState.sortDesc;
+    } else {
+      gjState.sortField = field;
+      gjState.sortDesc = (field === 'total_gaji' || field === 'total_pertemuan' || field === 'jam');
+    }
+    if (gjState.sortField === 'total_gaji') {
+      document.getElementById('gj-sortLabel').textContent = gjState.sortDesc ? 'Gaji Tertinggi' : 'Gaji Terendah';
+    } else {
+      document.getElementById('gj-sortLabel').textContent = gjState.sortDesc ? 'Z - A' : 'A - Z';
+    }
+    gjRenderList();
+  }
+
+  function gjMatchesSearch(row) {
+    if (!gjState.search) return true;
+    var nama = (row.users && row.users.nama || '').toLowerCase();
+    var profile = (row.users && row.users.tutor_profile && (row.users.tutor_profile[0] || row.users.tutor_profile)) || {};
+    var rekening = (profile.no_rekening || '').toLowerCase();
+    var bank = (profile.nama_bank || '').toLowerCase();
+    var mapelSet = gjState.mapelMap[row.tutor_id] || {};
+    var mapelStr = Object.keys(mapelSet).join(' ').toLowerCase();
+    return nama.indexOf(gjState.search) !== -1 || rekening.indexOf(gjState.search) !== -1 || bank.indexOf(gjState.search) !== -1 || mapelStr.indexOf(gjState.search) !== -1;
+  }
+
+  function gjGetVisibleRows() {
+    var wantStatus = gjState.tab === 'lunas' ? 'sudah_dibayar' : 'belum_dibayar';
+    return (gjState.rows || []).filter(function (r) { return r.status === wantStatus; }).filter(gjMatchesSearch);
+  }
+
+  function gjRenderList() {
+    var listEl = document.getElementById('gj-list');
+    var rows = gjGetVisibleRows();
+    rows.sort(function (a, b) {
+      var field = gjState.sortField || 'total_gaji';
+      var res = 0;
+      if (field === 'tutor') {
+        var namaA = (a.users && a.users.nama || '').toLowerCase();
+        var namaB = (b.users && b.users.nama || '').toLowerCase();
+        res = namaA.localeCompare(namaB);
+      } else if (field === 'bank') {
+        var profA = (a.users && a.users.tutor_profile && (a.users.tutor_profile[0] || a.users.tutor_profile)) || {};
+        var profB = (b.users && b.users.tutor_profile && (b.users.tutor_profile[0] || b.users.tutor_profile)) || {};
+        var bankA = (profA.nama_bank || '').toLowerCase();
+        var bankB = (profB.nama_bank || '').toLowerCase();
+        res = bankA.localeCompare(bankB);
+      } else if (field === 'mapel') {
+        var mapelA = Object.keys(gjState.mapelMap[a.tutor_id] || {}).join(', ').toLowerCase();
+        var mapelB = Object.keys(gjState.mapelMap[b.tutor_id] || {}).join(', ').toLowerCase();
+        res = mapelA.localeCompare(mapelB);
+      } else if (field === 'total_pertemuan') {
+        res = (a.total_pertemuan || 0) - (b.total_pertemuan || 0);
+      } else if (field === 'jam') {
+        var jamA = gjState.jamMap[a.tutor_id] || 0;
+        var jamB = gjState.jamMap[b.tutor_id] || 0;
+        res = jamA - jamB;
+      } else {
+        res = (parseFloat(a.total_gaji || 0) - parseFloat(b.total_gaji || 0));
+      }
+      return gjState.sortDesc ? -res : res;
+    });
+    document.getElementById('gj-resultCount').textContent = rows.length + ' Tutor';
+
+    document.getElementById('gj-sectionLabel').innerHTML =
+      '<div style="font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">' + (gjState.tab === 'lunas' ? 'Sudah Lunas' : 'Belum Dibayar') + '</div>' +
+      '<div style="font-size:11.5px; color:var(--ink-soft); margin-top:1px;">Periode ' + document.getElementById('gj-periodeLabel').textContent + '</div>';
+
+    if (!rows.length) {
+      listEl.classList.remove('gj-view-table');
+      listEl.innerHTML = '<div class="gj-card card gj-full-width" style="padding:48px 24px; text-align:center;">' +
+        '<div style="width:56px; height:56px; margin:0 auto 12px; border-radius:50%; background:rgba(0,122,255,.1); color:#007aff; display:flex; align-items:center; justify-content:center;">' +
+          '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
+        '</div>' +
+        '<h4 style="font-size:14px; font-weight:800; color:#1c1c1e; margin:0 0 4px;">Tidak Ada Data</h4>' +
+        '<p style="font-size:12px; color:#8e8e93; margin:0;">' + (gjState.tab === 'lunas' ? 'Belum ada gaji yang dibayarkan periode ini.' : 'Semua gaji periode ini sudah lunas.') + '</p>' +
+      '</div>';
+      return;
+    }
+
+    if (gjState.viewMode === 'table') {
+      listEl.classList.add('gj-view-table');
+      listEl.innerHTML = gjRenderTable(rows);
+    } else {
+      listEl.classList.remove('gj-view-table');
+      listEl.innerHTML = rows.map(gjRenderCard).join('');
+    }
+    gjBindCardEvents();
+  }
+
+  function gjRenderTable(rows) {
+    var trs = rows.map(function (row, idx) {
+      var user = row.users || {};
+      var profile = (user.tutor_profile && user.tutor_profile[0]) || user.tutor_profile || {};
+      var jam = gjState.jamMap[row.tutor_id] || 0;
+      var jamText = jam ? (Math.round(jam * 10) / 10) + ' Jam' : '-';
+
+      var namaBank = (profile.nama_bank || '').trim();
+      var noRek = (profile.no_rekening || '').trim();
+      var bankText = (namaBank && noRek)
+        ? (namaBank + ' - ' + noRek)
+        : (namaBank || noRek || '-');
+
+      var mapelSet = gjState.mapelMap[row.tutor_id] || {};
+      var mapelList = Object.keys(mapelSet);
+      var mapelText = mapelList.length ? mapelList.join(', ') : '-';
+
+      var isLunas = row.status === 'sudah_dibayar';
+      var dotColor = isLunas ? '#34c759' : '#ff9500';
+      var statusLabel = isLunas ? 'Lunas' : 'Belum Lunas';
+
+      var badge = '<span class="gj-table-status-pill">' +
+        '<span class="gj-status-dot" style="background:' + dotColor + ';"></span>' +
+        '<span class="gj-status-label">' + statusLabel + '</span>' +
+      '</span>';
+
+      var actionBtn = '';
+      if (isLunas) {
+        var isGenerated = !!row.pdf_url;
+        var cetakOrViewBtn = isGenerated
+          ? '<button type="button" class="gj-table-icon-btn gj-slip-btn" data-action="view" data-id="' + row.id + '" title="Lihat Slip Gaji" style="color:var(--blue);">' +
+              '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+            '</button>'
+          : '<button type="button" class="gj-table-icon-btn gj-slip-btn" data-action="print" data-id="' + row.id + '" title="Cetak Slip Gaji">' +
+              '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>' +
+            '</button>';
+
+        var batalBtn = '<button type="button" class="gj-table-icon-btn gj-batal-lunas-btn" data-id="' + row.id + '" title="Batalkan status lunas (hapus file di Drive)" style="color:var(--ink-soft);">' +
+            '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>' +
+          '</button>';
+
+        actionBtn = '<div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">' + cetakOrViewBtn + batalBtn + '</div>';
+      } else {
+        actionBtn = '<button type="button" class="gj-transfer-btn" data-id="' + row.id + '" title="Tandai pembayaran gaji sudah ditransfer">' +
+          '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>' +
+          '<span>Transfer</span>' +
+        '</button>';
+      }
+
+      return '' +
+        '<tr>' +
+          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:600;">' + genioEscapeHtml(user.nama || '-') + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11px; font-weight:400;">' + genioEscapeHtml(bankText) + '</td>' +
+          '<td style="color:var(--ink); font-size:11px; font-weight:400;">' + genioEscapeHtml(mapelText) + '</td>' +
+          '<td style="text-align:center; white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + row.total_pertemuan + ' Sesi</td>' +
+          '<td style="text-align:center; white-space:nowrap; color:var(--ink); font-size:11px; font-weight:400;">' + genioEscapeHtml(jamText) + '</td>' +
+          '<td style="text-align:right; white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:600;">' + gjFormatRp(row.total_gaji) + '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + badge + '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + actionBtn + '</td>' +
+        '</tr>';
+    }).join('');
+
+    return '' +
+      '<div class="gj-table-card gj-full-width">' +
+        '<div class="gj-table-wrap">' +
+          '<table class="gj-table">' +
+            '<thead>' +
+              '<tr>' +
+                '<th style="width:36px; text-align:center;">No</th>' +
+                '<th class="gj-sort-th" data-sort="tutor" title="Urutkan Tutor">' +
+                  '<span style="display:inline-flex; align-items:center;">Tutor' + gjGetSortIcon('tutor') + '</span>' +
+                '</th>' +
+                '<th class="gj-sort-th" data-sort="bank" title="Urutkan Bank">' +
+                  '<span style="display:inline-flex; align-items:center;">Bank' + gjGetSortIcon('bank') + '</span>' +
+                '</th>' +
+                '<th class="gj-sort-th" data-sort="mapel" title="Urutkan Mapel">' +
+                  '<span style="display:inline-flex; align-items:center;">Mata Pelajaran' + gjGetSortIcon('mapel') + '</span>' +
+                '</th>' +
+                '<th class="gj-sort-th" data-sort="total_pertemuan" title="Urutkan Sesi" style="text-align:center;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:center; width:100%;">Pertemuan' + gjGetSortIcon('total_pertemuan') + '</span>' +
+                '</th>' +
+                '<th class="gj-sort-th" data-sort="jam" title="Urutkan Jam" style="text-align:center;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:center; width:100%;">Jam' + gjGetSortIcon('jam') + '</span>' +
+                '</th>' +
+                '<th class="gj-sort-th" data-sort="total_gaji" title="Urutkan Total Gaji" style="text-align:right;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:flex-end; width:100%;">Total Gaji' + gjGetSortIcon('total_gaji') + '</span>' +
+                '</th>' +
+                '<th style="text-align:center;">Status</th>' +
+                '<th style="text-align:center; min-width:125px;">Aksi</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' +
+              trs +
+            '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function gjRenderCard(row) {
+    var user = row.users || {};
+    var profile = (user.tutor_profile && user.tutor_profile[0]) || user.tutor_profile || {};
+    var jam = gjState.jamMap[row.tutor_id] || 0;
+    var jamText = jam ? (Math.round(jam * 10) / 10) + ' Jam' : '-';
+    var avatar = user.foto_profil_url
+      ? '<img src="' + genioEscapeHtml(user.foto_profil_url) + '" style="width:32px; height:32px; border-radius:50%; object-fit:cover; flex:none; border:1.5px solid #fff; box-shadow:0 0 0 1px var(--border);">'
+      : '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + genioEscapeHtml((user.nama || '?').charAt(0).toUpperCase()) + '</div>';
+
+    var namaBankCard = (profile.nama_bank || '').trim();
+    var noRekCard = (profile.no_rekening || '').trim();
+    var bankStrCard = (namaBankCard && noRekCard)
+      ? (namaBankCard + ' - ' + noRekCard)
+      : (namaBankCard || noRekCard);
+    var rekeningText = bankStrCard
+      ? genioEscapeHtml(bankStrCard) + ' (a.n. ' + genioEscapeHtml(user.nama || '-') + ')'
+      : 'Rekening belum diisi tutor';
+
+    var isLunas = row.status === 'sudah_dibayar';
+    var badge = isLunas
+      ? '<span class="gj-status-badge" style="background:rgba(52,199,89,.14); color:#28a745; height:22px;"><span style="width:12px; height:12px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Lunas</span>'
+      : '<span class="gj-status-badge" style="background:rgba(255,149,0,.14); color:#ff9500; height:22px;"><span style="width:12px; height:12px; border-radius:50%; background:#ff9500; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Belum Lunas</span>';
+
+    var isGenerated = !!row.pdf_url;
+    var actionBtn = '';
+    if (isLunas) {
+      var cetakOrViewBtn = isGenerated
+        ? '<button type="button" class="gj-slip-btn" data-action="view" data-id="' + row.id + '" style="flex:1; height:32px; border-radius:8px; background:var(--blue-tint); color:var(--blue); font-size:11px; font-weight:700; border:1px solid rgba(0,122,255,.2); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">' +
+            '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+            '<span>Lihat Slip</span>' +
+          '</button>'
+        : '<button type="button" class="gj-slip-btn" data-action="print" data-id="' + row.id + '" style="flex:1; height:32px; border-radius:8px; background:var(--ink); color:#fff; font-size:11px; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">' +
+            '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>' +
+            '<span>Cetak Slip</span>' +
+          '</button>';
+
+      var batalBtn = '<button type="button" class="gj-batal-lunas-btn" data-id="' + row.id + '" title="Batalkan status lunas (hapus file di Drive)" style="height:32px; padding:0 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">' +
+          '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>' +
+          '<span>Batal Lunas</span>' +
+        '</button>';
+
+      actionBtn = '<div style="display:flex; gap:8px; margin-top:8px;">' + cetakOrViewBtn + batalBtn + '</div>';
+    } else {
+      actionBtn = '<button type="button" class="gj-transfer-btn" data-id="' + row.id + '" style="width:100%; height:32px; margin-top:8px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; font-family:var(--font); font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">' +
+        '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>' +
+        '<span>Transfer</span>' +
+      '</button>';
+    }
+
+    return '' +
+      '<div class="gj-card card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
+        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
+          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
+            avatar +
+            '<div style="min-width:0; flex:1;">' +
+              '<h4 style="font-size:12.5px; font-weight:700; color:#1c1c1e; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">' + genioEscapeHtml(user.nama || '-') + '</h4>' +
+              '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + rekeningText + '</p>' +
+            '</div>' +
+          '</div>' +
+          badge +
+        '</div>' +
+        '<div style="background:rgba(0,0,0,.03); border:1px solid rgba(0,0,0,.04); border-radius:9px; padding:8px 10px; margin-top:8px;">' +
+          '<div class="gj-detail-row" style="font-size:10.5px; padding:3px 0;"><span>Total Sesi Mengajar:</span><span>' + row.total_pertemuan + ' Sesi (' + jamText + ')</span></div>' +
+          '<div class="gj-detail-row" style="font-size:10.5px; padding:3px 0;"><span>Total Gaji:</span><span style="color:#28a745; font-weight:800; font-size:11.5px;">' + gjFormatRp(row.total_gaji) + '</span></div>' +
+        '</div>' +
+        actionBtn +
+      '</div>';
+  }
+
+  function gjBindCardEvents() {
+    document.querySelectorAll('.gj-slip-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.dataset.id;
+        var action = btn.dataset.action;
+        var row = gjState.rows.find(function (r) { return r.id === id; });
+        if (!row) return;
+
+        if (action === 'view' && row.pdf_url) {
+          gjOpenSlipPreview(row);
+        } else {
+          gjProcessSingleSlip(row, btn);
+        }
+      });
+    });
+    document.querySelectorAll('.gj-transfer-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { gjMarkAsPaid(btn.dataset.id); });
+    });
+    document.querySelectorAll('.gj-batal-lunas-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.dataset.id;
+        var row = gjState.rows.find(function (r) { return r.id === id; });
+        if (!row) return;
+        gjOpenBatalLunasModal(row);
+      });
+    });
+    document.querySelectorAll('.gj-sort-th').forEach(function (th) {
+      th.addEventListener('click', function () {
+        gjSortTable(th.dataset.sort);
+      });
+    });
+  }
+
+  function gjBuildSlipPayload(row) {
+    var user = row.users || {};
+    var profile = (user.tutor_profile && user.tutor_profile[0]) || user.tutor_profile || {};
+    var namaBank = (profile.nama_bank || '').trim();
+    var noRek = (profile.no_rekening || '').trim();
+    var bankText = (namaBank && noRek) ? (namaBank + ' - ' + noRek) : (namaBank || noRek || '-');
+    var jam = gjState.jamMap[row.tutor_id] || 0;
+    var jamText = jam ? (Math.round(jam * 10) / 10) + ' Jam' : '-';
+    var mapelSet = gjState.mapelMap[row.tutor_id] || {};
+    var mapelList = Object.keys(mapelSet);
+    var mapelText = mapelList.length ? mapelList.join(', ') : '-';
+    var parts = gjState.periode.split('-');
+    var namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][parseInt(parts[1], 10) - 1];
+    var periodeLabel = namaBulan + ' ' + parts[0];
+
+    return {
+      id: row.id,
+      tutorId: row.tutor_id,
+      tutorNama: user.nama || 'Tutor',
+      bankText: bankText,
+      mapel: mapelText,
+      periode: gjState.periode,
+      periodeLabel: periodeLabel,
+      totalPertemuan: row.total_pertemuan || 0,
+      totalJam: jamText,
+      totalGaji: row.total_gaji || 0,
+      status: row.status,
+      tanggalDibayar: row.tanggal_dibayar ? new Date(row.tanggal_dibayar).toLocaleDateString('id-ID', { year:'numeric', month:'long', day:'numeric' }) : '-'
+    };
+  }
+
+  async function gjGenerateAndSaveSlip(row) {
+    var payload = gjBuildSlipPayload(row);
+    var s = genioGetSession();
+
+    var pdfUrl = await new Promise(function (resolve, reject) {
+      if (window.google && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function (result) {
+            if (result && result.success) resolve(result.url);
+            else reject(new Error((result && result.error) || 'Gagal generate PDF ke Google Drive'));
+          })
+          .withFailureHandler(function (err) { reject(err); })
+          .generateSlipGajiPdf(payload);
+      } else {
+        // Fallback jika dibuka langsung di browser luar Google Apps Script
+        var mockUrl = 'https://drive.google.com/file/d/genio_slip_' + row.id + '/view';
+        setTimeout(function () { resolve(mockUrl); }, 500);
+      }
+    });
+
+    if (pdfUrl) {
+      await supaRest('slip_gaji?id=eq.' + row.id, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ pdf_url: pdfUrl })
+      });
+      row.pdf_url = pdfUrl;
+    }
+
+    return pdfUrl;
+  }
+
+  async function gjProcessSingleSlip(row, btn) {
+    if (!row || row.status !== 'sudah_dibayar') {
+      genioToast('Gagal mencetak slip gaji: Status gaji belum ditransfer.', 'error');
+      return;
+    }
+    if (btn && btn.dataset.busy === '1') return;
+
+    var isIconBtn = btn && btn.classList.contains('gj-table-icon-btn');
+    var originalTitle = btn ? (btn.getAttribute('title') || '') : '';
+    if (btn) {
+      btn.dataset.busy = '1';
+      btn.disabled = true;
+      btn.style.opacity = '.75';
+      if (isIconBtn) {
+        btn.setAttribute('title', 'Sedang mencetak...');
+        btn.innerHTML = '<span class="spinner" style="width:12px; height:12px; border:2px solid rgba(20,22,43,.25); border-top-color:var(--ink); display:inline-block; vertical-align:middle; box-sizing:border-box; margin:0 auto;"></span>';
+      } else {
+        btn.innerHTML = '<span class="spinner" style="width:12px; height:12px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; margin-right:6px; display:inline-block; vertical-align:middle; box-sizing:border-box;"></span><span>Mencetak...</span>';
+      }
+    }
+
+    try {
+      genioToast('Membuat PDF slip gaji ke Google Drive...', 'loading');
+      var pdfUrl = await gjGenerateAndSaveSlip(row);
+      genioToast('Slip gaji ' + ((row.users && row.users.nama) || 'Tutor') + ' berhasil dicetak!', 'success');
+
+      if (btn) {
+        btn.dataset.busy = '0';
+        btn.disabled = false;
+        btn.style.opacity = '';
+      }
+
+      gjRenderList();
+    } catch (err) {
+      if (btn) {
+        btn.dataset.busy = '0';
+        btn.disabled = false;
+        btn.style.opacity = '';
+        if (isIconBtn) {
+          btn.setAttribute('title', originalTitle || 'Cetak Slip Gaji');
+          btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>';
+        } else {
+          btn.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span>Cetak Slip</span>';
+        }
+      }
+      genioToast('Gagal membuat slip gaji: ' + err.message, 'error');
+    }
+  }
+
+  function gjGetDriveId(url) {
+    if (!url) return null;
+    var isDrive = url.indexOf('drive.google.com') !== -1 || url.indexOf('docs.google.com') !== -1;
+    if (!isDrive) return null;
+    var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+            url.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+            url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    return m ? m[1] : null;
+  }
+
+  var gjActivePreviewRow = null;
+
+  function gjOpenSlipPreview(row) {
+    var url = row.pdf_url;
+    if (!url) return;
+
+    gjActivePreviewRow = row;
+
+    var modal = document.getElementById('gj-previewModal');
+    if (!modal) {
+      window.open(url, '_blank');
+      return;
+    }
+
+    var user = row.users || {};
+    var titleEl = document.getElementById('gj-previewTitle');
+    var subEl = document.getElementById('gj-previewSub');
+    var iframe = document.getElementById('gj-previewIframe');
+    var spinner = document.getElementById('gj-previewSpinner');
+    var link = document.getElementById('gj-previewDirectLink');
+
+    if (titleEl) titleEl.textContent = 'Slip Gaji - ' + (user.nama || 'Tutor');
+    var parts = gjState.periode.split('-');
+    var namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][parseInt(parts[1], 10) - 1];
+    if (subEl) subEl.textContent = 'Periode ' + namaBulan + ' ' + parts[0] + ' • ' + gjFormatRp(row.total_gaji);
+
+    if (link) {
+      link.href = url;
+    }
+
+    if (iframe) {
+      iframe.style.display = 'none';
+      iframe.src = '';
+    }
+    if (spinner) {
+      spinner.style.display = 'flex';
+    }
+
+    var driveId = gjGetDriveId(url);
+    var previewSrc = '';
+    if (driveId) {
+      previewSrc = 'https://drive.google.com/file/d/' + driveId + '/preview';
+    } else if (url.indexOf('/view') !== -1) {
+      previewSrc = url.replace('/view', '/preview');
+    } else {
+      previewSrc = url;
+    }
+
+    if (iframe) {
+      iframe.onload = function () {
+        if (spinner) spinner.style.display = 'none';
+        iframe.style.display = 'block';
+      };
+      iframe.src = previewSrc;
+    }
+
+    modal.hidden = false;
+    modal.removeAttribute('hidden');
+    modal.style.display = 'flex';
+    requestAnimationFrame(function () {
+      modal.classList.add('show');
+    });
+  }
+
+  function gjCloseSlipPreview() {
+    gjActivePreviewRow = null;
+    var modal = document.getElementById('gj-previewModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    setTimeout(function () {
+      modal.hidden = true;
+      modal.setAttribute('hidden', '');
+      modal.style.display = 'none';
+      var iframe = document.getElementById('gj-previewIframe');
+      if (iframe) {
+        iframe.src = '';
+        iframe.style.display = 'none';
+      }
+    }, 280);
+  }
+
+  async function gjHandleDeleteSingleSlip() {
+    if (!gjActivePreviewRow || !gjActivePreviewRow.pdf_url) return;
+    var row = gjActivePreviewRow;
+    var userNama = (row.users && row.users.nama) || 'Tutor';
+    if (!confirm('Hapus file slip gaji ' + userNama + ' dari Google Drive dan sistem?')) return;
+
+    // Otomatis langsung keluar dari popup
+    gjCloseSlipPreview();
+
+    // Notifikasi loading
+    genioToast('Menghapus slip gaji ' + userNama + ' dari Google Drive & sistem...', 'loading');
+
+    try {
+      var s = genioGetSession();
+      var driveUrl = row.pdf_url;
+
+      // Hapus file fisik di Google Drive lewat Apps Script (hanya file ini)
+      if (window.google && google.script && google.script.run) {
+        await new Promise(function (resolve) {
+          google.script.run
+            .withSuccessHandler(function (res) { resolve(res); })
+            .withFailureHandler(function (err) {
+              console.warn('Gagal menghapus file di Drive via Apps Script:', err);
+              resolve(null);
+            })
+            .deleteDriveFiles([driveUrl]);
+        });
+      }
+
+      // Reset pdf_url di Supabase hanya untuk baris ini
+      await supaRest('slip_gaji?id=eq.' + row.id, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ pdf_url: null })
+      });
+
+      row.pdf_url = null;
+      gjRenderList();
+      // Notifikasi selesai
+      genioToast('Slip gaji ' + userNama + ' berhasil dihapus dari Google Drive & sistem!', 'success');
+    } catch (err) {
+      genioToast('Gagal menghapus slip gaji: ' + err.message, 'error');
+    }
+  }
+
+  async function gjProcessBatchSlip() {
+    var btn = document.getElementById('gj-cetakSemuaBtn');
+    if (btn && btn.dataset.busy === '1') return;
+
+    // Validasi: tombol cetak semua hanya berlaku untuk gaji yang sudah ditransfer
+    if (gjState.tab === 'belum') {
+      genioToast('Gagal mencetak: Status gaji belum ditransfer. Silakan lakukan transfer terlebih dahulu.', 'error');
+      return;
+    }
+
+    // Hanya ambil data yang tampil di tabel website sekarang
+    var visibleRows = gjGetVisibleRows();
+
+    // Validasi apakah ada data yang belum ditransfer
+    var hasUnpaid = visibleRows.some(function (r) { return r.status !== 'sudah_dibayar'; });
+    if (hasUnpaid) {
+      genioToast('Gagal mencetak slip gaji: Status gaji belum ditransfer.', 'error');
+      return;
+    }
+
+    var candidates = visibleRows.filter(function (r) {
+      return !r.pdf_url;
+    });
+
+    if (!candidates.length) {
+      if (visibleRows.length > 0) {
+        genioToast('Semua slip gaji pada tabel yang tampil saat ini sudah selesai dicetak!', 'info');
+      } else {
+        genioToast('Tidak ada data pada tabel yang tampil saat ini.', 'info');
+      }
+      return;
+    }
+
+    var originalHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.dataset.busy = '1';
+      btn.disabled = true;
+      btn.style.opacity = '.75';
+    }
+
+    var total = candidates.length;
+    var successCount = 0;
+
+    for (var i = 0; i < total; i++) {
+      var r = candidates[i];
+      if (btn) {
+        btn.innerHTML = '<span class="spinner" style="width:12px; height:12px; margin-right:6px; border-width:2px; vertical-align:middle; display:inline-block;"></span>Mencetak (' + (i + 1) + '/' + total + ')...';
+      }
+      genioToast('Mencetak slip ' + (i + 1) + ' dari ' + total + ' (' + ((r.users && r.users.nama) || 'Tutor') + ')...', 'loading');
+      try {
+        await gjGenerateAndSaveSlip(r);
+        successCount++;
+      } catch (err) {
+        console.error('Gagal mencetak slip gaji ' + r.id, err);
+      }
+    }
+
+    if (btn) {
+      btn.dataset.busy = '0';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.innerHTML = originalHtml;
+    }
+
+    gjRenderList();
+    genioToast('Selesai! ' + successCount + ' slip gaji pada tabel berhasil dicetak ke Google Drive.', 'success');
+  }
+
+  var gjPendingDeleteRows = [];
+  var gjConfirmCallback = null;
+
+  function gjOpenGenericConfirmModal(opts) {
+    gjConfirmCallback = opts.onConfirm || null;
+    var modal = document.getElementById('gj-confirmModal');
+    if (!modal) return;
+
+    var titleEl = document.getElementById('gj-confirmModalTitle');
+    var descEl = document.getElementById('gj-confirmModalDesc');
+    var okBtn = document.getElementById('gj-confirmOkBtn');
+
+    if (titleEl) titleEl.textContent = opts.title || 'Konfirmasi';
+    if (descEl) {
+      if (opts.descHtml) descEl.innerHTML = opts.descHtml;
+      else descEl.textContent = opts.desc || '';
+    }
+    if (okBtn) {
+      okBtn.textContent = opts.okText || 'Ya, Lanjutkan';
+      okBtn.style.background = opts.isDanger ? '#ff3b30' : 'var(--ink)';
+      okBtn.style.color = '#fff';
+    }
+
+    modal.hidden = false;
+    modal.removeAttribute('hidden');
+    modal.style.display = 'flex';
+    requestAnimationFrame(function () {
+      modal.classList.add('show');
+    });
+  }
+
+  function gjOpenConfirmModal(targetRows) {
+    gjPendingDeleteRows = targetRows || [];
+    gjOpenGenericConfirmModal({
+      title: 'Hapus Slip Gaji Tabel Ini?',
+      desc: 'Sebanyak ' + gjPendingDeleteRows.length + ' file PDF slip gaji yang sedang tampil di tabel saat ini akan dihapus permanen dari Google Drive dan database.',
+      okText: 'Ya, Hapus',
+      isDanger: true,
+      onConfirm: async function () {
+        await gjHandleDeleteAllSlips();
+      }
+    });
+  }
+
+  function gjOpenBatalLunasModal(row) {
+    var userNama = (row.users && row.users.nama) || 'Tutor';
+    var hasPdf = !!row.pdf_url;
+    var desc = 'Status gaji tutor <strong>' + genioEscapeHtml(userNama) + '</strong> akan dikembalikan menjadi <strong>Belum Ditransfer</strong>.';
+    if (hasPdf) {
+      desc += '<br><span style="color:#ff3b30; font-weight:600; font-size:10.5px;">File PDF slip gaji di Google Drive akan otomatis dihapus permanen.</span>';
+    }
+    desc += '<br><span style="color:var(--ink-soft); font-size:10px; margin-top:4px; display:inline-block;">Fitur ini berguna jika tutor baru saja menambah atau merevisi presensi sehingga nominal gaji perlu dihitung ulang.</span>';
+
+    gjOpenGenericConfirmModal({
+      title: 'Batalkan Status Lunas?',
+      descHtml: desc,
+      okText: 'Batalkan Lunas',
+      isDanger: true,
+      onConfirm: async function () {
+        gjCloseConfirmModal();
+        var s = genioGetSession();
+        genioToast('Membatalkan status lunas ' + userNama + '...', 'loading');
+
+        try {
+          // 1. Hapus file fisik di Google Drive jika ada PDF
+          if (hasPdf && row.pdf_url) {
+            if (window.google && google.script && google.script.run) {
+              await new Promise(function (resolve) {
+                google.script.run
+                  .withSuccessHandler(function (res) { resolve(res); })
+                  .withFailureHandler(function (err) {
+                    console.warn('Gagal menghapus file di Drive via Apps Script:', err);
+                    resolve(null);
+                  })
+                  .deleteDriveFiles([row.pdf_url]);
+              });
+            }
+          }
+
+          var live = gjState.tutorLiveStats && gjState.tutorLiveStats[row.tutor_id];
+          var freshPertemuan = live ? live.pertemuan : row.total_pertemuan;
+          var freshTotalGaji = live ? live.totalGaji : row.total_gaji;
+
+          // 2. Reset status di Supabase sekaligus perbarui total_pertemuan & total_gaji terbaru
+          await supaRest('slip_gaji?id=eq.' + row.id, s.access_token, {
+            method: 'PATCH',
+            headers: { 'Prefer': 'return=minimal' },
+            body: JSON.stringify({
+              status: 'belum_dibayar',
+              total_pertemuan: freshPertemuan,
+              total_gaji: freshTotalGaji,
+              tanggal_dibayar: null,
+              dibayar_oleh: null,
+              pdf_url: null
+            })
+          });
+
+          // 3. Update memori lokal
+          row.status = 'belum_dibayar';
+          row.total_pertemuan = freshPertemuan;
+          row.total_gaji = freshTotalGaji;
+          row.tanggal_dibayar = null;
+          row.dibayar_oleh = null;
+          row.pdf_url = null;
+
+          genioToast('Status gaji ' + userNama + ' berhasil dikembalikan ke Belum Ditransfer' + (hasPdf ? ' dan berkas Drive telah dihapus.' : '.'), 'success');
+          gjLoadAll();
+        } catch (err) {
+          genioToast('Gagal membatalkan status lunas: ' + err.message, 'error');
+        }
+      }
+    });
+  }
+
+  function gjCloseConfirmModal() {
+    var modal = document.getElementById('gj-confirmModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    setTimeout(function () {
+      modal.hidden = true;
+      modal.setAttribute('hidden', '');
+      modal.style.display = 'none';
+    }, 280);
+  }
+
+  async function gjHandleDeleteAllSlips() {
+    var targetRows = gjPendingDeleteRows || [];
+    if (!targetRows.length) {
+      gjCloseConfirmModal();
+      return;
+    }
+
+    // 1. Otomatis keluar/tutup popup langsung saat tombol ditekan
+    gjCloseConfirmModal();
+
+    // 2. Berikan notifikasi loading
+    var count = targetRows.length;
+    genioToast('Menghapus ' + count + ' file slip gaji dari Google Drive & database...', 'loading');
+
+    try {
+      var s = genioGetSession();
+
+      // Kumpulkan URL Drive HANYA dari baris yang tampil di tabel ini
+      var driveUrls = targetRows.map(function (r) { return r.pdf_url; }).filter(Boolean);
+      var rowIds = targetRows.map(function (r) { return r.id; });
+
+      // Hapus berkas fisik di Google Drive (hanya file-file dari baris ini)
+      if (driveUrls.length && window.google && google.script && google.script.run) {
+        await new Promise(function (resolve) {
+          google.script.run
+            .withSuccessHandler(function (res) { resolve(res); })
+            .withFailureHandler(function (err) {
+              console.warn('Gagal menghapus file di Drive via Apps Script:', err);
+              resolve(null);
+            })
+            .deleteDriveFiles(driveUrls);
+        });
+      }
+
+      // Reset pdf_url di Supabase HANYA untuk row id baris yang tampil ini
+      if (rowIds.length) {
+        await supaRest('slip_gaji?id=in.(' + rowIds.join(',') + ')', s.access_token, {
+          method: 'PATCH',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ pdf_url: null })
+        });
+      }
+
+      // Reset pada memori state lokal baris tersebut
+      targetRows.forEach(function (r) {
+        r.pdf_url = null;
+      });
+
+      gjPendingDeleteRows = [];
+      gjRenderList();
+
+      // 3. Notifikasi lagi jika sudah selesai dihapus
+      genioToast(count + ' file slip gaji pada tabel berhasil dihapus dari Google Drive & sistem!', 'success');
+    } catch (err) {
+      genioToast('Gagal menghapus slip gaji: ' + err.message, 'error');
+    }
+  }
+
+  async function gjMarkAsPaid(id) {
+    try {
+      var s = genioGetSession();
+      await supaRest('slip_gaji?id=eq.' + id, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ status: 'sudah_dibayar', tanggal_dibayar: new Date().toISOString(), dibayar_oleh: s.user_id })
+      });
+      genioToast('Gaji berhasil ditandai sudah dibayar', 'success');
+      gjLoadAll();
+    } catch (err) {
+      genioToast('Gagal memproses: ' + err.message, 'error');
+    }
+  }
+</script>
+</div>

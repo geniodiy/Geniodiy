@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>var SCRIPT_URL = '<?!= scriptUrl ?>';</script>
+  <?!= include('Config'); ?>
+  <style>
+    body{background:var(--bg-page, #f0f2f5);}
+
+    .content{padding:16px 16px 118px;}
+
+    /* ===== Bottom nav: iOS glass dock dengan glider pil putih meluncur ===== */
+    .dock-wrap{
+      position:fixed; left:20px; right:20px; bottom:20px;
+      max-width:370px; margin:0 auto; z-index:40;
+    }
+    .ios-glass-dock{
+      position:relative;
+      background:rgba(254,254,255,.62);
+      backdrop-filter:blur(36px) saturate(190%);
+      -webkit-backdrop-filter:blur(36px) saturate(190%);
+      border:1px solid rgba(255,255,255,.8);
+      border-radius:999px;
+      box-shadow:
+        0 20px 45px -10px rgba(28,28,30,.14),
+        0 2px 6px rgba(28,28,30,.04),
+        inset 0 1.5px 1.5px 0 rgba(255,255,255,1);
+      padding:8px;
+      display:flex; align-items:center; justify-content:space-between;
+      touch-action:none; -webkit-user-select:none; user-select:none;
+      transition:box-shadow .22s ease;
+      transform-origin:center bottom;
+      will-change:transform, box-shadow;
+    }
+    @keyframes appleDockGrow {
+      0% { transform: scale(1); }
+      60% { transform: scale(1.048); }
+      100% { transform: scale(1.04); }
+    }
+    .ios-glass-dock.dock-pressed{
+      animation: appleDockGrow .25s cubic-bezier(.34,1.56,.64,1) forwards;
+      box-shadow:
+        0 28px 60px -10px rgba(28,28,30,.22),
+        0 8px 18px rgba(28,28,30,.08),
+        inset 0 1.5px 1.5px 0 rgba(255,255,255,1);
+    }
+    @keyframes appleDockPop {
+      0% { transform: scale(1.04); }
+      40% { transform: scale(0.978); }
+      80% { transform: scale(1.008); }
+      100% { transform: scale(1); }
+    }
+    .ios-glass-dock.dock-pop {
+      animation: appleDockPop .32s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    .dock-glider{
+      position:absolute; top:5px; bottom:5px;
+      border-radius:999px; background:#fff;
+      border:.5px solid rgba(0,0,0,.06);
+      box-shadow:
+        0 6px 18px rgba(0,0,0,.12),
+        0 2px 5px rgba(0,0,0,.05),
+        inset 0 1px 1.5px #fff;
+      transition:left .36s cubic-bezier(.34,1.56,.64,1),
+                 width .36s cubic-bezier(.34,1.56,.64,1),
+                 transform .2s cubic-bezier(.34,1.56,.64,1);
+      z-index:1; pointer-events:none; will-change:left,width,transform;
+    }
+    .dock-btn{
+      position:relative; z-index:10; flex:1; overflow:hidden;
+      background:none; border:none; cursor:pointer;
+      padding:14px 0; display:flex; align-items:center; justify-content:center;
+      color:var(--ink-soft); font-family:var(--font);
+      transition:transform .2s cubic-bezier(.34,1.56,.64,1), color .18s ease;
+      transform-origin:center center; user-select:none;
+    }
+    .dock-btn.dock-active{color:var(--ink);}
+    .dock-btn:active{transform:scale(.86);}
+    .dock-btn svg{width:23px; height:23px; display:block; flex:none;}
+    .dock-btn .hidden, .dock-btn svg.hidden, .dock-btn [hidden]{display:none !important;}
+    /* Label teks di sebelah kanan ikon — HANYA muncul di layar desktop, disembunyikan di mobile */
+    .dock-label{
+      font-size:11px; font-weight:500; white-space:nowrap;
+      max-width:0; opacity:0; overflow:hidden; margin-left:0; flex:none;
+      transition:max-width .28s ease, opacity .2s ease, margin-left .28s ease;
+    }
+    @media (min-width:768px){
+      .dock-wrap{ max-width:460px; bottom:26px; }
+      .ios-glass-dock{ padding:10px; }
+      .dock-btn{ padding:16px 0; }
+      .dock-btn svg{ width:23px; height:23px; }
+      .dock-btn.dock-active{flex:1.7;}
+      .dock-label{ font-size:11.5px; font-weight:500; }
+      .dock-btn.dock-active .dock-label{max-width:84px; opacity:1; margin-left:8px;}
+      .dock-badge{ font-size:10px; min-width:18px; height:18px; line-height:14px; }
+    }
+    @keyframes appleTabIconPop{
+      0%{transform:scale(.8) translateY(2px);}
+      50%{transform:scale(1.22) translateY(-2px);}
+      100%{transform:scale(1) translateY(0);}
+    }
+    .tab-icon-pop{animation:appleTabIconPop .38s cubic-bezier(.34,1.56,.64,1) forwards;}
+    .dock-badge{
+      position:absolute; top:-4px; right:-8px;
+      min-width:16px; height:16px; padding:0 3px;
+      background:var(--red); color:#fff; border-radius:999px; border:2px solid #fff;
+      font-size:9px; font-weight:800; line-height:12px; text-align:center;
+    }
+
+    /* ===== List "Lainnya" gaya grouped iOS ===== */
+    .menu-group{
+      background:#fff; border-radius:12px;
+      border:1px solid var(--border); overflow:hidden; margin-bottom:10px;
+    }
+    .menu-row{
+      display:flex; align-items:center; gap:10px;
+      padding:9px 12px; border-bottom:1px solid var(--border);
+      cursor:pointer; background:#fff;
+    }
+    .menu-row:last-child{border-bottom:none;}
+    .menu-row:active{background:var(--surface);}
+    .menu-row .mr-badge{
+      width:28px; height:28px; border-radius:8px; flex:none;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--surface); color:var(--ink-soft);
+    }
+    .menu-row .mr-badge svg{width:15px; height:15px; display:block;}
+    .menu-row .mr-label{flex:1; font-size:12.5px; font-weight:600; color:var(--ink);}
+    .menu-row .mr-info{
+      font-size:10.5px; font-weight:700; color:var(--ink-soft); white-space:nowrap;
+    }
+    .menu-row .mr-soon{
+      font-size:9.5px; font-weight:700; color:var(--red);
+      background:var(--red-soft); padding:2px 7px; border-radius:999px; white-space:nowrap;
+    }
+    .menu-row .mr-chevron{color:var(--ink-soft); font-size:12px;}
+    .menu-group-label{
+      font-size:10px; font-weight:700; color:var(--ink-soft);
+      margin:2px 4px 6px;
+    }
+
+    /* ===== Layout desktop untuk halaman "Lainnya" ===== */
+    @media (min-width:900px){
+      .module-panel[data-module="lainnya"]{
+        width:94%; max-width:1500px; margin:0 auto;
+      }
+      #lainnyaMenuContainer{
+        column-count:3; column-gap:16px;
+      }
+      .menu-section-block{ break-inside:avoid; -webkit-column-break-inside:avoid; }
+
+      /* Mode split-view: Lainnya jadi sidebar kiri, modul yang dipilih tampil di kanan */
+      #content.lainnya-split-view{
+        display:grid; grid-template-columns:280px minmax(0, 1fr); gap:16px;
+        width:94%; max-width:1500px; margin:0 auto; align-items:start;
+        box-sizing:border-box;
+      }
+      #content.lainnya-split-view .module-panel[data-module="lainnya"]{
+        grid-column:1; width:100%; max-width:none; margin:0;
+        position:sticky; top:88px; max-height:calc(100vh - 104px); overflow-y:auto;
+        min-width:0; box-sizing:border-box;
+      }
+      #content.lainnya-split-view #lainnyaMenuContainer{ column-count:1 !important; }
+      #content.lainnya-split-view .module-panel:not([data-module="lainnya"]):not([hidden]){
+        grid-column:2; width:100% !important; max-width:100% !important; min-width:0 !important; margin:0 !important;
+        box-sizing:border-box;
+      }
+    }
+    @media (min-width:900px) and (max-width:1150px){
+      #lainnyaMenuContainer{ column-count:2; column-gap:14px; }
+    }
+
+    /* ===== Placeholder modul yang belum dibangun ===== */
+    .soon-panel{text-align:center; padding:60px 20px; color:var(--ink-soft);}
+
+    /* ===== Header Floating & iOS Glass Blur Style ===== */
+    #genioSharedHeader {
+      position: sticky;
+      top: 12px;
+      z-index: 60;
+      margin: 12px 14px 0;
+      width: auto;
+      min-height: 66px;
+      border-radius: 999px;
+      background: rgba(254, 254, 255, 0.62);
+      backdrop-filter: blur(36px) saturate(190%);
+      -webkit-backdrop-filter: blur(36px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow:
+        0 16px 36px -8px rgba(20, 22, 43, 0.10),
+        0 2px 6px rgba(20, 22, 43, 0.03),
+        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.9);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, background .25s ease;
+      box-sizing: border-box;
+      transform-origin: center center;
+    }
+    #genioSharedHeader.scrolled {
+      background: rgba(254, 254, 255, 0.78);
+      box-shadow:
+        0 18px 38px -8px rgba(20, 22, 43, 0.12),
+        0 3px 8px rgba(20, 22, 43, 0.05),
+        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.9);
+    }
+    /* Animasi zoom in / zoom out untuk header saat interaksi dock */
+    @keyframes genioHeaderGrow {
+      0% { transform: scale(1); }
+      60% { transform: scale(1.025); }
+      100% { transform: scale(1.02); }
+    }
+    #genioSharedHeader.header-pressed {
+      animation: genioHeaderGrow .25s cubic-bezier(.34,1.56,.64,1) forwards;
+      box-shadow:
+        0 20px 42px -10px rgba(20, 22, 43, 0.13),
+        0 4px 12px rgba(20, 22, 43, 0.05),
+        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1);
+    }
+    @keyframes genioHeaderPop {
+      0% { transform: scale(1.02); }
+      40% { transform: scale(0.99); }
+      80% { transform: scale(1.005); }
+      100% { transform: scale(1); }
+    }
+    #genioSharedHeader.header-pop {
+      animation: genioHeaderPop .32s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+
+    /* Brand Logo dengan font khusus Poppins */
+    .genio-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: transform .15s ease;
+    }
+    .genio-brand-wrap:active {
+      transform: scale(.97);
+    }
+    .genio-brand-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      background: var(--surface);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif !important;
+      font-weight: 800;
+      font-size: 19px;
+      flex: none;
+      box-shadow: none !important;
+      overflow: hidden;
+      padding: 0;
+      border: 1px solid var(--border);
+    }
+    .genio-brand-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 12px;
+    }
+    .genio-brand-text {
+      line-height: 1.22;
+      min-width: 0;
+      font-family: 'Poppins', sans-serif !important;
+    }
+    .genio-brand-title {
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 15.5px;
+      font-weight: 800;
+      white-space: nowrap;
+      letter-spacing: -0.015em;
+    }
+    .genio-brand-title .genio-text-blue {
+      color: var(--blue);
+      font-family: 'Poppins', sans-serif !important;
+    }
+    .genio-brand-title .genio-text-red {
+      color: var(--red);
+      font-family: 'Poppins', sans-serif !important;
+    }
+    .genio-brand-sub {
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .genio-header-nav-center {
+      display: none;
+    }
+    .genio-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: none;
+    }
+    .genio-header-icon-btn {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ink);
+      flex: none;
+      transition: all .16s ease;
+      outline: none;
+      padding: 0;
+      box-sizing: border-box;
+      box-shadow: none !important;
+    }
+    .genio-header-icon-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+    .genio-header-icon-btn:hover {
+      background: var(--surface);
+      border-color: rgba(20, 22, 43, 0.22);
+      color: var(--ink);
+      transform: translateY(-1px);
+      box-shadow: none !important;
+    }
+    .genio-header-icon-btn:active {
+      transform: scale(.93);
+      background: var(--surface);
+    }
+    .genio-header-logout-btn {
+      color: var(--ink-soft);
+    }
+    .genio-header-logout-btn:hover {
+      background: rgba(255, 59, 48, 0.08) !important;
+      border-color: rgba(255, 59, 48, 0.28) !important;
+      color: var(--red) !important;
+      box-shadow: none !important;
+    }
+
+    /* Desktop Responsive: Header berbentuk floating pill elegan (persempit & terpusat secara proporsional) */
+    @media (min-width: 900px) {
+      #genioSharedHeader {
+        top: 12px;
+        margin: 12px auto 0;
+        width: 88%;
+        max-width: 840px;
+        padding: 6px 14px 6px 16px;
+        gap: 12px;
+        min-height: 52px;
+        height: 52px;
+        background: rgba(255, 255, 255, 0.84);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow:
+          0 12px 30px -8px rgba(20, 22, 43, 0.08),
+          0 2px 6px rgba(20, 22, 43, 0.03),
+          inset 0 1px 1.5px 0 #ffffff;
+      }
+      #genioSharedHeader.scrolled {
+        background: rgba(255, 255, 255, 0.94) !important;
+        box-shadow:
+          0 14px 34px -8px rgba(20, 22, 43, 0.11),
+          0 3px 8px rgba(20, 22, 43, 0.04),
+          inset 0 1px 1.5px 0 #ffffff !important;
+      }
+      .content {
+        padding: 18px 0 48px !important;
+      }
+      .genio-brand-wrap {
+        gap: 8px !important;
+      }
+      .genio-brand-badge {
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 9px !important;
+        font-size: 15px !important;
+      }
+      .genio-brand-title {
+        font-size: 13.5px !important;
+      }
+      .genio-brand-sub {
+        font-size: 9.5px !important;
+      }
+      .genio-header-actions {
+        gap: 8px !important;
+      }
+      .genio-header-icon-btn {
+        width: 34px !important;
+        height: 34px !important;
+      }
+      .genio-header-icon-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+      }
+      .genio-header-nav-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        min-width: 0;
+      }
+      .dock-wrap {
+        display: none !important;
+      }
+
+      /* Dock di dalam Header Desktop: TANPA BACKGROUND PILL (transparan, menyatu dgn header) */
+      #genioHeaderNavCenter .ios-glass-dock {
+        position: relative;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 999px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 370px;
+        max-width: 390px;
+        height: 38px;
+        box-sizing: border-box;
+        transform: none !important;
+        animation: none !important;
+      }
+      /* Glider pil putih meluncur di belakang tab aktif */
+      #genioHeaderNavCenter .dock-glider {
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        border-radius: 999px;
+        background: #ffffff;
+        border: 0.5px solid rgba(0, 0, 0, 0.07);
+        box-shadow: 0 3px 10px rgba(20, 22, 43, 0.07), 0 1px 3px rgba(20, 22, 43, 0.03), inset 0 1px 1px #ffffff;
+        transition: left .36s cubic-bezier(.34,1.56,.64,1),
+                    width .36s cubic-bezier(.34,1.56,.64,1),
+                    transform .2s cubic-bezier(.34,1.56,.64,1);
+        z-index: 1;
+        pointer-events: none;
+        will-change: left, width, transform;
+      }
+      /* Tombol-tombol tab di header desktop */
+      #genioHeaderNavCenter .dock-btn {
+        position: relative;
+        z-index: 10;
+        flex: 1;
+        height: 34px;
+        padding: 0 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink-soft);
+        font-family: var(--font);
+        background: none;
+        border: none;
+        cursor: pointer;
+        user-select: none;
+        transition: flex .28s cubic-bezier(.34,1.56,.64,1), transform .2s cubic-bezier(.34,1.56,.64,1), color .18s ease;
+        transform-origin: center center;
+      }
+      #genioHeaderNavCenter .dock-btn:hover {
+        color: var(--ink);
+      }
+      #genioHeaderNavCenter .dock-btn.dock-active {
+        color: var(--ink);
+        flex: 1.6;
+      }
+      #genioHeaderNavCenter .dock-btn svg {
+        width: 17px;
+        height: 17px;
+        display: block;
+        flex: none;
+      }
+      #genioHeaderNavCenter .dock-btn .hidden,
+      #genioHeaderNavCenter .dock-btn svg.hidden,
+      #genioHeaderNavCenter .dock-btn [hidden] {
+        display: none !important;
+      }
+      /* Teks label HANYA muncul saat tombol aktif/dipilih — bersih dan tidak bold */
+      #genioHeaderNavCenter .dock-label {
+        font-size: 11.5px;
+        font-weight: 500;
+        white-space: nowrap;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        margin-left: 0;
+        flex: none;
+        transition: max-width .28s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, margin-left .28s ease;
+      }
+      #genioHeaderNavCenter .dock-btn.dock-active .dock-label {
+        max-width: 72px;
+        opacity: 1;
+        margin-left: 6px;
+      }
+      #genioHeaderNavCenter .dock-badge {
+        top: -2px;
+        right: -4px;
+        min-width: 14px;
+        height: 14px;
+        padding: 0 2.5px;
+        font-size: 8px;
+        font-weight: 800;
+        line-height: 10px;
+        border-radius: 999px;
+        border: 2px solid #fff;
+      }
+    }
+    .soon-panel .icn{font-size:34px; margin-bottom:14px;}
+    .soon-panel h3{font-size:16px; color:var(--ink); margin:0 0 6px;}
+    .soon-panel p{font-size:13.5px; margin:0;}
+
+    /* ===== Modal Konfirmasi Logout Pop-up ===== */
+    #genioLogoutModal {
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      background: rgba(20, 22, 43, 0.45);
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    #genioLogoutModal.show {
+      opacity: 1;
+    }
+    #genioLogoutModal .modal-sheet {
+      border-radius: 20px;
+      width: 100%;
+      max-width: 330px;
+      margin: 0 auto;
+      padding: 24px 20px 20px;
+      text-align: center;
+      transform: scale(.9) translateY(10px);
+      transition: transform .28s cubic-bezier(.34, 1.56, .64, 1);
+      box-shadow: 0 20px 48px -10px rgba(20, 22, 43, 0.22);
+      border: 1px solid var(--border);
+    }
+    #genioLogoutModal.show .modal-sheet {
+      transform: scale(1) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="genioSharedHeader">
+    <!-- Brand / Logo Asli dengan font Poppins khusus -->
+    <div class="genio-brand-wrap" id="genioHeaderBrand" title="Ke Beranda Utama">
+      <div class="genio-brand-badge">
+        <img src="https://drive.google.com/thumbnail?id=1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ&sz=w500" alt="Logo Genio" onerror="if(this.src.indexOf('lh3')===-1){this.src='https://lh3.googleusercontent.com/d/1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ';}else{this.style.display='none';this.parentElement.textContent='G';this.parentElement.style.background='var(--blue)';}">
+      </div>
+      <div class="genio-brand-text">
+        <div class="genio-brand-title">
+          <span class="genio-text-blue">Genio</span> <span class="genio-text-red">Institute</span>
+        </div>
+        <div class="genio-brand-sub">Yogyakarta</div>
+      </div>
+    </div>
+
+    <!-- Center Navigation Slot (Desktop: Bottom Bar Moves Here) -->
+    <div id="genioHeaderNavCenter" class="genio-header-nav-center"></div>
+
+    <!-- Actions (Notification & Logout) -->
+    <div class="genio-header-actions">
+      <div style="position:relative;">
+        <button id="genioHeaderBellBtn" class="genio-header-icon-btn" aria-label="Notifikasi" title="Notifikasi">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span id="homeBellBadge" class="dock-badge" style="top:-3px; right:-3px;" hidden>0</span>
+        </button>
+
+        <div id="genioNotifPanel" style="position:absolute; display:none; top:48px; right:0; width:320px; max-width:85vw; background:rgba(255,255,255,.96); backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%); border:1.5px solid var(--border); border-radius:16px; box-shadow:0 16px 40px -8px rgba(20,22,43,.18); padding:16px; z-index:90;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+            <div style="font-size:13px; font-weight:800; color:var(--ink);">Notifikasi</div>
+            <span id="genioNotifBadgeCount" style="font-size:10px; font-weight:700; color:var(--ink-soft); background:var(--surface); padding:2px 8px; border-radius:999px;">Terbaru</span>
+          </div>
+          <div id="genioNotifList" style="max-height:320px; overflow-y:auto;"></div>
+          <div id="genioNotifFooter" style="display:flex; justify-content:flex-end; align-items:center; margin-top:8px; padding-top:4px;">
+            <button type="button" id="genioNotifClearBtn" style="background:none; border:none; padding:4px 2px; font-size:11.5px; font-weight:700; color:var(--red); cursor:pointer; font-family:var(--font); outline:none; transition:opacity .15s ease;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'" title="Sembunyikan notifikasi sesi ini">Hapus</button>
+          </div>
+        </div>
+      </div>
+
+      <button id="genioHeaderLogoutBtn" class="genio-header-icon-btn genio-header-logout-btn" aria-label="Keluar" title="Keluar dari Sistem">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+
+    <!-- ===== Tab: Home ===== -->
+    <?!= include('ModuleHome'); ?>
+
+    <!-- ===== Tab: Presensi ===== -->
+    <?!= include('ModulePresensi'); ?>
+    <?!= include('ModuleGaji'); ?>
+
+    <!-- ===== Tab: Lainnya — profil + menu di-generate JS ===== -->
+    <div class="module-panel" data-module="lainnya" hidden>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; padding:0 2px;">
+        <div style="font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;" id="lainnyaHeaderTitle">Profil</div>
+        <button id="lainnyaRefreshBtn" aria-label="Refresh data" style="width:32px; height:32px; border-radius:50%; background:#fff; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft);">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
+        </button>
+      </div>
+
+      <div class="card" style="padding:14px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:44px; height:44px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; flex:none; position:relative;">
+            <span id="lainnyaAvatar">--</span>
+            <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:var(--green); border:2px solid #fff;"></span>
+          </div>
+          <div style="min-width:0; flex:1;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span style="background:var(--blue-tint); color:var(--blue); font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px;" id="lainnyaRoleBadge">-</span>
+              <span style="font-size:11px; color:var(--green); font-weight:700;">&bull; Aktif</span>
+            </div>
+            <div style="font-size:14.5px; font-weight:800; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lainnyaNama">-</div>
+            <div style="font-size:11.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lainnyaSubtitle">-</div>
+          </div>
+          <button id="lainnyaDetailToggle" style="background:var(--surface); border:none; border-radius:999px; padding:7px 12px; font-size:11.5px; font-weight:700; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:4px; flex:none;">
+            Detail
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="lainnyaMenuContainer"></div>
+      <div class="menu-group">
+        <div class="menu-row" id="logoutRow"><span class="mr-badge" style="background:var(--red-soft);color:var(--red);">&larr;</span><span class="mr-label" style="color:var(--red);">Keluar</span></div>
+      </div>
+    </div>
+
+    <!-- Empty-state kanan: muncul di split-view desktop saat belum ada sub-menu Lainnya dipilih -->
+    <div id="lainnyaEmptyState" style="display:none; grid-column:2; background:#fff; border:1.5px solid var(--border); border-radius:var(--radius-lg); padding:70px 30px; text-align:center;">
+      <div style="width:56px; height:56px; margin:0 auto 16px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center;">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </div>
+      <h3 style="font-size:16px; color:var(--ink); margin:0 0 6px;">Pilih Menu di Sebelah Kiri</h3>
+      <p style="font-size:13.5px; color:var(--ink-soft); margin:0;">Pilih salah satu menu pada daftar di sebelah kiri untuk menampilkan detailnya di sini.</p>
+    </div>
+
+    <?!= include('ModuleProfil'); ?>
+
+    <!-- Panel kosong untuk tiap sub-modul lain otomatis dibuat oleh JS (renderLainnyaMenu) -->
+    <?!= include('ModuleKelolaUnit'); ?>
+    <?!= include('ModuleOrtuSiswa'); ?>
+    <?!= include('ModulePaketBelajar'); ?>
+    <?!= include('ModuleKontrak'); ?>
+    <?!= include('ModuleJadwal'); ?>
+    <?!= include('ModuleTagihan'); ?>
+    <?!= include('ModuleKelolaPengguna'); ?>
+    <?!= include('ModuleDataTutor'); ?>
+    <?!= include('ModuleOperasional'); ?>
+    <?!= include('ModulePengaturan'); ?>
+
+  </div>
+
+  <!-- ===== Bottom nav: glass dock + glider ===== -->
+  <nav class="dock-wrap">
+    <div id="interactiveDock" class="ios-glass-dock">
+      <div id="dockGlider" class="dock-glider" style="width:calc(25% - 8px); left:4px;"></div>
+
+      <button id="nav-home" data-tab="home" aria-label="Home" class="dock-btn dock-active">
+        <svg class="icon-outline hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 3.5l8 7V19.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-9z"/></svg>
+        <svg class="icon-filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.2L3.5 10.2a1 1 0 0 0-.3.74V19.5A1.5 1.5 0 0 0 4.7 21h14.6a1.5 1.5 0 0 0 1.5-1.5V10.94a1 1 0 0 0-.3-.74L12 3.2z"/></svg>
+        <span class="dock-label">Home</span>
+      </button>
+
+      <button id="nav-presensi" data-tab="presensi" aria-label="Presensi" class="dock-btn">
+        <span style="position:relative; display:flex; align-items:center; justify-content:center;">
+          <svg class="icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+          <svg class="icon-filled hidden" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M8.5 12.2l2.3 2.3 4.7-4.7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="bnPresensiBadge" class="dock-badge" hidden>0</span>
+        </span>
+        <span class="dock-label">Presensi</span>
+      </button>
+
+      <button id="nav-gaji" data-tab="gaji" aria-label="Gaji" class="dock-btn">
+        <svg class="icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6.5 15h3.5"/></svg>
+        <svg class="icon-filled hidden" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5" fill="currentColor"/><path d="M2.5 9.5h19" stroke="#fff" stroke-width="1.8"/><circle cx="7" cy="14.5" r="1.3" fill="#fff"/></svg>
+        <span class="dock-label">Gaji</span>
+      </button>
+
+      <button id="nav-lainnya" data-tab="lainnya" aria-label="Lainnya" class="dock-btn">
+        <svg class="icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1.8"/><rect x="14" y="4" width="6" height="6" rx="1.8"/><rect x="4" y="14" width="6" height="6" rx="1.8"/><rect x="14" y="14" width="6" height="6" rx="1.8"/></svg>
+        <svg class="icon-filled hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="1.8"/><rect x="14" y="4" width="6" height="6" rx="1.8"/><rect x="4" y="14" width="6" height="6" rx="1.8"/><rect x="14" y="14" width="6" height="6" rx="1.8"/></svg>
+        <svg class="icon-back hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span class="dock-label">Lainnya</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== Modal Konfirmasi Keluar (Logout) ===== -->
+  <div class="modal-overlay" id="genioLogoutModal" hidden style="display:none;">
+    <div class="modal-sheet">
+      <div style="width:52px; height:52px; border-radius:50%; background:rgba(255,59,48,.12); color:var(--red); display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </div>
+      <h3 style="font-size:16px; font-weight:800; color:var(--ink); margin:0 0 8px; font-family:var(--font); text-align:center;">Keluar dari Sistem?</h3>
+      <p style="font-size:12.5px; color:var(--ink-soft); margin:0 0 20px; line-height:1.45; text-align:center;">Apakah Anda yakin ingin mengakhiri sesi dan keluar dari akun Anda?</p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" id="genioLogoutCancelBtn" class="btn btn-outline" style="flex:1; height:42px; font-size:12.5px; font-weight:700; border-radius:12px; cursor:pointer;">Batal</button>
+        <button type="button" id="genioLogoutConfirmBtn" class="btn" style="flex:1; height:42px; font-size:12.5px; font-weight:700; border-radius:12px; cursor:pointer; background:var(--red); color:#fff; border:none;">Keluar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var session = genioRequireSession();
+    if (session) { initDashboard(session); }
+
+    function initDashboard(session) {
+
+    // ===== Ikon minimalis untuk tiap item menu (line-icon, konsisten gaya bottom nav) =====
+    var MENU_ICONS = {
+      people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7.5" r="3.2"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><path d="M16 4.8a3.2 3.2 0 0 1 0 6.2"/><path d="M20 20c0-2.8-1.8-5-4-5.8"/></svg>',
+      doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>',
+      card: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><path d="M2 10h20"/></svg>',
+      person: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/></svg>',
+      monitor: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>',
+      home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 3.5l8 7V19.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-9z"/></svg>',
+      calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+      layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>',
+      shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.5 3 7 7 8 4-1 7-3.5 7-8V6l-7-3z"/></svg>',
+      news: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>',
+      gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>'
+    };
+
+    // ===== Konfigurasi menu "Lainnya" — satu-satunya sumber data untuk:
+    //   1) isi list menu, 2) daftar sub-modul, 3) pembuatan panel kosong otomatis =====
+    var MENU_SECTIONS = [
+      { label: 'Data & Transaksi', items: [
+        { key: 'ortu-siswa', icon: 'people', label: 'Data Ortu & Siswa' },
+        { key: 'kontrak', icon: 'doc', label: 'Kontrak' },
+        { key: 'jadwal', icon: 'calendar', label: 'Jadwal Mengajar' },
+        { key: 'tagihan', icon: 'card', label: 'Tagihan' },
+        { key: 'data-tutor', icon: 'person', label: 'Kelola Tutor' },
+        { key: 'operasional', icon: 'monitor', label: 'Operasional' }
+      ]},
+      { label: 'Admin', items: [
+        { key: 'kelola-unit', icon: 'home', label: 'Kelola Unit', ready: true },
+        { key: 'paket-belajar', icon: 'layers', label: 'Paket Belajar' },
+        { key: 'kelola-pengguna', icon: 'shield', label: 'Kelola User' },
+        { key: 'genio-news', icon: 'news', label: 'Genio News' },
+        { key: 'pengaturan', icon: 'gear', label: 'Pengaturan' }
+      ]}
+    ];
+
+    var SUB_MODULES = ['profile-detail'];
+    MENU_SECTIONS.forEach(function (sec) {
+      sec.items.forEach(function (it) { SUB_MODULES.push(it.key); });
+    });
+
+    var MODULE_TITLES = {
+      'home': ['Home', 'Dashboard Manajer'],
+      'presensi': ['Presensi', 'Approval & riwayat'],
+      'gaji': ['Gaji', 'Slip gaji tutor'],
+      'lainnya': ['Lainnya', 'Menu & pengaturan'],
+      'profile-detail': ['Detail Profil', 'Informasi akun saya'],
+      'ortu-siswa': ['Data Ortu & Siswa', 'Lintas unit'],
+      'kontrak': ['Kontrak', 'Kontrak siswa & tutor'],
+      'jadwal': ['Jadwal', 'Jadwal sesi belajar'],
+      'tagihan': ['Tagihan', 'Invoice & receipt'],
+      'data-tutor': ['Kelola Tutor', 'Kelola akun tutor'],
+      'operasional': ['Operasional', 'Pengeluaran unit'],
+      'kelola-unit': ['Kelola Unit', 'Unit / cabang Genio Institute'],
+      'paket-belajar': ['Paket Belajar', 'Master paket belajar'],
+      'kelola-pengguna': ['Kelola User', 'Semua akun & role'],
+      'genio-news': ['Genio News', 'Pengumuman'],
+      'pengaturan': ['Pengaturan', 'Denda, visit, dsb.']
+    };
+
+    // Render list menu "Lainnya" + buat panel kosong utk sub-modul yang belum punya konten nyata
+    function renderLainnyaMenu() {
+      var html = '';
+      MENU_SECTIONS.forEach(function (sec) {
+        html += '<div class="menu-section-block"><div class="menu-group-label">' + sec.label + '</div><div class="menu-group">';
+        sec.items.forEach(function (it) {
+          var trailing = it.key === 'genio-news'
+            ? '<span class="mr-soon">Coming Soon</span>'
+            : '<span class="mr-info" id="mrInfo-' + it.key + '">&hellip;</span>';
+          html += '<div class="menu-row" data-goto="' + it.key + '"><span class="mr-badge">' + (MENU_ICONS[it.icon] || '') + '</span>' +
+            '<span class="mr-label">' + it.label + '</span>' + trailing + '<span class="mr-chevron">&#8250;</span></div>';
+        });
+        html += '</div></div>';
+      });
+      document.getElementById('lainnyaMenuContainer').innerHTML = html;
+
+      var content = document.getElementById('content');
+      SUB_MODULES.forEach(function (key) {
+        if (content.querySelector('.module-panel[data-module="' + key + '"]')) return; // sudah ada kontennya (mis. Kelola Unit via include)
+        var panel = document.createElement('div');
+        panel.className = 'module-panel';
+        panel.dataset.module = key;
+        panel.hidden = true;
+        content.appendChild(panel);
+      });
+
+      document.querySelectorAll('.menu-row[data-goto]').forEach(function (row) {
+        row.addEventListener('click', function () { showModule(row.dataset.goto); });
+      });
+    }
+    renderLainnyaMenu();
+
+    document.getElementById('logoutRow').addEventListener('click', genioConfirmLogout);
+
+    // ===== Kartu Profil & badge menu "Lainnya" — data asli dari Supabase =====
+    var LAINNYA_ROLE_LABELS = { super_admin: 'Super Admin', manajer: 'Manajer', hrd: 'HRD', kepala_unit: 'Kepala Unit', tutor: 'Tutor' };
+
+    function lainnyaInitials(nama) {
+      return (nama || '').split(' ').filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || '—';
+    }
+    function lainnyaFormatRupiah(n) {
+      n = Math.round(n || 0);
+      if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1) + ' Jt';
+      return 'Rp ' + n.toLocaleString('id-ID');
+    }
+    function lainnyaSetInfo(key, text) {
+      var el = document.getElementById('mrInfo-' + key);
+      if (el) el.textContent = text;
+    }
+
+    async function loadLainnyaData() {
+      var session = genioGetSession();
+      if (!session) return;
+      var token = session.access_token;
+      genioUpdateHeaderUser();
+
+      document.getElementById('lainnyaAvatar').textContent = lainnyaInitials(session.nama);
+      document.getElementById('lainnyaRoleBadge').textContent = (LAINNYA_ROLE_LABELS[session.role] || session.role).toUpperCase();
+      document.getElementById('lainnyaNama').textContent = session.nama || '-';
+
+      try {
+        var userRows = await supaRest('users?id=eq.' + session.user_id + '&select=no_hp,unit_id,units(nama_unit)', token);
+        var me = userRows && userRows[0];
+        var unitNama = (me && me.units && me.units.nama_unit) || null;
+
+        var kepalaCount = 0;
+        if (session.role === 'manajer' || session.role === 'super_admin' || session.role === 'hrd') {
+          var kepalaRows = await supaRest('users?role=eq.kepala_unit&select=id', token);
+          kepalaCount = kepalaRows.length;
+        }
+        var subtitle;
+        if (session.role === 'kepala_unit') subtitle = 'Kepala Unit &bull; ' + (unitNama || '-');
+        else if (session.role === 'tutor') subtitle = 'Tutor &bull; Lintas Unit';
+        else if (session.role === 'hrd') subtitle = 'SDM & Kepegawaian &bull; Yayasan Pusat';
+        else if (session.role === 'super_admin') subtitle = 'Administrator Sistem &bull; Yayasan Pusat';
+        else subtitle = 'Supervisi ' + kepalaCount + ' Kepala Unit &bull; Yayasan Pusat';
+        document.getElementById('lainnyaSubtitle').innerHTML = subtitle;
+      } catch (e) {
+        genioToast('Gagal memuat sebagian profil: ' + e.message, 'error');
+      }
+
+      var range = homePeriodeRangeForLainnya();
+      try {
+        var results = await Promise.all([
+          supaRest('kontrak_siswa?select=siswa_id', token),
+          supaRest('kontrak_siswa?select=id', token),
+          supaRest('kontrak_tutor?select=id', token),
+          supaRest('invoice?select=status', token),
+          supaRest('users?role=eq.tutor&select=id', token),
+          supaRest('operasional?select=nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token),
+          supaRest('units?select=id', token),
+          supaRest('paket_belajar?select=id', token),
+          supaRest('users?select=id', token),
+          supaRest('jadwal?select=id', token)
+        ]);
+        var siswaRows = results[0], kontrakSiswaRows = results[1], kontrakTutorRows = results[2],
+            invoiceRows = results[3], tutorRows = results[4], opsRows = results[5],
+            unitRows = results[6], paketRows = results[7], userRows2 = results[8],
+            jadwalRows = results[9] || [];
+
+        var siswaSet = {};
+        siswaRows.forEach(function (r) { siswaSet[r.siswa_id] = true; });
+        lainnyaSetInfo('ortu-siswa', Object.keys(siswaSet).length + ' Siswa');
+        lainnyaSetInfo('kontrak', (kontrakSiswaRows.length + kontrakTutorRows.length) + ' Dokumen');
+        lainnyaSetInfo('jadwal', jadwalRows.length + ' Sesi');
+
+        var lunasCount = invoiceRows.filter(function (r) { return r.status === 'lunas'; }).length;
+        var lunasPct = invoiceRows.length ? (lunasCount / invoiceRows.length * 100) : 0;
+        var tagihanEl = document.getElementById('mrInfo-tagihan');
+        if (tagihanEl) { tagihanEl.textContent = lunasPct.toFixed(1) + '% Lunas'; tagihanEl.style.color = 'var(--green)'; }
+
+        lainnyaSetInfo('data-tutor', tutorRows.length + ' Tutor');
+        lainnyaSetInfo('operasional', lainnyaFormatRupiah(opsRows.reduce(function (a, r) { return a + parseFloat(r.nominal || 0); }, 0)));
+        lainnyaSetInfo('kelola-unit', unitRows.length + ' Unit');
+        lainnyaSetInfo('paket-belajar', paketRows.length + ' Program');
+        lainnyaSetInfo('kelola-pengguna', userRows2.length + ' User');
+        lainnyaSetInfo('pengaturan', '');
+      } catch (e) {
+        genioToast('Gagal memuat sebagian data: ' + e.message, 'error');
+      }
+    }
+    function homePeriodeRangeForLainnya() {
+      var d = new Date();
+      var y = d.getFullYear(), m = d.getMonth() + 1;
+      var lastDay = new Date(y, m, 0).getDate();
+      var mm = String(m).padStart(2, '0');
+      return { start: y + '-' + mm + '-01', end: y + '-' + mm + '-' + String(lastDay).padStart(2, '0') };
+    }
+    window.genioModuleHandlers = window.genioModuleHandlers || {};
+    window.genioModuleHandlers['lainnya'] = loadLainnyaData;
+
+    document.getElementById('lainnyaDetailToggle').addEventListener('click', function () {
+      showModule('profile-detail');
+    });
+    document.getElementById('lainnyaRefreshBtn').addEventListener('click', function () {
+      this.style.transition = 'transform .5s ease';
+      this.style.transform = 'rotate(360deg)';
+      var btn = this;
+      setTimeout(function () { btn.style.transition = 'none'; btn.style.transform = 'rotate(0deg)'; }, 500);
+      loadLainnyaData();
+    });
+
+    // ===== Dock glider & Header zoom animation engine =====
+    var PRIMARY_TABS = ['home', 'presensi', 'gaji', 'lainnya'];
+    var currentBottomTab = 'home';
+    var currentActiveModule = 'home';
+
+    function triggerHeaderPress() {
+      var header = document.getElementById('genioSharedHeader');
+      if (!header || !window.matchMedia('(min-width:900px)').matches) return;
+      if (header.classList.contains('header-pressed')) return;
+      header.classList.remove('header-pop');
+      void header.offsetWidth; // reflow to trigger grow animation
+      header.classList.add('header-pressed');
+    }
+    function releaseHeaderPress() {
+      var header = document.getElementById('genioSharedHeader');
+      if (!header || !window.matchMedia('(min-width:900px)').matches) return;
+      header.classList.remove('header-pressed');
+    }
+    function triggerHeaderPop() {
+      var header = document.getElementById('genioSharedHeader');
+      if (!header || !window.matchMedia('(min-width:900px)').matches) return;
+      header.classList.remove('header-pressed');
+      header.classList.remove('header-pop');
+      void header.offsetWidth; // reflow to retrigger animation
+      header.classList.add('header-pop');
+    }
+
+    function triggerDockPress() {
+      if (window.matchMedia('(min-width:900px)').matches) return;
+      var dock = document.getElementById('interactiveDock');
+      if (!dock || dock.classList.contains('dock-pressed')) return;
+      dock.classList.remove('dock-pop');
+      void dock.offsetWidth; // reflow to trigger grow animation
+      dock.classList.add('dock-pressed');
+    }
+    function releaseDockPress() {
+      if (window.matchMedia('(min-width:900px)').matches) return;
+      var dock = document.getElementById('interactiveDock');
+      if (!dock) return;
+      dock.classList.remove('dock-pressed');
+    }
+    function triggerDockPop() {
+      if (window.matchMedia('(min-width:900px)').matches) return;
+      var dock = document.getElementById('interactiveDock');
+      if (!dock) return;
+      dock.classList.remove('dock-pressed');
+      dock.classList.remove('dock-pop');
+      void dock.offsetWidth; // reflow to retrigger animation
+      dock.classList.add('dock-pop');
+    }
+
+    function updateGliderPosition(tabId) {
+      var btn = document.getElementById('nav-' + tabId);
+      var glider = document.getElementById('dockGlider');
+      if (!glider) return;
+      var idx = PRIMARY_TABS.indexOf(tabId);
+      if (idx === -1) idx = 0;
+      var isDesktop = window.matchMedia('(min-width:900px)').matches;
+      var marginX = isDesktop ? 2 : 4;
+      if (btn && btn.offsetWidth > 0) {
+        glider.style.width = (btn.offsetWidth - marginX * 2) + 'px';
+        glider.style.left = (btn.offsetLeft + marginX) + 'px';
+      } else {
+        glider.style.width = 'calc(25% - 8px)';
+        glider.style.left = 'calc(' + (idx * 25) + '% + 4px)';
+      }
+    }
+
+    // Satu fungsi dipakai baik oleh klik tab maupun drag-scrub (opts membedakan detail animasinya)
+    function setDockTabVisual(tabId, opts) {
+      opts = opts || {};
+      PRIMARY_TABS.forEach(function (t) {
+        var btn = document.getElementById('nav-' + t);
+        if (!btn) return;
+        var outline = btn.querySelector('.icon-outline');
+        var filled = btn.querySelector('.icon-filled');
+        var isActive = (t === tabId);
+
+        btn.classList.toggle('dock-active', isActive);
+        if (outline) outline.classList.toggle('hidden', isActive);
+        if (filled) filled.classList.toggle('hidden', !isActive);
+
+        if (opts.pop && isActive && filled) {
+          filled.classList.remove('tab-icon-pop');
+          void filled.offsetWidth; // reflow supaya animasi bisa diulang
+          filled.classList.add('tab-icon-pop');
+        }
+        if (opts.scaleDuringDrag) btn.style.transform = isActive ? 'scale(1.12)' : '';
+      });
+    }
+
+    function updateDockHighlight(tabId) {
+      setDockTabVisual(tabId, { pop: true });
+      triggerHeaderPop();
+      triggerDockPop();
+      updateGliderPosition(tabId);
+      requestAnimationFrame(function () {
+        updateGliderPosition(tabId);
+      });
+      setTimeout(function () {
+        updateGliderPosition(tabId);
+      }, 100);
+      setTimeout(function () {
+        updateGliderPosition(tabId);
+      }, 280);
+    }
+
+    // ===== Router modul =====
+    function showModule(name) {
+      currentActiveModule = name;
+      var isSub = SUB_MODULES.indexOf(name) !== -1;
+      var bottomTabKey = isSub ? 'lainnya' : name;
+      currentBottomTab = bottomTabKey;
+
+      updateDockHighlight(bottomTabKey);
+
+      var lainnyaBtn = document.getElementById('nav-lainnya');
+      if (lainnyaBtn) {
+        var iconBack = lainnyaBtn.querySelector('.icon-back');
+        var iconOutline = lainnyaBtn.querySelector('.icon-outline');
+        var iconFilled = lainnyaBtn.querySelector('.icon-filled');
+        if (iconBack) iconBack.classList.toggle('hidden', !isSub);
+        if (isSub) {
+          if (iconOutline) iconOutline.classList.add('hidden');
+          if (iconFilled) iconFilled.classList.add('hidden');
+        }
+      }
+
+      var isDesktop = window.matchMedia('(min-width:900px)').matches;
+      var isLainnyaMain = name === 'lainnya';
+      var splitView = (isSub || isLainnyaMain) && isDesktop; // di desktop, Lainnya tetap kelihatan sebagai sidebar
+
+      var content = document.getElementById('content');
+      var wasSplitView = content.classList.contains('lainnya-split-view'); // baca status SEBELUM ditimpa
+      content.classList.toggle('lainnya-split-view', splitView);
+
+      document.querySelectorAll('.module-panel').forEach(function (panel) {
+        var isTarget = panel.dataset.module === name;
+        var isSidebar = splitView && panel.dataset.module === 'lainnya';
+        panel.hidden = !(isTarget || isSidebar);
+      });
+
+      var emptyState = document.getElementById('lainnyaEmptyState');
+      if (emptyState) emptyState.style.display = (splitView && isLainnyaMain) ? 'block' : 'none';
+
+      var title = MODULE_TITLES[name] || [name, ''];
+
+      var builtPanel = content.querySelector('.module-panel[data-module="' + name + '"]');
+      var isEmptyPlaceholder = builtPanel && builtPanel.children.length === 0;
+      content.querySelectorAll('.soon-panel-wrap').forEach(function (n) { n.remove(); });
+      if (isEmptyPlaceholder) {
+        var wrap = document.createElement('div');
+        wrap.className = 'soon-panel-wrap';
+        wrap.innerHTML = '<div class="soon-panel"><div class="icn">&#128736;</div><h3>Modul sedang dikembangkan</h3><p>' + title[0] + ' akan tersedia di iterasi berikutnya.</p></div>';
+        builtPanel.appendChild(wrap);
+      }
+
+      // Cuma reset scroll ke atas kalau BUKAN transisi antar sub-menu di dalam split-view
+      // (misal baru pertama kali masuk Lainnya, atau pindah ke tab utama lain).
+      if (!(splitView && wasSplitView)) window.scrollTo({ top: 0 });
+      if (window.genioModuleHandlers && window.genioModuleHandlers[name]) {
+        window.genioModuleHandlers[name]();
+      }
+      if (splitView && window.genioModuleHandlers && window.genioModuleHandlers['lainnya']) {
+        window.genioModuleHandlers['lainnya'](); // sidebar tetap perlu data profil/badge ter-update
+      }
+    }
+
+    PRIMARY_TABS.forEach(function (t) {
+      var btn = document.getElementById('nav-' + t);
+      if (btn) {
+        btn.addEventListener('pointerdown', function () {
+          triggerHeaderPress();
+          triggerDockPress();
+        });
+        btn.addEventListener('pointerup', function () {
+          releaseHeaderPress();
+          triggerHeaderPop();
+          releaseDockPress();
+          triggerDockPop();
+        });
+        btn.addEventListener('pointercancel', function () {
+          releaseHeaderPress();
+          releaseDockPress();
+        });
+        btn.addEventListener('click', function () { showModule(t); });
+      }
+    });
+
+    window.genioDashboardShowModule = showModule;
+
+    function genioConfirmLogout() {
+      var modal = document.getElementById('genioLogoutModal');
+      if (!modal) { genioLogout(); return; }
+      modal.hidden = false;
+      modal.removeAttribute('hidden');
+      modal.style.display = 'flex';
+      requestAnimationFrame(function () { modal.classList.add('show'); });
+    }
+
+    function genioCloseLogoutModal() {
+      var modal = document.getElementById('genioLogoutModal');
+      if (!modal) return;
+      modal.classList.remove('show');
+      setTimeout(function () {
+        modal.hidden = true;
+        modal.setAttribute('hidden', '');
+        modal.style.display = 'none';
+      }, 260);
+    }
+
+    var logoutModal = document.getElementById('genioLogoutModal');
+    var logoutCancelBtn = document.getElementById('genioLogoutCancelBtn');
+    var logoutConfirmBtn = document.getElementById('genioLogoutConfirmBtn');
+
+    if (logoutModal) {
+      logoutModal.addEventListener('click', function (e) {
+        if (e.target === this) genioCloseLogoutModal();
+      });
+    }
+    if (logoutCancelBtn) {
+      logoutCancelBtn.addEventListener('click', genioCloseLogoutModal);
+    }
+    if (logoutConfirmBtn) {
+      logoutConfirmBtn.addEventListener('click', function () {
+        genioCloseLogoutModal();
+        genioLogout();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && logoutModal && logoutModal.classList.contains('show')) {
+        genioCloseLogoutModal();
+      }
+    });
+
+    document.getElementById('genioHeaderLogoutBtn').onclick = genioConfirmLogout;
+
+    var brandEl = document.getElementById('genioHeaderBrand');
+    if (brandEl) brandEl.onclick = function () { showModule('home'); };
+
+    function genioApplyResponsiveHeader() {
+      var isDesktop = window.matchMedia('(min-width:900px)').matches;
+      var dock = document.getElementById('interactiveDock');
+      var headerNavCenter = document.getElementById('genioHeaderNavCenter');
+      var dockWrap = document.querySelector('.dock-wrap');
+      if (!dock || !headerNavCenter || !dockWrap) return;
+
+      if (isDesktop) {
+        if (dock.parentNode !== headerNavCenter) {
+          headerNavCenter.appendChild(dock);
+          dockWrap.style.display = 'none';
+        }
+      } else {
+        if (dock.parentNode !== dockWrap) {
+          dockWrap.appendChild(dock);
+          dockWrap.style.display = '';
+        }
+      }
+      requestAnimationFrame(function () {
+        updateGliderPosition(currentBottomTab);
+      });
+    }
+
+    function genioUpdateHeaderUser() {
+      var s = genioGetSession();
+      if (!s) return;
+      var avatarEl = document.getElementById('genioHeaderUserAvatar');
+      var nameEl = document.getElementById('genioHeaderUserName');
+      var roleEl = document.getElementById('genioHeaderUserRole');
+      if (avatarEl) avatarEl.textContent = lainnyaInitials(s.nama);
+      if (nameEl) nameEl.textContent = (s.nama || '').split(' ')[0] || 'User';
+      if (roleEl) roleEl.textContent = (LAINNYA_ROLE_LABELS[s.role] || s.role || 'User');
+    }
+
+    (function () {
+      var header = document.getElementById('genioSharedHeader');
+      window.addEventListener('scroll', function () {
+        header.classList.toggle('scrolled', window.scrollY > 8);
+      });
+    })();
+
+    // ===== Drag / scrub geser bar (meniru fisik dock iOS asli) =====
+    function initDockScrubbing() {
+      var dock = document.getElementById('interactiveDock');
+      var glider = document.getElementById('dockGlider');
+      if (!dock || !glider) return;
+
+      var startX = 0, startY = 0, isPointerDown = false, isDragging = false, hasDragged = false;
+      var suppressClick = false, targetTab = 'home', pointerId = null;
+      var cachedDockLeft = 0, cachedDockWidth = 0, cachedGliderWidth = 0, prevActiveIndex = -1;
+      var rafId = null, lastClientX = 0;
+      var DRAG_THRESHOLD = 8;
+
+      dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
+      dock.addEventListener('click', function (e) {
+        if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
+      }, true);
+
+      function updateGliderScrub() {
+        rafId = null;
+        if (!isDragging || cachedDockWidth <= 0) return;
+        var relX = lastClientX - cachedDockLeft;
+        var centerOffset = relX - (cachedGliderWidth / 2);
+        var minLeft = 4;
+        var maxLeft = cachedDockWidth - cachedGliderWidth - 4;
+        var clampedPx = Math.max(minLeft, Math.min(maxLeft, centerOffset));
+        glider.style.transition = 'none';
+        glider.style.left = clampedPx + 'px';
+
+        // Tentukan tab terdekat berdasarkan posisi tombol SEBENARNYA (bukan asumsi 4 kolom
+        // sama lebar) — penting karena tombol aktif melebar (flex:1.7), jadi lebarnya nggak rata.
+        var closestIdx = 0, closestDist = Infinity;
+        PRIMARY_TABS.forEach(function (t, idx) {
+          var btn = document.getElementById('nav-' + t);
+          if (!btn) return;
+          var rect = btn.getBoundingClientRect();
+          var btnCenter = rect.left + rect.width / 2;
+          var dist = Math.abs(lastClientX - btnCenter);
+          if (dist < closestDist) { closestDist = dist; closestIdx = idx; }
+        });
+        if (closestIdx !== prevActiveIndex) {
+          prevActiveIndex = closestIdx;
+          targetTab = PRIMARY_TABS[closestIdx];
+          setDockTabVisual(targetTab, { scaleDuringDrag: true });
+        }
+      }
+
+      dock.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
+        pointerId = e.pointerId; startX = e.clientX; startY = e.clientY; lastClientX = e.clientX;
+        var rect = dock.getBoundingClientRect();
+        cachedDockLeft = rect.left; cachedDockWidth = rect.width;
+        cachedGliderWidth = glider.offsetWidth || (rect.width * 0.23);
+        targetTab = currentBottomTab;
+        prevActiveIndex = PRIMARY_TABS.indexOf(targetTab);
+        triggerHeaderPress();
+        triggerDockPress();
+      });
+
+      dock.addEventListener('pointermove', function (e) {
+        if (!isPointerDown) return;
+        lastClientX = e.clientX;
+        var dx = e.clientX - startX, dy = e.clientY - startY;
+        if (!hasDragged) {
+          if (Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+            isDragging = true; hasDragged = true; suppressClick = true;
+            try { dock.setPointerCapture(pointerId); } catch (_) {}
+          }
+        }
+        if (isDragging) {
+          if (e.cancelable) e.preventDefault();
+          if (!rafId) rafId = requestAnimationFrame(updateGliderScrub);
+        }
+      });
+
+      function endDockScrub() {
+        if (!isPointerDown) return;
+        isPointerDown = false;
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        dock.classList.remove('dock-pressed');
+        releaseHeaderPress();
+        triggerHeaderPop();
+        releaseDockPress();
+        triggerDockPop();
+        glider.style.transition = '';
+        if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+        PRIMARY_TABS.forEach(function (t) {
+          var btn = document.getElementById('nav-' + t);
+          if (btn) btn.style.transform = '';
+        });
+        if (hasDragged) {
+          isDragging = false;
+          showModule(targetTab);
+          setTimeout(function () { suppressClick = false; }, 80);
+        } else {
+          suppressClick = false;
+        }
+      }
+
+      dock.addEventListener('pointerup', endDockScrub);
+      dock.addEventListener('pointercancel', endDockScrub);
+    }
+    initDockScrubbing();
+
+    var homeSplitViewResizeTimer;
+    var lastIsDesktop = window.matchMedia('(min-width:900px)').matches;
+    window.addEventListener('resize', function () {
+      genioApplyResponsiveHeader();
+      updateGliderPosition(currentBottomTab);
+      clearTimeout(homeSplitViewResizeTimer);
+      homeSplitViewResizeTimer = setTimeout(function () {
+        // Cuma render ulang kalau breakpoint mobile/desktop BENERAN berubah — mencegah
+        // input kehilangan fokus (keyboard virtual di HP juga memicu event 'resize').
+        var isDesktopNow = window.matchMedia('(min-width:900px)').matches;
+        if (isDesktopNow !== lastIsDesktop) {
+          lastIsDesktop = isDesktopNow;
+          genioApplyResponsiveHeader();
+          if (currentActiveModule) showModule(currentActiveModule);
+        }
+      }, 200);
+    });
+
+    genioApplyResponsiveHeader();
+    genioUpdateHeaderUser();
+    showModule('home');
+
+    // Sistem Notifikasi Header — dijalankan di tick berikutnya & dibungkus try-catch,
+    // supaya kalau ada masalah, navigasi utama tetap aman jalan duluan.
+    setTimeout(function () {
+      try { genioInitNotifikasi(); }
+      catch (notifErr) { console.error('Gagal inisialisasi notifikasi:', notifErr); }
+    }, 50);
+
+    function genioInitNotifikasi() {
+      var bellBtn = document.getElementById('genioHeaderBellBtn');
+      var panel = document.getElementById('genioNotifPanel');
+      var clearBtn = document.getElementById('genioNotifClearBtn');
+      if (!bellBtn || !panel) { console.error('Elemen notifikasi tidak ditemukan.'); return; }
+
+      var genioNotifItems = [];
+
+      // Bersihkan seluruh sisa cache lama di localStorage & sessionStorage
+      // agar pengguna TIDAK PERLU lagi menghapus history atau cache browser.
+      try {
+        for (var i = localStorage.length - 1; i >= 0; i--) {
+          var lk = localStorage.key(i);
+          if (lk && (lk.indexOf('genio_read_notifs') !== -1 || lk.indexOf('genio_session_hidden') !== -1)) {
+            localStorage.removeItem(lk);
+          }
+        }
+        for (var j = sessionStorage.length - 1; j >= 0; j--) {
+          var sk = sessionStorage.key(j);
+          if (sk && (sk.indexOf('genio_session_hidden') !== -1 || sk.indexOf('genio_read_notifs') !== -1)) {
+            sessionStorage.removeItem(sk);
+          }
+        }
+      } catch (e) {}
+
+      // State hidden notifikasi in-memory (hanya berlaku selama halaman ini aktif):
+      // Saat refresh, buka tab baru, atau login lagi, semua notifikasi otomatis muncul kembali!
+      var genioSessionHiddenIds = [];
+
+      function genioGetReadIds() {
+        return genioSessionHiddenIds;
+      }
+      function genioSaveReadIds(ids) {
+        genioSessionHiddenIds = ids;
+      }
+      function genioMarkNotifRead(id) {
+        if (genioSessionHiddenIds.indexOf(id) === -1) { genioSessionHiddenIds.push(id); }
+        var item = genioNotifItems.find(function (n) { return n.id === id; });
+        if (item) item.read = true;
+      }
+
+      async function genioLoadNotifications() {
+        try {
+          var s = genioGetSession();
+          if (!s || !s.access_token) return;
+
+          var range14 = new Date(); range14.setDate(range14.getDate() - 14);
+          var startDate = range14.toISOString().slice(0, 10);
+
+          var pendingPresensi = [];
+          var latePresensi = [];
+          var pendingTutor = [];
+
+          // 1. Ambil Presensi yang Menunggu Approval (status = pending)
+          try {
+            var presPendingRes = await supaRest('presensi?status=eq.pending&select=id,tanggal,status,terlambat,kontrak_tutor(users!kontrak_tutor_tutor_id_fkey(nama))&order=tanggal.desc&limit=40', s.access_token);
+            if (Array.isArray(presPendingRes)) pendingPresensi = presPendingRes;
+          } catch (errPres) {
+            console.warn('Info notif presensi pending:', errPres.message);
+          }
+
+          // 2. Ambil Presensi Terlambat (14 hari terakhir)
+          try {
+            var presLateRes = await supaRest('presensi?terlambat=eq.true&tanggal=gte.' + startDate + '&select=id,tanggal,status,terlambat,kontrak_tutor(users!kontrak_tutor_tutor_id_fkey(nama))&order=tanggal.desc&limit=30', s.access_token);
+            if (Array.isArray(presLateRes)) latePresensi = presLateRes;
+          } catch (errLate) {
+            console.warn('Info notif presensi terlambat:', errLate.message);
+          }
+
+          // 3. Ambil Pendaftaran Tutor Menunggu Approval
+          try {
+            var tutorRes = await supaRest('users?role=eq.tutor&status=eq.pending_approval&select=id,nama,created_at&order=created_at.desc&limit=30', s.access_token);
+            if (Array.isArray(tutorRes)) pendingTutor = tutorRes;
+          } catch (errTutor) {
+            console.warn('Info notif tutor approval:', errTutor.message);
+          }
+
+          var readIds = genioGetReadIds();
+          var items = [];
+          var seenPresensiIds = {};
+
+          pendingPresensi.forEach(function (r) {
+            seenPresensiIds[r.id] = true;
+            var tutorNama = (r.kontrak_tutor && r.kontrak_tutor.users && r.kontrak_tutor.users.nama) || 'Tutor';
+            items.push({
+              id: 'approval-' + r.id, type: 'presensi-approval',
+              title: tutorNama + ' melapor presensi, menunggu approval', tanggal: r.tanggal,
+              icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>', iconBg: 'rgba(255,149,0,.14)', iconColor: '#ff9500'
+            });
+          });
+
+          latePresensi.forEach(function (r) {
+            if (seenPresensiIds[r.id]) return;
+            var tutorNama = (r.kontrak_tutor && r.kontrak_tutor.users && r.kontrak_tutor.users.nama) || 'Tutor';
+            items.push({
+              id: 'telat-' + r.id, type: 'presensi-telat',
+              title: 'Presensi ' + tutorNama + ' terlambat dilaporkan', tanggal: r.tanggal,
+              icon: '<circle cx="12" cy="12" r="9"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>', iconBg: 'rgba(255,59,48,.12)', iconColor: '#ff3b30'
+            });
+          });
+
+          pendingTutor.forEach(function (u) {
+            items.push({
+              id: 'tutor-' + u.id, type: 'tutor-approval',
+              title: u.nama + ' mendaftar sebagai tutor, menunggu approval', tanggal: (u.created_at || '').slice(0, 10),
+              icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>', iconBg: 'rgba(20,22,43,.08)', iconColor: 'var(--ink)'
+            });
+          });
+
+          genioNotifItems = items.map(function (it) {
+            it.read = readIds.indexOf(it.id) !== -1;
+            return it;
+          }).sort(function (a, b) { return (b.tanggal || '').localeCompare(a.tanggal || ''); });
+
+          genioRenderNotifBadge();
+          if (panel.style.display === 'block') genioRenderNotifList();
+        } catch (err) { console.error('Gagal memuat notifikasi:', err); }
+      }
+
+      function genioRenderNotifBadge() {
+        var unreadCount = genioNotifItems.filter(function (n) { return !n.read; }).length;
+        var badge = document.getElementById('homeBellBadge');
+        if (!badge) return;
+        if (unreadCount > 0) { badge.textContent = unreadCount > 99 ? '99+' : unreadCount; badge.hidden = false; }
+        else badge.hidden = true;
+      }
+
+      function genioFormatNotifDate(tanggal) {
+        if (!tanggal) return '';
+        var d = new Date(tanggal + 'T00:00:00');
+        return isNaN(d.getTime()) ? tanggal : d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+      }
+
+      function genioRenderNotifList() {
+        var listEl = document.getElementById('genioNotifList');
+        if (!listEl) return;
+        var footerEl = document.getElementById('genioNotifFooter');
+        var unread = genioNotifItems.filter(function (n) { return !n.read; });
+
+        if (footerEl) {
+          footerEl.style.display = unread.length ? 'flex' : 'none';
+        }
+
+        if (!unread.length) {
+          listEl.innerHTML = '<div class="empty-state" style="padding:22px 10px; text-align:center; color:var(--ink-soft); font-size:12px;">Tidak ada notifikasi.</div>';
+          return;
+        }
+
+        listEl.innerHTML = unread.map(function (n) {
+          return '<div class="genio-notif-item" data-notif-id="' + n.id + '" data-notif-type="' + n.type + '" style="display:flex; align-items:flex-start; gap:10px; padding:10px 2px; border-bottom:1px solid var(--border); cursor:pointer; touch-action:pan-y; transition:transform .25s ease, opacity .25s ease, max-height .25s ease, padding .25s ease; max-height:80px;">' +
+            '<span style="width:30px; height:30px; border-radius:10px; background:' + n.iconBg + '; color:' + n.iconColor + '; display:flex; align-items:center; justify-content:center; flex:none;">' +
+              '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">' + n.icon + '</svg>' +
+            '</span>' +
+            '<div style="min-width:0; flex:1;">' +
+              '<div style="font-size:11.5px; font-weight:600; color:var(--ink); line-height:1.4;">' + genioEscapeHtml(n.title) + '</div>' +
+              '<div style="font-size:10px; color:var(--ink-soft); margin-top:2px;">' + genioFormatNotifDate(n.tanggal) + '</div>' +
+            '</div>' +
+            '<span style="width:7px; height:7px; border-radius:50%; background:var(--ink); flex:none; margin-top:5px;"></span>' +
+          '</div>';
+        }).join('');
+
+        listEl.querySelectorAll('.genio-notif-item').forEach(function (el) {
+          var startX = 0, startY = 0, dx = 0, isDragging = false, hasDragged = false, pointerId = null;
+          var DRAG_THRESHOLD = 8, DISMISS_THRESHOLD = 70;
+
+          function dismiss() {
+            el.style.transition = 'transform .15s ease, opacity .15s ease, max-height .15s ease, padding .15s ease, margin .15s ease';
+            el.style.transform = 'translateX(' + (dx < 0 ? '-100%' : '100%') + ')';
+            el.style.opacity = '0';
+            el.style.maxHeight = '0px';
+            el.style.paddingTop = '0px';
+            el.style.paddingBottom = '0px';
+            el.style.borderBottomWidth = '0px';
+            genioMarkNotifRead(el.dataset.notifId);
+            genioRenderNotifBadge();
+            setTimeout(function () {
+              el.remove();
+              if (!document.querySelector('.genio-notif-item')) genioRenderNotifList();
+            }, 160);
+          }
+
+          el.addEventListener('pointerdown', function (e) {
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            isDragging = false; hasDragged = false; dx = 0;
+            startX = e.clientX; startY = e.clientY; pointerId = e.pointerId;
+          });
+          el.addEventListener('pointermove', function (e) {
+            if (pointerId === null) return;
+            var moveX = e.clientX - startX, moveY = e.clientY - startY;
+            if (!hasDragged && Math.abs(moveX) > DRAG_THRESHOLD && Math.abs(moveX) > Math.abs(moveY)) {
+              isDragging = true; hasDragged = true;
+              try { el.setPointerCapture(pointerId); } catch (_) {}
+              el.style.transition = 'none';
+            }
+            if (isDragging) {
+              if (e.cancelable) e.preventDefault();
+              dx = moveX;
+              el.style.transform = 'translateX(' + dx + 'px)';
+              el.style.opacity = String(Math.max(0.3, 1 - Math.abs(dx) / 200));
+            }
+          });
+          function endDrag() {
+            if (pointerId !== null) { try { el.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+            if (isDragging) {
+              el.style.transition = 'transform .2s ease, opacity .2s ease';
+              if (Math.abs(dx) > DISMISS_THRESHOLD) { dismiss(); }
+              else { el.style.transform = 'translateX(0)'; el.style.opacity = '1'; }
+            }
+            isDragging = false;
+          }
+          el.addEventListener('pointerup', endDrag);
+          el.addEventListener('pointercancel', endDrag);
+
+          el.addEventListener('click', function (e) {
+            if (hasDragged) { e.preventDefault(); e.stopPropagation(); hasDragged = false; return; }
+            genioMarkNotifRead(el.dataset.notifId);
+            genioCloseNotifPanel();
+            var type = el.dataset.notifType;
+            if (type === 'tutor-approval') { showModule('data-tutor'); }
+            else {
+              showModule('presensi');
+              if (window.genioModuleHandlers && window.genioModuleHandlers['presensi-goto']) {
+                window.genioModuleHandlers['presensi-goto'](type === 'presensi-approval' ? 'approval' : 'riwayat');
+              }
+            }
+            genioLoadNotifications();
+          });
+        });
+      }
+
+      function genioOpenNotifPanel() {
+        panel.style.display = 'block';
+        genioRenderNotifList();
+      }
+      function genioCloseNotifPanel() {
+        panel.style.display = 'none';
+      }
+      bellBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (panel.style.display === 'block') genioCloseNotifPanel();
+        else genioOpenNotifPanel();
+      });
+      document.addEventListener('click', function (e) {
+        if (panel.style.display === 'block' && !panel.contains(e.target) && e.target !== bellBtn && !bellBtn.contains(e.target)) {
+          genioCloseNotifPanel();
+        }
+      });
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          genioNotifItems.forEach(function (n) {
+            n.read = true;
+            if (genioSessionHiddenIds.indexOf(n.id) === -1) genioSessionHiddenIds.push(n.id);
+          });
+          genioRenderNotifBadge();
+          genioRenderNotifList();
+          genioToast('Notifikasi sesi ini disembunyikan', 'success');
+        });
+      }
+
+      genioLoadNotifications();
+      setInterval(genioLoadNotifications, 60000);
+    } // tutup genioInitNotifikasi
+    } // tutup initDashboard
+  </script>
+</body>
+</html>

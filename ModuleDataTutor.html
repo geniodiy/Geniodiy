@@ -1,0 +1,1524 @@
+<div class="module-panel" data-module="data-tutor" hidden>
+<style>
+  @media (min-width:900px){
+    .module-panel[data-module="data-tutor"][hidden]{ display:none !important; }
+    .module-panel[data-module="data-tutor"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+    .dt-hero-sec{
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+    }
+    .dt-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
+    .dt-hero-badges{
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+    .dt-hero-badge-pill{
+      font-size: 8.5px !important;
+      padding: 2px 7px !important;
+    }
+    .dt-hero-unit-badge{
+      font-size: 9px !important;
+      padding: 2px 7px !important;
+    }
+    .dt-hero-sublabel{
+      display: none !important;
+    }
+    .dt-hero-counter{
+      margin-top: 0 !important;
+    }
+    .dt-hero-num-wrap{
+      display: flex !important;
+      align-items: baseline !important;
+      gap: 6px !important;
+      margin-top: 0 !important;
+    }
+    .dt-hero-num{
+      font-size: 18px !important;
+      line-height: 1.1 !important;
+    }
+    .dt-hero-unit{
+      font-size: 10.5px !important;
+    }
+    .dt-hero-stats-row{
+      flex: none !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 16px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+    }
+    .dt-hero-stat-card{
+      flex: none !important;
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+      min-width: 0 !important;
+    }
+    #dt-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+    #dt-list.dt-view-table{ display:block !important; width:100% !important; max-width:100% !important; min-width:0 !important; box-sizing:border-box !important; }
+    #dt-list > .dt-card{ margin-bottom:0 !important; }
+    #dt-list > .dt-full-width{ grid-column:1/-1; }
+
+    #dt-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:12px; }
+    #dt-toolbarRow .dt-dock-sec{ flex:none; width:280px !important; margin-bottom:0 !important; }
+    #dt-toolbarRow .dt-search-sec{ flex:1; min-width:0; margin-bottom:0 !important; display:flex; align-items:center; gap:8px; }
+
+    #dt-pendaftaranList{ display:flex; flex-direction:column; gap:10px; }
+  }
+
+  /* Table View Styles */
+  #dt-list.dt-view-table{
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .dt-table-card{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+    margin-bottom: 12px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .dt-table-wrap{
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box !important;
+  }
+  .dt-table{
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: var(--font);
+    font-size: 11.5px;
+    box-sizing: border-box !important;
+  }
+  .dt-table th{
+    padding: 6px 8px;
+    background: rgba(0,0,0,.025);
+    border-bottom: 1px solid var(--border);
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: .02em;
+    white-space: nowrap;
+    vertical-align: middle !important;
+  }
+  .dt-table th.dt-sort-th{
+    cursor: pointer;
+    user-select: none;
+    transition: color .15s ease, background .15s ease;
+  }
+  .dt-table th.dt-sort-th:hover{
+    color: var(--ink);
+    background: rgba(0,0,0,.04);
+  }
+  .dt-table td{
+    padding: 5px 8px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    color: var(--ink);
+    vertical-align: middle !important;
+    font-size: 11.5px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+  .dt-table tbody tr:last-child td{
+    border-bottom: none;
+  }
+  .dt-table tbody tr{
+    transition: background .12s ease;
+  }
+  .dt-table tbody tr:hover{
+    background: rgba(0,122,255,.03);
+  }
+  .dt-table-icon-btn{
+    width: 24px !important;
+    height: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    flex: none;
+    background: var(--surface) !important;
+    color: var(--ink-soft) !important;
+    border: 1px solid var(--border) !important;
+    box-sizing: border-box !important;
+    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    text-decoration: none;
+  }
+  .dt-table-icon-btn:hover{
+    background: #fff !important;
+    color: var(--ink) !important;
+    border-color: rgba(20, 22, 43, 0.22) !important;
+  }
+  .dt-table-icon-btn.dt-del-btn:hover{
+    color: #ff3b30 !important;
+    border-color: rgba(255, 59, 48, 0.3) !important;
+  }
+  .dt-table-icon-btn:active{
+    transform: scale(.9);
+  }
+  @keyframes dtPop{
+    0% { transform: scale(1); }
+    35% { transform: scale(1.18); }
+    100% { transform: scale(1); }
+  }
+  .dt-btn-pop{
+    animation: dtPop .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #dt-viewToggleBtn:active{
+    transform: scale(.9);
+  }
+
+  .dt-dock{
+    position:relative; display:flex; align-items:center; height:38px;
+    background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px;
+    margin-bottom:12px; touch-action:none; -webkit-user-select:none; user-select:none;
+    box-sizing:border-box;
+  }
+  .dt-dock-glider{
+    position:absolute; top:3px; bottom:3px; border-radius:8px; background:#fff;
+    border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08);
+    transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1);
+    z-index:1; pointer-events:none;
+  }
+  .dt-dock-btn{
+    position:relative; z-index:2; flex:1; height:32px; display:flex; align-items:center; justify-content:center; gap:6px;
+    background:none; border:none; cursor:pointer; padding:0 8px; font-size:11.5px; font-family:var(--font);
+    color:var(--ink-soft); font-weight:700; transition:color .18s ease; white-space:nowrap;
+  }
+  .dt-dock-btn.dt-dock-active{ color:var(--ink); font-weight:800; }
+
+  .dt-gender-badge{ width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9.5px; font-weight:800; color:#fff; flex:none; }
+  .dt-mapel-badge{ background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+
+  .dt-wrap{ max-height:0; opacity:0; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease; }
+  .dt-toggle-icon{ transition:transform .25s ease; }
+
+  #dt-modal, #dt-confirmModal, #dt-filterModal, #dt-pickerModal, #dt-pendaftaranModal{
+    align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    opacity:0; transition:opacity .28s ease;
+  }
+  #dt-modal.show, #dt-confirmModal.show, #dt-filterModal.show, #dt-pickerModal.show, #dt-pendaftaranModal.show{ opacity:1; }
+  #dt-modal .modal-sheet, #dt-confirmModal .modal-sheet, #dt-filterModal .modal-sheet, #dt-pickerModal .modal-sheet, #dt-pendaftaranModal .modal-sheet{
+    border-radius:16px; width:100%; max-width:400px; margin:0 auto; max-height:88vh; overflow-y:auto; padding:16px 18px 18px; box-sizing:border-box;
+    transform:scale(.88) translateY(10px); transition:transform .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #dt-pendaftaranModal .modal-sheet{ max-width:480px; }
+  #dt-modal.show .modal-sheet, #dt-confirmModal.show .modal-sheet, #dt-filterModal.show .modal-sheet, #dt-pickerModal.show .modal-sheet, #dt-pendaftaranModal.show .modal-sheet{ transform:scale(1) translateY(0); }
+
+  #dt-modal .modal-actions .btn, #dt-confirmModal .modal-actions .btn, #dt-filterModal .modal-actions .btn, #dt-pickerModal .modal-actions .btn, #dt-pendaftaranModal .modal-actions .btn{
+    height: 36px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 9px !important;
+    padding: 0 16px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
+  }
+
+  .dt-group-title{ font-size:10px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
+  .dt-group-title:first-of-type{ margin-top:0; }
+  .dt-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .dt-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
+  .dt-row:last-child{ border-bottom:none; }
+  .dt-row label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:2px; }
+  .dt-row input, .dt-row select{
+    width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
+    background:none; color:var(--ink); outline:none;
+  }
+  .dt-opt-row{ display:flex; gap:6px; }
+  .dt-opt{
+    flex:1; text-align:center; padding:7px 4px; border-radius:8px;
+    border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;
+  }
+  .dt-opt input{ display:none; }
+
+  /* Hero Data Tutor */
+  .dt-hero-sec{
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .dt-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .dt-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .dt-hero-badge-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .dt-hero-unit-badge{
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .dt-hero-sublabel{
+    font-size: 10.5px;
+    opacity: .65;
+    margin-top: 8px;
+  }
+  .dt-hero-num-wrap{
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .dt-hero-num{
+    font-size: 21px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .dt-hero-unit{
+    font-size: 11.5px;
+    opacity: .6;
+    font-weight: 600;
+  }
+  .dt-hero-stats-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.14);
+  }
+  .dt-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 10px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dt-hero-stat-label{
+    font-size: 9.5px;
+    opacity: .65;
+  }
+  .dt-hero-stat-val{
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: 1px;
+  }
+</style>
+
+  <!-- Hero -->
+  <div class="dt-hero-sec">
+    <div class="dt-hero-main-col">
+      <div class="dt-hero-badges">
+        <span class="dt-hero-badge-pill">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+          MANAJEMEN TUTOR PENGAJAR
+        </span>
+        <span class="dt-hero-unit-badge" id="dt-heroUnitBadge">-</span>
+      </div>
+      <div class="dt-hero-counter">
+        <div class="dt-hero-sublabel">Total Pengajar Terdaftar</div>
+        <div class="dt-hero-num-wrap">
+          <span class="dt-hero-num" id="dt-heroTotal">0</span>
+          <span class="dt-hero-unit">Tutor Aktif</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dt-hero-stats-row">
+      <div class="dt-hero-stat-card">
+        <span class="dt-gender-badge" style="width:22px; height:22px; font-size:10px; background:var(--blue);">L</span>
+        <div style="min-width:0;">
+          <div class="dt-hero-stat-label">Laki-laki (L)</div>
+          <div class="dt-hero-stat-val" id="dt-heroL">0 Pengajar</div>
+        </div>
+      </div>
+      <div class="dt-hero-stat-card">
+        <span class="dt-gender-badge" style="width:22px; height:22px; font-size:10px; background:#d6285c;">P</span>
+        <div style="min-width:0;">
+          <div class="dt-hero-stat-label">Perempuan (P)</div>
+          <div class="dt-hero-stat-val" id="dt-heroP">0 Pengajar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner Pendaftaran Tutor Web (membuka popup saat tombol Tinjau diklik) -->
+  <div class="card" style="padding:10px 14px; margin-bottom:12px; border-radius:12px;">
+    <div style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+      <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+        <span style="width:7px; height:7px; border-radius:50%; background:#ff9500; flex:none;"></span>
+        <div style="min-width:0;">
+          <div style="font-size:12px; font-weight:800; color:#1c1c1e;">Pendaftaran Tutor Web</div>
+          <div style="font-size:10px; color:#8e8e93; margin-top:1px;">Tinjau calon tutor baru yang mendaftar online</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; flex:none;">
+        <span id="dt-pendingBadge" style="background:rgba(255,149,0,.14); color:#c06400; font-size:10px; font-weight:800; padding:0 8px; height:24px; box-sizing:border-box; border-radius:999px; white-space:nowrap; display:flex; align-items:center;">0 Calon Pendaftar</span>
+        <button type="button" id="dt-pendaftaranToggle" style="background:#1c1c1e; color:#fff; font-size:10.5px; font-weight:700; padding:0 12px; height:26px; box-sizing:border-box; border-radius:999px; border:none; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:var(--font); transition:transform .12s ease;">
+          Tinjau
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Popup Pendaftaran Tutor Web -->
+  <div class="modal-overlay" id="dt-pendaftaranModal" hidden>
+    <div class="modal-sheet" style="max-width:480px;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px;">
+        <div>
+          <h3 style="font-size:13.5px; font-weight:700; margin:0 0 2px;">Pendaftaran Tutor Web</h3>
+          <p id="dt-pendaftaranModalSub" style="font-size:11px; color:var(--ink-soft); margin:0;">0 calon pendaftar menunggu verifikasi</p>
+        </div>
+        <button type="button" id="dt-pendaftaranModalCloseIcon" aria-label="Tutup" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:2px; display:inline-flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div id="dt-pendaftaranList" style="max-height:65vh; overflow-y:auto; padding-right:2px;"></div>
+
+      <div class="modal-actions" style="margin-top:12px;">
+        <button type="button" class="btn btn-outline" id="dt-pendaftaranModalCloseBtn" style="height:36px; font-size:12px; border-radius:9px; width:100%;">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab switcher -->
+  <div class="dt-dock dt-dock-sec" id="dt-dock">
+    <div class="dt-dock-glider" id="dt-dockGlider"></div>
+    <button class="dt-dock-btn dt-tab-btn dt-dock-active" data-tab="aktif">
+      <span>Tutor Aktif</span>
+      <span id="dt-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+    </button>
+    <button class="dt-dock-btn dt-tab-btn" data-tab="nonaktif">
+      <span>Tutor Nonaktif</span>
+      <span id="dt-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+    </button>
+  </div>
+
+  <div id="dt-desktopAnchor"></div>
+
+  <!-- Search + Filter -->
+  <div class="dt-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
+    <div style="flex:1; position:relative;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="dt-searchInput" placeholder="Cari nama tutor, mapel, pendidikan, rekening..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+    </div>
+    <button id="dt-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      <span id="dt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:800; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
+    </button>
+    <button id="dt-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+    </button>
+  </div>
+
+  <div id="dt-list">
+    <div class="empty-state">Memuat data tutor...</div>
+  </div>
+
+  <!-- Modal Edit Tutor -->
+  <div class="modal-overlay" id="dt-modal" hidden>
+    <div class="modal-sheet">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Edit Tutor</h3>
+      <div id="dt-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
+      <input type="hidden" id="dt-editId">
+
+      <div class="dt-group-title">Status</div>
+      <div class="dt-opt-row" id="dt-statusOpts" style="margin-bottom:4px;">
+        <label class="dt-opt" data-val="aktif"><input type="radio" name="dt-status" value="aktif">Aktif</label>
+        <label class="dt-opt" data-val="nonaktif"><input type="radio" name="dt-status" value="nonaktif">Nonaktif</label>
+      </div>
+
+      <div class="dt-group-title">Data Diri</div>
+      <div class="dt-group" style="margin-bottom:4px;">
+        <div class="dt-row"><label for="dt-nama">Nama Lengkap</label><input type="text" id="dt-nama"></div>
+        <div class="dt-row"><label for="dt-email">Email</label><input type="email" id="dt-email"></div>
+        <div class="dt-row"><label for="dt-noWa">Nomor WhatsApp</label><input type="tel" id="dt-noWa"></div>
+      </div>
+
+      <div class="dt-group-title">Jenis Kelamin</div>
+      <div class="dt-opt-row" id="dt-genderOpts" style="margin-bottom:4px;">
+        <label class="dt-opt" data-val="L"><input type="radio" name="dt-gender" value="L">Laki-laki</label>
+        <label class="dt-opt" data-val="P"><input type="radio" name="dt-gender" value="P">Perempuan</label>
+      </div>
+
+      <div class="dt-group-title">Keahlian &amp; Pendidikan</div>
+      <div class="dt-group" style="margin-bottom:4px;">
+        <div class="dt-row"><label for="dt-keahlian">Keahlian / Mapel (pisahkan koma)</label><input type="text" id="dt-keahlian" placeholder="mis. Matematika Saintek, Fisika UTBK"></div>
+        <div class="dt-row"><label for="dt-pendidikan">Pendidikan Terakhir</label><input type="text" id="dt-pendidikan" placeholder="mis. S1 Pendidikan Matematika - UNJ"></div>
+      </div>
+
+      <div class="dt-group-title">Rekening</div>
+      <div class="dt-group" style="margin-bottom:4px;">
+        <div class="dt-row"><label for="dt-namaBank">Nama Bank</label><input type="text" id="dt-namaBank" placeholder="mis. BCA"></div>
+        <div class="dt-row"><label for="dt-noRekening">Nomor Rekening</label><input type="text" id="dt-noRekening"></div>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="dt-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="dt-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Filter -->
+  <div class="modal-overlay" id="dt-filterModal" hidden>
+    <div class="modal-sheet">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Filter</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar tutor berdasarkan mapel atau jenis kelamin.</p>
+
+      <div class="dt-group-title">Mapel</div>
+      <div class="dt-group" style="margin-bottom:4px;">
+        <button type="button" class="dt-filter-row-btn" data-picker="mapel" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="dt-filterMapelSummary">Semua Mapel</span>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="dt-group-title">Jenis Kelamin</div>
+      <div class="dt-group">
+        <button type="button" class="dt-filter-row-btn" data-picker="gender" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="dt-filterGenderSummary">Semua</span>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="dt-filterResetBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Reset</button>
+        <button type="button" class="btn btn-primary" id="dt-filterApplyBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Terapkan Filter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Picker (dengan search bar) -->
+  <div class="modal-overlay" id="dt-pickerModal" hidden style="z-index:70;">
+    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
+      <h3 id="dt-pickerTitle" style="font-size:13.5px; font-weight:700; margin:0 0 10px;">Pilih</h3>
+      <div id="dt-pickerList" style="margin-bottom:6px;"></div>
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
+        <button type="button" class="btn btn-outline" id="dt-pickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="dt-pickerDoneBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Selesai</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi -->
+  <div class="modal-overlay" id="dt-confirmModal" hidden>
+    <div class="modal-sheet" style="max-width:360px;">
+      <div id="dt-confirmIconWrap" style="width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;"></div>
+      <h3 style="text-align:center; font-size:13.5px; font-weight:700; margin:0 0 4px;" id="dt-confirmTitle">Yakin?</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;" id="dt-confirmDesc">-</p>
+      <div class="modal-actions" style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-outline" id="dt-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="dt-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Ya</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['data-tutor'] = function () { dtInit(); };
+
+  var dtState = {
+    tab: 'aktif',
+    tutorList: [],
+    pendingList: [],
+    search: '',
+    openCard: null,
+    pendaftaranOpen: false,
+    initialized: false,
+    filterMapel: [],
+    filterGender: '',
+    sortField: 'nama',
+    sortDir: 'asc',
+    viewMode: (function () {
+      try {
+        var saved = localStorage.getItem('genio_dt_view_mode');
+        if (saved === 'cards' || saved === 'table') return saved;
+      } catch (e) {}
+      var isDesktop = window.matchMedia && window.matchMedia('(min-width: 900px)').matches;
+      return isDesktop ? 'table' : 'cards';
+    })()
+  };
+
+  function dtEscape(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+  function dtRelativeTime(iso) {
+    var diffMin = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (diffMin < 1) return 'Baru saja';
+    if (diffMin < 60) return diffMin + ' Menit lalu';
+    var diffHour = Math.floor(diffMin / 60);
+    if (diffHour < 24) return diffHour + ' Jam lalu';
+    return Math.floor(diffHour / 24) + ' Hari lalu';
+  }
+  function dtGenderBadge(g, size) {
+    size = size || 20;
+    var bg = g === 'P' ? '#d6285c' : 'var(--blue)';
+    return '<span class="dt-gender-badge" style="width:' + size + 'px; height:' + size + 'px; font-size:' + Math.round(size * 0.5) + 'px; background:' + bg + ';">' + (g || '-') + '</span>';
+  }
+  function dtMapelBadges(keahlian) {
+    if (!keahlian || !keahlian.length) return '';
+    return keahlian.map(function (k) { return '<span class="dt-mapel-badge">' + dtEscape(k) + '</span>'; }).join('');
+  }
+
+  function dtInit() {
+    if (!dtState.initialized) {
+      dtState.initialized = true;
+      initDtTabScrubbing();
+      setTimeout(dtUpdateDockGlider, 50);
+      window.addEventListener('resize', dtUpdateDockGlider);
+
+      document.getElementById('dt-searchInput').addEventListener('input', function (e) {
+        dtState.search = e.target.value.toLowerCase();
+        dtRenderList();
+      });
+      var pendaftaranToggle = document.getElementById('dt-pendaftaranToggle');
+      if (pendaftaranToggle) pendaftaranToggle.addEventListener('click', dtOpenPendaftaranModal);
+      var pendaftaranCloseBtn = document.getElementById('dt-pendaftaranModalCloseBtn');
+      if (pendaftaranCloseBtn) pendaftaranCloseBtn.addEventListener('click', dtClosePendaftaranModal);
+      var pendaftaranCloseIcon = document.getElementById('dt-pendaftaranModalCloseIcon');
+      if (pendaftaranCloseIcon) pendaftaranCloseIcon.addEventListener('click', dtClosePendaftaranModal);
+      document.getElementById('dt-filterBtn').addEventListener('click', dtOpenFilterModal);
+      var viewToggleBtn = document.getElementById('dt-viewToggleBtn');
+      if (viewToggleBtn) viewToggleBtn.addEventListener('click', dtToggleViewMode);
+      document.getElementById('dt-cancelBtn').addEventListener('click', dtCloseModal);
+      document.getElementById('dt-saveBtn').addEventListener('click', dtSubmitEdit);
+      document.getElementById('dt-confirmCancelBtn').addEventListener('click', dtCloseConfirm);
+
+      document.querySelectorAll('.dt-opt').forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          var group = opt.closest('.dt-opt-row');
+          group.querySelectorAll('.dt-opt').forEach(function (o) {
+            o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
+          });
+          var c = DT_OPT_COLORS[opt.dataset.val] || { bg: 'var(--blue-tint)', fg: 'var(--blue)', border: 'var(--blue)' };
+          opt.style.background = c.bg; opt.style.color = c.fg; opt.style.borderColor = c.border;
+          opt.querySelector('input').checked = true;
+        });
+      });
+
+      document.querySelectorAll('#dt-modal input').forEach(function (el) {
+        el.addEventListener('focus', function () {
+          setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+        });
+      });
+
+      dtApplyResponsiveLayout();
+      var dtLayoutResizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(dtLayoutResizeTimer);
+        dtLayoutResizeTimer = setTimeout(dtApplyResponsiveLayout, 150);
+      });
+    }
+    dtLoadAll();
+  }
+
+  var DT_MOBILE_ORDER = ['.dt-dock-sec', '.dt-search-sec'];
+  function dtApplyResponsiveLayout() {
+    var anchor = document.getElementById('dt-desktopAnchor');
+    if (!anchor) return;
+    var isDesktop = window.matchMedia('(min-width:900px)').matches;
+    var toolbarRow = document.getElementById('dt-toolbarRow');
+    if (isDesktop) {
+      if (!toolbarRow) {
+        toolbarRow = document.createElement('div');
+        toolbarRow.id = 'dt-toolbarRow';
+        anchor.parentNode.insertBefore(toolbarRow, anchor.nextSibling);
+      }
+      var dockEl = document.querySelector('.dt-dock-sec');
+      if (dockEl) toolbarRow.appendChild(dockEl);
+      var searchEl = document.querySelector('.dt-search-sec');
+      if (searchEl) toolbarRow.appendChild(searchEl);
+    } else if (toolbarRow) {
+      var cursor = anchor;
+      DT_MOBILE_ORDER.forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (el) { cursor.parentNode.insertBefore(el, cursor.nextSibling); cursor = el; }
+      });
+      toolbarRow.remove();
+    }
+    setTimeout(dtUpdateDockGlider, 60);
+  }
+
+  function dtSwitchTab(tab) {
+    dtState.tab = tab;
+    document.querySelectorAll('.dt-dock-btn').forEach(function (b) { b.classList.toggle('dt-dock-active', b.dataset.tab === tab); });
+    dtUpdateDockGlider();
+    dtRenderList();
+  }
+  function dtUpdateDockGlider() {
+    var activeBtn = document.querySelector('.dt-dock-btn.dt-dock-active');
+    var glider = document.getElementById('dt-dockGlider');
+    if (!activeBtn || !glider) return;
+    glider.style.left = activeBtn.offsetLeft + 'px';
+    glider.style.width = activeBtn.offsetWidth + 'px';
+  }
+  function initDtTabScrubbing() {
+    var dock = document.getElementById('dt-dock');
+    var glider = document.getElementById('dt-dockGlider');
+    if (!dock || !glider) return;
+    var TABS = ['aktif', 'nonaktif'];
+    var isPointerDown = false, isDragging = false, hasDragged = false, suppressClick = false;
+    var startX = 0, startY = 0, pointerId = null;
+    var cachedLeft = 0, cachedWidth = 0, cachedGliderWidth = 0, targetTab = dtState.tab;
+    var DRAG_THRESHOLD = 8;
+
+    dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    dock.addEventListener('click', function (e) { if (suppressClick) { e.stopPropagation(); e.preventDefault(); } }, true);
+    dock.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
+      pointerId = e.pointerId; startX = e.clientX; startY = e.clientY;
+      var rect = dock.getBoundingClientRect();
+      cachedLeft = rect.left; cachedWidth = rect.width;
+      cachedGliderWidth = glider.offsetWidth || (rect.width / TABS.length);
+      targetTab = dtState.tab;
+    });
+    dock.addEventListener('pointermove', function (e) {
+      if (!isPointerDown) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!hasDragged && Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+        isDragging = true; hasDragged = true; suppressClick = true;
+        try { dock.setPointerCapture(pointerId); } catch (_) {}
+      }
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        var relX = e.clientX - cachedLeft;
+        var clampedPx = Math.max(0, Math.min(cachedWidth - cachedGliderWidth, relX - cachedGliderWidth / 2));
+        glider.style.transition = 'none';
+        glider.style.left = clampedPx + 'px';
+        var ratio = Math.max(0, Math.min(0.999, relX / cachedWidth));
+        var newIdx = Math.min(TABS.length - 1, Math.max(0, Math.floor(ratio * TABS.length)));
+        targetTab = TABS[newIdx];
+        document.querySelectorAll('.dt-dock-btn').forEach(function (b) { b.classList.toggle('dt-dock-active', b.dataset.tab === targetTab); });
+      }
+    });
+    function endScrub() {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      glider.style.transition = '';
+      if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+      if (hasDragged) { isDragging = false; dtSwitchTab(targetTab); setTimeout(function () { suppressClick = false; }, 80); }
+      else suppressClick = false;
+    }
+    dock.addEventListener('pointerup', endScrub);
+    dock.addEventListener('pointercancel', function () { endScrub(); });
+    document.querySelectorAll('.dt-tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { if (!hasDragged) dtSwitchTab(btn.dataset.tab); });
+    });
+  }
+
+  async function dtLoadAll() {
+    var listEl = document.getElementById('dt-list');
+    try {
+      var s = genioGetSession();
+      var rows = await supaRest('users?role=eq.tutor&select=id,nama,email,status,jenis_kelamin,no_hp,foto_profil_url,created_at,tutor_profile(keahlian,pendidikan_terakhir,no_wa,no_rekening,nama_bank)&order=nama.asc', s.access_token);
+
+      dtState.pendingList = rows.filter(function (u) { return u.status === 'pending_approval'; });
+      dtState.tutorList = rows.filter(function (u) { return u.status !== 'pending_approval'; });
+
+      var aktifCount = dtState.tutorList.filter(function (u) { return u.status === 'aktif'; }).length;
+      var nonaktifCount = dtState.tutorList.length - aktifCount;
+      var lCount = dtState.tutorList.filter(function (u) { return u.jenis_kelamin === 'L'; }).length;
+      var pCount = dtState.tutorList.filter(function (u) { return u.jenis_kelamin === 'P'; }).length;
+
+      document.getElementById('dt-heroTotal').textContent = aktifCount;
+      document.getElementById('dt-heroL').textContent = lCount + ' Pengajar';
+      document.getElementById('dt-heroP').textContent = pCount + ' Pengajar';
+      document.getElementById('dt-aktifCount').textContent = aktifCount;
+      document.getElementById('dt-nonaktifCount').textContent = nonaktifCount;
+      document.getElementById('dt-pendingBadge').textContent = dtState.pendingList.length + ' Calon Pendaftar';
+
+      try {
+        var unitRows = await supaRest('units?select=id', s.access_token);
+        document.getElementById('dt-heroUnitBadge').textContent = unitRows.length + ' Unit Cabang';
+      } catch (e2) {}
+
+      dtRenderPendaftaranList();
+      dtRenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + dtEscape(err.message) + '</div>';
+    }
+  }
+
+  /* ===== Modal Popup Pendaftaran Tutor Web ===== */
+  var dtPendaftaranModal = document.getElementById('dt-pendaftaranModal');
+  function dtOpenPendaftaranModal() {
+    dtRenderPendaftaranList();
+    if (!dtPendaftaranModal) dtPendaftaranModal = document.getElementById('dt-pendaftaranModal');
+    if (!dtPendaftaranModal) return;
+    dtPendaftaranModal.hidden = false;
+    requestAnimationFrame(function () { dtPendaftaranModal.classList.add('show'); });
+  }
+  function dtClosePendaftaranModal() {
+    if (!dtPendaftaranModal) dtPendaftaranModal = document.getElementById('dt-pendaftaranModal');
+    if (!dtPendaftaranModal) return;
+    dtPendaftaranModal.classList.remove('show');
+    setTimeout(function () { dtPendaftaranModal.hidden = true; }, 280);
+  }
+
+  function dtRenderPendaftaranList() {
+    var listEl = document.getElementById('dt-pendaftaranList');
+    var subEl = document.getElementById('dt-pendaftaranModalSub');
+    if (subEl) subEl.textContent = dtState.pendingList.length + ' calon pendaftar menunggu verifikasi';
+    if (!listEl) return;
+    if (!dtState.pendingList.length) {
+      listEl.innerHTML = '<div style="padding:32px 14px; text-align:center;">' +
+        '<div style="width:42px; height:42px; border-radius:50%; background:rgba(52,199,89,.12); color:#34c759; display:inline-flex; align-items:center; justify-content:center; margin:0 auto 10px;">' +
+          '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</div>' +
+        '<div style="font-size:13px; font-weight:700; color:var(--ink);">Semua Beres!</div>' +
+        '<p style="font-size:11px; color:var(--ink-soft); margin:4px 0 0;">Tidak ada calon pendaftar yang menunggu verifikasi.</p>' +
+      '</div>';
+      return;
+    }
+    listEl.innerHTML = dtState.pendingList.map(function (u) {
+      var tp = u.tutor_profile || {};
+      var mapelPills = (tp.keahlian && tp.keahlian.length)
+        ? '<div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">' +
+            tp.keahlian.map(function (k) {
+              return '<span style="display:inline-flex; align-items:center; background:#fff; border:1px solid var(--border); border-radius:5px; padding:2px 6px; font-size:10.5px; color:var(--ink); font-weight:400;">' + dtEscape(k) + '</span>';
+            }).join('') +
+          '</div>'
+        : '';
+
+      var waNumber = (tp.no_wa || u.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
+      var waLink = waNumber ? ('https://wa.me/' + waNumber) : '';
+
+      return '<div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:10px;">' +
+        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
+          '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
+            (u.foto_profil_url
+              ? '<img src="' + u.foto_profil_url + '" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex:none;">'
+              : '<div style="width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>') +
+            '<div style="min-width:0;">' +
+              '<div style="display:flex; align-items:center; gap:6px;"><span style="font-size:12.5px; font-weight:800; color:#1c1c1e;">' + dtEscape(u.nama) + '</span>' + dtGenderBadge(u.jenis_kelamin, 16) + '</div>' +
+              (u.email ? '<div style="font-size:10.5px; color:var(--ink-soft);">' + dtEscape(u.email) + '</div>' : '') +
+            '</div>' +
+          '</div>' +
+          '<span style="font-size:10px; color:#8e8e93; flex:none;">' + dtRelativeTime(u.created_at) + '</span>' +
+        '</div>' +
+        mapelPills +
+        '<div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-top:8px;">' +
+          '<div style="font-size:10.5px; color:var(--ink-soft);">Pendidikan: <span style="font-weight:600; color:var(--ink);">' + dtEscape(tp.pendidikan_terakhir || '-') + '</span></div>' +
+          '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">WhatsApp: <span style="font-weight:600; color:var(--ink);">' + dtEscape(tp.no_wa || u.no_hp || '-') + '</span>' +
+            (waLink ? ' <a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="color:#25D366; text-decoration:none; font-weight:700; margin-left:4px;">(Chat WA)</a>' : '') +
+          '</div>' +
+          (tp.no_rekening ? '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">Rekening: <span style="font-weight:600; color:var(--ink);">' + dtEscape(tp.nama_bank || '') + ' • ' + dtEscape(tp.no_rekening) + '</span></div>' : '') +
+        '</div>' +
+        '<div style="display:flex; gap:8px; margin-top:10px;">' +
+          '<button type="button" class="dt-reject-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" style="flex:1; height:32px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:8px; border:none; font-size:11.5px; font-weight:700; cursor:pointer; background:rgba(255,59,48,.12); color:#ff3b30; font-family:var(--font); transition:transform .1s ease;">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+            'Tolak' +
+          '</button>' +
+          '<button type="button" class="dt-approve-btn" data-id="' + u.id + '" style="flex:1; height:32px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:8px; border:none; font-size:11.5px; font-weight:700; cursor:pointer; background:rgba(52,199,89,.14); color:#28a745; font-family:var(--font); transition:transform .1s ease;">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+            'Terima' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    listEl.querySelectorAll('.dt-approve-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { dtApprove(btn.dataset.id); });
+    });
+    listEl.querySelectorAll('.dt-reject-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        dtOpenConfirm('Tolak Pendaftaran Ini?', btn.dataset.nama + ' akan dihapus permanen dari sistem.', 'Ya, Tolak', '#ff3b30', function () { dtReject(btn.dataset.id); });
+      });
+    });
+  }
+
+  async function dtApprove(id) {
+    try {
+      var s = genioGetSession();
+      await supaRest('users?id=eq.' + id, s.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ status: 'aktif' }) });
+      genioToast('Pendaftaran tutor disetujui', 'success');
+      dtLoadAll();
+    } catch (err) { genioToast('Gagal menyetujui: ' + err.message, 'error'); }
+  }
+  async function dtReject(id) {
+    try {
+      var s = genioGetSession();
+      await supaRest('users?id=eq.' + id, s.access_token, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+      genioToast('Pendaftaran berhasil ditolak', 'success');
+      dtLoadAll();
+    } catch (err) { genioToast('Gagal menolak: ' + err.message, 'error'); }
+  }
+
+  /* ===== Daftar Tutor (Aktif/Nonaktif) ===== */
+  function dtMatchesSearch(u) {
+    if (!dtState.search) return true;
+    var q = dtState.search;
+    var tp = u.tutor_profile || {};
+    if ((u.nama || '').toLowerCase().indexOf(q) !== -1) return true;
+    if ((tp.pendidikan_terakhir || '').toLowerCase().indexOf(q) !== -1) return true;
+    if ((tp.no_rekening || '').toLowerCase().indexOf(q) !== -1) return true;
+    return (tp.keahlian || []).some(function (k) { return k.toLowerCase().indexOf(q) !== -1; });
+  }
+
+  function dtMatchesFilters(u) {
+    var tp = u.tutor_profile || {};
+    if (dtState.filterGender && u.jenis_kelamin !== dtState.filterGender) return false;
+    if (dtState.filterMapel.length) {
+      var keahlian = tp.keahlian || [];
+      if (!dtState.filterMapel.some(function (m) { return keahlian.indexOf(m) !== -1; })) return false;
+    }
+    return true;
+  }
+
+  function dtUpdateViewToggleUI() {
+    var btn = document.getElementById('dt-viewToggleBtn');
+    if (!btn) return;
+    var isTable = dtState.viewMode === 'table';
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color = 'var(--ink)';
+    btn.style.background = '#fff';
+    if (isTable) {
+      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Kartu');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
+    } else {
+      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Tabel');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+    }
+  }
+
+  function dtToggleViewMode() {
+    var btn = document.getElementById('dt-viewToggleBtn');
+    if (btn) {
+      btn.classList.remove('dt-btn-pop');
+      void btn.offsetWidth;
+      btn.classList.add('dt-btn-pop');
+    }
+    dtState.viewMode = (dtState.viewMode === 'table') ? 'cards' : 'table';
+    try {
+      localStorage.setItem('genio_dt_view_mode', dtState.viewMode);
+    } catch (e) {}
+    dtRenderList();
+  }
+
+  function dtGetSortIcon(field) {
+    if (dtState.sortField === field) {
+      if (dtState.sortDir === 'asc') {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+      } else {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
+      }
+    }
+    return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; opacity:.2; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+  }
+
+  function dtSortRows(rows) {
+    var field = dtState.sortField || 'nama';
+    var dir = dtState.sortDir || 'asc';
+    var sorted = rows.slice();
+    sorted.sort(function (a, b) {
+      if (field === 'gender') {
+        var gA = (a.jenis_kelamin || '').toLowerCase();
+        var gB = (b.jenis_kelamin || '').toLowerCase();
+        if (gA < gB) return dir === 'asc' ? -1 : 1;
+        if (gA > gB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      if (field === 'pendidikan') {
+        var pA = ((a.tutor_profile && a.tutor_profile.pendidikan_terakhir) || '').toLowerCase();
+        var pB = ((b.tutor_profile && b.tutor_profile.pendidikan_terakhir) || '').toLowerCase();
+        if (pA < pB) return dir === 'asc' ? -1 : 1;
+        if (pA > pB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      if (field === 'status') {
+        var sA = (a.status || '').toLowerCase();
+        var sB = (b.status || '').toLowerCase();
+        if (sA < sB) return dir === 'asc' ? -1 : 1;
+        if (sA > sB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      var nA = (a.nama || '').toLowerCase();
+      var nB = (b.nama || '').toLowerCase();
+      if (nA < nB) return dir === 'asc' ? -1 : 1;
+      if (nA > nB) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+    return sorted;
+  }
+
+  function dtBindTableEvents() {
+    document.querySelectorAll('.dt-sort-th').forEach(function (th) {
+      th.addEventListener('click', function () {
+        var field = th.dataset.sort;
+        if (dtState.sortField === field) {
+          dtState.sortDir = (dtState.sortDir === 'asc') ? 'desc' : 'asc';
+        } else {
+          dtState.sortField = field;
+          dtState.sortDir = 'asc';
+        }
+        dtRenderList();
+      });
+    });
+    document.querySelectorAll('.dt-table-edit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        dtOpenModal(btn.dataset.id);
+      });
+    });
+    document.querySelectorAll('.dt-table-del-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        dtOpenConfirm('Hapus Tutor Ini?', btn.dataset.nama + ' akan dihapus permanen. Tutor yang sudah punya riwayat kontrak/presensi tidak bisa dihapus.', 'Ya, Hapus', '#ff3b30', function () {
+          dtDelete(btn.dataset.id);
+        });
+      });
+    });
+  }
+
+  function dtRenderTable(rows) {
+    var sortedRows = dtSortRows(rows);
+    var trs = sortedRows.map(function (u, idx) {
+      var tp = u.tutor_profile || {};
+      var isAktif = u.status === 'aktif';
+      var statusBadge = isAktif
+        ? '<span style="display:inline-flex; align-items:center; background:rgba(52,199,89,.12); color:#28a745; height:18px; font-size:9px; font-weight:600; padding:0 6px; border-radius:999px;"><span style="width:5px; height:5px; border-radius:50%; background:#34c759; display:inline-block; flex:none; margin-right:3.5px;"></span>Aktif</span>'
+        : '<span style="display:inline-flex; align-items:center; background:rgba(255,59,48,.1); color:#ff3b30; height:18px; font-size:9px; font-weight:600; padding:0 6px; border-radius:999px;"><span style="width:5px; height:5px; border-radius:50%; background:#ff3b30; display:inline-block; flex:none; margin-right:3.5px;"></span>Nonaktif</span>';
+
+      var avatar = u.foto_profil_url
+        ? '<img src="' + u.foto_profil_url + '" style="width:24px; height:24px; border-radius:50%; object-fit:cover; flex:none;">'
+        : '<div style="width:24px; height:24px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:9.5px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>';
+
+      var genderHtml = (u.jenis_kelamin === 'L' || u.jenis_kelamin === 'P')
+        ? '<span style="font-size:11.5px; font-weight:600; color:var(--ink);">' + u.jenis_kelamin + '</span>'
+        : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">-</span>';
+
+      var waNumber = (tp.no_wa || u.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
+      var waLink = waNumber ? ('https://wa.me/' + waNumber) : '';
+      var waBtn = waLink
+        ? '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" class="dt-table-icon-btn" title="Hubungi WhatsApp (' + dtEscape(u.nama) + ')" aria-label="Chat WA" style="color:#25D366 !important;">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg>' +
+          '</a>'
+        : '';
+
+      var mapelBadgesHtml = (tp.keahlian && tp.keahlian.length)
+        ? '<div style="display:flex; flex-wrap:wrap; gap:3px;">' +
+            tp.keahlian.map(function (k) {
+              return '<span class="dt-table-mapel-pill" style="display:inline-flex; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.5px 5px; font-size:10px; color:var(--ink); font-weight:400; white-space:nowrap;">' +
+                dtEscape(k) +
+              '</span>';
+            }).join('') +
+          '</div>'
+        : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">-</span>';
+
+      var rekeningText = tp.no_rekening
+        ? '<div style="font-size:11px; color:var(--ink); font-weight:500;">' + dtEscape(tp.no_rekening) + '</div>' +
+          (tp.nama_bank ? '<div style="font-size:9.5px; color:var(--ink-soft);">' + dtEscape(tp.nama_bank) + '</div>' : '')
+        : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">Belum diisi</span>';
+
+      var phoneText = (tp.no_wa || u.no_hp)
+        ? '<div style="font-size:11px; color:var(--ink); font-weight:500;">' + dtEscape(tp.no_wa || u.no_hp) + '</div>'
+        : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">-</span>';
+
+      return '' +
+        '<tr class="dt-table-row" data-id="' + u.id + '">' +
+          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px;">' + (idx + 1) + '</td>' +
+          '<td>' +
+            '<div style="display:flex; align-items:center; gap:7px;">' +
+              avatar +
+              '<div style="min-width:0;">' +
+                '<div style="font-weight:600; color:var(--ink); font-size:11.5px; line-height:1.25;">' + dtEscape(u.nama || '-') + '</div>' +
+                (u.email ? '<div style="color:var(--ink-soft); font-size:10px; margin-top:1px;">' + dtEscape(u.email) + '</div>' : '') +
+              '</div>' +
+            '</div>' +
+          '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + genderHtml + '</td>' +
+          '<td style="white-space:nowrap;">' + phoneText + '</td>' +
+          '<td>' + mapelBadgesHtml + '</td>' +
+          '<td style="font-size:11px; color:var(--ink); white-space:nowrap;">' + dtEscape(tp.pendidikan_terakhir || '-') + '</td>' +
+          '<td>' + rekeningText + '</td>' +
+          '<td style="white-space:nowrap;">' + statusBadge + '</td>' +
+          '<td style="text-align:right; white-space:nowrap;">' +
+            '<div style="display:inline-flex; align-items:center; gap:4px;">' +
+              waBtn +
+              '<button type="button" class="dt-table-icon-btn dt-table-edit-btn" data-id="' + u.id + '" title="Edit Tutor (' + dtEscape(u.nama) + ')" aria-label="Edit Tutor">' +
+                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+              '</button>' +
+              '<button type="button" class="dt-table-icon-btn dt-table-del-btn dt-del-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" title="Hapus Tutor (' + dtEscape(u.nama) + ')" aria-label="Hapus Tutor">' +
+                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+              '</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+    }).join('');
+
+    return '' +
+      '<div class="dt-table-card dt-full-width">' +
+        '<div class="dt-table-wrap">' +
+          '<table class="dt-table">' +
+            '<thead>' +
+              '<tr>' +
+                '<th style="width:34px; text-align:center;">No</th>' +
+                '<th class="dt-sort-th" data-sort="nama" style="min-width:170px;">' +
+                  '<span style="display:inline-flex; align-items:center;">Nama Tutor' + dtGetSortIcon('nama') + '</span>' +
+                '</th>' +
+                '<th class="dt-sort-th" data-sort="gender" style="min-width:85px; text-align:center;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:center;">Jenis Kelamin' + dtGetSortIcon('gender') + '</span>' +
+                '</th>' +
+                '<th style="min-width:110px;">Kontak (WA)</th>' +
+                '<th style="min-width:170px;">Keahlian / Mapel</th>' +
+                '<th class="dt-sort-th" data-sort="pendidikan" style="min-width:130px;">' +
+                  '<span style="display:inline-flex; align-items:center;">Pendidikan' + dtGetSortIcon('pendidikan') + '</span>' +
+                '</th>' +
+                '<th style="min-width:130px;">Rekening Bank</th>' +
+                '<th class="dt-sort-th" data-sort="status" style="min-width:90px;">' +
+                  '<span style="display:inline-flex; align-items:center;">Status' + dtGetSortIcon('status') + '</span>' +
+                '</th>' +
+                '<th style="min-width:100px; text-align:right;">Aksi</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' +
+              trs +
+            '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function dtRenderList() {
+    var listEl = document.getElementById('dt-list');
+    var rows = dtState.tutorList.filter(function (u) { return u.status === dtState.tab; }).filter(dtMatchesSearch).filter(dtMatchesFilters);
+
+    dtUpdateViewToggleUI();
+
+    if (!rows.length) {
+      listEl.classList.remove('dt-view-table');
+      listEl.innerHTML = '<div class="dt-card dt-full-width empty-state">Tidak ada tutor yang cocok.</div>';
+      return;
+    }
+
+    if (dtState.viewMode === 'table') {
+      listEl.classList.add('dt-view-table');
+      listEl.innerHTML = dtRenderTable(rows);
+      dtBindTableEvents();
+    } else {
+      listEl.classList.remove('dt-view-table');
+      listEl.innerHTML = rows.map(dtRenderCard).join('');
+      dtBindCardEvents();
+    }
+  }
+
+  function dtRenderCard(u) {
+    var tp = u.tutor_profile || {};
+    var isOpen = dtState.openCard === u.id;
+    var waLink = 'https://wa.me/' + (tp.no_wa || u.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
+
+    return '' +
+      '<div class="card dt-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
+        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">' +
+          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
+            (u.foto_profil_url
+              ? '<img src="' + u.foto_profil_url + '" style="width:32px; height:32px; border-radius:50%; object-fit:cover; flex:none;">'
+              : '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>') +
+            '<div style="min-width:0;">' +
+              '<div style="display:flex; align-items:center; gap:6px;"><h4 style="font-size:12.5px; font-weight:800; color:#1c1c1e; margin:0; line-height:1.3;">' + dtEscape(u.nama) + '</h4>' + dtGenderBadge(u.jenis_kelamin, 16) + '</div>' +
+              '<div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:3px;">' + dtMapelBadges(tp.keahlian) + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<button class="dt-detail-toggle" data-id="' + u.id + '" style="background:#1c1c1e; color:#fff; border:none; border-radius:8px; height:26px; padding:0 10px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; flex:none; font-family:var(--font);">' +
+            (isOpen ? 'Tutup' : 'Detail') +
+            '<svg class="dt-toggle-icon" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
+          '</button>' +
+        '</div>' +
+
+        '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="margin-top:8px; height:30px; background:rgba(52,199,89,.12); color:#1DB954; border-radius:8px; padding:0 10px; font-size:11px; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:6px; font-family:var(--font);">' +
+          '<span style="width:16px; height:16px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="9" height="9" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>' +
+          'Hubungi WhatsApp' +
+        '</a>' +
+
+        '<div class="dt-wrap" data-id="' + u.id + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
+          '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:9px; padding:8px 10px; margin-top:8px;">' +
+            '<div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px;"><span style="color:#8e8e93;">Pendidikan Terakhir:</span><span style="font-weight:700; color:var(--ink); text-align:right;">' + dtEscape(tp.pendidikan_terakhir || '-') + '</span></div>' +
+            '<div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px; margin-top:4px;"><span style="color:#8e8e93;">Nomor Rekening:</span><span style="font-weight:700; color:var(--ink); text-align:right;">' + (tp.no_rekening ? dtEscape(tp.nama_bank || '') + ' &bull; ' + dtEscape(tp.no_rekening) : '<span style="color:#8e8e93; font-weight:500;">Belum diisi</span>') + '</span></div>' +
+          '</div>' +
+          '<div style="display:flex; gap:8px; margin-top:8px;">' +
+            '<button class="dt-edit-btn" data-id="' + u.id + '" style="flex:1; height:30px; background:#1c1c1e; color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:700; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Edit</button>' +
+            '<button class="dt-delete-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" style="flex:1; height:30px; background:#ff3b30; color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:700; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Hapus</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function dtBindCardEvents() {
+    document.querySelectorAll('.dt-detail-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.dataset.id;
+        var wrap = document.querySelector('.dt-wrap[data-id="' + id + '"]');
+        var chevron = btn.querySelector('svg');
+        var isOpen = dtState.openCard === id;
+        if (isOpen) {
+          dtState.openCard = null;
+          wrap.style.maxHeight = '0px'; wrap.style.opacity = '0';
+          chevron.style.transform = 'rotate(0deg)';
+          btn.childNodes[0].textContent = 'Detail';
+        } else {
+          if (dtState.openCard) {
+            var prevWrap = document.querySelector('.dt-wrap[data-id="' + dtState.openCard + '"]');
+            var prevBtn = document.querySelector('.dt-detail-toggle[data-id="' + dtState.openCard + '"]');
+            if (prevWrap) { prevWrap.style.maxHeight = '0px'; prevWrap.style.opacity = '0'; }
+            if (prevBtn) { prevBtn.querySelector('svg').style.transform = 'rotate(0deg)'; prevBtn.childNodes[0].textContent = 'Detail'; }
+          }
+          dtState.openCard = id;
+          wrap.style.maxHeight = '600px'; wrap.style.opacity = '1';
+          chevron.style.transform = 'rotate(180deg)';
+          btn.childNodes[0].textContent = 'Tutup';
+        }
+      });
+    });
+    document.querySelectorAll('.dt-edit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { dtOpenModal(btn.dataset.id); });
+    });
+    document.querySelectorAll('.dt-delete-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        dtOpenConfirm('Hapus Tutor Ini?', btn.dataset.nama + ' akan dihapus permanen. Tutor yang sudah punya riwayat kontrak/presensi tidak bisa dihapus.', 'Ya, Hapus', '#ff3b30', function () { dtDelete(btn.dataset.id); });
+      });
+    });
+  }
+
+  async function dtDelete(id) {
+    try {
+      var s = genioGetSession();
+      await supaRest('users?id=eq.' + id, s.access_token, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+      genioToast('Tutor berhasil dihapus', 'success');
+      dtLoadAll();
+    } catch (err) { genioToast('Gagal menghapus: ' + err.message, 'error'); }
+  }
+
+  /* ===== Modal Edit ===== */
+  var dtModal = document.getElementById('dt-modal');
+  var DT_OPT_COLORS = {
+    L: { bg: 'var(--blue-tint)', fg: 'var(--blue)', border: 'var(--blue)' },
+    P: { bg: 'rgba(255,59,48,.1)', fg: '#ff3b30', border: '#ff3b30' },
+    aktif: { bg: 'rgba(52,199,89,.14)', fg: '#28a745', border: '#28a745' },
+    nonaktif: { bg: 'rgba(255,59,48,.1)', fg: '#ff3b30', border: '#ff3b30' }
+  };
+  function dtSetOpt(groupSelector, val) {
+    document.querySelectorAll(groupSelector + ' .dt-opt').forEach(function (o) {
+      var active = o.dataset.val === val;
+      var c = DT_OPT_COLORS[o.dataset.val] || { bg: 'var(--blue-tint)', fg: 'var(--blue)', border: 'var(--blue)' };
+      o.style.background = active ? c.bg : '#fff';
+      o.style.color = active ? c.fg : 'var(--ink-soft)';
+      o.style.borderColor = active ? c.border : 'var(--border)';
+      o.querySelector('input').checked = active;
+    });
+  }
+  function dtOpenModal(id) {
+    var u = dtState.tutorList.find(function (x) { return x.id === id; });
+    if (!u) return;
+    var tp = u.tutor_profile || {};
+    document.getElementById('dt-modalAlert').hidden = true;
+    document.getElementById('dt-editId').value = id;
+    document.getElementById('dt-nama').value = u.nama || '';
+    document.getElementById('dt-email').value = u.email || '';
+    document.getElementById('dt-noWa').value = tp.no_wa || u.no_hp || '';
+    document.getElementById('dt-keahlian').value = (tp.keahlian || []).join(', ');
+    document.getElementById('dt-pendidikan').value = tp.pendidikan_terakhir || '';
+    document.getElementById('dt-namaBank').value = tp.nama_bank || '';
+    document.getElementById('dt-noRekening').value = tp.no_rekening || '';
+    dtSetOpt('#dt-genderOpts', u.jenis_kelamin);
+    dtSetOpt('#dt-statusOpts', u.status);
+    dtModal.hidden = false;
+    requestAnimationFrame(function () { dtModal.classList.add('show'); });
+  }
+  function dtCloseModal() {
+    dtModal.classList.remove('show');
+    setTimeout(function () { dtModal.hidden = true; }, 280);
+  }
+  async function dtSubmitEdit() {
+    var alertEl = document.getElementById('dt-modalAlert');
+    var id = document.getElementById('dt-editId').value;
+    var nama = document.getElementById('dt-nama').value.trim();
+    var email = document.getElementById('dt-email').value.trim();
+    var genderEl = document.querySelector('input[name="dt-gender"]:checked');
+    var statusEl = document.querySelector('input[name="dt-status"]:checked');
+    var keahlian = document.getElementById('dt-keahlian').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+
+    if (!nama || !email) { alertEl.textContent = 'Nama dan email wajib diisi.'; alertEl.hidden = false; return; }
+    alertEl.hidden = true;
+
+    var btn = document.getElementById('dt-saveBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    try {
+      var s = genioGetSession();
+      await supaRest('users?id=eq.' + id, s.access_token, {
+        method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({
+          nama: nama, email: email, no_hp: document.getElementById('dt-noWa').value.trim() || null,
+          jenis_kelamin: genderEl ? genderEl.value : null, status: statusEl ? statusEl.value : 'aktif'
+        })
+      });
+      await supaRest('tutor_profile?user_id=eq.' + id, s.access_token, {
+        method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({
+          keahlian: keahlian, pendidikan_terakhir: document.getElementById('dt-pendidikan').value.trim() || null,
+          no_wa: document.getElementById('dt-noWa').value.trim() || null,
+          nama_bank: document.getElementById('dt-namaBank').value.trim() || null,
+          no_rekening: document.getElementById('dt-noRekening').value.trim() || null
+        })
+      });
+      genioToast('Data tutor berhasil diperbarui', 'success');
+      dtCloseModal();
+      dtLoadAll();
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menyimpan data.'; alertEl.hidden = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Simpan';
+    }
+  }
+
+  /* ===== Modal Konfirmasi Generik ===== */
+  var dtConfirmModal = document.getElementById('dt-confirmModal');
+  var dtConfirmCallback = null;
+  function dtOpenConfirm(title, desc, okLabel, okColor, callback) {
+    document.getElementById('dt-confirmTitle').textContent = title;
+    document.getElementById('dt-confirmDesc').textContent = desc;
+    var okBtn = document.getElementById('dt-confirmOkBtn');
+    okBtn.textContent = okLabel; okBtn.style.background = okColor;
+    var iconWrap = document.getElementById('dt-confirmIconWrap');
+    iconWrap.style.background = okColor === '#ff3b30' ? 'rgba(255,59,48,.12)' : 'rgba(52,199,89,.12)';
+    iconWrap.style.color = okColor;
+    iconWrap.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    dtConfirmCallback = callback;
+    dtConfirmModal.hidden = false;
+    requestAnimationFrame(function () { dtConfirmModal.classList.add('show'); });
+  }
+  function dtCloseConfirm() {
+    dtConfirmModal.classList.remove('show');
+    setTimeout(function () { dtConfirmModal.hidden = true; }, 280);
+  }
+  document.getElementById('dt-confirmOkBtn').addEventListener('click', async function () {
+    var btn = this;
+    var originalLabel = btn.textContent;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Memproses...';
+    try { if (dtConfirmCallback) await dtConfirmCallback(); }
+    finally { btn.disabled = false; btn.textContent = originalLabel; dtCloseConfirm(); }
+  });
+
+  /* ===== Filter (Mapel & Jenis Kelamin) — picker-popup dengan search bar ===== */
+  function dtGetMapelOptions() {
+    var set = {};
+    dtState.tutorList.forEach(function (u) {
+      ((u.tutor_profile && u.tutor_profile.keahlian) || []).forEach(function (k) { set[k] = true; });
+    });
+    return Object.keys(set).sort().map(function (m) { return { value: m, label: m }; });
+  }
+
+  var DT_FILTER_DEFS = {
+    mapel: { title: 'Pilih Mapel', allLabel: 'Semua Mapel', multi: true, getOptions: dtGetMapelOptions },
+    gender: { title: 'Pilih Jenis Kelamin', allLabel: 'Semua', multi: false, getOptions: function () { return [{ value: 'L', label: 'Laki-laki' }, { value: 'P', label: 'Perempuan' }]; } }
+  };
+  var dtPickerCurrentType = null;
+  var dtPickerTempSingle = '';
+  var dtPickerTempMulti = [];
+  var dtPickerSearch = '';
+
+  function dtOpenFilterModal() {
+    dtUpdateFilterSummary('mapel');
+    dtUpdateFilterSummary('gender');
+    var modal = document.getElementById('dt-filterModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function dtCloseFilterModal() {
+    var modal = document.getElementById('dt-filterModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+
+  function dtFilterStateKey(type) { return 'filter' + type.charAt(0).toUpperCase() + type.slice(1); }
+  function dtGetFilterState(type) { return dtState[dtFilterStateKey(type)]; }
+  function dtSetFilterState(type, value) { dtState[dtFilterStateKey(type)] = value; }
+
+  function dtUpdateFilterSummary(type) {
+    var def = DT_FILTER_DEFS[type];
+    var selected = dtGetFilterState(type);
+    var summaryEl = document.getElementById('dt-filter' + type.charAt(0).toUpperCase() + type.slice(1) + 'Summary');
+    if (!summaryEl) return;
+    if (def.multi) {
+      if (!selected.length) { summaryEl.textContent = def.allLabel; return; }
+      summaryEl.textContent = selected.length + ' dipilih (' + selected[0] + (selected.length > 1 ? ', +' + (selected.length - 1) : '') + ')';
+    } else {
+      if (!selected) { summaryEl.textContent = def.allLabel; return; }
+      var opt = def.getOptions().filter(function (o) { return o.value === selected; })[0];
+      summaryEl.textContent = opt ? opt.label : selected;
+    }
+  }
+
+  document.querySelectorAll('.dt-filter-row-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { dtOpenPicker(btn.dataset.picker); });
+  });
+
+  function dtOpenPicker(type) {
+    dtPickerCurrentType = type;
+    dtPickerSearch = '';
+    var def = DT_FILTER_DEFS[type];
+    document.getElementById('dt-pickerTitle').textContent = def.title;
+    if (def.multi) dtPickerTempMulti = dtGetFilterState(type).slice();
+    else dtPickerTempSingle = dtGetFilterState(type);
+    dtRenderPickerList(type);
+    var modal = document.getElementById('dt-pickerModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function dtClosePicker() {
+    var modal = document.getElementById('dt-pickerModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+
+  function dtRenderPickerList(type) {
+    var def = DT_FILTER_DEFS[type];
+    var listEl = document.getElementById('dt-pickerList');
+
+    if (!def.multi) {
+      var options = def.getOptions();
+      var allRow = '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
+        '<input type="radio" name="dt-picker-opt" class="dt-picker-opt-single" value="" ' + (!dtPickerTempSingle ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+        def.allLabel + '</label>';
+      var rows = options.map(function (opt) {
+        var checked = dtPickerTempSingle === opt.value;
+        return '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
+          '<input type="radio" name="dt-picker-opt" class="dt-picker-opt-single" value="' + dtEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+          dtEscape(opt.label) + '</label>';
+      }).join('');
+      listEl.innerHTML = allRow + rows;
+      listEl.querySelectorAll('.dt-picker-opt-single').forEach(function (input) {
+        input.addEventListener('change', function () { dtPickerTempSingle = input.value; });
+      });
+      return;
+    }
+
+    // Multi-select (Mapel) — pakai search bar di atas daftar
+    listEl.innerHTML =
+      '<div style="position:relative; margin-bottom:8px;">' +
+        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+        '<input type="text" id="dt-pickerSearchInput" placeholder="Cari mapel..." style="width:100%; border:1.5px solid var(--border); border-radius:999px; padding:9px 14px 9px 34px; font-family:var(--font); font-size:12.5px; background:#fff; box-sizing:border-box;">' +
+      '</div>' +
+      '<div id="dt-pickerRows"></div>';
+    document.getElementById('dt-pickerSearchInput').addEventListener('input', function (e) {
+      dtPickerSearch = e.target.value.toLowerCase();
+      dtRenderPickerRows(type);
+    });
+    document.getElementById('dt-pickerSearchInput').addEventListener('focus', function (e) {
+      var el = e.target;
+      setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+    });
+    dtRenderPickerRows(type);
+  }
+
+  function dtRenderPickerRows(type) {
+    var def = DT_FILTER_DEFS[type];
+    var allOptions = def.getOptions();
+    var options = dtPickerSearch ? allOptions.filter(function (o) { return o.label.toLowerCase().indexOf(dtPickerSearch) !== -1; }) : allOptions;
+    var rowsEl = document.getElementById('dt-pickerRows');
+
+    if (!options.length) {
+      rowsEl.innerHTML = '<div style="font-size:12.5px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data.') + '</div>';
+      return;
+    }
+    rowsEl.innerHTML = options.map(function (opt) {
+      var checked = dtPickerTempMulti.indexOf(opt.value) !== -1;
+      return '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
+        '<input type="checkbox" class="dt-picker-opt-multi" value="' + dtEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+        dtEscape(opt.label) + '</label>';
+    }).join('');
+    rowsEl.querySelectorAll('.dt-picker-opt-multi').forEach(function (input) {
+      input.addEventListener('change', function () {
+        var idx = dtPickerTempMulti.indexOf(input.value);
+        if (input.checked && idx === -1) dtPickerTempMulti.push(input.value);
+        else if (!input.checked && idx !== -1) dtPickerTempMulti.splice(idx, 1);
+      });
+    });
+  }
+
+  document.getElementById('dt-pickerCancelBtn').addEventListener('click', function () { dtClosePicker(); });
+  document.getElementById('dt-pickerDoneBtn').addEventListener('click', function () {
+    var def = DT_FILTER_DEFS[dtPickerCurrentType];
+    dtSetFilterState(dtPickerCurrentType, def.multi ? dtPickerTempMulti.slice() : dtPickerTempSingle);
+    dtUpdateFilterSummary(dtPickerCurrentType);
+    dtClosePicker();
+  });
+
+  function dtUpdateFilterBadge() {
+    var badge = document.getElementById('dt-filterCount');
+    var n = (dtState.filterMapel.length ? 1 : 0) + (dtState.filterGender ? 1 : 0);
+    if (n > 0) { badge.textContent = n; badge.hidden = false; } else badge.hidden = true;
+  }
+  document.getElementById('dt-filterApplyBtn').addEventListener('click', function () {
+    dtUpdateFilterBadge();
+    dtCloseFilterModal();
+    dtRenderList();
+  });
+  document.getElementById('dt-filterResetBtn').addEventListener('click', function () {
+    dtState.filterMapel = []; dtState.filterGender = '';
+    dtUpdateFilterSummary('mapel'); dtUpdateFilterSummary('gender');
+    dtUpdateFilterBadge();
+    dtCloseFilterModal();
+    dtRenderList();
+  });
+</script>

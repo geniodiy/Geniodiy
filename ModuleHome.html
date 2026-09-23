@@ -1,0 +1,1735 @@
+<div class="module-panel" data-module="home">
+<style>
+  .genio-news-track::-webkit-scrollbar{display:none;}
+  .genio-news-track{scrollbar-width:none; -ms-overflow-style:none;}
+
+  /* Custom scrollbar tipis halus ala Apple */
+  .home-scrollable::-webkit-scrollbar { width: 4px; height: 4px; }
+  .home-scrollable::-webkit-scrollbar-thumb { background: rgba(20,22,43,.14); border-radius: 999px; }
+  .home-scrollable::-webkit-scrollbar-track { background: transparent; }
+  .home-scrollable { scrollbar-width: thin; scrollbar-color: rgba(20,22,43,.14) transparent; }
+
+  .module-panel[data-module="home"][hidden]{ display:none !important; }
+
+  /* Widget Jadwal Tutor Mingguan (Identik Kontrak) */
+  .home-jm-grid{ display:grid; grid-template-columns:26px repeat(8,1fr); grid-auto-rows:minmax(24px, auto); gap:3px; align-items:stretch; min-width:280px; }
+  .home-jm-head{ font-size:8.5px; font-weight:700; color:var(--ink-soft); text-align:center; padding-bottom:2px; }
+  .home-jm-hour{ font-size:9px; color:var(--ink-soft); text-align:right; padding-right:3px; align-self:center; }
+  .home-jm-cell{ background:var(--surface); border-radius:6px; min-height:24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; align-content:center; gap:2px; padding:2px; }
+  .home-jm-dot{ width:9px; height:9px; border-radius:50%; cursor:pointer; flex:none; border:none; padding:0; transition:transform .15s ease; }
+  .home-jm-dot:hover{ transform:scale(1.35); }
+
+  /* Card Styling khusus Home */
+  .module-panel[data-module="home"] .card{ padding:12px 14px; border-radius:12px; }
+
+  /* Hero Finansial Modern (White Theme Aesthetic) */
+  .home-hero-badge-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--ink-soft); font-size:9.5px; font-weight:800;
+    letter-spacing:.04em; padding:2.5px 8px; border-radius:999px;
+    text-transform:uppercase;
+  }
+  .home-hero-cetak-btn{
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--ink); border-radius:999px; padding:3px 9px;
+    font-family:var(--font); font-size:10px; font-weight:600;
+    cursor:pointer; display:inline-flex; align-items:center; gap:4px;
+    flex:none; white-space:nowrap; transition:all .16s ease;
+    box-shadow:0 1px 2px rgba(0,0,0,.03);
+  }
+  .home-hero-cetak-btn:hover{
+    background:var(--surface-hover); border-color:#d1d5db;
+    transform:translateY(-1px); box-shadow:0 2px 5px rgba(0,0,0,.06);
+  }
+  .home-hero-cetak-btn:active{ transform:scale(.96); }
+  .home-hero-subcard{
+    background:#fbfcfd; border:1px solid var(--border);
+    border-radius:12px; padding:9px 12px; display:flex;
+    flex-direction:column; justify-content:space-between;
+    transition:all .18s ease; box-shadow:0 1px 2px rgba(0,0,0,.02);
+  }
+  .home-hero-subcard:hover{
+    background:#ffffff; border-color:#d2d6dc;
+    box-shadow:0 4px 12px rgba(20,22,43,.04);
+  }
+
+  /* ===== Mobile Layout Khusus (Gaya Presensi: Jarak Vertikal 14px Rapi) ===== */
+  @media (max-width:899px){
+    .module-panel[data-module="home"]:not([hidden]){
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 14px !important;
+    }
+
+    /* Buka batasan baris desktop agar urutan mobile bebas diatur */
+    .home-top-row,
+    .home-kpi-row,
+    .home-main-grid,
+    #homeJadwalCol{
+      display: contents !important;
+    }
+
+    /* Reset margin bawah elemen khusus Home agar jarak vertikal murni dari gap: 14px */
+    .module-panel[data-module="home"] .card,
+    .home-sec-hero,
+    .home-sec-periode,
+    .home-sec-sapaan,
+    .home-sec-presensi,
+    .home-sec-stats,
+    .home-sec-jadwal,
+    #homeSecJadwalTutor,
+    #genioNewsSection,
+    .home-sec-unit,
+    .home-sec-trend{
+      margin-bottom: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Hero Finansial Mobile (Cerah / Pure White Modern) */
+    .home-sec-hero{
+      background: #ffffff !important;
+      color: var(--ink) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 16px !important;
+      padding: 14px 16px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+      box-shadow: 0 2px 10px -2px rgba(20, 22, 43, 0.05), 0 1px 3px rgba(20, 22, 43, 0.02) !important;
+    }
+    .home-hero-main-col{
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+    }
+    .home-hero-badges{
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+    }
+    .home-hero-counter{
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+    }
+    .home-hero-stats-row{
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 8px !important;
+      padding-top: 10px !important;
+      border-top: 1px solid var(--border) !important;
+    }
+
+    /* Ketinggian konten mobile agar tidak terkunci ukuran desktop */
+    #homeSecJadwalTutor,
+    .home-sec-trend .card,
+    .home-sec-unit .card{
+      height: auto !important;
+    }
+    #home-jmGridWrap{
+      max-height: 270px;
+    }
+
+    /* Urutan Komponen Mobile Sesuai Arahan User:
+       1. Periode Data (paling atas)
+       2. Sapaan ("Selamat datang")
+       3. Highlight Hitam (Omset, Laba, Pengeluaran) -> dibawah selamat datang
+       4. 2 Kartu Statistik (Siswa Aktif & Banyak Pertemuan)
+       5. Presensi Pending ("1 Presensi Menunggu Approval") -> diatas jadwal
+       6. Jadwal Tutor
+       7. Genio News
+       8. Penyebaran Data 5 Unit
+       9. Trend Progress Cabang
+    */
+    .home-sec-periode   { order: 1 !important; }
+    .home-sec-sapaan    { order: 2 !important; }
+    .home-sec-hero      { order: 3 !important; }
+    .home-sec-stats     { order: 4 !important; }
+    .home-sec-presensi  { order: 5 !important; }
+    #homeSecJadwalTutor { order: 6 !important; }
+    #genioNewsSection   { order: 7 !important; }
+    .home-sec-unit      { order: 8 !important; }
+    .home-sec-trend     { order: 9 !important; }
+  }
+
+  /* ===== Desktop Layout Khusus (Gaya Presensi: Space Rapat, 1 Layar Full) ===== */
+  @media (min-width:900px){
+    .module-panel[data-module="home"][hidden]{ display:none !important; }
+    .module-panel[data-module="home"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+      display: block !important;
+    }
+
+    /* Periode memanjang di paling atas (Identik Presensi) */
+    .home-sec-periode{
+      margin-bottom: 12px !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+    }
+
+    /* Baris 2: Header Toolbar (Sapaan | Presensi Pending) */
+    .home-top-row{
+      display:flex !important; flex-direction:row !important; gap:12px !important; align-items:stretch !important; margin-bottom:12px !important;
+    }
+    .home-top-row > .card{
+      margin-bottom:0 !important;
+    }
+    .home-sec-sapaan{ flex: 1; min-width:0; }
+    .home-sec-presensi{ flex: 1; min-width:0; }
+
+    /* Baris 3: KPI Finansial & Statistik (Gaya Presensi: Hero Horizontal | 2 Kartu Stats) */
+    .home-kpi-row{
+      display:flex !important; flex-direction:row !important; gap:12px !important; align-items:stretch !important; margin-bottom:12px !important;
+    }
+    .home-sec-hero{
+      background: #ffffff !important;
+      color: var(--ink) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 16px !important;
+      flex: 1.6;
+      margin-bottom: 0 !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 16px !important;
+      padding: 12px 18px !important;
+      box-sizing: border-box !important;
+      box-shadow: 0 2px 12px -2px rgba(20, 22, 43, 0.05), 0 1px 3px rgba(20, 22, 43, 0.02) !important;
+    }
+    .home-hero-main-col{
+      flex: 1.05 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      min-width: 175px !important;
+      gap: 6px !important;
+    }
+    .home-hero-badges{
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 8px !important;
+    }
+    .home-hero-counter{
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+    }
+    .home-hero-stats-row{
+      flex: 1.4 !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid var(--border) !important;
+      padding-left: 16px !important;
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      align-items: stretch !important;
+    }
+    .home-sec-stats{
+      flex: 1; min-width:0; margin-bottom:0 !important;
+      display:grid !important; grid-template-columns:1fr 1fr !important; gap:10px !important;
+    }
+    .home-sec-stats > .card{
+      margin-bottom:0 !important;
+    }
+
+    /* Baris 4: Main Workspace (Trend Progress | 5 Unit | Jadwal Tutor & News) */
+    .home-main-grid{
+      display:grid !important; grid-template-columns:1.15fr 1fr 1.2fr !important; gap:10px !important; align-items:stretch !important;
+      height:445px !important; margin-bottom:12px !important;
+    }
+    .home-main-grid > *{
+      height:100% !important; min-height:0 !important; margin-bottom:0 !important;
+    }
+    #homeJadwalCol{ display:flex !important; flex-direction:column !important; height:100% !important; min-height:0 !important; gap:10px !important; }
+
+    .home-sec-trend .card, .home-sec-unit .card{
+      height:100% !important; display:flex !important; flex-direction:column !important;
+      box-sizing:border-box !important; margin-bottom:0 !important;
+    }
+    #homeUnitTable{
+      flex:1; min-height:0; overflow-y:auto; padding-right:2px;
+    }
+    #homeTrendChartWrap{
+      flex:1; min-height:120px;
+    }
+    #homeSecJadwalTutor{
+      flex:1 !important; min-height:0 !important; display:flex !important; flex-direction:column !important; margin-bottom:0 !important;
+    }
+    #genioNewsSection{
+      flex:none !important; margin-bottom:0 !important;
+    }
+
+    /* Rapatkan padding kartu di desktop agar 1 layar memuat semua info */
+    .module-panel[data-module="home"] .card{ padding:14px 16px; border-radius:16px; }
+  }
+</style>
+
+  <!-- Periode Pemilih Memanjang di Paling Atas (Identik Presensi) -->
+  <div class="card home-sec-periode" style="display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; box-sizing:border-box; padding:8px 14px; border-radius:12px;">
+    <div id="homePeriodeLabelWrap" style="min-width:0; cursor:pointer;" title="Pilih Periode">
+      <div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Periode Data</div>
+      <div style="font-size:13px; font-weight:700; margin-top:1px;" id="homePeriodeLabel">-</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; flex:none; position:relative;">
+      <button id="homeRefreshBtn" aria-label="Refresh data" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; color:var(--ink-soft);">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
+      </button>
+      <button id="homePeriodeFakeBtn" type="button" style="height:32px; border:1px solid var(--border); border-radius:8px; padding:0 10px; font-family:var(--font); font-size:11.5px; font-weight:600; color:var(--ink); background:var(--surface); display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;">
+        Pilih Bulan
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      </button>
+      <input type="month" id="homePeriodeInput" style="position:absolute; right:0; bottom:0; width:1px; height:1px; opacity:0; pointer-events:none; border:none;">
+    </div>
+  </div>
+
+  <!-- Baris 2: Header Toolbar (Sapaan & Banner Presensi Pending) -->
+  <div class="home-top-row" id="homeTopRow">
+    <!-- Kartu sapaan -->
+    <div class="card home-sec-sapaan" style="display:flex; align-items:center; gap:10px; flex:1; min-width:0; padding:10px 14px; border-radius:12px;">
+      <div style="width:32px; height:32px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11.5px; flex:none;" id="homeAvatarInitials">--</div>
+      <div style="min-width:0;">
+        <div style="font-size:9px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;" id="homeRoleLabel">Manajer</div>
+        <div style="font-size:12.5px; font-weight:700; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeGreeting">Selamat datang</div>
+        <div style="font-size:10.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Semoga harimu produktif.</div>
+      </div>
+    </div>
+
+    <!-- Banner Presensi Pending -->
+    <div class="card home-sec-presensi" id="homePresensiBanner" style="display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; flex:1; min-width:0; padding:10px 14px; border-radius:12px;">
+      <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+        <span style="width:30px; height:30px; border-radius:50%; background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 2 20h20L12 3.5z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div style="font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homePresensiPendingText">0 Presensi Menunggu Approval</div>
+          <div style="font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tutor telah mengajar &bull; Klik verifikasi</div>
+        </div>
+      </div>
+      <span style="color:var(--ink-soft); font-size:16px; font-weight:700; flex:none;">&#8250;</span>
+    </div>
+  </div>
+
+  <!-- Baris 3: Highlight Finansial & Statistik (Gaya Presensi) -->
+  <div class="home-kpi-row" id="homeKpiRow">
+    <!-- Hero Finansial Modern (White Theme Aesthetic) -->
+    <div class="home-sec-hero">
+      <div class="home-hero-main-col">
+        <div class="home-hero-badges">
+          <span class="home-hero-badge-pill">
+            <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+            Total Omset
+          </span>
+          <button id="homeCetakLaporanBtn" type="button" class="home-hero-cetak-btn" title="Cetak Laporan">
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></svg>
+            <span>Cetak</span>
+          </button>
+        </div>
+        <div class="home-hero-counter">
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span style="font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1.15; color:var(--ink); letter-spacing:-0.02em;" id="homeOmset">Rp 0</span>
+          </div>
+          <div style="font-size:10px; color:var(--ink-soft); margin-top:2px;" id="homeOmsetDelta"></div>
+        </div>
+      </div>
+
+      <div class="home-hero-stats-row">
+        <!-- Sub-card: Laba Bersih -->
+        <div class="home-hero-subcard">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:20px; height:20px; border-radius:6px; background:rgba(52,199,89,.12); color:#28a745; display:flex; align-items:center; justify-content:center; flex:none;">
+                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Laba Bersih</span>
+            </div>
+            <span id="homeMargin" style="font-size:8.5px; font-weight:800; background:rgba(52,199,89,.1); color:#1e7e34; padding:1.5px 6px; border-radius:999px; white-space:nowrap;">Margin -</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div style="font-size:13px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;" id="homeLaba">Rp 0</div>
+            <div style="font-size:9px; color:var(--ink-soft); margin-top:2px;" id="homeLabaDelta"></div>
+          </div>
+        </div>
+
+        <!-- Sub-card: Pengeluaran -->
+        <div class="home-hero-subcard">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:20px; height:20px; border-radius:6px; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;">
+                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              </span>
+              <span style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Pengeluaran</span>
+            </div>
+            <span style="font-size:8.5px; font-weight:700; background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); padding:1px 5px; border-radius:999px; white-space:nowrap;">Beban Ops</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div style="font-size:13px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;" id="homeOperasional">Rp 0</div>
+            <div style="font-size:9px; color:var(--ink-soft); margin-top:2px;" id="homeOperasionalDelta"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid statistik 2 kartu (Siswa Aktif & Pertemuan) -->
+    <div class="home-sec-stats" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <div class="card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; padding:8px 10px; border-radius:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="width:24px; height:24px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7.5" r="3.2"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><path d="M16 4.8a3.2 3.2 0 0 1 0 6.2"/><path d="M20 20c0-2.8-1.8-5-4-5.8"/></svg>
+          </div>
+          <span id="homeSiswaPct"></span>
+        </div>
+        <div style="margin-top:3px;">
+          <div style="font-size:9.5px; color:var(--ink-soft); font-weight:600;">Total Siswa Aktif</div>
+          <div style="margin-top:1px;">
+            <span style="font-size:17px; font-weight:800;" id="homeSiswaAktif">0</span>
+            <span style="font-size:9.5px; color:var(--ink-soft); font-weight:600;">anak</span>
+          </div>
+          <div style="font-size:9px; margin-top:1px;" id="homeSiswaSub">&nbsp;</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; padding:8px 10px; border-radius:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="width:24px; height:24px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5l3.2 2"/></svg>
+          </div>
+          <span id="homePertemuanPct"></span>
+        </div>
+        <div style="margin-top:3px;">
+          <div style="font-size:9.5px; color:var(--ink-soft); font-weight:600;">Banyak Pertemuan</div>
+          <div style="margin-top:1px;">
+            <span style="font-size:17px; font-weight:800;" id="homePertemuan">0</span>
+            <span style="font-size:9.5px; color:var(--ink-soft); font-weight:600;">sesi</span>
+          </div>
+          <div style="font-size:9px; margin-top:1px;" id="homePertemuanSub">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Baris 3: Main Workspace (3 Kolom Sejajar di Desktop) -->
+  <div class="home-main-grid" id="homeMainGrid">
+
+    <!-- Kolom 1: Trend Progress Cabang -->
+    <div class="home-sec-trend">
+      <div class="card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
+        <div style="font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:8px;">Trend Progress Cabang</div>
+
+        <div id="trendRangeDock" style="position:relative; display:flex; margin-bottom:8px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; touch-action:none; -webkit-user-select:none; user-select:none; height:38px; box-sizing:border-box; align-items:center;">
+          <div id="trendRangeGlider" style="position:absolute; top:3px; bottom:3px; left:3px; width:calc(33.33% - 4px); background:#fff; border-radius:8px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;"></div>
+          <button class="home-trend-range" data-range="3" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:11px; font-weight:700; cursor:pointer; color:var(--ink); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">3 Bulan</button>
+          <button class="home-trend-range" data-range="6" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:11px; font-weight:700; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">6 Bulan</button>
+          <button class="home-trend-range" data-range="12" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:11px; font-weight:700; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">12 Bulan</button>
+        </div>
+
+        <div id="trendMetricCardsRow" style="display:flex; gap:5px; margin-bottom:8px;">
+          <button class="home-trend-metric" data-metric="omset" style="flex:1; padding:6px 5px; border-radius:10px; border:1.5px solid var(--blue); background:var(--blue-tint); text-align:left; cursor:pointer; min-width:0;">
+            <div style="font-size:9px; color:var(--blue); font-weight:700;">OMSET</div>
+            <div style="font-size:11px; font-weight:800; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendOmsetVal">-</div>
+          </button>
+          <button class="home-trend-metric" data-metric="laba" style="flex:1; padding:6px 5px; border-radius:10px; border:1.5px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
+            <div style="font-size:9px; color:var(--ink-soft); font-weight:700;">LABA</div>
+            <div style="font-size:11px; font-weight:800; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendLabaVal">-</div>
+          </button>
+          <button class="home-trend-metric" data-metric="sesi" style="flex:1; padding:6px 5px; border-radius:10px; border:1.5px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
+            <div style="font-size:9px; color:var(--ink-soft); font-weight:700;">SESI</div>
+            <div style="font-size:11px; font-weight:800; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendSesiVal">-</div>
+          </button>
+          <button class="home-trend-metric" data-metric="semua" style="flex:1; padding:6px 5px; border-radius:10px; border:1.5px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
+            <div style="font-size:9px; color:var(--ink-soft); font-weight:700;">SEMUA</div>
+            <div style="font-size:10px; font-weight:700; margin-top:2px; display:flex; gap:3px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#1C1AAF; display:inline-block;"></span>
+              <span style="width:6px; height:6px; border-radius:50%; background:#1E8E5A; display:inline-block;"></span>
+              <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
+            </div>
+          </button>
+        </div>
+
+        <div id="homeTrendChartWrap" style="position:relative; flex:1; min-height:120px;">
+          <svg id="homeTrendSvg" viewBox="0 0 340 140" style="width:100%; height:100%; display:block; position:absolute; inset:0;"></svg>
+          <div id="homeTrendTooltip" style="position:absolute; display:none; background:var(--ink); color:#fff; font-size:10px; font-weight:700; padding:4px 8px; border-radius:8px; white-space:nowrap; pointer-events:none; z-index:5; transform:translate(-50%,-115%);"></div>
+        </div>
+        <div id="homeTrendLegend" style="display:none; justify-content:center; gap:12px; margin-top:4px; font-size:9.5px; font-weight:700; color:var(--ink-soft);"></div>
+        <div id="homeTrendFooter" style="font-size:9.5px; color:var(--ink-soft); text-align:center; margin-top:6px;"></div>
+      </div>
+    </div>
+
+    <!-- Kolom 2: Penyebaran Data 5 Unit -->
+    <div class="home-sec-unit">
+      <div class="card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
+        <div style="font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:8px;">Penyebaran Data 5 Unit</div>
+
+        <div id="unitTabDock" style="position:relative; display:flex; margin-bottom:8px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; touch-action:none; -webkit-user-select:none; user-select:none; height:38px; box-sizing:border-box; align-items:center;">
+          <div id="unitTabGlider" style="position:absolute; top:3px; bottom:3px; left:3px; width:calc(20% - 3.8px); background:#fff; border-radius:8px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;"></div>
+          <button class="home-unit-tab" data-metric="siswa" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:700; cursor:pointer; color:var(--ink); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Siswa</button>
+          <button class="home-unit-tab" data-metric="omset" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:700; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Omset</button>
+          <button class="home-unit-tab" data-metric="laba" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:700; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Laba</button>
+          <button class="home-unit-tab" data-metric="pengeluaran" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:700; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Pengeluaran</button>
+          <button class="home-unit-tab" data-metric="tutor" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:700; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Tutor</button>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0 3px 6px;">
+          <span style="font-size:9px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Unit / Kepala Unit</span>
+          <span id="homeUnitColRight" style="font-size:9px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Siswa &amp; Perubahan</span>
+        </div>
+
+        <div id="homeUnitTable" class="home-scrollable">
+          <div style="padding:16px; text-align:center; color:var(--ink-soft); font-size:11.5px;">Memuat data unit...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kolom 3: Jadwal Tutor (Jadwal Mingguan yg di kontrak) & Genio News -->
+    <div class="home-sec-jadwal-col" id="homeJadwalCol">
+      <div class="card home-sec-jadwal" id="homeSecJadwalTutor" style="display:flex; flex-direction:column; height:100%; box-sizing:border-box; margin-bottom:0; position:relative;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex:none;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="font-size:13px; font-weight:800; color:var(--ink);">Jadwal Tutor</div>
+            <span id="homeJmTotalBadge" style="background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px;">-</span>
+          </div>
+          <a href="javascript:void(0)" id="homeLihatSemuaJadwal" style="font-size:10.5px; font-weight:700; color:var(--red); text-decoration:none;">Lihat Semua &#8250;</a>
+        </div>
+
+        <!-- Matrix Timetable Grid identik dengan Jadwal Mingguan Kontrak -->
+        <div id="home-jmGridWrap" class="home-scrollable" style="flex:1; min-height:0; overflow-y:auto; overflow-x:auto; padding-right:2px;">
+          <div id="home-jmGrid"><div class="empty-state" style="padding:20px;">Memuat jadwal...</div></div>
+        </div>
+        <div id="home-jmLegend" class="home-scrollable" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; flex:none; max-height:48px; overflow-y:auto;"></div>
+
+        <!-- Popover Detail Preview Modal persis seperti di Kontrak -->
+        <div id="home-jmPreviewModal" style="position:absolute; display:none; flex-direction:column; background:#fff; border-radius:16px; box-shadow:0 8px 24px rgba(20,22,43,.18); padding:10px 12px; max-width:250px; z-index:20; gap:8px; border:1px solid var(--border);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div id="home-jmPreviewAvatar" style="width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; color:#fff; flex:none;">-</div>
+            <div style="min-width:0; flex:1;">
+              <div id="home-jmPreviewTutor" style="font-size:12px; font-weight:800; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+              <div id="home-jmPreviewSiswa" style="font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+              <div id="home-jmPreviewJadwal" style="font-size:10.5px; color:var(--ink-soft); font-family:monospace; margin-top:1px;">-</div>
+            </div>
+            <button type="button" id="home-jmPreviewGotoBtn" aria-label="Lihat detail kontrak" style="width:28px; height:28px; border-radius:50%; background:#fff; border:1.5px solid var(--border); color:var(--ink); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#1c1c1e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+          <div style="display:flex; flex-wrap:nowrap; gap:6px; width:100%;">
+            <a id="home-jmChatTutorBtn" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:0; background:rgba(52,199,89,.12); color:#1DB954; border-radius:999px; padding:5px 10px 5px 5px; font-size:10.5px; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; overflow:hidden;">
+              <span style="width:18px; height:18px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="10" height="10" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>
+              Chat Tutor
+            </a>
+            <a id="home-jmChatOrtuBtn" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:0; background:rgba(52,199,89,.12); color:#1DB954; border-radius:999px; padding:5px 10px 5px 5px; font-size:10.5px; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; overflow:hidden;">
+              <span style="width:18px; height:18px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="10" height="10" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>
+              Chat Ortu
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Genio News: carousel gambar -->
+      <div id="genioNewsSection" class="home-sec-news" style="display:none;">
+        <div style="position:relative; border-radius:16px; border:1.5px solid var(--border); overflow:hidden; background:var(--surface);">
+          <div id="genioNewsTrack" class="genio-news-track" style="display:flex; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;"></div>
+          <div id="genioNewsDots" style="position:absolute; left:50%; bottom:6px; transform:translateX(-50%); display:flex; align-items:center; gap:5px; background:rgba(255,255,255,.28); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); padding:3px 7px; border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,.12); pointer-events:none;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="height:4px;"></div>
+
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['home'] = function () { loadHomeData(); };
+
+  var ROLE_LABELS = { super_admin: 'Super Admin', manajer: 'Manajer', hrd: 'HRD', kepala_unit: 'Kepala Unit', tutor: 'Tutor' };
+  var MONTH_NAMES_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+  function homeInitials(nama) {
+    return (nama || '').split(' ').filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || '—';
+  }
+  function homeFormatRupiah(n) {
+    n = Math.round(n || 0);
+    return 'Rp ' + n.toLocaleString('id-ID');
+  }
+
+  /* Animasi "mengocok" angka acak sebentar sebelum settle ke nilai asli.
+     Hanya untuk elemen berisi teks polos (textContent) — aman karena tidak
+     menyentuh markup HTML/style yang mengandung digit. */
+  function homeRevealValue(el, finalText) {
+    if (!el) return;
+    clearInterval(el._revealTimer);
+    clearTimeout(el._revealStopTimer);
+    el.textContent = homeScramble(finalText);
+    el._revealTimer = setInterval(function () {
+      el.textContent = homeScramble(finalText);
+    }, 45);
+    el._revealStopTimer = setTimeout(function () {
+      clearInterval(el._revealTimer);
+      el.textContent = finalText;
+    }, 450);
+  }
+
+  function homeFormatPeriodeLabel(periode) {
+    var parts = periode.split('-');
+    return (MONTH_NAMES_ID[(+parts[1]) - 1] || '') + ' ' + parts[0];
+  }
+  function homeCurrentYYYYMM() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  }
+  function homePrevPeriode(periode) {
+    var parts = periode.split('-');
+    var y = +parts[0], m = +parts[1] - 1;
+    if (m === 0) { m = 12; y -= 1; }
+    return y + '-' + String(m).padStart(2, '0');
+  }
+  function homePeriodeRange(periode) {
+    var parts = periode.split('-');
+    var y = +parts[0], m = +parts[1];
+    var lastDay = new Date(y, m, 0).getDate();
+    return { start: periode + '-01', end: periode + '-' + String(lastDay).padStart(2, '0') };
+  }
+  function homeDeltaBadge(current, previous, dark) {
+    var pct, isUp;
+    if (!previous) {
+      pct = 100; isUp = true; // tidak ada data bulan lalu -> dianggap naik 100%
+    } else {
+      pct = ((current - previous) / previous) * 100;
+      isUp = pct >= 0;
+    }
+    var color = dark ? (isUp ? '#8CF5C4' : '#FFB4AE') : (isUp ? 'var(--green)' : 'var(--red)');
+    var arrow = isUp ? '&#8593;' : '&#8595;';
+    var sign = isUp ? '+' : '';
+    return '<span style="color:' + color + '; font-weight:700;">' + sign + pct.toFixed(1) + '% ' + arrow + '</span> vs bulan lalu';
+  }
+  function homeCountDeltaLine(current, previous, unitLabel) {
+    var diff = current - (previous || 0);
+    var isUp = diff >= 0;
+    var color = isUp ? 'var(--green)' : 'var(--red)';
+    var arrow = isUp ? '&#8593;' : '&#8595;';
+    var sign = isUp ? '+' : '';
+    return '&#8226; <span style="color:' + color + '; font-weight:700;">' + sign + diff + ' ' + unitLabel + ' ' + arrow + '</span> vs bulan lalu';
+  }
+  function homePercentPill(current, previous) {
+    var pct, isUp;
+    if (!previous) { pct = 100; isUp = true; }
+    else { pct = ((current - previous) / previous) * 100; isUp = pct >= 0; }
+    var color = isUp ? 'var(--green)' : 'var(--red)';
+    var bg = isUp ? 'var(--green-soft)' : 'var(--red-soft)';
+    var arrow = isUp ? '&#8593;' : '&#8595;';
+    var sign = isUp ? '+' : '';
+    return '<span style="display:inline-flex; align-items:center; gap:2px; background:' + bg + '; color:' + color + '; font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px; white-space:nowrap;">' + sign + pct.toFixed(1) + '% ' + arrow + '</span>';
+  }
+  function homeSum(rows, field) {
+    return rows.reduce(function (acc, r) { return acc + (parseFloat(r[field]) || 0); }, 0);
+  }
+
+  async function loadHomeData() {
+    var session = genioGetSession();
+    if (!session) return;
+
+    document.getElementById('homeAvatarInitials').textContent = homeInitials(session.nama);
+    document.getElementById('homeGreeting').textContent = 'Selamat datang, ' + (session.nama || '');
+    document.getElementById('homeRoleLabel').textContent = ROLE_LABELS[session.role] || session.role;
+
+    var input = document.getElementById('homePeriodeInput');
+    if (!input.value) {
+      input.value = homeCurrentYYYYMM(); // selalu default ke bulan berjalan, bukan bulan terakhir yang ada datanya
+    }
+    if (!input._bound) {
+      input.addEventListener('change', function () { renderHomePeriode(input.value); });
+      input._bound = true;
+    }
+    function homeOpenPeriodePicker() {
+      if (typeof genioOpenMonthYearPicker === 'function') {
+        genioOpenMonthYearPicker({
+          currentValue: input.value,
+          title: 'Periode Data',
+          onSelect: function (val) {
+            input.value = val;
+            renderHomePeriode(val);
+          }
+        });
+      } else {
+        try { input.showPicker(); } catch (e) { input.focus(); input.click(); }
+      }
+    }
+    var periodeFakeBtn = document.getElementById('homePeriodeFakeBtn');
+    if (periodeFakeBtn && !periodeFakeBtn._bound) {
+      periodeFakeBtn.addEventListener('click', homeOpenPeriodePicker);
+      periodeFakeBtn._bound = true;
+    }
+    var periodeLabelWrap = document.getElementById('homePeriodeLabelWrap') || document.getElementById('homePeriodeLabel');
+    if (periodeLabelWrap && !periodeLabelWrap._bound) {
+      periodeLabelWrap.style.cursor = 'pointer';
+      periodeLabelWrap.addEventListener('click', homeOpenPeriodePicker);
+      periodeLabelWrap._bound = true;
+    }
+    var refreshBtn = document.getElementById('homeRefreshBtn');
+    if (!refreshBtn._bound) {
+      refreshBtn.addEventListener('click', function () {
+        var icon = refreshBtn.querySelector('svg');
+        if (icon) {
+          icon.style.transition = 'transform .5s ease';
+          icon.style.transform = 'rotate(360deg)';
+          setTimeout(function () {
+            icon.style.transition = 'none';
+            icon.style.transform = 'rotate(0deg)';
+          }, 500);
+        }
+        loadJadwalTutorMingguan();
+        loadGenioNews();
+        renderHomePeriode(input.value);
+      });
+      refreshBtn._bound = true;
+    }
+    document.getElementById('homePresensiBanner').onclick = function () {
+      if (window.genioDashboardShowModule) window.genioDashboardShowModule('presensi');
+    };
+    document.getElementById('homeCetakLaporanBtn').onclick = function () {
+      genioToast('Fitur cetak laporan segera hadir', 'loading');
+    };
+    document.getElementById('homeLihatSemuaJadwal').onclick = function () {
+      if (window.genioDashboardShowModule) window.genioDashboardShowModule('kontrak');
+    };
+
+    loadJadwalTutorMingguan();
+    loadGenioNews();
+    renderHomePeriode(input.value);
+
+    var homeColResizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(homeColResizeTimer);
+      homeColResizeTimer = setTimeout(function () {
+        renderTrendChart();
+        homeMatchTrendRangeDockHeight();
+      }, 150);
+    });
+    setTimeout(function () { renderTrendChart(); homeMatchTrendRangeDockHeight(); }, 350);
+  }
+
+  function homeMatchTrendRangeDockHeight() {
+    if (!window.matchMedia('(min-width:900px)').matches) return;
+    var dock = document.getElementById('trendRangeDock');
+    var metricsRow = document.getElementById('trendMetricCardsRow');
+    if (!dock || !metricsRow) return;
+    dock.style.height = 'auto';
+    var targetHeight = metricsRow.offsetHeight;
+    if (targetHeight > 30) {
+      dock.style.height = targetHeight + 'px';
+      dock.style.alignItems = 'center';
+      dock.querySelectorAll('.home-trend-range').forEach(function (btn) {
+        btn.style.height = '100%';
+        btn.style.display = 'flex';
+        btn.style.alignItems = 'center';
+        btn.style.justifyContent = 'center';
+      });
+    }
+  }
+
+  /* Safe stub untuk backwards compatibility */
+  function homeApplyResponsiveColumns() {}
+  function homeMatchJadwalHeight() {}
+
+  /* ===== Genio News: carousel gambar klik-buka-link ===== */
+  async function loadGenioNews() {
+    var session = genioGetSession();
+    if (!session) return;
+    var section = document.getElementById('genioNewsSection');
+    var track = document.getElementById('genioNewsTrack');
+    var dotsWrap = document.getElementById('genioNewsDots');
+
+    try {
+      var nowIso = new Date().toISOString();
+      var rows = await supaRest(
+        'genio_news?select=id,gambar_url,tombol_kontak_url&status=eq.aktif&gambar_url=not.is.null' +
+        '&tanggal_publish=lte.' + nowIso +
+        '&or=(tanggal_expire.gte.' + nowIso + ',tanggal_expire.is.null)' +
+        '&order=tanggal_publish.desc',
+        session.access_token
+      );
+
+      if (!rows.length) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+
+      track.innerHTML = rows.map(function (r) {
+        var img = '<img src="' + homeEsc(r.gambar_url) + '" alt="Genio News" style="width:100%; height:100%; object-fit:cover; display:block;">';
+        var inner = r.tombol_kontak_url
+          ? '<a href="' + homeEsc(r.tombol_kontak_url) + '" target="_top" style="display:block; width:100%; height:100%;">' + img + '</a>'
+          : img;
+        return '<div style="flex:0 0 100%; aspect-ratio:3.2/1; scroll-snap-align:start;">' + inner + '</div>';
+      }).join('');
+
+      if (rows.length > 1) {
+        dotsWrap.innerHTML = rows.map(function (r, i) {
+          return '<span class="genio-news-dot" data-idx="' + i + '" style="width:5px; height:5px; border-radius:50%; background:' + (i === 0 ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.45)') + '; transition:background .2s ease;"></span>';
+        }).join('');
+
+        function goToSlide(idx, instant) {
+          var slideWidth = track.firstChild.getBoundingClientRect().width;
+          track.scrollTo({ left: idx * slideWidth, behavior: instant ? 'auto' : 'smooth' });
+        }
+        function updateDots(activeIdx) {
+          document.querySelectorAll('.genio-news-dot').forEach(function (dot, i) {
+            dot.style.background = i === activeIdx ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.45)';
+          });
+        }
+
+        var currentIdx = 0;
+        clearInterval(track._autoTimer);
+        track._autoTimer = setInterval(function () {
+          var isWrapAround = currentIdx === rows.length - 1;
+          currentIdx = isWrapAround ? 0 : currentIdx + 1;
+          goToSlide(currentIdx, isWrapAround);
+          updateDots(currentIdx);
+        }, 5000);
+
+        var scrollDebounce;
+        track.onscroll = function () {
+          clearTimeout(scrollDebounce);
+          scrollDebounce = setTimeout(function () {
+            var slideWidth = track.firstChild.getBoundingClientRect().width;
+            currentIdx = Math.round(track.scrollLeft / slideWidth);
+            updateDots(currentIdx);
+          }, 80);
+        };
+      } else {
+        dotsWrap.innerHTML = '';
+      }
+    } catch (err) {
+      section.style.display = 'none';
+    }
+  }
+
+  function homeEsc(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+
+  /* ===== Widget Jadwal Tutor Mingguan (Identik Kontrak) ===== */
+  var HOME_JM_HARI = ['fleksibel', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+  var HOME_JM_HARI_LABEL = { senin: 'Sen', selasa: 'Sel', rabu: 'Rab', kamis: 'Kam', jumat: 'Jum', sabtu: 'Sab', minggu: 'Min', fleksibel: 'Flx' };
+  var HOME_JM_COLORS = ['#378ADD', '#E24B4A', '#639922', '#7F77DD', '#D85A30', '#D4537E', '#0F9E86', '#BA7517'];
+  var homeJmSessions = [];
+  var homeJmPreviewKontrakId = null;
+
+  function homeJmColorForTutor(tutorId) {
+    var hash = 0;
+    var s = String(tutorId || '');
+    for (var i = 0; i < s.length; i++) hash = (hash * 31 + s.charCodeAt(i)) >>> 0;
+    return HOME_JM_COLORS[hash % HOME_JM_COLORS.length];
+  }
+
+  function homeWaLink(hp) {
+    if (!hp) return '';
+    var clean = String(hp).replace(/\D/g, '').replace(/^0/, '62');
+    return 'https://wa.me/' + clean;
+  }
+
+  function homeCapitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  async function loadJadwalTutorMingguan() {
+    var session = genioGetSession();
+    if (!session) return;
+    var gridEl = document.getElementById('home-jmGrid');
+    var legendEl = document.getElementById('home-jmLegend');
+    var badge = document.getElementById('homeJmTotalBadge');
+
+    try {
+      var rows = await supaRest(
+        'kontrak_siswa?select=id,status,siswa(nama,orangtua(no_hp)),kontrak_tutor(id,tutor_id,mapel,status,users:users!kontrak_tutor_tutor_id_fkey(nama,no_hp),jadwal(id,hari,jam_mulai,jam_selesai))&status=eq.aktif',
+        session.access_token
+      );
+
+      homeJmSessions = [];
+      (rows || []).forEach(function (k) {
+        (k.kontrak_tutor || []).forEach(function (kt) {
+          if (kt.status && kt.status !== 'aktif') return;
+          var tutorNama = (kt.users && kt.users.nama) || 'Tutor';
+          var tutorHp = kt.users && kt.users.no_hp;
+          var siswaNama = (k.siswa && k.siswa.nama) || '-';
+          var ortuHp = k.siswa && k.siswa.orangtua && k.siswa.orangtua.no_hp;
+          var mapel = kt.mapel || 'Bimbel';
+          (kt.jadwal || []).forEach(function (j) {
+            var hari = (j.hari || 'fleksibel').toLowerCase().trim();
+            if (HOME_JM_HARI.indexOf(hari) === -1) hari = 'fleksibel';
+            var jamMulai = (j.jam_mulai || '').slice(0, 5);
+            var jamSelesai = (j.jam_selesai || '').slice(0, 5);
+            homeJmSessions.push({
+              hari: hari,
+              jam: jamMulai,
+              jamSelesai: jamSelesai,
+              tutorId: kt.tutor_id,
+              tutorNama: tutorNama,
+              tutorHp: tutorHp,
+              mapel: mapel,
+              siswaNama: siswaNama,
+              ortuHp: ortuHp,
+              kontrakId: k.id
+            });
+          });
+        });
+      });
+
+      if (badge) {
+        badge.textContent = homeJmSessions.length + ' Sesi / Mgg';
+      }
+
+      renderJadwalTutorMatrix();
+    } catch (err) {
+      if (gridEl) {
+        gridEl.innerHTML = '<div style="padding:16px; text-align:center; color:var(--red); font-size:11.5px;">Gagal memuat jadwal tutor: ' + homeEsc(err.message) + '</div>';
+      }
+      if (legendEl) legendEl.innerHTML = '';
+    }
+  }
+
+  function renderJadwalTutorMatrix() {
+    var gridEl = document.getElementById('home-jmGrid');
+    var legendEl = document.getElementById('home-jmLegend');
+    if (!gridEl) return;
+
+    if (!homeJmSessions.length) {
+      gridEl.innerHTML = '<div class="empty-state" style="padding:20px;">Belum ada jadwal tutor.</div>';
+      if (legendEl) legendEl.innerHTML = '';
+      return;
+    }
+
+    var jamSet = {};
+    homeJmSessions.forEach(function (s) { if (s.jam) jamSet[s.jam] = true; });
+    var jamList = Object.keys(jamSet).sort();
+    if (!jamList.length) jamList = ['08:00'];
+
+    var todayIdx = new Date().getDay(); // 0=Minggu, 1=Senin, ...
+    var todayHari = HOME_JM_HARI[todayIdx === 0 ? 7 : todayIdx];
+
+    var html = '<div class="home-jm-grid">';
+    html += '<div></div>';
+    HOME_JM_HARI.forEach(function (h) {
+      var isSpecial = h === todayHari || h === 'fleksibel';
+      html += '<div class="home-jm-head"' + (isSpecial ? ' style="background:var(--blue-tint); color:var(--blue); border-radius:6px; padding:3px 0 5px;"' : '') + '>' + HOME_JM_HARI_LABEL[h] + '</div>';
+    });
+
+    jamList.forEach(function (jam) {
+      html += '<div class="home-jm-hour">' + jam + '</div>';
+      HOME_JM_HARI.forEach(function (hari) {
+        var isSpecial = hari === todayHari || hari === 'fleksibel';
+        var matches = homeJmSessions.filter(function (s) { return s.hari === hari && s.jam === jam; });
+        var dots = matches.map(function (s) {
+          return '<button type="button" class="home-jm-dot" data-idx="' + homeJmSessions.indexOf(s) + '" style="background:' + homeJmColorForTutor(s.tutorId) + ';" aria-label="' + homeEsc(s.tutorNama) + '"></button>';
+        }).join('');
+        html += '<div class="home-jm-cell"' + (isSpecial ? ' style="background:rgba(55,138,221,.08);"' : '') + '>' + dots + '</div>';
+      });
+    });
+    html += '</div>';
+    gridEl.innerHTML = html;
+
+    gridEl.querySelectorAll('.home-jm-dot').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var s = homeJmSessions[parseInt(btn.dataset.idx, 10)];
+        if (s) homeOpenJmPreview(s, btn);
+      });
+    });
+
+    if (legendEl) {
+      var tutorMap = {};
+      homeJmSessions.forEach(function (s) { tutorMap[s.tutorId] = s.tutorNama; });
+      legendEl.innerHTML = Object.keys(tutorMap).map(function (id) {
+        return '<span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:' + homeJmColorForTutor(id) + '; display:inline-block; flex:none;"></span><span style="font-size:10px; color:var(--ink-soft); white-space:nowrap;">' + homeEsc(tutorMap[id]) + '</span></span>';
+      }).join('');
+    }
+  }
+
+  var homeJmPreviewModal = document.getElementById('home-jmPreviewModal');
+
+  function homeOpenJmPreview(session, dotEl) {
+    if (!homeJmPreviewModal) return;
+    homeJmPreviewKontrakId = session.kontrakId;
+    var initials = (session.tutorNama || '').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || 'T';
+    var color = homeJmColorForTutor(session.tutorId);
+    var avatarEl = document.getElementById('home-jmPreviewAvatar');
+    if (avatarEl) {
+      avatarEl.textContent = initials;
+      avatarEl.style.background = color;
+    }
+    var tutorEl = document.getElementById('home-jmPreviewTutor');
+    if (tutorEl) tutorEl.textContent = session.tutorNama;
+    var siswaEl = document.getElementById('home-jmPreviewSiswa');
+    if (siswaEl) siswaEl.textContent = session.siswaNama;
+    var jadwalEl = document.getElementById('home-jmPreviewJadwal');
+    if (jadwalEl) jadwalEl.textContent = homeCapitalize(session.hari) + ' \u2022 ' + (session.jam || '-') + '-' + (session.jamSelesai || '-');
+
+    var chatTutorBtn = document.getElementById('home-jmChatTutorBtn');
+    var chatOrtuBtn = document.getElementById('home-jmChatOrtuBtn');
+    if (chatTutorBtn) {
+      chatTutorBtn.style.display = 'flex';
+      chatTutorBtn.href = homeWaLink(session.tutorHp) || '#';
+      chatTutorBtn.onclick = session.tutorHp ? null : function (e) { e.preventDefault(); genioToast('Nomor WhatsApp tutor belum tersedia', 'error'); };
+    }
+    if (chatOrtuBtn) {
+      chatOrtuBtn.style.display = 'flex';
+      chatOrtuBtn.href = homeWaLink(session.ortuHp) || '#';
+      chatOrtuBtn.onclick = session.ortuHp ? null : function (e) { e.preventDefault(); genioToast('Nomor WhatsApp orang tua belum tersedia', 'error'); };
+    }
+
+    var card = document.getElementById('homeSecJadwalTutor');
+    if (!card) return;
+    var cardRect = card.getBoundingClientRect();
+    var dotRect = dotEl.getBoundingClientRect();
+    homeJmPreviewModal.style.display = 'flex';
+    var popW = homeJmPreviewModal.offsetWidth || 230;
+    var left = dotRect.left - cardRect.left + dotRect.width / 2 - popW / 2;
+    left = Math.max(4, Math.min(left, cardRect.width - popW - 4));
+    var top = dotRect.top - cardRect.top - homeJmPreviewModal.offsetHeight - 8;
+    if (top < 0) top = dotRect.bottom - cardRect.top + 8;
+    homeJmPreviewModal.style.left = left + 'px';
+    homeJmPreviewModal.style.top = top + 'px';
+
+    clearTimeout(window._homeJmPreviewTimer);
+    window._homeJmPreviewTimer = setTimeout(homeCloseJmPreview, 5000);
+  }
+
+  function homeCloseJmPreview() {
+    if (homeJmPreviewModal) homeJmPreviewModal.style.display = 'none';
+  }
+
+  document.addEventListener('click', function (e) {
+    if (homeJmPreviewModal && homeJmPreviewModal.style.display === 'flex' && !homeJmPreviewModal.contains(e.target) && !e.target.classList.contains('home-jm-dot')) {
+      homeCloseJmPreview();
+    }
+  });
+
+  var homeGotoBtn = document.getElementById('home-jmPreviewGotoBtn');
+  if (homeGotoBtn) {
+    homeGotoBtn.addEventListener('click', function () {
+      homeCloseJmPreview();
+      if (window.genioDashboardShowModule) {
+        window.genioDashboardShowModule('kontrak');
+        if (homeJmPreviewKontrakId && typeof ktrGotoKontrak === 'function') {
+          setTimeout(function () { ktrGotoKontrak(homeJmPreviewKontrakId); }, 200);
+        }
+      }
+    });
+  }
+
+  async function renderHomePeriode(periode) {
+    var session = genioGetSession();
+    if (!session) return;
+    var token = session.access_token;
+
+    document.getElementById('homePeriodeLabel').textContent = homeFormatPeriodeLabel(periode);
+    var range = homePeriodeRange(periode);
+    var prevPeriode = homePrevPeriode(periode);
+
+    try {
+      var prevRange = homePeriodeRange(prevPeriode);
+      var results = await Promise.all([
+        supaRest('invoice?select=nominal&periode=eq.' + periode, token),
+        supaRest('invoice?select=nominal&periode=eq.' + prevPeriode, token),
+        supaRest('slip_gaji?select=total_gaji&periode=eq.' + periode, token),
+        supaRest('slip_gaji?select=total_gaji&periode=eq.' + prevPeriode, token),
+        supaRest('operasional?select=nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token),
+        supaRest('operasional?select=nominal&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, token),
+        supaRest('kontrak_siswa?select=siswa_id&status=eq.aktif', token),
+        supaRest('presensi?select=id&status=in.(diterima,visit)&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token),
+        supaRest('presensi?select=id&status=in.(diterima,visit)&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, token),
+        supaRest('presensi?select=id&status=eq.pending', token)
+      ]);
+
+      var invoiceNow = results[0], invoicePrev = results[1], slipNow = results[2], slipPrev = results[3],
+          opsNow = results[4], opsPrev = results[5], kontrakAktif = results[6],
+          pertemuanNow = results[7], pertemuanPrev = results[8], pendingPresensi = results[9];
+
+      var omset = homeSum(invoiceNow, 'nominal');
+      var omsetPrev = homeSum(invoicePrev, 'nominal');
+      var totalGaji = homeSum(slipNow, 'total_gaji');
+      var totalGajiPrev = homeSum(slipPrev, 'total_gaji');
+      var totalOps = homeSum(opsNow, 'nominal');
+      var totalOpsPrev = homeSum(opsPrev, 'nominal');
+      var pengeluaran = totalGaji + totalOps;
+      var pengeluaranPrev = totalGajiPrev + totalOpsPrev;
+      var laba = omset - pengeluaran;
+      var labaPrev = omsetPrev - pengeluaranPrev;
+      var marginPct = omset > 0 ? (laba / omset) * 100 : 0;
+
+      var siswaAktifSet = {};
+      kontrakAktif.forEach(function (r) { siswaAktifSet[r.siswa_id] = true; });
+      var siswaAktifCount = Object.keys(siswaAktifSet).length;
+
+      homeRevealValue(document.getElementById('homeOmset'), homeFormatRupiah(omset));
+      document.getElementById('homeOmsetDelta').innerHTML = homeDeltaBadge(omset, omsetPrev, false);
+      homeRevealValue(document.getElementById('homeLaba'), homeFormatRupiah(laba));
+      document.getElementById('homeMargin').textContent = omset > 0 ? ('Margin ' + marginPct.toFixed(1) + '%') : 'Margin -';
+      document.getElementById('homeLabaDelta').innerHTML = homeDeltaBadge(laba, labaPrev, false);
+      homeRevealValue(document.getElementById('homeOperasional'), homeFormatRupiah(pengeluaran));
+      document.getElementById('homeOperasionalDelta').innerHTML = homeDeltaBadge(pengeluaran, pengeluaranPrev, false);
+
+      homeRevealValue(document.getElementById('homeSiswaAktif'), String(siswaAktifCount));
+      document.getElementById('homeSiswaPct').innerHTML = homePercentPill(siswaAktifCount, 0);
+      // Catatan: status kontrak_siswa cuma snapshot terkini (bukan historis per-bulan),
+      // jadi belum ada pembanding bulan lalu yang valid -> ikuti aturan "anggap naik 100%".
+      document.getElementById('homeSiswaSub').innerHTML = homeCountDeltaLine(siswaAktifCount, 0, 'Siswa');
+
+      homeRevealValue(document.getElementById('homePertemuan'), String(pertemuanNow.length));
+      document.getElementById('homePertemuanPct').innerHTML = homePercentPill(pertemuanNow.length, pertemuanPrev.length);
+      document.getElementById('homePertemuanSub').innerHTML = homeCountDeltaLine(pertemuanNow.length, pertemuanPrev.length, 'Pertemuan');
+
+      var pendingCount = pendingPresensi.length;
+      homeRevealValue(document.getElementById('homePresensiPendingText'), pendingCount + ' Presensi Menunggu Approval');
+
+      var badge = document.getElementById('bnPresensiBadge');
+      if (badge) {
+        if (pendingCount > 0) {
+          badge.textContent = pendingCount > 99 ? '99+' : pendingCount;
+          badge.hidden = false;
+        } else {
+          badge.hidden = true;
+        }
+      }
+      var bellBadge = document.getElementById('homeBellBadge');
+      if (bellBadge) {
+        if (pendingCount > 0) {
+          bellBadge.textContent = pendingCount > 99 ? '99+' : pendingCount;
+          bellBadge.hidden = false;
+        } else {
+          bellBadge.hidden = true;
+        }
+      }
+    } catch (err) {
+      genioToast('Gagal memuat data Home: ' + err.message, 'error');
+    }
+
+    loadUnitBreakdown(periode);
+    loadTrendData(periode);
+  }
+
+  /* ===== Penyebaran Data 5 Unit ===== */
+  var homeUnitDataCache = null;
+  var homeCurrentUnitMetric = 'siswa';
+  var UNIT_METRICS = ['siswa', 'omset', 'laba', 'pengeluaran', 'tutor'];
+
+  async function loadUnitBreakdown(periode) {
+    var session = genioGetSession();
+    if (!session) return;
+    var range = homePeriodeRange(periode);
+    var prevPeriode = homePrevPeriode(periode);
+    var prevRange = homePeriodeRange(prevPeriode);
+    var container = document.getElementById('homeUnitTable');
+
+    try {
+      var results = await Promise.all([
+        supaRest('units?select=id,nama_unit&order=nama_unit.asc', session.access_token),
+        supaRest('users?select=id,nama,unit_id&role=eq.kepala_unit', session.access_token),
+        supaRest('kontrak_siswa?select=unit_id,siswa_id&status=eq.aktif', session.access_token),
+        supaRest('kontrak_tutor?select=unit_id,tutor_id&status=eq.aktif', session.access_token),
+        supaRest('invoice?select=unit_id,nominal&periode=eq.' + periode, session.access_token),
+        supaRest('invoice?select=unit_id,nominal&periode=eq.' + prevPeriode, session.access_token),
+        supaRest('presensi?select=unit_id,nominal_dibayar&status=in.(diterima,visit)&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, session.access_token),
+        supaRest('presensi?select=unit_id,nominal_dibayar&status=in.(diterima,visit)&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token),
+        supaRest('operasional?select=unit_id,nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, session.access_token),
+        supaRest('operasional?select=unit_id,nominal&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token)
+      ]);
+      var units = results[0], kepalaUsers = results[1], kontrakSiswaAktif = results[2], kontrakTutorAktif = results[3],
+          invoiceRows = results[4], invoiceRowsPrev = results[5],
+          presensiRows = results[6], presensiRowsPrev = results[7],
+          opsRows = results[8], opsRowsPrev = results[9];
+
+      var kepalaByUnit = {};
+      kepalaUsers.forEach(function (u) { kepalaByUnit[u.unit_id] = u.nama; });
+
+      function sumByUnit(rows, field) {
+        var out = {};
+        rows.forEach(function (r) { out[r.unit_id] = (out[r.unit_id] || 0) + parseFloat(r[field] || 0); });
+        return out;
+      }
+      function distinctCountByUnit(rows, field) {
+        var sets = {};
+        rows.forEach(function (r) { (sets[r.unit_id] = sets[r.unit_id] || {})[r[field]] = true; });
+        var out = {};
+        Object.keys(sets).forEach(function (k) { out[k] = Object.keys(sets[k]).length; });
+        return out;
+      }
+
+      var siswaByUnit = distinctCountByUnit(kontrakSiswaAktif, 'siswa_id');
+      var tutorByUnit = distinctCountByUnit(kontrakTutorAktif, 'tutor_id');
+      var omsetByUnit = sumByUnit(invoiceRows, 'nominal');
+      var omsetPrevByUnit = sumByUnit(invoiceRowsPrev, 'nominal');
+      var gajiByUnit = sumByUnit(presensiRows, 'nominal_dibayar');
+      var gajiPrevByUnit = sumByUnit(presensiRowsPrev, 'nominal_dibayar');
+      var opsByUnit = sumByUnit(opsRows, 'nominal');
+      var opsPrevByUnit = sumByUnit(opsRowsPrev, 'nominal');
+
+      homeUnitDataCache = units.map(function (u) {
+        var omset = omsetByUnit[u.id] || 0;
+        var omsetPrev = omsetPrevByUnit[u.id] || 0;
+        var gaji = gajiByUnit[u.id] || 0;
+        var gajiPrev = gajiPrevByUnit[u.id] || 0;
+        var ops = opsByUnit[u.id] || 0;
+        var opsPrev = opsPrevByUnit[u.id] || 0;
+        var pengeluaran = gaji + ops;
+        var pengeluaranPrev = gajiPrev + opsPrev;
+        return {
+          id: u.id,
+          nama_unit: u.nama_unit,
+          kepala: kepalaByUnit[u.id] || 'Belum ditugaskan',
+          siswa: siswaByUnit[u.id] || 0,
+          tutor: tutorByUnit[u.id] || 0,
+          omset: omset, omsetPrev: omsetPrev,
+          laba: omset - pengeluaran, labaPrev: omsetPrev - pengeluaranPrev,
+          pengeluaran: pengeluaran, pengeluaranPrev: pengeluaranPrev,
+          gaji: gaji, ops: ops
+        };
+      });
+
+      revealUnitTable();
+    } catch (err) {
+      container.innerHTML = '<div style="padding:16px; text-align:center; color:var(--red); font-size:12px;">Gagal memuat data unit: ' + homeEsc(err.message) + '</div>';
+    }
+  }
+
+  var UNIT_TOTAL_LABELS = {
+    siswa: 'Total Siswa Konsolidasi',
+    omset: 'Total Omset 5 Cabang',
+    laba: 'Total Laba Operasional',
+    pengeluaran: 'Total Pengeluaran 5 Cabang',
+    tutor: 'Total Tutor Terdaftar'
+  };
+  var UNIT_COLUMN_LABELS = {
+    siswa: 'Siswa &amp; Perubahan',
+    omset: 'Omset &amp; Perubahan',
+    laba: 'Laba &amp; Perubahan',
+    pengeluaran: 'Pengeluaran &amp; Perubahan',
+    tutor: 'Tutor &amp; Perubahan'
+  };
+
+  function homeFormatRupiahSmart(n) {
+    n = n || 0;
+    if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1) + ' Jt';
+    return homeFormatRupiah(n);
+  }
+  function homeFormatRupiahSmartLong(n) {
+    n = n || 0;
+    if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1) + ' Juta';
+    return homeFormatRupiah(n);
+  }
+
+  function homePillDelta(current, previous, hasHistory) {
+    var pct, isUp;
+    if (!hasHistory) { pct = 100; isUp = true; }
+    else { pct = previous ? ((current - previous) / previous) * 100 : 100; isUp = pct >= 0; }
+    var bg = isUp ? 'var(--green-soft)' : 'var(--red-soft)';
+    var fg = isUp ? 'var(--green)' : 'var(--red)';
+    var arrow = isUp ? '&#8593;' : '&#8595;';
+    var sign = isUp ? '+' : '';
+    return '<span style="display:inline-block; background:' + bg + '; color:' + fg + '; font-weight:700; font-size:10px; padding:2px 8px; border-radius:999px; white-space:nowrap;">' + sign + pct.toFixed(1) + '% ' + arrow + '</span>';
+  }
+
+  function homeTotalPill(current, previous, hasHistory, diffLabel) {
+    var pct, isUp;
+    if (!hasHistory) { pct = 100; isUp = true; }
+    else { pct = previous ? ((current - previous) / previous) * 100 : 100; isUp = pct >= 0; }
+    var bg = isUp ? 'var(--green-soft)' : 'var(--red-soft)';
+    var fg = isUp ? 'var(--green)' : 'var(--red)';
+    var sign = isUp ? '+' : '';
+    var text = sign + pct.toFixed(1) + '% vs Bulan Lalu' + (diffLabel ? ' (' + diffLabel + ')' : '');
+    return '<span style="display:inline-block; background:' + bg + '; color:' + fg + '; font-weight:700; font-size:10px; padding:3px 10px; border-radius:999px; white-space:nowrap;">' + text + '</span>';
+  }
+
+  function homeScramble(text) {
+    return text.replace(/[0-9]/g, function () { return Math.floor(Math.random() * 10); });
+  }
+
+  function renderUnitTable(scramble) {
+    var container = document.getElementById('homeUnitTable');
+    if (!homeUnitDataCache) return;
+    var metric = homeCurrentUnitMetric;
+    var isMoney = (metric === 'omset' || metric === 'laba' || metric === 'pengeluaran');
+    var hasHistory = isMoney; // siswa & tutor belum ada data historis per-bulan
+    var unitLabel = metric === 'siswa' ? ' Siswa' : (metric === 'tutor' ? ' Tutor' : '');
+
+    var colRightEl = document.getElementById('homeUnitColRight');
+    if (colRightEl) colRightEl.innerHTML = UNIT_COLUMN_LABELS[metric];
+
+    var total = 0, totalPrev = 0;
+
+    var rowsHtml = homeUnitDataCache.map(function (u, idx) {
+      var val = u[metric];
+      var prevVal = hasHistory ? u[metric + 'Prev'] : 0;
+      total += val;
+      totalPrev += prevVal;
+      var display = isMoney ? homeFormatRupiahSmart(val) : (val + unitLabel);
+      if (scramble) display = homeScramble(display);
+      var subLine = metric === 'pengeluaran'
+        ? ('<span style="color:var(--red); font-size:9.5px;">Gaji ' + homeFormatRupiahSmart(u.gaji) + ' &middot; Ops ' + homeFormatRupiahSmart(u.ops) + '</span>')
+        : ('<span style="color:var(--blue);">' + homeEsc(u.kepala) + '</span>');
+      return '' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--surface); border-radius:10px; padding:6px 9px; margin-bottom:4px;">' +
+          '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
+            '<div style="width:26px; height:26px; border-radius:8px; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:9.5px; flex:none;">U' + (idx + 1) + '</div>' +
+            '<div style="min-width:0;">' +
+              '<div style="font-size:11.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Unit ' + (idx + 1) + ' &ndash; ' + homeEsc(u.nama_unit) + '</div>' +
+              '<div style="font-size:9.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + subLine + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="text-align:right; flex:none;">' +
+            '<div style="font-size:11px; font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; margin-bottom:2px;">' + display + '</div>' +
+            homePillDelta(val, prevVal, hasHistory) +
+          '</div>' +
+        '</div>';
+    }).join('');
+
+    var totalDisplay = isMoney ? homeFormatRupiahSmartLong(total) : (total + unitLabel);
+    if (scramble) totalDisplay = homeScramble(totalDisplay);
+    var diffLabel = null;
+    if (hasHistory) {
+      var diff = total - totalPrev;
+      var sign = diff >= 0 ? '+' : '-';
+      diffLabel = sign + homeFormatRupiahSmart(Math.abs(diff));
+    }
+    rowsHtml += '' +
+      '<div style="background:var(--blue); border-radius:10px; padding:10px 12px; margin-top:4px;">' +
+        '<div style="font-size:9px; font-weight:700; color:rgba(255,255,255,.75); text-transform:uppercase; letter-spacing:.02em; margin-bottom:4px;">' + UNIT_TOTAL_LABELS[metric] + '</div>' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">' +
+          '<div style="font-size:15px; font-weight:800; color:#fff; font-variant-numeric:tabular-nums;">' + totalDisplay + '</div>' +
+          homeTotalPill(total, totalPrev, hasHistory, diffLabel) +
+        '</div>' +
+      '</div>';
+
+    container.innerHTML = rowsHtml;
+  }
+
+  function updateUnitTabGlider(metric) {
+    var glider = document.getElementById('unitTabGlider');
+    var btn = document.querySelector('.home-unit-tab[data-metric="' + metric + '"]');
+    if (!glider) return;
+    var idx = UNIT_METRICS.indexOf(metric);
+    if (idx === -1) idx = 0;
+    if (btn && btn.offsetWidth > 0) {
+      glider.style.width = btn.offsetWidth + 'px';
+      glider.style.left = btn.offsetLeft + 'px';
+    } else {
+      glider.style.width = 'calc(20% - 4.8px)';
+      glider.style.left = 'calc(' + (idx * 20) + '% + 4px)';
+    }
+  }
+
+  function setUnitTabActive(metric) {
+    document.querySelectorAll('.home-unit-tab').forEach(function (b) {
+      b.style.color = (b.dataset.metric === metric) ? 'var(--ink)' : 'var(--ink-soft)';
+    });
+  }
+
+  /* Ganti metrik tabel unit dengan animasi geser kiri/kanan mengikuti arah pindah tab */
+  function switchUnitMetric(newMetric) {
+    homeCurrentUnitMetric = newMetric;
+    revealUnitTable();
+  }
+
+  /* Render tabel unit berulang dengan angka acak (efek "mengocok" yang benar-benar
+     berjalan/flicker), lalu ~450ms kemudian settle ke angka asli. */
+  function revealUnitTable() {
+    clearInterval(window._unitTableScrambleTimer);
+    clearTimeout(window._unitTableRevealTimer);
+    renderUnitTable(true);
+    window._unitTableScrambleTimer = setInterval(function () { renderUnitTable(true); }, 60);
+    window._unitTableRevealTimer = setTimeout(function () {
+      clearInterval(window._unitTableScrambleTimer);
+      renderUnitTable(false);
+    }, 450);
+  }
+
+  document.querySelectorAll('.home-unit-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      setUnitTabActive(btn.dataset.metric);
+      updateUnitTabGlider(btn.dataset.metric);
+      switchUnitMetric(btn.dataset.metric);
+    });
+  });
+
+  /* Drag/geser header tab — animasi & mekanisme sama seperti bottom bar */
+  (function initUnitTabScrubbing() {
+    var dock = document.getElementById('unitTabDock');
+    var glider = document.getElementById('unitTabGlider');
+    if (!dock || !glider) return;
+
+    var isPointerDown = false, isDragging = false, hasDragged = false, suppressClick = false;
+    var startX = 0, startY = 0, pointerId = null;
+    var cachedLeft = 0, cachedWidth = 0, cachedGliderWidth = 0, targetMetric = homeCurrentUnitMetric;
+    var DRAG_THRESHOLD = 8;
+
+    dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    dock.addEventListener('click', function (e) {
+      if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+
+    dock.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
+      pointerId = e.pointerId; startX = e.clientX; startY = e.clientY;
+      var rect = dock.getBoundingClientRect();
+      cachedLeft = rect.left; cachedWidth = rect.width;
+      cachedGliderWidth = glider.offsetWidth || (rect.width / UNIT_METRICS.length);
+      targetMetric = homeCurrentUnitMetric;
+    });
+
+    dock.addEventListener('pointermove', function (e) {
+      if (!isPointerDown) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!hasDragged) {
+        if (Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+          isDragging = true; hasDragged = true; suppressClick = true;
+          try { dock.setPointerCapture(pointerId); } catch (_) {}
+        }
+      }
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        var relX = e.clientX - cachedLeft;
+        var clampedPx = Math.max(0, Math.min(cachedWidth - cachedGliderWidth, relX - cachedGliderWidth / 2));
+        glider.style.transition = 'none';
+        glider.style.left = clampedPx + 'px';
+        var ratio = Math.max(0, Math.min(0.999, relX / cachedWidth));
+        var newIdx = Math.min(UNIT_METRICS.length - 1, Math.max(0, Math.floor(ratio * UNIT_METRICS.length)));
+        targetMetric = UNIT_METRICS[newIdx];
+        setUnitTabActive(targetMetric);
+      }
+    });
+
+    function endScrub() {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      glider.style.transition = '';
+      if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+      if (hasDragged) {
+        isDragging = false;
+        updateUnitTabGlider(targetMetric);
+        switchUnitMetric(targetMetric);
+        setTimeout(function () { suppressClick = false; }, 80);
+      } else {
+        suppressClick = false;
+      }
+    }
+    dock.addEventListener('pointerup', endScrub);
+    dock.addEventListener('pointercancel', endScrub);
+  })();
+  setUnitTabActive(homeCurrentUnitMetric);
+  updateUnitTabGlider(homeCurrentUnitMetric);
+
+  /* ===== Trend Progress Cabang ===== */
+  var homeTrendCache = null;
+  var homeTrendRange = 3;
+  var homeTrendMetric = 'omset';
+  var TREND_RANGES = [3, 6, 12];
+  var TREND_COLORS = { omset: '#1C1AAF', laba: '#1E8E5A', sesi: '#F59E0B' };
+
+  function homeMonthsBack(endPeriode, n) {
+    var result = [];
+    var cur = endPeriode;
+    for (var i = 0; i < n; i++) { result.unshift(cur); cur = homePrevPeriode(cur); }
+    return result;
+  }
+
+  async function loadTrendData(endPeriode) {
+    var session = genioGetSession();
+    if (!session) return;
+    var periods = homeMonthsBack(endPeriode, 12);
+    var earliestRange = homePeriodeRange(periods[0]);
+    var latestRange = homePeriodeRange(periods[periods.length - 1]);
+    var periodeListSql = periods.join(',');
+
+    try {
+      var results = await Promise.all([
+        supaRest('invoice?select=periode,nominal&periode=in.(' + periodeListSql + ')', session.access_token),
+        supaRest('presensi?select=tanggal,nominal_dibayar&status=in.(diterima,visit)&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token),
+        supaRest('operasional?select=tanggal,nominal&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token)
+      ]);
+      var invoiceRows = results[0], presensiRows = results[1], opsRows = results[2];
+
+      var omsetByMonth = {}, gajiByMonth = {}, sesiByMonth = {}, opsByMonth = {};
+      periods.forEach(function (p) { omsetByMonth[p] = 0; gajiByMonth[p] = 0; sesiByMonth[p] = 0; opsByMonth[p] = 0; });
+      invoiceRows.forEach(function (r) { if (omsetByMonth[r.periode] !== undefined) omsetByMonth[r.periode] += parseFloat(r.nominal || 0); });
+      presensiRows.forEach(function (r) {
+        var m = r.tanggal.substring(0, 7);
+        if (sesiByMonth[m] !== undefined) { sesiByMonth[m] += 1; gajiByMonth[m] += parseFloat(r.nominal_dibayar || 0); }
+      });
+      opsRows.forEach(function (r) {
+        var m = r.tanggal.substring(0, 7);
+        if (opsByMonth[m] !== undefined) opsByMonth[m] += parseFloat(r.nominal || 0);
+      });
+
+      homeTrendCache = {
+        periods: periods,
+        omset: periods.map(function (p) { return omsetByMonth[p]; }),
+        laba: periods.map(function (p) { return omsetByMonth[p] - gajiByMonth[p] - opsByMonth[p]; }),
+        sesi: periods.map(function (p) { return sesiByMonth[p]; })
+      };
+      renderTrendChart();
+    } catch (err) {
+      document.getElementById('homeTrendFooter').textContent = 'Gagal memuat tren: ' + err.message;
+    }
+  }
+
+  function homeHideTrendTooltip() {
+    var tooltip = document.getElementById('homeTrendTooltip');
+    if (tooltip) tooltip.style.display = 'none';
+  }
+
+  function homeShowTrendTooltip(circleEl, text) {
+    var tooltip = document.getElementById('homeTrendTooltip');
+    var wrap = document.getElementById('homeTrendChartWrap');
+    if (!tooltip || !wrap) return;
+    var wrapRect = wrap.getBoundingClientRect();
+    var circleRect = circleEl.getBoundingClientRect();
+    var x = circleRect.left + circleRect.width / 2 - wrapRect.left;
+    var y = circleRect.top - wrapRect.top;
+    tooltip.innerHTML = text;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+    tooltip.style.display = 'block';
+    clearTimeout(window._homeTrendTooltipTimer);
+    window._homeTrendTooltipTimer = setTimeout(homeHideTrendTooltip, 3000);
+  }
+
+  function renderTrendChart() {
+    if (!homeTrendCache) return;
+    var n = homeTrendRange;
+    var periods = homeTrendCache.periods.slice(-n);
+
+    homeRevealValue(document.getElementById('homeTrendOmsetVal'), homeFormatRupiahSmart(homeTrendCache.omset[homeTrendCache.omset.length - 1]));
+    homeRevealValue(document.getElementById('homeTrendLabaVal'), homeFormatRupiahSmart(homeTrendCache.laba[homeTrendCache.laba.length - 1]));
+    homeRevealValue(document.getElementById('homeTrendSesiVal'), homeTrendCache.sesi[homeTrendCache.sesi.length - 1] + ' sesi');
+
+    var chartWrap = document.getElementById('homeTrendChartWrap');
+    var w = (chartWrap && chartWrap.offsetWidth) || 340;
+    var h = (chartWrap && chartWrap.offsetHeight) || 140;
+    var padX = Math.max(20, w * 0.06), padY = Math.max(16, h * 0.14);
+    document.getElementById('homeTrendSvg').setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+
+    function toPoints(values) {
+      var minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values);
+      if (minV === maxV) { minV -= 1; maxV += 1; }
+      return values.map(function (v, i) {
+        var x = padX + (i / (values.length - 1 || 1)) * (w - padX * 2);
+        var y = h - padY - ((v - minV) / (maxV - minV)) * (h - padY * 2);
+        return { x: x, y: y, rawVal: v };
+      });
+    }
+    function buildSmoothPath(points) {
+      var d = 'M ' + points[0].x + ' ' + points[0].y;
+      for (var i = 1; i < points.length; i++) {
+        var prev = points[i - 1], cur = points[i];
+        var cpX = (prev.x + cur.x) / 2;
+        d += ' C ' + cpX + ' ' + prev.y + ', ' + cpX + ' ' + cur.y + ', ' + cur.x + ' ' + cur.y;
+      }
+      return d;
+    }
+    function displayValFor(key, val) {
+      return (key === 'sesi') ? (val + ' sesi') : homeFormatRupiahSmart(val);
+    }
+
+    var legend = document.getElementById('homeTrendLegend');
+
+    if (homeTrendMetric === 'semua') {
+      legend.style.display = 'flex';
+      legend.innerHTML = ['omset', 'laba', 'sesi'].map(function (key) {
+        return '<span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:' + TREND_COLORS[key] + '; display:inline-block;"></span>' + key.toUpperCase() + '</span>';
+      }).join('');
+
+      var seriesOrder = ['sesi', 'laba', 'omset']; // digambar terakhir = paling atas/terlihat
+      var seriesData = {};
+      seriesOrder.forEach(function (key) {
+        var values = homeTrendCache[key].slice(-n);
+        seriesData[key] = { values: values, points: toPoints(values) };
+      });
+
+      var defsHtml = '';
+      var fillsHtml = '';
+      var strokesHtml = '';
+      seriesOrder.forEach(function (key) {
+        var color = TREND_COLORS[key];
+        var points = seriesData[key].points;
+        var pathD = buildSmoothPath(points);
+        var areaD = pathD + ' L ' + points[points.length - 1].x + ' ' + h + ' L ' + points[0].x + ' ' + h + ' Z';
+        var gradId = 'homeTrendGrad_' + key;
+        defsHtml += '<linearGradient id="' + gradId + '" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0%" stop-color="' + color + '" stop-opacity="0.22"/>' +
+          '<stop offset="100%" stop-color="' + color + '" stop-opacity="0"/>' +
+        '</linearGradient>';
+        fillsHtml += '<path d="' + areaD + '" fill="url(#' + gradId + ')"/>';
+        strokesHtml += '<path d="' + pathD + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+        strokesHtml += points.map(function (p, idx) {
+          return '<circle class="trend-dot" data-metric="' + key + '" data-idx="' + idx + '" cx="' + p.x + '" cy="' + p.y + '" r="3.5" fill="#fff" stroke="' + color + '" stroke-width="2" style="cursor:pointer;"/>';
+        }).join('');
+      });
+
+      document.getElementById('homeTrendSvg').innerHTML = '<defs>' + defsHtml + '</defs>' + fillsHtml + strokesHtml;
+
+      document.querySelectorAll('#homeTrendSvg .trend-dot').forEach(function (circle) {
+        circle.addEventListener('click', function () {
+          var key = circle.dataset.metric;
+          var idx = +circle.dataset.idx;
+          var val = homeTrendCache[key].slice(-n)[idx];
+          homeShowTrendTooltip(circle, key.toUpperCase() + ' &middot; ' + homeFormatPeriodeLabel(periods[idx]) + ': ' + displayValFor(key, val));
+        });
+      });
+    } else {
+      legend.style.display = 'none';
+      var values = homeTrendCache[homeTrendMetric].slice(-n);
+      var color = TREND_COLORS[homeTrendMetric];
+      var points = toPoints(values);
+      var pathD = buildSmoothPath(points);
+      var areaD = pathD + ' L ' + points[points.length - 1].x + ' ' + h + ' L ' + points[0].x + ' ' + h + ' Z';
+      var circles = points.map(function (p, idx) {
+        return '<circle class="trend-dot" data-idx="' + idx + '" cx="' + p.x + '" cy="' + p.y + '" r="4" fill="#fff" stroke="' + color + '" stroke-width="2.5" style="cursor:pointer;"/>';
+      }).join('');
+
+      document.getElementById('homeTrendSvg').innerHTML =
+        '<defs><linearGradient id="homeTrendGrad" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0%" stop-color="' + color + '" stop-opacity="0.25"/>' +
+          '<stop offset="100%" stop-color="' + color + '" stop-opacity="0"/>' +
+        '</linearGradient></defs>' +
+        '<path d="' + areaD + '" fill="url(#homeTrendGrad)"/>' +
+        '<path d="' + pathD + '" fill="none" stroke="' + color + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
+        circles;
+
+      document.querySelectorAll('#homeTrendSvg .trend-dot').forEach(function (circle) {
+        circle.addEventListener('click', function () {
+          var idx = +circle.dataset.idx;
+          homeShowTrendTooltip(circle, homeFormatPeriodeLabel(periods[idx]) + ': ' + displayValFor(homeTrendMetric, values[idx]));
+        });
+      });
+    }
+
+    document.getElementById('homeTrendFooter').textContent =
+      'Menampilkan tren ' + n + ' bulan terakhir (' + homeFormatPeriodeLabel(periods[0]) + ' - ' + homeFormatPeriodeLabel(periods[periods.length - 1]) + ')';
+
+    document.querySelectorAll('.home-trend-metric').forEach(function (btn) {
+      var m = btn.dataset.metric;
+      if (m === 'semua') {
+        var isSemuaActive = homeTrendMetric === 'semua';
+        btn.style.border = isSemuaActive ? '1.5px solid var(--ink)' : '1.5px solid var(--border)';
+        btn.style.background = isSemuaActive ? 'var(--surface)' : '#fff';
+        return;
+      }
+      var isActive = homeTrendMetric === m;
+      var c = TREND_COLORS[m];
+      btn.style.border = isActive ? ('1.5px solid ' + c) : '1.5px solid var(--border)';
+      btn.style.background = isActive ? (c + '1A') : '#fff';
+      var labelEl = btn.querySelector('div:first-child');
+      if (labelEl) labelEl.style.color = isActive ? c : 'var(--ink-soft)';
+    });
+  }
+
+  document.querySelectorAll('.home-trend-metric').forEach(function (btn) {
+    btn.addEventListener('click', function () { homeTrendMetric = btn.dataset.metric; homeHideTrendTooltip(); renderTrendChart(); });
+  });
+
+  function updateTrendRangeGlider(range) {
+    var glider = document.getElementById('trendRangeGlider');
+    var btn = document.querySelector('.home-trend-range[data-range="' + range + '"]');
+    if (!glider) return;
+    var idx = TREND_RANGES.indexOf(range);
+    if (idx === -1) idx = 0;
+    if (btn && btn.offsetWidth > 0) {
+      glider.style.width = btn.offsetWidth + 'px';
+      glider.style.left = btn.offsetLeft + 'px';
+    } else {
+      glider.style.width = 'calc(33.33% - 5.3px)';
+      glider.style.left = 'calc(' + (idx * 33.33) + '% + 4px)';
+    }
+  }
+  function setTrendRangeActive(range) {
+    document.querySelectorAll('.home-trend-range').forEach(function (b) {
+      b.style.color = (+b.dataset.range === range) ? 'var(--ink)' : 'var(--ink-soft)';
+    });
+  }
+  document.querySelectorAll('.home-trend-range').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      homeTrendRange = parseInt(btn.dataset.range, 10);
+      setTrendRangeActive(homeTrendRange);
+      updateTrendRangeGlider(homeTrendRange);
+      homeHideTrendTooltip();
+      renderTrendChart();
+    });
+  });
+  setTrendRangeActive(homeTrendRange);
+  updateTrendRangeGlider(homeTrendRange);
+
+  /* Drag/geser toggle 3/6/12 Bulan — mekanisme sama seperti bottom bar & tab unit */
+  (function initTrendRangeScrubbing() {
+    var dock = document.getElementById('trendRangeDock');
+    var glider = document.getElementById('trendRangeGlider');
+    if (!dock || !glider) return;
+
+    var isPointerDown = false, isDragging = false, hasDragged = false, suppressClick = false;
+    var startX = 0, startY = 0, pointerId = null;
+    var cachedLeft = 0, cachedWidth = 0, cachedGliderWidth = 0, targetRange = homeTrendRange;
+    var DRAG_THRESHOLD = 8;
+
+    dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    dock.addEventListener('click', function (e) {
+      if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+
+    dock.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
+      pointerId = e.pointerId; startX = e.clientX; startY = e.clientY;
+      var rect = dock.getBoundingClientRect();
+      cachedLeft = rect.left; cachedWidth = rect.width;
+      cachedGliderWidth = glider.offsetWidth || (rect.width / TREND_RANGES.length);
+      targetRange = homeTrendRange;
+    });
+
+    dock.addEventListener('pointermove', function (e) {
+      if (!isPointerDown) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!hasDragged) {
+        if (Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+          isDragging = true; hasDragged = true; suppressClick = true;
+          try { dock.setPointerCapture(pointerId); } catch (_) {}
+        }
+      }
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        var relX = e.clientX - cachedLeft;
+        var clampedPx = Math.max(0, Math.min(cachedWidth - cachedGliderWidth, relX - cachedGliderWidth / 2));
+        glider.style.transition = 'none';
+        glider.style.left = clampedPx + 'px';
+        var ratio = Math.max(0, Math.min(0.999, relX / cachedWidth));
+        var newIdx = Math.min(TREND_RANGES.length - 1, Math.max(0, Math.floor(ratio * TREND_RANGES.length)));
+        targetRange = TREND_RANGES[newIdx];
+        setTrendRangeActive(targetRange);
+      }
+    });
+
+    function endScrub() {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      glider.style.transition = '';
+      if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+      if (hasDragged) {
+        isDragging = false;
+        homeTrendRange = targetRange;
+        updateTrendRangeGlider(homeTrendRange);
+        homeHideTrendTooltip();
+        renderTrendChart();
+        setTimeout(function () { suppressClick = false; }, 80);
+      } else {
+        suppressClick = false;
+      }
+    }
+    dock.addEventListener('pointerup', endScrub);
+    dock.addEventListener('pointercancel', endScrub);
+  })();
+</script>

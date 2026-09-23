@@ -1,0 +1,2401 @@
+<div class="module-panel" data-module="tagihan" hidden>
+<style>
+  /* =========================================================
+     MODUL TAGIHAN & KUITANSI (GENIO 2.0)
+     Standardized high-density typography, desktop density,
+     split-view responsiveness, and universal compact table.
+     ========================================================= */
+
+  .tg-card{
+    border-radius: 12px;
+  }
+  .tg-periode-sec{
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+
+  .tg-hero-sec{
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .tg-dock-sec{
+    margin-bottom: 12px !important;
+  }
+  .tg-search-sec{
+    margin-bottom: 12px;
+  }
+  #tg-filterBtn, #tg-viewToggleBtn{
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  #tg-filterBtn:active, #tg-viewToggleBtn:active{
+    transform: scale(.9);
+  }
+
+  .tg-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .tg-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .tg-hero-total-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .tg-hero-unit-pill{
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .tg-hero-counter{
+    margin-top: 4px;
+  }
+  .tg-hero-sublabel{
+    display: block;
+    font-size: 9.5px;
+    opacity: .65;
+  }
+  .tg-hero-num-wrap{
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 1px;
+  }
+  .tg-hero-num{
+    font-size: 20px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .tg-hero-unit{
+    font-size: 11px;
+    opacity: .65;
+    font-weight: 600;
+  }
+  .tg-hero-stats-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,.14);
+  }
+  .tg-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 10px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .tg-hero-stat-icon{
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .tg-hero-stat-label{
+    font-size: 9px;
+    opacity: .65;
+    white-space: nowrap;
+  }
+  .tg-hero-stat-val{
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: 1px;
+    font-variant-numeric: tabular-nums;
+  }
+  .tg-hero-actions{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tg-hero-action-btn{
+    width: 100%;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    color: #fff;
+    border-radius: 8px;
+    padding: 0 10px;
+    height: 28px;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .tg-hero-action-btn:hover{
+    background: rgba(255,255,255,.2);
+    border-color: rgba(255,255,255,.35);
+  }
+  .tg-hero-action-btn:active{ transform: scale(.97); }
+  .tg-hero-action-btn.tg-primary-btn{
+    background: #fff !important;
+    color: var(--ink) !important;
+    font-weight: 700 !important;
+    border: none !important;
+  }
+  .tg-hero-action-btn.tg-primary-btn:hover{
+    background: #f2f2f7 !important;
+  }
+
+  /* Desktop Density Optimizations */
+  @media (min-width: 900px){
+    .module-panel[data-module="tagihan"][hidden]{ display:none !important; }
+    .module-panel[data-module="tagihan"]:not([hidden]){
+      width: 100% !important; max-width: 100% !important; min-width: 0 !important; margin: 0 auto;
+      box-sizing: border-box !important;
+    }
+    .tg-periode-sec{
+      margin-bottom: 12px !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+    }
+    .tg-hero-sec{
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+    }
+    .tg-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+    .tg-hero-badges{
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+    .tg-hero-total-pill,
+    .tg-hero-unit-pill{
+      font-size: 8.5px !important;
+      padding: 2px 7px !important;
+    }
+    .tg-hero-sublabel{ display: none !important; }
+    .tg-hero-counter{ margin-top: 1px !important; }
+    .tg-hero-num{ font-size: 18px !important; }
+    .tg-hero-stats-row{
+      flex: 1 !important;
+      max-width: 580px;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 14px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+    }
+    .tg-hero-stat-card{
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+    }
+  }
+
+  /* Toolbar Row: Desktop dock di kiri search bar; Mobile full-width stacked */
+  .tg-toolbar-row{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+  @media (min-width: 900px){
+    .tg-toolbar-row{
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      margin-bottom: 8px !important;
+    }
+    .tg-toolbar-row .tg-dock-sec{
+      margin-bottom: 0 !important;
+      flex: none !important;
+    }
+    .tg-toolbar-row .tg-search-sec{
+      margin-bottom: 0 !important;
+      flex: 1 !important;
+      max-width: 520px !important;
+    }
+  }
+
+  /* Status Dock Switcher (Pill Glider) */
+  .tg-dock{
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2.5px;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    height: 32px;
+  }
+  @media (min-width: 900px){
+    .tg-dock{
+      width: auto !important;
+      min-width: 240px;
+    }
+  }
+  .tg-dock-glider{
+    position: absolute;
+    top: 2.5px;
+    bottom: 2.5px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    transition: all .25s cubic-bezier(.34,1.56,.64,1);
+    z-index: 0;
+  }
+  .tg-dock-btn{
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    height: 27px;
+    border: none;
+    background: transparent;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 12px;
+    white-space: nowrap;
+    transition: color .2s ease;
+  }
+  .tg-dock-btn.tg-dock-active{
+    color: var(--ink) !important;
+    font-weight: 700 !important;
+  }
+
+  /* Table Styles */
+  .tg-table-card{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+    margin-bottom: 16px;
+  }
+  .tg-table-wrap{
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tg-table{
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: var(--font);
+    font-size: 11.5px;
+    box-sizing: border-box !important;
+  }
+  .tg-table th{
+    padding: 6px 8px;
+    background: rgba(0,0,0,.025);
+    border-bottom: 1px solid var(--border);
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: .02em;
+    white-space: nowrap;
+    vertical-align: top !important;
+  }
+  .tg-table th.tg-sort-th{
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: color .15s ease, background .15s ease;
+  }
+  .tg-table th.tg-sort-th:hover{
+    color: var(--ink);
+    background: rgba(0,0,0,.04);
+  }
+  .tg-table td{
+    padding: 5px 8px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    color: var(--ink);
+    vertical-align: top !important;
+    font-size: 11.5px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+  .tg-table tbody tr:last-child td{
+    border-bottom: none;
+  }
+  .tg-table tbody tr{
+    transition: background .12s ease;
+  }
+  .tg-table tbody tr:hover{
+    background: rgba(0,122,255,.03);
+  }
+
+  .tg-table-icon-btn{
+    width: 24px !important;
+    height: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    flex: none;
+    background: var(--surface) !important;
+    color: var(--ink-soft) !important;
+    border: 1px solid var(--border) !important;
+    box-sizing: border-box !important;
+    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    text-decoration: none;
+  }
+  .tg-table-icon-btn:hover{
+    background: #fff !important;
+    color: var(--ink) !important;
+    border-color: rgba(20, 22, 43, 0.22) !important;
+  }
+  .tg-table-icon-btn:active{
+    transform: scale(.9);
+  }
+  .tg-table-icon-btn.tg-has-pdf{
+    color: var(--blue) !important;
+    border-color: rgba(0,122,255,.3) !important;
+    background: rgba(0,122,255,.06) !important;
+  }
+
+  /* Siswa Pill Tag */
+  .tg-siswa-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    color: var(--ink);
+    font-weight: 400;
+    margin: 1px 2px;
+    white-space: nowrap;
+  }
+  .tg-siswa-sesi-tag{
+    color: var(--ink-soft);
+    font-size: 9.5px;
+    font-weight: 500;
+  }
+
+  /* Status Badge */
+  .tg-status-pill{
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0 7px;
+    font-family: var(--font);
+    font-size: 9.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+  .tg-status-dot{
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex: none;
+    margin-right: 4px;
+  }
+
+  /* Card Item */
+  .tg-card-item{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.03);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .tg-card-item:hover{
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+  }
+
+
+  /* =========================================================
+     MODAL OVERLAY & POPUP SHEET (STANDAR KONTRAK & PRESENSI)
+     Centered horizontally and vertically with backdrop blur
+     ========================================================= */
+  #tg-filterModal, #tg-pickerModal, #tg-lunasModal, #tg-previewModal, #tg-confirmModal{
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(20,22,43,.45) !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .28s ease;
+    box-sizing: border-box !important;
+  }
+  #tg-filterModal.show, #tg-pickerModal.show, #tg-lunasModal.show, #tg-previewModal.show, #tg-confirmModal.show{
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  #tg-filterModal[hidden], #tg-pickerModal[hidden], #tg-lunasModal[hidden], #tg-previewModal[hidden], #tg-confirmModal[hidden]{
+    display: none !important;
+  }
+  #tg-filterModal .modal-sheet, #tg-pickerModal .modal-sheet, #tg-lunasModal .modal-sheet, #tg-confirmModal .modal-sheet{
+    border-radius: 16px !important;
+    width: 100% !important;
+    max-width: 400px !important;
+    margin: 0 auto !important;
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+    padding: 16px 18px 18px !important;
+    box-sizing: border-box !important;
+    background: #fff !important;
+    box-shadow: 0 16px 40px -10px rgba(20,22,43,.18) !important;
+    transform: scale(.88) translateY(10px);
+    transition: transform .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #tg-previewModal .modal-sheet{
+    border-radius: 16px !important;
+    width: 100% !important;
+    max-width: 540px !important;
+    margin: 0 auto !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    padding: 16px 18px 18px !important;
+    box-sizing: border-box !important;
+    background: #fff !important;
+    box-shadow: 0 16px 40px -10px rgba(20,22,43,.18) !important;
+    transform: scale(.88) translateY(10px);
+    transition: transform .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #tg-confirmModal .modal-sheet{
+    max-width: 360px !important;
+    text-align: center !important;
+  }
+  #tg-filterModal.show .modal-sheet, #tg-pickerModal.show .modal-sheet, #tg-lunasModal.show .modal-sheet, #tg-previewModal.show .modal-sheet, #tg-confirmModal.show .modal-sheet{
+    transform: scale(1) translateY(0) !important;
+  }
+
+  #tg-filterModal .modal-actions .btn,
+  #tg-pickerModal .modal-actions .btn,
+  #tg-lunasModal .modal-actions .btn,
+  #tg-previewModal .modal-actions .btn,
+  #tg-confirmModal .modal-actions .btn{
+    height: 36px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 9px !important;
+    padding: 0 16px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+  .modal-actions .btn-primary{
+    background: var(--blue) !important;
+    border-color: var(--blue) !important;
+    color: #fff !important;
+  }
+
+  /* Form iOS Groups */
+  .tg-group-title{
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    margin: 8px 0 4px 4px;
+  }
+  .tg-group{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .tg-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .tg-row:last-child{
+    border-bottom: none;
+  }
+  .tg-row input[type="date"]{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-family: var(--font);
+    font-size: 11.5px;
+    color: var(--ink);
+  }
+
+  /* Print Preview Sheet */
+  .tg-print-sheet{
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    color: #24292f;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+</style>
+
+  <!-- Periode Selector (Sama Persis seperti Gaji & Presensi) -->
+  <div class="card tg-card tg-periode-sec" style="display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface); border:1px solid var(--border); margin-bottom:12px;">
+    <div id="tg-periodeLabelWrap" style="min-width:0; cursor:pointer;" title="Klik untuk pilih bulan">
+      <div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Periode Tagihan Siswa</div>
+      <div style="font-size:13px; font-weight:700; margin-top:1px; color:var(--ink);" id="tg-periodeLabel">-</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; flex:none; position:relative;">
+      <button id="tg-refreshBtn" type="button" aria-label="Refresh data tagihan" style="width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; color:var(--ink-soft); transition:all .15s ease;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
+      </button>
+      <button id="tg-pilihPeriodeBtn" type="button" style="height:32px; border:1px solid var(--border); border-radius:8px; padding:0 10px; font-family:var(--font); font-size:11.5px; font-weight:600; color:var(--ink); background:#fff; display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap; transition:all .15s ease;">
+        <span>Pilih Bulan</span>
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      </button>
+      <input type="month" id="tg-periodeInput" style="position:absolute; right:0; bottom:0; width:1px; height:1px; opacity:0; pointer-events:none; border:none;">
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="tg-hero-sec">
+    <div class="tg-hero-main-col">
+      <div class="tg-hero-badges">
+        <span class="tg-hero-total-pill">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+          TAGIHAN &amp; KUITANSI
+        </span>
+        <span class="tg-hero-unit-pill" id="tg-heroUnitBadge">Semua Unit</span>
+      </div>
+      <div class="tg-hero-counter">
+        <span class="tg-hero-sublabel">Total Tagihan Periode Ini</span>
+        <div class="tg-hero-num-wrap">
+          <span class="tg-hero-num" id="tg-heroTotal">Rp 0</span>
+          <span class="tg-hero-unit" id="tg-heroCount">0 Siswa</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tg-hero-stats-row">
+      <div class="tg-hero-stat-card">
+        <div class="tg-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#34c759;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div style="min-width:0;">
+          <div class="tg-hero-stat-label">Lunas Diterima</div>
+          <div class="tg-hero-stat-val" id="tg-heroLunas">Rp 0</div>
+        </div>
+      </div>
+      <div class="tg-hero-stat-card">
+        <div class="tg-hero-stat-icon" style="background:rgba(255,149,0,.2); color:#ff9500;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div style="min-width:0;">
+          <div class="tg-hero-stat-label">Menunggu Pembayaran</div>
+          <div class="tg-hero-stat-val" id="tg-heroBelum">Rp 0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar Row: Status Dock (Belum Lunas & Sudah Lunas) + Search, Filter, View Toggle -->
+  <div id="tg-toolbarRow" class="tg-toolbar-row">
+    <!-- Status Dock Switcher -->
+    <div class="tg-dock tg-dock-sec" id="tg-dock">
+      <div class="tg-dock-glider" id="tg-dockGlider"></div>
+      <button type="button" class="tg-dock-btn tg-dock-active" data-tab="belum_lunas">
+        <span>Belum Lunas</span>
+        <span id="tg-tabCountBelum" style="background:rgba(255,149,0,.15); color:#c06400; font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+      </button>
+      <button type="button" class="tg-dock-btn" data-tab="lunas">
+        <span>Sudah Lunas</span>
+        <span id="tg-tabCountLunas" style="background:rgba(52,199,89,.15); color:#28a745; font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+      </button>
+    </div>
+
+    <!-- Search + Filter + View Toggle (Sama persis seperti di Kontrak) -->
+    <div class="tg-search-sec" style="display:flex; gap:8px;">
+      <div style="flex:1; position:relative;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="tg-searchInput" placeholder="Cari nama orang tua, siswa, atau unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box; outline:none; color:var(--ink);">
+      </div>
+
+      <!-- Button Filter (Popup iOS Grouped Picker) -->
+      <button id="tg-filterBtn" type="button" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        <span id="tg-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:800; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
+      </button>
+
+      <!-- View Toggle: Kartu vs Tabel -->
+      <button id="tg-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content List (Cards or Table) -->
+  <div id="tg-list" class="tg-view-table">
+    <div style="padding:28px 14px; text-align:center; color:var(--ink-soft); font-size:12px;">Memuat tagihan...</div>
+  </div>
+
+  <!-- =========================================================
+       MODALS
+       ========================================================= -->
+
+  <!-- Modal 1: Tandai Lunas & Buat Kuitansi -->
+  <div class="modal-overlay" id="tg-lunasModal" hidden>
+    <div class="modal-sheet">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px;">
+        <div>
+          <h3 style="font-size:13.5px; font-weight:700; margin:0 0 2px;">Konfirmasi Pembayaran Lunas</h3>
+          <p id="tg-lunasModalSub" style="font-size:11px; color:var(--ink-soft); margin:0;">Menerbitkan tanda terima kuitansi otomatis</p>
+        </div>
+        <button type="button" id="tg-lunasCloseX" aria-label="Tutup" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:2px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="tg-group-title">Rincian Tagihan</div>
+      <div class="tg-group" id="tg-lunasInfoBox" style="margin-bottom:10px; padding:10px 12px;">
+        <!-- Filled by JS -->
+      </div>
+
+      <div class="tg-group-title">Tanggal Pembayaran</div>
+      <div class="tg-group" style="margin-bottom:4px;">
+        <div class="tg-row">
+          <label for="tg-lunasTanggalInput">Tanggal Pembayaran Diterima</label>
+          <input type="date" id="tg-lunasTanggalInput">
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top:14px; display:flex; gap:8px;">
+        <button type="button" class="btn btn-outline" id="tg-lunasCancelBtn" style="flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="tg-lunasSubmitBtn" style="flex:1; background:#28a745 !important; border-color:#28a745 !important;">Tandai Lunas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Preview Dokumen (Invoice / Kuitansi Printable) -->
+  <div class="modal-overlay" id="tg-previewModal" hidden>
+    <div class="modal-sheet">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+        <div>
+          <h3 id="tg-previewDocTitle" style="font-size:13.5px; font-weight:700; margin:0 0 2px;">Dokumen Tagihan</h3>
+          <p id="tg-previewDocSub" style="font-size:11px; color:var(--ink-soft); margin:0;">Pratinjau &amp; cetak dokumen resmi</p>
+        </div>
+        <button type="button" id="tg-previewCloseX" aria-label="Tutup" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:2px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div id="tg-previewContainer" style="max-height:62vh; overflow-y:auto; padding-right:2px;">
+        <!-- Injected by JS -->
+      </div>
+
+      <div class="modal-actions" style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-primary" id="tg-previewPrintBtn" style="flex:1; min-width:140px; display:inline-flex; align-items:center; justify-content:center; gap:5px; cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span id="tg-previewPrintBtnText">Cetak Dokumen (PDF)</span>
+        </button>
+        <a id="tg-previewDriveBtn" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="flex:1; min-width:125px; display:none; align-items:center; justify-content:center; gap:5px; color:var(--blue); border-color:rgba(0,122,255,.3); text-decoration:none; box-sizing:border-box;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span>Buka di Drive</span>
+        </a>
+        <button type="button" class="btn" id="tg-previewWaBtn" style="flex:1; min-width:115px; background:#25D366; color:#fff; display:inline-flex; align-items:center; justify-content:center; gap:5px; border:none; cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>
+          Kirim via WA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Konfirmasi Tindakan (Hapus / Batal Lunas) -->
+  <div class="modal-overlay" id="tg-confirmModal" hidden>
+    <div class="modal-sheet" style="max-width:360px; text-align:center;">
+      <div id="tg-confirmIcon" style="width:38px; height:38px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:16px;">
+        &#9888;&#65039;
+      </div>
+      <h3 id="tg-confirmTitle" style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Konfirmasi</h3>
+      <p id="tg-confirmDesc" style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; line-height:1.45;">Apakah Anda yakin?</p>
+      <div class="modal-actions" style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-outline" id="tg-confirmCancelBtn" style="flex:1;">Batal</button>
+        <button type="button" class="btn" id="tg-confirmOkBtn" style="flex:1; background:var(--red); color:#fff;">Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Filter Tagihan (Unit & Status Cetak Dokumen PDF) -->
+  <div class="modal-overlay" id="tg-filterModal" hidden>
+    <div class="modal-sheet" style="max-height:88vh; overflow-y:auto;">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Filter</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar tagihan sesuai kebutuhan.</p>
+
+      <div class="tg-group-title">Unit / Cabang</div>
+      <div class="tg-group" style="margin-bottom:4px;">
+        <button type="button" class="tg-filter-row-btn" data-picker="unit" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="tg-filterUnitSummary">Semua Unit</span>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="tg-group-title">Status Cetak Dokumen</div>
+      <div class="tg-group">
+        <button type="button" class="tg-filter-row-btn" data-picker="cetak" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="tg-filterCetakSummary">Semua Dokumen</span>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="tg-filterResetBtn" style="flex:1;">Reset</button>
+        <button type="button" class="btn btn-primary" id="tg-filterApplyBtn" style="flex:1;">Terapkan Filter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 6: Popup Picker (Pilih Unit / Status Dokumen) -->
+  <div class="modal-overlay" id="tg-pickerModal" hidden style="z-index:70;">
+    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
+      <h3 id="tg-pickerTitle" style="font-size:13.5px; font-weight:700; margin:0 0 10px;">Pilih</h3>
+      <div id="tg-pickerList" style="margin-bottom:6px;"></div>
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
+        <button type="button" class="btn btn-outline" id="tg-pickerCancelBtn" style="flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="tg-pickerDoneBtn" style="flex:1;">Selesai</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var TG_BULAN_NAMA = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ];
+
+  var TG_TABS = ['belum_lunas', 'lunas'];
+
+  var tgState = {
+    periode: null,
+    tab: 'belum_lunas', // 'belum_lunas' | 'lunas'
+    search: '',
+    filterUnit: '',
+    filterCetak: '', // '' | 'sudah_dicetak' | 'belum_dicetak'
+    viewMode: (window.matchMedia && window.matchMedia('(min-width:900px)').matches) ? 'table' : 'cards',
+    sortField: 'nominal',
+    sortDesc: true,
+    rows: [],
+    unitList: [],
+    selectedKey: null,
+    candidateRows: []
+  };
+
+  function tgEscape(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function tgFormatRp(n) {
+    return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
+  }
+
+  function tgTerbilang(angka) {
+    angka = Math.floor(Math.abs(Number(angka) || 0));
+    var huruf = ['', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
+    if (angka < 12) return huruf[angka];
+    if (angka < 20) return tgTerbilang(angka - 10) + ' Belas';
+    if (angka < 100) return tgTerbilang(Math.floor(angka / 10)) + ' Puluh ' + huruf[angka % 10];
+    if (angka < 200) return 'Seratus ' + tgTerbilang(angka - 100);
+    if (angka < 1000) return tgTerbilang(Math.floor(angka / 100)) + ' Ratus ' + tgTerbilang(angka % 100);
+    if (angka < 2000) return 'Seribu ' + tgTerbilang(angka - 1000);
+    if (angka < 1000000) return tgTerbilang(Math.floor(angka / 1000)) + ' Ribu ' + tgTerbilang(angka % 1000);
+    if (angka < 1000000000) return tgTerbilang(Math.floor(angka / 1000000)) + ' Juta ' + tgTerbilang(angka % 1000000);
+    return tgTerbilang(Math.floor(angka / 1000000000)) + ' Miliar ' + tgTerbilang(angka % 1000000000);
+  }
+
+  function tgFormatTgl(iso) {
+    if (!iso) return '-';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '-';
+    return String(d.getDate()).padStart(2, '0') + ' ' + TG_BULAN_NAMA[d.getMonth()].slice(0, 3) + ' ' + d.getFullYear();
+  }
+
+  function tgFormatPeriodeLabel(periodeStr) {
+    if (!periodeStr) return '-';
+    var parts = periodeStr.split('-');
+    if (parts.length < 2) return periodeStr;
+    var y = parts[0], m = parseInt(parts[1], 10) - 1;
+    return (TG_BULAN_NAMA[m] || parts[1]) + ' ' + y;
+  }
+
+  function tgPeriodeDateRange() {
+    var p = tgState.periode || '';
+    var parts = p.split('-');
+    var y = parseInt(parts[0], 10) || new Date().getFullYear();
+    var m = parseInt(parts[1], 10) || (new Date().getMonth() + 1);
+    var lastDay = new Date(y, m, 0).getDate();
+    var mm = String(m).padStart(2, '0');
+    return {
+      start: y + '-' + mm + '-01',
+      end: y + '-' + mm + '-' + String(lastDay).padStart(2, '0')
+    };
+  }
+
+  function tgUpdatePeriodeLabel() {
+    var labelEl = document.getElementById('tg-periodeLabel');
+    if (labelEl) labelEl.textContent = tgFormatPeriodeLabel(tgState.periode);
+  }
+
+  function tgOpenPeriodePicker() {
+    if (typeof window.genioOpenMonthYearPicker === 'function') {
+      window.genioOpenMonthYearPicker({
+        currentValue: tgState.periode,
+        title: 'Periode Tagihan Siswa',
+        onSelect: function (val) {
+          tgState.periode = val;
+          tgUpdatePeriodeLabel();
+          tgLoadAll();
+        }
+      });
+    } else {
+      var input = document.getElementById('tg-periodeInput');
+      if (input) {
+        input.value = tgState.periode || '';
+        if (typeof input.showPicker === 'function') {
+          input.showPicker();
+        } else {
+          input.click();
+        }
+      }
+    }
+  }
+
+  // =========================================================
+  // VIEW SWITCHER (CARDS VS TABLE)
+  // =========================================================
+
+  function tgUpdateViewToggleUI() {
+    var btn = document.getElementById('tg-viewToggleBtn');
+    if (!btn) return;
+    var isTable = tgState.viewMode === 'table';
+    if (isTable) {
+      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>';
+    } else {
+      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+    }
+  }
+
+  function tgToggleViewMode() {
+    tgState.viewMode = (tgState.viewMode === 'table') ? 'cards' : 'table';
+    try { localStorage.setItem('genio_tg_view_mode', tgState.viewMode); } catch (e) {}
+    tgUpdateViewToggleUI();
+    tgRenderList();
+  }
+
+  // =========================================================
+  // GLIDER ANIMATION FOR STATUS DOCK SWITCHER
+  // =========================================================
+
+  function tgUpdateGlider() {
+    var dock = document.getElementById('tg-dock');
+    var glider = document.getElementById('tg-dockGlider');
+    if (!dock || !glider) return;
+    var activeBtn = dock.querySelector('.tg-dock-btn.tg-dock-active');
+    if (!activeBtn) return;
+    glider.style.left = activeBtn.offsetLeft + 'px';
+    glider.style.width = activeBtn.offsetWidth + 'px';
+  }
+
+  function initTgTabScrubbing() {
+    var dock = document.getElementById('tg-dock');
+    if (!dock) return;
+
+    var buttons = Array.from(dock.querySelectorAll('.tg-dock-btn'));
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var tab = btn.dataset.tab;
+        if (tgState.tab === tab) return;
+        tgState.tab = tab;
+        buttons.forEach(function (b) { b.classList.toggle('tg-dock-active', b === btn); });
+        tgUpdateGlider();
+        tgRenderList();
+      });
+    });
+
+    window.addEventListener('resize', tgUpdateGlider);
+    setTimeout(tgUpdateGlider, 100);
+  }
+
+  // =========================================================
+  // DATA FETCHER & REALTIME AGGREGATION FROM PRESENSI
+  // =========================================================
+
+  async function tgLoadUnits() {
+    try {
+      var s = genioGetSession();
+      var res = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+      tgState.unitList = res || [];
+    } catch (e) {
+      console.warn('Gagal memuat list unit tagihan:', e.message);
+    }
+  }
+
+  async function tgLoadAll() {
+    var listEl = document.getElementById('tg-list');
+    listEl.innerHTML = '<div style="padding:28px 14px; text-align:center; color:var(--ink-soft); font-size:12px;"><span class="spinner" style="width:14px; height:14px; margin-right:6px; border-width:2px; display:inline-block;"></span>Memuat dan menyinkronkan data tagihan...</div>';
+
+    try {
+      var s = genioGetSession();
+      var range = tgPeriodeDateRange();
+
+      var unitFilterUrl = '';
+      if (s.role === 'kepala_unit' && s.unit_id) {
+        unitFilterUrl = '&unit_id=eq.' + s.unit_id;
+        var unitBadge = document.getElementById('tg-heroUnitBadge');
+        if (unitBadge) unitBadge.textContent = s.unit_nama || 'Unit';
+      }
+
+      // Query presensi yang diterima pada periode aktif
+      var presensiUrl = 'presensi?select=id,tanggal,status,kontrak_tutor!inner(id,kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)))' +
+        '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end +
+        '&status=in.(diterima,visit)' + unitFilterUrl;
+
+      // Query invoice yang sudah tercatat di database
+      var invoiceUrl = 'invoice?select=id,kontrak_siswa_id,unit_id,periode,jumlah_pertemuan,harga_satuan,nominal,status,tanggal_lunas,pdf_url,' +
+        'kontrak_siswa:kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)),' +
+        'receipt:receipt(id,tanggal_bayar,pdf_url)' +
+        '&periode=eq.' + tgState.periode + unitFilterUrl;
+
+      var results = await Promise.all([
+        supaRest(presensiUrl, s.access_token),
+        supaRest(invoiceUrl, s.access_token)
+      ]);
+
+      var presensiRows = results[0] || [];
+      var existingInvoices = results[1] || [];
+
+      // Hitung akumulasi pertemuan per kontrak siswa
+      var livePresensiMap = {};
+      presensiRows.forEach(function (p) {
+        var kt = p.kontrak_tutor;
+        if (!kt || !kt.kontrak_siswa) return;
+        var ks = kt.kontrak_siswa;
+        if (s.role === 'kepala_unit' && s.unit_id && ks.unit_id !== s.unit_id) return;
+        var kId = ks.id;
+        if (!livePresensiMap[kId]) {
+          livePresensiMap[kId] = {
+            kId: kId,
+            ks: ks,
+            count: 0
+          };
+        }
+        livePresensiMap[kId].count += 1;
+      });
+
+      var invoiceMap = {};
+      existingInvoices.forEach(function (inv) {
+        invoiceMap[inv.kontrak_siswa_id] = inv;
+      });
+
+      var syncPromises = [];
+      var finalInvoices = [];
+
+      // 1. Sinkronisasi invoice yang sudah ada di database
+      for (var i = 0; i < existingInvoices.length; i++) {
+        var inv = existingInvoices[i];
+        var kId = inv.kontrak_siswa_id;
+        var live = livePresensiMap[kId];
+        var liveCount = live ? live.count : 0;
+
+        if (inv.status === 'lunas') {
+          // Status lunas terkunci sebagai snapshot historis
+          finalInvoices.push(inv);
+        } else {
+          // Status belum lunas: REALTIME kalkulasi dari presensi riil
+          if (liveCount > 0) {
+            var ks = inv.kontrak_siswa || (live && live.ks) || {};
+            var harga = parseFloat(ks.harga || inv.harga_satuan || 0);
+            var liveNominal = liveCount * harga;
+
+            if (inv.jumlah_pertemuan !== liveCount || inv.nominal !== liveNominal) {
+              inv.jumlah_pertemuan = liveCount;
+              inv.harga_satuan = harga;
+              inv.nominal = liveNominal;
+              syncPromises.push(
+                supaRest('invoice?id=eq.' + inv.id, s.access_token, {
+                  method: 'PATCH',
+                  body: JSON.stringify({ jumlah_pertemuan: liveCount, harga_satuan: harga, nominal: liveNominal })
+                })
+              );
+            }
+            finalInvoices.push(inv);
+          } else {
+            // Sesi presensi 0 pada invoice belum lunas -> bersihkan
+            syncPromises.push(
+              supaRest('invoice?id=eq.' + inv.id, s.access_token, { method: 'DELETE' })
+            );
+          }
+        }
+      }
+
+      // 2. Kontrak siswa yang memiliki presensi riil tapi belum tercatat di invoice
+      var newContractIds = Object.keys(livePresensiMap).filter(function (cid) {
+        return !invoiceMap[cid];
+      });
+
+      for (var j = 0; j < newContractIds.length; j++) {
+        var newKId = newContractIds[j];
+        var liveData = livePresensiMap[newKId];
+        var ksObj = liveData.ks;
+        var hargaBaru = parseFloat(ksObj.harga || 0);
+        var nomBaru = liveData.count * hargaBaru;
+
+        var newPayload = {
+          kontrak_siswa_id: newKId,
+          unit_id: ksObj.unit_id,
+          periode: tgState.periode,
+          jumlah_pertemuan: liveData.count,
+          harga_satuan: hargaBaru,
+          nominal: nomBaru,
+          status: 'belum_lunas'
+        };
+
+        var postPromise = (async function (payload, ks) {
+          try {
+            var res = await supaRest('invoice', s.access_token, {
+              method: 'POST',
+              headers: { 'Prefer': 'return=representation' },
+              body: JSON.stringify(payload)
+            });
+            var inserted = (Array.isArray(res) ? res[0] : res) || payload;
+            inserted.kontrak_siswa = ks;
+            inserted.units = ks.units || { id: ks.unit_id, nama_unit: '-' };
+            finalInvoices.push(inserted);
+          } catch (e) {
+            console.warn('Auto-create invoice tagihan err:', e.message);
+          }
+        })(newPayload, ksObj);
+
+        syncPromises.push(postPromise);
+      }
+
+      if (syncPromises.length) {
+        await Promise.allSettled(syncPromises);
+      }
+
+      tgState.rows = finalInvoices;
+
+      // Group rows into Orang Tua groups per status
+      var allBelumInvoices = tgState.rows.filter(function (r) { return r.status === 'belum_lunas'; });
+      var allLunasInvoices = tgState.rows.filter(function (r) { return r.status === 'lunas'; });
+
+      var belumGroups = tgGroupRowsByOrtu(allBelumInvoices);
+      var lunasGroups = tgGroupRowsByOrtu(allLunasInvoices);
+
+      var totalNominal = tgState.rows.reduce(function (acc, r) { return acc + parseFloat(r.nominal || 0); }, 0);
+      var totalLunas = allLunasInvoices.reduce(function (acc, r) { return acc + parseFloat(r.nominal || 0); }, 0);
+      var totalBelum = allBelumInvoices.reduce(function (acc, r) { return acc + parseFloat(r.nominal || 0); }, 0);
+
+      var totalOrtu = belumGroups.length + lunasGroups.length;
+
+      document.getElementById('tg-heroTotal').textContent = tgFormatRp(totalNominal);
+      document.getElementById('tg-heroCount').textContent = totalOrtu + ' Ortu (' + tgState.rows.length + ' Tagihan)';
+      document.getElementById('tg-heroLunas').textContent = tgFormatRp(totalLunas);
+      document.getElementById('tg-heroBelum').textContent = tgFormatRp(totalBelum);
+
+      document.getElementById('tg-tabCountBelum').textContent = belumGroups.length;
+      document.getElementById('tg-tabCountLunas').textContent = lunasGroups.length;
+
+      tgRenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="card tg-card" style="padding:24px; text-align:center; color:var(--red); font-size:12px;">Gagal memuat tagihan: ' + tgEscape(err.message) + '</div>';
+    }
+  }
+
+  // =========================================================
+  // FILTER & SORTING (FOCUSED ON ORTU)
+  // =========================================================
+
+  var TG_FILTER_DEFS = {
+    unit: {
+      title: 'Pilih Unit / Cabang',
+      allLabel: 'Semua Unit',
+      getOptions: function () {
+        return [{ value: '', label: 'Semua Unit' }].concat(
+          (tgState.unitList || []).map(function (u) { return { value: u.id, label: u.nama_unit }; })
+        );
+      }
+    },
+    cetak: {
+      title: 'Status Cetak Dokumen PDF',
+      allLabel: 'Semua Dokumen',
+      getOptions: function () {
+        return [
+          { value: '', label: 'Semua Dokumen' },
+          { value: 'sudah_dicetak', label: 'Sudah Dicetak (Ada di Drive)' },
+          { value: 'belum_dicetak', label: 'Belum Dicetak (Belum ada PDF)' }
+        ];
+      }
+    }
+  };
+
+  var tgPickerCurrentType = null;
+  var tgPickerTempSelected = '';
+
+  function tgOpenModal(modalOrId) {
+    var modal = typeof modalOrId === 'string' ? document.getElementById(modalOrId) : modalOrId;
+    if (!modal) return;
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+
+  function tgCloseModal(modalOrId) {
+    var modal = typeof modalOrId === 'string' ? document.getElementById(modalOrId) : modalOrId;
+    if (!modal) return;
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+
+  function tgOpenFilterModal() {
+    var modal = document.getElementById('tg-filterModal');
+    if (!modal) return;
+    tgUpdateFilterSummary('unit');
+    tgUpdateFilterSummary('cetak');
+    tgOpenModal('tg-filterModal');
+  }
+
+  function tgCloseFilterModal() {
+    tgCloseModal('tg-filterModal');
+  }
+
+  function tgUpdateFilterSummary(type) {
+    var def = TG_FILTER_DEFS[type];
+    if (!def) return;
+    var el = document.getElementById(type === 'unit' ? 'tg-filterUnitSummary' : 'tg-filterCetakSummary');
+    if (!el) return;
+    var val = type === 'unit' ? tgState.filterUnit : tgState.filterCetak;
+    if (!val) {
+      el.textContent = def.allLabel;
+      el.style.color = 'var(--ink)';
+    } else {
+      var opt = def.getOptions().find(function (o) { return String(o.value) === String(val); });
+      el.textContent = opt ? opt.label : val;
+      el.style.color = 'var(--blue)';
+    }
+  }
+
+  function tgOpenPicker(type) {
+    var def = TG_FILTER_DEFS[type];
+    if (!def) return;
+    tgPickerCurrentType = type;
+    tgPickerTempSelected = (type === 'unit') ? tgState.filterUnit : tgState.filterCetak;
+
+    var titleEl = document.getElementById('tg-pickerTitle');
+    if (titleEl) titleEl.textContent = def.title;
+
+    tgRenderPickerList(type);
+    tgOpenModal('tg-pickerModal');
+  }
+
+  function tgClosePicker() {
+    tgCloseModal('tg-pickerModal');
+  }
+
+  function tgRenderPickerList(type) {
+    var def = TG_FILTER_DEFS[type];
+    var options = def.getOptions();
+    var listEl = document.getElementById('tg-pickerList');
+    if (!listEl) return;
+    listEl.innerHTML = options.map(function (opt) {
+      var checked = tgPickerTempSelected === opt.value;
+      return '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
+        '<input type="radio" name="tg-picker-opt" class="tg-picker-opt" value="' + tgEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+        tgEscape(opt.label) +
+      '</label>';
+    }).join('');
+    listEl.querySelectorAll('.tg-picker-opt').forEach(function (input) {
+      input.addEventListener('change', function () {
+        tgPickerTempSelected = input.value;
+      });
+    });
+  }
+
+  function tgUpdateFilterBadge() {
+    var badge = document.getElementById('tg-filterCount');
+    if (!badge) return;
+    var n = (tgState.filterUnit ? 1 : 0) + (tgState.filterCetak ? 1 : 0);
+    if (n > 0) {
+      badge.textContent = n;
+      badge.hidden = false;
+    } else {
+      badge.hidden = true;
+    }
+  }
+
+  function tgApplyFilter() {
+    tgUpdateFilterBadge();
+    var uBadge = document.getElementById('tg-heroUnitBadge');
+    if (uBadge) {
+      if (tgState.filterUnit) {
+        var unitObj = (tgState.unitList || []).find(function (u) { return String(u.id) === String(tgState.filterUnit); });
+        uBadge.textContent = unitObj ? (unitObj.nama || unitObj.nama_unit || 'Unit') : 'Unit Terpilih';
+      } else {
+        var s = (window.Auth && window.Auth.getSession) ? window.Auth.getSession() : {};
+        uBadge.textContent = (s.role === 'kepala_unit' && s.unit_nama) ? s.unit_nama : 'Semua Unit';
+      }
+    }
+    tgCloseFilterModal();
+    tgRenderList();
+  }
+
+  function tgResetFilter() {
+    tgState.filterUnit = '';
+    tgState.filterCetak = '';
+    var uBadge = document.getElementById('tg-heroUnitBadge');
+    if (uBadge) {
+      var s = (window.Auth && window.Auth.getSession) ? window.Auth.getSession() : {};
+      uBadge.textContent = (s.role === 'kepala_unit' && s.unit_nama) ? s.unit_nama : 'Semua Unit';
+    }
+    tgUpdateFilterSummary('unit');
+    tgUpdateFilterSummary('cetak');
+    tgUpdateFilterBadge();
+    tgCloseFilterModal();
+    tgRenderList();
+  }
+
+  function tgGetFilteredGroups() {
+    var search = (tgState.search || '').toLowerCase().trim();
+    var unitId = tgState.filterUnit;
+    var filterCetak = tgState.filterCetak;
+    var tab = tgState.tab; // 'belum_lunas' | 'lunas'
+
+    // Filter raw invoices by tab status and unit
+    var rowsForTab = tgState.rows.filter(function (r) {
+      if (r.status !== tab) return false;
+      if (unitId && r.unit_id !== unitId) return false;
+      return true;
+    });
+
+    // Group by Orang Tua
+    var groups = tgGroupRowsByOrtu(rowsForTab);
+
+    // Filter by status cetak dokumen (PDF di Google Drive)
+    if (filterCetak === 'sudah_dicetak') {
+      groups = groups.filter(function (g) {
+        return g.invoices.some(function (inv) { return !!inv.pdf_url; });
+      });
+    } else if (filterCetak === 'belum_dicetak') {
+      groups = groups.filter(function (g) {
+        return g.invoices.every(function (inv) { return !inv.pdf_url; });
+      });
+    }
+
+    // Filter by Search text (nama ortu, anak, atau unit)
+    if (search) {
+      groups = groups.filter(function (g) {
+        if (g.ortuNama.toLowerCase().includes(search)) return true;
+        if (g.unitNama.toLowerCase().includes(search)) return true;
+        return g.children.some(function (c) {
+          return c.nama.toLowerCase().includes(search);
+        });
+      });
+    }
+
+    return groups;
+  }
+
+  function tgGroupRowsByOrtu(rows) {
+    var map = {};
+    rows.forEach(function (r) {
+      var ks = r.kontrak_siswa || {};
+      var s = ks.siswa || {};
+      var ortu = s.ortu || s.orangtua || {};
+      var ortuId = ortu.id || (s.nama ? ('nama_' + s.nama) : ('inv_' + r.id));
+      var ortuNama = ortu.nama || s.nama || 'Orang Tua (Tanpa Nama)';
+      var ortuHp = ortu.no_hp || ortu.nomor_telepon || '';
+      var ortuAlamat = ortu.alamat || '';
+      var unitNama = (r.units && r.units.nama_unit) || (ks.units && ks.units.nama_unit) || '-';
+
+      if (!map[ortuId]) {
+        map[ortuId] = {
+          key: ortuId,
+          ortuId: ortuId,
+          ortuNama: ortuNama,
+          ortuHp: ortuHp,
+          ortuAlamat: ortuAlamat,
+          unitNama: unitNama,
+          unitId: r.unit_id,
+          status: r.status,
+          tanggalLunas: r.tanggal_lunas,
+          totalSesi: 0,
+          totalNominal: 0,
+          invoices: [],
+          childrenMap: {}
+        };
+      }
+
+      var g = map[ortuId];
+      g.invoices.push(r);
+      g.totalSesi += (r.jumlah_pertemuan || 0);
+      g.totalNominal += parseFloat(r.nominal || 0);
+      if (r.tanggal_lunas && (!g.tanggalLunas || new Date(r.tanggal_lunas) > new Date(g.tanggalLunas))) {
+        g.tanggalLunas = r.tanggal_lunas;
+      }
+
+      var anakId = s.id || ('s_' + (s.nama || 'unknown'));
+      if (!g.childrenMap[anakId]) {
+        g.childrenMap[anakId] = {
+          id: anakId,
+          nama: s.nama || 'Siswa',
+          kelas: s.kelas || '',
+          sekolah: s.sekolah || '',
+          sesi: 0,
+          nominal: 0,
+          pakets: [],
+          invoices: []
+        };
+      }
+      var c = g.childrenMap[anakId];
+      c.sesi += (r.jumlah_pertemuan || 0);
+      c.nominal += parseFloat(r.nominal || 0);
+      c.invoices.push(r);
+      var pktNama = ks.paket_belajar ? ks.paket_belajar.nama_paket : '';
+      if (pktNama && c.pakets.indexOf(pktNama) === -1) {
+        c.pakets.push(pktNama);
+      }
+    });
+
+    return Object.values(map).map(function (g) {
+      g.children = Object.values(g.childrenMap);
+      return g;
+    });
+  }
+
+  function tgSortGroups(groups) {
+    var field = tgState.sortField;
+    var desc = tgState.sortDesc ? -1 : 1;
+    return groups.slice().sort(function (a, b) {
+      if (field === 'ortu') {
+        return a.ortuNama.localeCompare(b.ortuNama) * desc;
+      }
+      if (field === 'sesi') {
+        return (a.totalSesi - b.totalSesi) * desc;
+      }
+      if (field === 'nominal') {
+        return (a.totalNominal - b.totalNominal) * desc;
+      }
+      if (field === 'unit') {
+        return a.unitNama.localeCompare(b.unitNama) * desc;
+      }
+      if (field === 'status') {
+        return a.status.localeCompare(b.status) * desc;
+      }
+      return 0;
+    });
+  }
+
+  function tgGetSortIcon(field) {
+    if (tgState.sortField !== field) {
+      return '<span style="opacity:.25; font-size:9px; margin-left:3px;">&#8645;</span>';
+    }
+    return tgState.sortDesc
+      ? '<span style="color:var(--blue); font-size:10px; margin-left:3px;">&#8595;</span>'
+      : '<span style="color:var(--blue); font-size:10px; margin-left:3px;">&#8593;</span>';
+  }
+
+  function tgSortTable(field) {
+    if (tgState.sortField === field) {
+      tgState.sortDesc = !tgState.sortDesc;
+    } else {
+      tgState.sortField = field;
+      tgState.sortDesc = (field === 'nominal' || field === 'sesi');
+    }
+    tgRenderList();
+  }
+
+  // =========================================================
+  // RENDERING (TABLE VIEW & CARDS VIEW)
+  // =========================================================
+
+  function tgRenderTable(groups) {
+    var trs = groups.map(function (g, idx) {
+      var isLunas = g.status === 'lunas';
+      var statusBadge = isLunas
+        ? '<span class="tg-status-pill"><span class="tg-status-dot" style="background:#34c759;"></span><span style="color:#28a745;">Lunas</span></span>'
+        : '<span class="tg-status-pill"><span class="tg-status-dot" style="background:#ff9500;"></span><span style="color:#ff9500;">Belum Lunas</span></span>';
+
+      var cleanHp = (g.ortuHp || '').replace(/\D/g, '').replace(/^0/, '62');
+      var waBtn = cleanHp
+        ? '<a href="' + tgBuildWaLink(g, cleanHp) + '" target="_blank" rel="noopener noreferrer" class="tg-table-icon-btn" title="Hubungi Ortu WA" style="color:#25D366 !important;">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>' +
+          '</a>'
+        : '';
+
+      var hasPdf = g.invoices.some(function (inv) { return !!inv.pdf_url; });
+      var previewBtn = '<button type="button" class="tg-table-icon-btn tg-preview-btn' + (hasPdf ? ' tg-has-pdf' : '') + '" data-key="' + tgEscape(g.key) + '" title="' + (hasPdf ? 'Lihat Dokumen (Tersimpan di Drive)' : 'Lihat &amp; Cetak Dokumen') + '">' +
+          '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+        '</button>';
+
+      var lunasBtn = isLunas
+        ? '<button type="button" class="tg-table-icon-btn tg-batal-lunas-btn" data-key="' + tgEscape(g.key) + '" title="Batalkan status lunas" aria-label="Batal Lunas" style="color:var(--ink-soft);">' +
+            '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>' +
+          '</button>'
+        : '<button type="button" class="tg-table-icon-btn tg-lunas-btn" data-key="' + tgEscape(g.key) + '" title="Tandai pembayaran lunas" aria-label="Tandai Lunas" style="color:#28a745 !important;">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '</button>';
+
+      var delBtn = (!isLunas)
+        ? '<button type="button" class="tg-table-icon-btn tg-del-btn" data-key="' + tgEscape(g.key) + '" data-nama="' + tgEscape(g.ortuNama) + '" title="Hapus Tagihan" aria-label="Hapus">' +
+            '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+          '</button>'
+        : '';
+
+      var siswaBadges = g.children.map(function (c) {
+        return '<span class="tg-siswa-pill" title="' + tgEscape(c.nama + ' (' + c.pakets.join(', ') + ') • ' + c.sesi + ' Sesi • ' + tgFormatRp(c.nominal)) + '">' +
+          tgEscape(c.nama) +
+          '<span class="tg-siswa-sesi-tag">[' + c.sesi + ']</span>' +
+        '</span>';
+      }).join('');
+
+      return '' +
+        '<tr class="tg-table-row" data-key="' + tgEscape(g.key) + '">' +
+          '<td style="text-align:center; width:32px; color:var(--ink-soft); font-size:10.5px;">' + (idx + 1) + '</td>' +
+          '<td>' +
+            '<div style="font-weight:400; color:var(--ink); font-size:11.5px;">' + tgEscape(g.ortuNama) + '</div>' +
+          '</td>' +
+          '<td>' +
+            '<div style="display:flex; align-items:center; flex-wrap:wrap; gap:2px;">' +
+              siswaBadges +
+            '</div>' +
+          '</td>' +
+          '<td style="text-align:center; white-space:nowrap; font-size:11.5px; font-weight:400; color:var(--ink);">' + g.totalSesi + ' Sesi</td>' +
+          '<td style="white-space:nowrap;"><span style="background:var(--surface); border:1px solid var(--border); padding:1.5px 6px; border-radius:4px; font-size:10px; color:var(--ink); font-weight:400;">' + tgEscape(g.unitNama) + '</span></td>' +
+          '<td style="text-align:right; white-space:nowrap; font-weight:400; font-size:11.5px; color:var(--ink); font-variant-numeric:tabular-nums;">' + tgFormatRp(g.totalNominal) + '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + statusBadge + '</td>' +
+          '<td style="text-align:center; white-space:nowrap; width:84px;">' +
+            '<div style="display:inline-flex; align-items:center; gap:3px;">' +
+              waBtn +
+              previewBtn +
+              lunasBtn +
+              delBtn +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+    }).join('');
+
+    return '' +
+      '<div class="tg-table-card">' +
+        '<div class="tg-table-wrap">' +
+          '<table class="tg-table">' +
+            '<thead>' +
+              '<tr>' +
+                '<th style="width:32px; text-align:center;">No</th>' +
+                '<th class="tg-sort-th" data-sort="ortu">' +
+                  '<span style="display:inline-flex; align-items:center;">Orang Tua' + tgGetSortIcon('ortu') + '</span>' +
+                '</th>' +
+                '<th style="text-align:left;">Siswa</th>' +
+                '<th class="tg-sort-th" data-sort="sesi" style="text-align:center;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:center;">Total Sesi' + tgGetSortIcon('sesi') + '</span>' +
+                '</th>' +
+                '<th class="tg-sort-th" data-sort="unit">' +
+                  '<span style="display:inline-flex; align-items:center;">Unit' + tgGetSortIcon('unit') + '</span>' +
+                '</th>' +
+                '<th class="tg-sort-th" data-sort="nominal" style="text-align:right;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:flex-end;">Total Tagihan' + tgGetSortIcon('nominal') + '</span>' +
+                '</th>' +
+                '<th class="tg-sort-th" data-sort="status" style="text-align:center;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:center;">Status' + tgGetSortIcon('status') + '</span>' +
+                '</th>' +
+                '<th style="text-align:center; width:84px;">Aksi</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' +
+              trs +
+            '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function tgRenderCard(g) {
+    var isLunas = g.status === 'lunas';
+    var statusBadge = isLunas
+      ? '<span class="tg-status-pill" style="background:rgba(52,199,89,.12); color:#28a745;"><span class="tg-status-dot" style="background:#34c759;"></span>Lunas</span>'
+      : '<span class="tg-status-pill" style="background:rgba(255,149,0,.12); color:#ff9500;"><span class="tg-status-dot" style="background:#ff9500;"></span>Belum Lunas</span>';
+
+    var cleanHp = (g.ortuHp || '').replace(/\D/g, '').replace(/^0/, '62');
+    var waBtn = cleanHp
+      ? '<a href="' + tgBuildWaLink(g, cleanHp) + '" target="_blank" rel="noopener noreferrer" class="tg-table-icon-btn" title="Hubungi Ortu WA" style="color:#25D366 !important;">' +
+          '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>' +
+        '</a>'
+      : '';
+
+    var actionBtn = isLunas
+      ? '<button type="button" class="tg-batal-lunas-btn" data-key="' + tgEscape(g.key) + '" style="background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); font-size:10.5px; font-weight:600; padding:0 8px; height:24px; border-radius:6px; cursor:pointer;">Batalkan</button>'
+      : '<button type="button" class="tg-lunas-btn" data-key="' + tgEscape(g.key) + '" style="background:#28a745; border:none; color:#fff; font-size:10.5px; font-weight:700; padding:0 10px; height:24px; border-radius:6px; cursor:pointer;">Tandai Lunas</button>';
+
+    var delBtn = (!isLunas)
+      ? '<button type="button" class="tg-table-icon-btn tg-del-btn" data-key="' + tgEscape(g.key) + '" data-nama="' + tgEscape(g.ortuNama) + '" title="Hapus Tagihan">' +
+          '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+        '</button>'
+      : '';
+
+    var hasPdf = g.invoices.some(function (inv) { return !!inv.pdf_url; });
+    var previewBtnCard = '<button type="button" class="tg-table-icon-btn tg-preview-btn' + (hasPdf ? ' tg-has-pdf' : '') + '" data-key="' + tgEscape(g.key) + '" title="' + (hasPdf ? 'Lihat Dokumen (Tersimpan di Drive)' : 'Lihat &amp; Cetak Dokumen') + '"' + (hasPdf ? ' style="color:var(--blue) !important; border-color:rgba(0,122,255,.3) !important;"' : '') + '>' +
+        '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+      '</button>';
+
+    var childrenItems = g.children.map(function (c) {
+      return '' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px dashed rgba(0,0,0,.06); font-size:11px;">' +
+          '<div style="min-width:0; padding-right:8px;">' +
+            '<span style="font-weight:400; color:var(--ink);">' + tgEscape(c.nama) + '</span>' +
+            (c.pakets.length ? ' <span style="font-size:10px; color:var(--ink-soft);">(' + tgEscape(c.pakets.join(', ')) + ')</span>' : '') +
+          '</div>' +
+          '<div style="text-align:right; white-space:nowrap; flex:none;">' +
+            '<span style="background:#fff; border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:9.5px; font-weight:400; color:var(--ink); margin-right:6px;">' + c.sesi + ' Sesi</span>' +
+            '<span style="font-weight:400; color:var(--ink); font-size:11px; font-variant-numeric:tabular-nums;">' + tgFormatRp(c.nominal) + '</span>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+
+    return '' +
+      '<div class="tg-card-item" data-key="' + tgEscape(g.key) + '">' +
+        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px;">' +
+          '<div>' +
+            '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+              '<span style="font-weight:400; color:var(--ink); font-size:12.5px;">' + tgEscape(g.ortuNama) + '</span>' +
+              (g.unitNama ? '<span style="background:var(--surface); border:1px solid var(--border); padding:1px 5px; border-radius:4px; font-size:9px; color:var(--ink-soft); font-weight:400;">' + tgEscape(g.unitNama) + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div>' + statusBadge + '</div>' +
+        '</div>' +
+
+        '<div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:9px;">' +
+          '<div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:4px;">Daftar Siswa &amp; Sesi</div>' +
+          childrenItems +
+          '<div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px; padding-top:4px; font-size:11.5px;">' +
+            '<span style="color:var(--ink-soft); font-size:10px; font-weight:400;">Total ' + g.children.length + ' Siswa (' + g.totalSesi + ' Sesi)</span>' +
+            '<span style="font-weight:400; font-size:13px; color:var(--ink); font-variant-numeric:tabular-nums;">' + tgFormatRp(g.totalNominal) + '</span>' +
+          '</div>' +
+        '</div>' +
+
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">' +
+          '<div style="font-size:10px; color:var(--ink-soft);">' +
+            (isLunas ? 'Lunas: ' + tgFormatTgl(g.tanggalLunas) : 'Menunggu pembayaran') +
+          '</div>' +
+          '<div style="display:flex; align-items:center; gap:5px;">' +
+            waBtn +
+            previewBtnCard +
+            delBtn +
+            actionBtn +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function tgRenderList() {
+    var listEl = document.getElementById('tg-list');
+    var filtered = tgGetFilteredGroups();
+    var sorted = tgSortGroups(filtered);
+
+    tgUpdateViewToggleUI();
+    tgUpdateGlider();
+
+    if (!sorted.length) {
+      listEl.className = '';
+      listEl.innerHTML = '<div class="card tg-card" style="padding:28px 14px; text-align:center; color:var(--ink-soft); font-size:12px;">' +
+        (tgState.rows.length ? 'Tidak ada data tagihan yang cocok dengan filter atau pencarian.' : 'Belum ada tagihan di periode ' + tgFormatPeriodeLabel(tgState.periode) + ' (tidak ada sesi presensi siswa yang diterima/visit).') +
+      '</div>';
+      return;
+    }
+
+    if (tgState.viewMode === 'table') {
+      listEl.className = 'tg-view-table';
+      listEl.innerHTML = tgRenderTable(sorted);
+    } else {
+      listEl.className = '';
+      listEl.innerHTML = sorted.map(tgRenderCard).join('');
+    }
+
+    tgBindEvents();
+  }
+
+  // =========================================================
+  // WHATSAPP BILLING TEMPLATE (CONSOLIDATED PER ORANG TUA)
+  // =========================================================
+
+  function tgBuildWaLink(group, cleanHp) {
+    var isLunas = group.status === 'lunas';
+    var childrenLines = group.children.map(function (c) {
+      return '• ' + c.nama + ' (' + c.sesi + ' Sesi)' + (c.pakets.length ? ' - ' + c.pakets.join(', ') : '') + ': ' + tgFormatRp(c.nominal);
+    }).join('\n');
+
+    var msg = '';
+    if (isLunas) {
+      msg = 'Yth. Bapak/Ibu ' + group.ortuNama + ',\n\n' +
+            'Terima kasih, pembayaran bimbingan belajar Genio Institute telah kami terima dengan status *LUNAS*:\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            '• Periode: ' + tgFormatPeriodeLabel(tgState.periode) + '\n' +
+            '• Unit: ' + group.unitNama + '\n' +
+            '• Rincian Siswa:\n' + childrenLines + '\n' +
+            '• Total Sesi: ' + group.totalSesi + ' Pertemuan\n' +
+            '• *Total Diterima: ' + tgFormatRp(group.totalNominal) + '*\n' +
+            '• Tanggal Bayar: ' + tgFormatTgl(group.tanggalLunas) + '\n' +
+            '• Status: *LUNAS*\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Tanda terima kuitansi resmi ini diterbitkan otomatis oleh sistem Genio Institute.\n\n' +
+            'Terima kasih atas kepercayaan Bapak/Ibu kepada kami.';
+    } else {
+      msg = 'Yth. Bapak/Ibu ' + group.ortuNama + ',\n\n' +
+            'Berikut rincian tagihan bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*:\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            '• Unit Cabang: ' + group.unitNama + '\n' +
+            '• Rincian Siswa:\n' + childrenLines + '\n' +
+            '• Total Sesi: ' + group.totalSesi + ' Pertemuan\n' +
+            '• *Total Tagihan: ' + tgFormatRp(group.totalNominal) + '*\n' +
+            '• Status: *MENUNGGU PEMBAYARAN*\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Pembayaran dapat ditransfer ke rekening resmi Genio Institute. Setelah melakukan transfer, mohon konfirmasi melalui nomor ini.\n\n' +
+            'Terima kasih atas kerja sama dan kepercayaannya.';
+    }
+
+    return 'https://wa.me/' + cleanHp + '?text=' + encodeURIComponent(msg);
+  }
+
+  // =========================================================
+  // ACTIONS: GENERATE, TANDAI LUNAS, DELETE, PREVIEW
+  // =========================================================
+
+  function tgFindGroupByOrtuKey(key) {
+    var currentGroups = tgGetFilteredGroups();
+    var g = currentGroups.find(function (grp) { return grp.key === key; });
+    if (!g) {
+      var allG = tgGroupRowsByOrtu(tgState.rows);
+      g = allG.find(function (grp) { return grp.key === key; });
+    }
+    return g;
+  }
+
+  function tgOpenLunasModal(key) {
+    var g = tgFindGroupByOrtuKey(key);
+    if (!g) return;
+    tgState.selectedKey = key;
+
+    var childListHtml = g.children.map(function (c) {
+      return '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">' +
+        '<span>' + tgEscape(c.nama) + ' (' + c.sesi + ' Sesi)</span>' +
+        '<span style="font-weight:600;">' + tgFormatRp(c.nominal) + '</span>' +
+      '</div>';
+    }).join('');
+
+    var infoBox = document.getElementById('tg-lunasInfoBox');
+    infoBox.innerHTML = '' +
+      '<div style="font-weight:700; color:var(--ink); font-size:13px; margin-bottom:2px;">' + tgEscape(g.ortuNama) + '</div>' +
+      '<div style="color:var(--ink-soft); font-size:10.5px; margin-bottom:6px;">Unit: ' + tgEscape(g.unitNama) + '</div>' +
+      '<div style="border-top:1px solid var(--border); padding-top:6px; margin-bottom:6px;">' +
+        childListHtml +
+      '</div>' +
+      '<div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:6px;">' +
+        '<span style="color:var(--ink-soft); font-size:11px;">Total Pembayaran (' + g.totalSesi + ' Sesi):</span>' +
+        '<span style="font-weight:800; font-size:13.5px; color:var(--ink);">' + tgFormatRp(g.totalNominal) + '</span>' +
+      '</div>';
+
+    var dateInput = document.getElementById('tg-lunasTanggalInput');
+    dateInput.value = new Date().toISOString().slice(0, 10);
+
+    tgOpenModal('tg-lunasModal');
+  }
+
+  async function tgSubmitLunas() {
+    var g = tgFindGroupByOrtuKey(tgState.selectedKey);
+    if (!g || !g.invoices.length) return;
+
+    var submitBtn = document.getElementById('tg-lunasSubmitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner" style="width:11px; height:11px; margin-right:5px; border-width:2px; display:inline-block;"></span>Menyimpan...';
+
+    try {
+      var s = genioGetSession();
+      var tglInput = document.getElementById('tg-lunasTanggalInput').value || new Date().toISOString();
+      var tglIso = new Date(tglInput).toISOString();
+
+      for (var i = 0; i < g.invoices.length; i++) {
+        var inv = g.invoices[i];
+        // 1. Update status invoice
+        await supaRest('invoice?id=eq.' + inv.id, s.access_token, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            status: 'lunas',
+            tanggal_lunas: tglIso
+          })
+        });
+
+        // 2. Insert receipt
+        await supaRest('receipt', s.access_token, {
+          method: 'POST',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({
+            invoice_id: inv.id,
+            tanggal_bayar: tglIso,
+            dibuat_oleh: s.user_id
+          })
+        });
+      }
+
+      genioToast('Pembayaran ' + g.ortuNama + ' (' + g.invoices.length + ' tagihan) berhasil ditandai LUNAS!', 'success');
+      tgCloseModal('tg-lunasModal');
+      tgLoadAll();
+
+      // Offer preview receipt
+      setTimeout(function () {
+        tgOpenPreview(g.key);
+      }, 400);
+    } catch (err) {
+      genioToast('Gagal menandai lunas: ' + err.message, 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Tandai Lunas';
+    }
+  }
+
+  function tgOpenBatalLunasConfirm(key) {
+    var g = tgFindGroupByOrtuKey(key);
+    if (!g) return;
+
+    tgOpenConfirmModal({
+      title: 'Batalkan Status Lunas?',
+      desc: 'Status tagihan siswa dari orang tua ' + tgEscape(g.ortuNama) + ' (' + g.invoices.length + ' tagihan) akan dikembalikan menjadi Belum Lunas dan berkas kuitansi di Drive akan dibersihkan.',
+      okText: 'Batalkan Lunas',
+      isDanger: true,
+      onConfirm: async function () {
+        var s = genioGetSession();
+
+        // Kumpulkan berkas PDF yang ada untuk dihapus dari Google Drive
+        var oldPdfUrls = [];
+        g.invoices.forEach(function (inv) {
+          if (inv.pdf_url && oldPdfUrls.indexOf(inv.pdf_url) === -1) oldPdfUrls.push(inv.pdf_url);
+          if (inv.receipt && inv.receipt.pdf_url && oldPdfUrls.indexOf(inv.receipt.pdf_url) === -1) oldPdfUrls.push(inv.receipt.pdf_url);
+        });
+
+        if (oldPdfUrls.length && window.google && google.script && google.script.run) {
+          google.script.run
+            .withFailureHandler(function (e) { console.warn('Pembersihan Drive kuitansi tagihan:', e); })
+            .deleteDriveFiles(oldPdfUrls);
+        }
+
+        for (var i = 0; i < g.invoices.length; i++) {
+          var inv = g.invoices[i];
+          await supaRest('receipt?invoice_id=eq.' + inv.id, s.access_token, { method: 'DELETE' });
+          await supaRest('invoice?id=eq.' + inv.id, s.access_token, {
+            method: 'PATCH',
+            body: JSON.stringify({ status: 'belum_lunas', tanggal_lunas: null, pdf_url: null })
+          });
+          inv.pdf_url = null;
+        }
+        genioToast('Status tagihan ' + g.ortuNama + ' dikembalikan menjadi Belum Lunas.', 'info');
+        tgLoadAll();
+      }
+    });
+  }
+
+  function tgOpenDeleteConfirm(key, nama) {
+    var g = tgFindGroupByOrtuKey(key);
+    if (!g) return;
+
+    tgOpenConfirmModal({
+      title: 'Hapus Tagihan?',
+      desc: 'Apakah Anda yakin ingin menghapus seluruh tagihan dari orang tua ' + tgEscape(nama) + ' (' + g.invoices.length + ' tagihan)? Tindakan ini tidak dapat dibatalkan.',
+      okText: 'Hapus Tagihan',
+      isDanger: true,
+      onConfirm: async function () {
+        var s = genioGetSession();
+
+        var oldPdfUrls = [];
+        g.invoices.forEach(function (inv) {
+          if (inv.pdf_url && oldPdfUrls.indexOf(inv.pdf_url) === -1) oldPdfUrls.push(inv.pdf_url);
+        });
+
+        if (oldPdfUrls.length && window.google && google.script && google.script.run) {
+          google.script.run
+            .withFailureHandler(function (e) { console.warn('Pembersihan Drive tagihan:', e); })
+            .deleteDriveFiles(oldPdfUrls);
+        }
+
+        for (var i = 0; i < g.invoices.length; i++) {
+          var inv = g.invoices[i];
+          await supaRest('invoice?id=eq.' + inv.id, s.access_token, { method: 'DELETE' });
+        }
+        genioToast('Tagihan ' + nama + ' berhasil dihapus.', 'info');
+        tgLoadAll();
+      }
+    });
+  }
+
+  function tgOpenConfirmModal(opts) {
+    var modal = document.getElementById('tg-confirmModal');
+    document.getElementById('tg-confirmTitle').textContent = opts.title || 'Konfirmasi';
+    document.getElementById('tg-confirmDesc').textContent = opts.desc || 'Apakah Anda yakin?';
+    var okBtn = document.getElementById('tg-confirmOkBtn');
+    okBtn.textContent = opts.okText || 'Lanjutkan';
+    okBtn.style.background = opts.isDanger ? 'var(--red)' : 'var(--blue)';
+
+    tgOpenModal('tg-confirmModal');
+
+    okBtn.onclick = async function () {
+      tgCloseModal('tg-confirmModal');
+      if (opts.onConfirm) await opts.onConfirm();
+    };
+  }
+
+  // =========================================================
+  // PRINTABLE PREVIEW & GOOGLE DRIVE PDF GENERATION
+  // =========================================================
+
+  async function tgProcessPrintDoc(g, btn) {
+    if (!g || !g.invoices || !g.invoices.length) return;
+    if (btn && btn.dataset.busy === '1') return;
+
+    var driveBtn = document.getElementById('tg-previewDriveBtn');
+
+    if (btn) {
+      btn.dataset.busy = '1';
+      btn.disabled = true;
+      btn.style.opacity = '.75';
+      btn.innerHTML = '<span class="spinner" style="width:11px; height:11px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; display:inline-block; vertical-align:middle; margin-right:5px; box-sizing:border-box;"></span><span id="tg-previewPrintBtnText">Mencetak...</span>';
+    }
+
+    try {
+      genioToast('Menghasilkan dokumen PDF ke Google Drive...', 'loading');
+
+      // Ambil berkas PDF lama jika sebelumnya sudah pernah dicetak (untuk dibersihkan di Drive)
+      var existingPdfUrl = null;
+      for (var k = 0; k < g.invoices.length; k++) {
+        if (g.invoices[k].pdf_url) {
+          existingPdfUrl = g.invoices[k].pdf_url;
+          break;
+        }
+      }
+
+      var itemsPayload = g.children.map(function (c) {
+        var hgSatuan = c.sesi > 0 ? Math.round(c.nominal / c.sesi) : 0;
+        return {
+          nama: c.nama,
+          pakets: c.pakets,
+          sesi: c.sesi,
+          hargaSatuan: hgSatuan,
+          nominal: c.nominal,
+          subtext: [c.kelas ? 'Kelas ' + c.kelas : '', c.sekolah].filter(Boolean).join(' • ')
+        };
+      });
+
+      var firstInv = g.invoices[0] || {};
+      var payload = {
+        id: firstInv.id,
+        receiptId: (firstInv.receipt && firstInv.receipt.id) ? firstInv.receipt.id : null,
+        oldPdfUrl: existingPdfUrl,
+        status: g.status,
+        ortuNama: g.ortuNama,
+        ortuHp: g.ortuHp,
+        unitNama: g.unitNama,
+        periode: tgState.periode,
+        periodeLabel: tgFormatPeriodeLabel(tgState.periode),
+        totalSesi: g.totalSesi,
+        totalNominal: g.totalNominal,
+        items: itemsPayload,
+        siswaList: g.children.map(function (c) { return c.nama; }).join(', '),
+        tanggalLunas: g.tanggalLunas ? tgFormatTgl(g.tanggalLunas) : null
+      };
+
+      var result = await new Promise(function (resolve, reject) {
+        if (window.google && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function (res) {
+              if (res && res.success) resolve(res);
+              else reject(new Error((res && res.error) || 'Gagal membuat berkas PDF di Google Drive.'));
+            })
+            .withFailureHandler(function (err) { reject(err); })
+            .generateInvoicePdf(payload);
+        } else {
+          // Fallback mockup jika di luar GAS
+          setTimeout(function () {
+            resolve({
+              success: true,
+              url: 'https://drive.google.com/file/d/genio_doc_' + firstInv.id + '/view'
+            });
+          }, 700);
+        }
+      });
+
+      var s = genioGetSession();
+      // Sinkronkan URL berkas Drive ke Supabase
+      for (var i = 0; i < g.invoices.length; i++) {
+        var inv = g.invoices[i];
+        await supaRest('invoice?id=eq.' + inv.id, s.access_token, {
+          method: 'PATCH',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ pdf_url: result.url })
+        });
+        inv.pdf_url = result.url;
+        if (inv.receipt && inv.receipt.id) {
+          await supaRest('receipt?id=eq.' + inv.receipt.id, s.access_token, {
+            method: 'PATCH',
+            headers: { 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ pdf_url: result.url })
+          });
+          inv.receipt.pdf_url = result.url;
+        }
+      }
+
+      genioToast('Dokumen ' + (g.status === 'lunas' ? 'Kuitansi' : 'Invoice') + ' berhasil dicetak ke Google Drive!', 'success');
+
+      if (driveBtn) {
+        driveBtn.href = result.url;
+        driveBtn.style.display = 'inline-flex';
+      }
+
+      tgRenderList();
+
+      if (result.url) {
+        window.open(result.url, '_blank');
+      }
+
+    } catch (err) {
+      genioToast('Gagal mencetak dokumen: ' + err.message, 'error');
+    } finally {
+      if (btn) {
+        btn.dataset.busy = '0';
+        btn.disabled = false;
+        btn.style.opacity = '';
+        var hasPdfNow = g.invoices.some(function (inv) { return !!inv.pdf_url; });
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span id="tg-previewPrintBtnText">' + (hasPdfNow ? 'Cetak Ulang Dokumen (PDF)' : 'Cetak Dokumen (PDF)') + '</span>';
+      }
+    }
+  }
+
+  function tgOpenPreview(key) {
+    var g = tgFindGroupByOrtuKey(key);
+    if (!g) return;
+    tgState.selectedKey = key;
+
+    var isLunas = g.status === 'lunas';
+    var docTitle = isLunas ? 'KUITANSI PEMBAYARAN RESMI' : 'INVOICE TAGIHAN BIMBEL';
+    var firstInv = g.invoices[0] || {};
+    var docNo = isLunas
+      ? 'REC-' + (firstInv.receipt && firstInv.receipt.id ? firstInv.receipt.id.slice(0, 8).toUpperCase() : firstInv.id.slice(0, 8).toUpperCase())
+      : 'INV-' + firstInv.id.slice(0, 8).toUpperCase();
+
+    document.getElementById('tg-previewDocTitle').textContent = docTitle;
+    document.getElementById('tg-previewDocSub').textContent = g.ortuNama + ' &bull; Periode ' + tgFormatPeriodeLabel(tgState.periode);
+
+    var stampColor = isLunas ? '#28a745' : '#ff9500';
+    var stampText = isLunas ? 'LUNAS' : 'TAGIHAN';
+
+    var lineRows = g.invoices.map(function (inv, idx) {
+      var ks = inv.kontrak_siswa || {};
+      var s = ks.siswa || {};
+      var pkt = ks.paket_belajar || {};
+      return '<tr>' +
+        '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (idx + 1) + '</td>' +
+        '<td style="padding:8px; border-bottom:1px solid #e5e5ea;">' +
+          '<div style="font-weight:600;">' + tgEscape(s.nama || 'Siswa') + ' &bull; ' + tgEscape(pkt.nama_paket || 'Bimbingan Belajar') + '</div>' +
+          '<div style="font-size:9.5px; color:#8e8e93;">' + [s.kelas ? 'Kelas ' + s.kelas : '', s.sekolah].filter(Boolean).join(' • ') + '</div>' +
+        '</td>' +
+        '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (inv.jumlah_pertemuan || 0) + ' Sesi</td>' +
+        '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea;">' + tgFormatRp(inv.harga_satuan) + '</td>' +
+        '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea; font-weight:700;">' + tgFormatRp(inv.nominal) + '</td>' +
+      '</tr>';
+    }).join('');
+
+    var childrenNames = g.children.map(function (c) { return c.nama; }).join(', ');
+
+    var html = '' +
+      '<div class="tg-print-sheet">' +
+        // Header Kop
+        '<div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #1c1c1e; padding-bottom:12px; margin-bottom:16px;">' +
+          '<div>' +
+            '<div style="font-size:18px; font-weight:800; letter-spacing:-0.3px; color:#1c1c1e;">GENIO INSTITUTE</div>' +
+            '<div style="font-size:10px; text-transform:uppercase; color:#8e8e93; letter-spacing:1px; font-weight:600; margin-top:2px;">Bimbingan Belajar &amp; Privat Berkualitas</div>' +
+            '<div style="font-size:10px; color:#636366; margin-top:3px;">Unit Cabang: ' + tgEscape(g.unitNama || 'Pusat') + '</div>' +
+          '</div>' +
+          '<div style="text-align:right;">' +
+            '<div style="font-size:13px; font-weight:800; color:' + stampColor + ';">' + docTitle + '</div>' +
+            '<div style="font-size:10px; font-family:monospace; color:#8e8e93; margin-top:2px;">No: ' + docNo + '</div>' +
+            '<div style="font-size:10px; color:#636366; margin-top:2px;">Periode: ' + tgFormatPeriodeLabel(tgState.periode) + '</div>' +
+          '</div>' +
+        '</div>' +
+
+        // Metadata grid (No WA phone number)
+        '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; background:#f8f9fa; border:1px solid #ededf0; border-radius:8px; padding:10px 12px; margin-bottom:16px; font-size:11px;">' +
+          '<div>' +
+            '<div style="color:#8e8e93; font-size:9.5px; text-transform:uppercase; font-weight:700;">Orang Tua / Wali Siswa</div>' +
+            '<div style="font-weight:700; color:#1c1c1e; margin-top:2px;">' + tgEscape(g.ortuNama || '-') + '</div>' +
+            '<div style="color:#636366; font-size:10px; margin-top:1px;">' + (g.ortuAlamat ? tgEscape(g.ortuAlamat) : ('Unit Cabang: ' + tgEscape(g.unitNama || '-'))) + '</div>' +
+          '</div>' +
+          '<div>' +
+            '<div style="color:#8e8e93; font-size:9.5px; text-transform:uppercase; font-weight:700;">Daftar Siswa (' + g.children.length + ' Anak)</div>' +
+            '<div style="font-weight:700; color:#1c1c1e; margin-top:2px;">' + tgEscape(childrenNames || '-') + '</div>' +
+            '<div style="color:#636366; font-size:10px; margin-top:1px;">Total ' + g.totalSesi + ' Sesi Pertemuan</div>' +
+          '</div>' +
+        '</div>' +
+
+        // Line Item Table
+        '<table style="width:100%; border-collapse:collapse; margin-bottom:16px; font-size:11px;">' +
+          '<thead>' +
+            '<tr style="background:#1c1c1e; color:#fff;">' +
+              '<th style="padding:6px 8px; text-align:center; width:30px; font-weight:700;">No</th>' +
+              '<th style="padding:6px 8px; text-align:left; font-weight:700;">Nama Siswa &amp; Paket Belajar</th>' +
+              '<th style="padding:6px 8px; text-align:center; width:70px; font-weight:700;">Sesi</th>' +
+              '<th style="padding:6px 8px; text-align:right; width:85px; font-weight:700;">Tarif/Sesi</th>' +
+              '<th style="padding:6px 8px; text-align:right; width:95px; font-weight:700;">Subtotal</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+            lineRows +
+          '</tbody>' +
+        '</table>' +
+
+        // Summary total & Terbilang
+        '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; gap:16px;">' +
+          '<div style="flex:1; background:#f8f9fa; border:1px solid #ededf0; border-radius:8px; padding:8px 10px; font-size:10.5px;">' +
+            '<div style="color:#8e8e93; font-size:9px; text-transform:uppercase; font-weight:700;">Terbilang:</div>' +
+            '<div style="font-style:italic; font-weight:600; color:#1c1c1e; margin-top:2px;"># ' + tgTerbilang(g.totalNominal) + ' Rupiah #</div>' +
+          '</div>' +
+          '<div style="width:200px; text-align:right;">' +
+            '<div style="font-size:10px; color:#8e8e93;">TOTAL PEMBAYARAN</div>' +
+            '<div style="font-size:16px; font-weight:800; color:#1c1c1e; margin-top:2px;">' + tgFormatRp(g.totalNominal) + '</div>' +
+            '<div style="display:inline-block; margin-top:4px; padding:2px 8px; border-radius:999px; font-size:9px; font-weight:800; background:' + (isLunas ? '#e8f5e9' : '#fff3e0') + '; color:' + stampColor + ';">' +
+              stampText + (isLunas && g.tanggalLunas ? ' (' + tgFormatTgl(g.tanggalLunas) + ')' : '') +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        // Signatures
+        '<div style="display:flex; justify-content:space-between; margin-top:24px; padding-top:12px; font-size:10px; color:#636366; text-align:center;">' +
+          '<div style="width:140px;">' +
+            '<div>Orang Tua / Wali Siswa,</div>' +
+            '<div style="height:38px;"></div>' +
+            '<div style="border-top:1px solid #c7c7cc; padding-top:2px; font-weight:600; color:#1c1c1e;">' + tgEscape(g.ortuNama) + '</div>' +
+          '</div>' +
+          '<div style="width:140px;">' +
+            '<div>Genio Institute ' + tgEscape(g.unitNama || '') + ',</div>' +
+            '<div style="height:38px; display:flex; align-items:center; justify-content:center; color:' + stampColor + '; font-weight:900; font-size:14px; opacity:.75; transform:rotate(-6deg);">' +
+              stampText +
+            '</div>' +
+            '<div style="border-top:1px solid #c7c7cc; padding-top:2px; font-weight:600; color:#1c1c1e;">Bagian Administrasi</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    document.getElementById('tg-previewContainer').innerHTML = html;
+
+    // Drive PDF link button
+    var existingPdf = null;
+    for (var k = 0; k < g.invoices.length; k++) {
+      if (g.invoices[k].pdf_url) {
+        existingPdf = g.invoices[k].pdf_url;
+        break;
+      }
+    }
+
+    var driveBtn = document.getElementById('tg-previewDriveBtn');
+    if (driveBtn) {
+      if (existingPdf) {
+        driveBtn.href = existingPdf;
+        driveBtn.style.display = 'inline-flex';
+      } else {
+        driveBtn.style.display = 'none';
+      }
+    }
+
+    // Print to Drive button
+    var printBtn = document.getElementById('tg-previewPrintBtn');
+    var printBtnText = document.getElementById('tg-previewPrintBtnText');
+    if (printBtnText) {
+      printBtnText.textContent = existingPdf ? 'Cetak Ulang Dokumen (PDF)' : 'Cetak Dokumen (PDF)';
+    }
+    if (printBtn) {
+      printBtn.onclick = function () {
+        tgProcessPrintDoc(g, printBtn);
+      };
+    }
+
+    var waBtn = document.getElementById('tg-previewWaBtn');
+    var cleanHp = (g.ortuHp || '').replace(/\D/g, '').replace(/^0/, '62');
+    if (cleanHp) {
+      waBtn.onclick = function () { window.open(tgBuildWaLink(g, cleanHp), '_blank'); };
+      waBtn.style.display = 'inline-flex';
+    } else {
+      waBtn.style.display = 'none';
+    }
+
+    tgOpenModal('tg-previewModal');
+  }
+
+  // =========================================================
+  // EVENT BINDINGS
+  // =========================================================
+
+  function tgBindEvents() {
+    // Table sorting
+    document.querySelectorAll('.tg-sort-th').forEach(function (th) {
+      th.onclick = function () { tgSortTable(th.dataset.sort); };
+    });
+
+    // Action buttons inside list
+    document.querySelectorAll('.tg-preview-btn').forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.stopPropagation();
+        tgOpenPreview(btn.dataset.key);
+      };
+    });
+
+    document.querySelectorAll('.tg-lunas-btn').forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.stopPropagation();
+        tgOpenLunasModal(btn.dataset.key);
+      };
+    });
+
+    document.querySelectorAll('.tg-batal-lunas-btn').forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.stopPropagation();
+        tgOpenBatalLunasConfirm(btn.dataset.key);
+      };
+    });
+
+    document.querySelectorAll('.tg-del-btn').forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.stopPropagation();
+        tgOpenDeleteConfirm(btn.dataset.key, btn.dataset.nama);
+      };
+    });
+
+
+  }
+
+  function tgInit() {
+    // Default to previous month according to PRD billing flow
+    if (!tgState.periode) {
+      var d = new Date();
+      d.setMonth(d.getMonth() - 1);
+      var y = d.getFullYear(), m = d.getMonth() + 1;
+      tgState.periode = y + '-' + String(m).padStart(2, '0');
+    }
+
+    // Restore saved view preference if available
+    try {
+      var savedView = localStorage.getItem('genio_tg_view_mode');
+      if (savedView === 'cards' || savedView === 'table') {
+        tgState.viewMode = savedView;
+      }
+    } catch (e) {}
+
+    tgUpdatePeriodeLabel();
+
+    // Periode buttons
+    var pilihPeriodeBtn = document.getElementById('tg-pilihPeriodeBtn');
+    if (pilihPeriodeBtn) pilihPeriodeBtn.onclick = tgOpenPeriodePicker;
+    var periodeLabelWrap = document.getElementById('tg-periodeLabelWrap');
+    if (periodeLabelWrap) periodeLabelWrap.onclick = tgOpenPeriodePicker;
+
+    var input = document.getElementById('tg-periodeInput');
+    if (input) {
+      input.onchange = function () {
+        if (input.value) {
+          tgState.periode = input.value;
+          tgUpdatePeriodeLabel();
+          tgLoadAll();
+        }
+      };
+    }
+
+    // Refresh data with spin animation
+    var refreshBtn = document.getElementById('tg-refreshBtn');
+    if (refreshBtn) {
+      refreshBtn.onclick = function () {
+        var icon = this.querySelector('svg');
+        if (icon) {
+          icon.style.transition = 'transform .4s cubic-bezier(.34,1.56,.64,1)';
+          icon.style.transform = 'rotate(360deg)';
+          setTimeout(function () {
+            icon.style.transition = 'none';
+            icon.style.transform = 'none';
+          }, 450);
+        }
+        tgLoadAll();
+      };
+    }
+
+    // Filter popup controls
+    var filterBtn = document.getElementById('tg-filterBtn');
+    if (filterBtn) filterBtn.onclick = tgOpenFilterModal;
+
+    var filterApplyBtn = document.getElementById('tg-filterApplyBtn');
+    if (filterApplyBtn) filterApplyBtn.onclick = tgApplyFilter;
+
+    var filterResetBtn = document.getElementById('tg-filterResetBtn');
+    if (filterResetBtn) filterResetBtn.onclick = tgResetFilter;
+
+    // Filter row buttons opening picker
+    document.querySelectorAll('.tg-filter-row-btn').forEach(function (btn) {
+      btn.onclick = function () {
+        tgOpenPicker(btn.dataset.picker);
+      };
+    });
+
+    // Picker Done & Cancel
+    var pickerDoneBtn = document.getElementById('tg-pickerDoneBtn');
+    if (pickerDoneBtn) {
+      pickerDoneBtn.onclick = function () {
+        if (tgPickerCurrentType === 'unit') {
+          tgState.filterUnit = tgPickerTempSelected;
+        } else if (tgPickerCurrentType === 'cetak') {
+          tgState.filterCetak = tgPickerTempSelected;
+        }
+        tgUpdateFilterSummary(tgPickerCurrentType);
+        tgClosePicker();
+      };
+    }
+
+    var pickerCancelBtn = document.getElementById('tg-pickerCancelBtn');
+    if (pickerCancelBtn) {
+      pickerCancelBtn.onclick = tgClosePicker;
+    }
+
+    // View toggle
+    var viewToggleBtn = document.getElementById('tg-viewToggleBtn');
+    if (viewToggleBtn) viewToggleBtn.onclick = tgToggleViewMode;
+
+    // Scrubbing and Tab Hold setup
+    initTgTabScrubbing();
+
+    // Search input
+    var searchInput = document.getElementById('tg-searchInput');
+    if (searchInput) {
+      searchInput.oninput = function (e) {
+        tgState.search = e.target.value;
+        tgRenderList();
+      };
+    }
+
+    // Modal controls
+    var lunasCloseX = document.getElementById('tg-lunasCloseX');
+    if (lunasCloseX) {
+      lunasCloseX.onclick = function () { tgCloseModal('tg-lunasModal'); };
+    }
+    var lunasCancelBtn = document.getElementById('tg-lunasCancelBtn');
+    if (lunasCancelBtn) {
+      lunasCancelBtn.onclick = function () { tgCloseModal('tg-lunasModal'); };
+    }
+    var lunasSubmitBtn = document.getElementById('tg-lunasSubmitBtn');
+    if (lunasSubmitBtn) lunasSubmitBtn.onclick = tgSubmitLunas;
+
+    var previewCloseX = document.getElementById('tg-previewCloseX');
+    if (previewCloseX) {
+      previewCloseX.onclick = function () { tgCloseModal('tg-previewModal'); };
+    }
+
+    var confirmCancelBtn = document.getElementById('tg-confirmCancelBtn');
+    if (confirmCancelBtn) {
+      confirmCancelBtn.onclick = function () { tgCloseModal('tg-confirmModal'); };
+    }
+
+    // Dismiss modals when clicking on background overlay
+    ['tg-lunasModal', 'tg-previewModal', 'tg-confirmModal', 'tg-filterModal', 'tg-pickerModal'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('click', function (e) {
+          if (e.target === el) {
+            tgCloseModal(id);
+          }
+        });
+      }
+    });
+
+    // Load initial data and update UI
+    tgUpdateViewToggleUI();
+    tgUpdateFilterBadge();
+    tgLoadUnits();
+    tgLoadAll();
+  }
+
+  // Register in Genio Module Handlers
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['tagihan'] = tgInit;
+
+  // Auto-init if module is active upon load
+  var currentModule = document.querySelector('.module-panel[data-module="tagihan"]');
+  if (currentModule && !currentModule.hidden) {
+    tgInit();
+  }
+})();
+</script>
+  

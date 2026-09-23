@@ -1,0 +1,76 @@
+<style>
+  .profile-detail-row{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    padding:6px 0; font-size:11.5px;
+  }
+  .profile-detail-row span:first-child{color:var(--ink-soft); flex:none;}
+  .profile-detail-row span:last-child{color:var(--ink); font-weight:600; text-align:right;}
+</style>
+
+<!-- Detail Profil — muncul sebagai panel tersendiri (drill-down mobile / sidebar+konten desktop) -->
+<div class="module-panel" data-module="profile-detail" hidden>
+  <div class="card" style="padding:16px 14px; text-align:center; margin-bottom:10px; border-radius:14px;">
+    <div style="position:relative; width:64px; height:64px; margin:0 auto 10px;">
+      <img id="prfDetailPhoto" style="display:none; width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--border);">
+      <div id="prfDetailPhotoFallback" style="width:64px; height:64px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;">-</div>
+    </div>
+    <div style="font-size:15px; font-weight:800; color:var(--ink);" id="prfDetailNamaHero">-</div>
+    <span id="prfDetailRoleHero" style="display:inline-block; margin-top:4px; background:var(--surface); color:var(--ink-soft); font-size:9.5px; font-weight:700; letter-spacing:.02em; padding:2.5px 9px; border-radius:999px;">-</span>
+  </div>
+  <div class="card" style="padding:12px 14px; border-radius:12px;">
+    <div class="profile-detail-row"><span>Nama Lengkap</span><span id="prfDetailNama">-</span></div>
+    <div class="profile-detail-row"><span>Jenis Kelamin</span><span id="prfDetailGender">-</span></div>
+    <div class="profile-detail-row"><span>Email</span><span id="prfDetailEmail">-</span></div>
+    <div class="profile-detail-row"><span>Nomor WhatsApp</span><span id="prfDetailHp">-</span></div>
+    <button id="prfEditProfileBtn" style="width:100%; height:32px; margin-top:12px; background:var(--ink); color:#fff; border:none; border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11.5px; cursor:pointer;">Edit Profil</button>
+  </div>
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['profile-detail'] = prfLoadDetail;
+
+  var LAINNYA_ROLE_LABELS_PRF = { manajer: 'Manajer', kepala_unit: 'Kepala Unit', hrd: 'HRD', super_admin: 'Super Admin' };
+
+  function prfInitials(nama) {
+    if (!nama) return '?';
+    var parts = nama.trim().split(/\s+/);
+    return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+  }
+
+  async function prfLoadDetail() {
+    var session = genioGetSession();
+    if (!session) return;
+
+    document.getElementById('prfDetailNamaHero').textContent = session.nama || '-';
+    document.getElementById('prfDetailRoleHero').textContent = (LAINNYA_ROLE_LABELS_PRF[session.role] || session.role).toUpperCase();
+    document.getElementById('prfDetailNama').textContent = session.nama || '-';
+    document.getElementById('prfDetailGender').textContent = session.jenis_kelamin === 'L' ? 'Laki-laki' : (session.jenis_kelamin === 'P' ? 'Perempuan' : '-');
+    document.getElementById('prfDetailEmail').textContent = session.email || '-';
+
+    try {
+      var rows = await supaRest('users?id=eq.' + session.user_id + '&select=no_hp,foto_profil_url', session.access_token);
+      var me = rows && rows[0];
+      document.getElementById('prfDetailHp').textContent = (me && me.no_hp) || '-';
+
+      var img = document.getElementById('prfDetailPhoto');
+      var fallback = document.getElementById('prfDetailPhotoFallback');
+      var photoUrl = me && me.foto_profil_url;
+      if (photoUrl) {
+        img.src = photoUrl;
+        img.style.display = 'block';
+        fallback.style.display = 'none';
+      } else {
+        img.style.display = 'none';
+        fallback.style.display = 'flex';
+        fallback.textContent = prfInitials(session.nama);
+      }
+    } catch (err) {
+      genioToast('Gagal memuat data profil: ' + err.message, 'error');
+    }
+  }
+
+  document.getElementById('prfEditProfileBtn').addEventListener('click', function () {
+    genioToast('Fitur edit profile segera hadir', 'loading');
+  });
+</script>

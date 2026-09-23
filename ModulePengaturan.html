@@ -1,0 +1,461 @@
+<div class="module-panel" data-module="pengaturan" hidden>
+<style>
+  @media (min-width:900px){
+    .module-panel[data-module="pengaturan"][hidden]{ display:none !important; }
+    .module-panel[data-module="pengaturan"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+    }
+    #pgt-list .card{
+      display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px;
+    }
+    #pgt-list .card > div:first-child{ flex:0 0 100%; }
+    #pgt-list .card > div:nth-child(2){ flex:0 0 100%; margin:0; padding-top:0 !important; }
+    #pgt-list .card .pgt-toggle-btn{
+      width:auto !important; margin-top:0 !important; margin-left:auto;
+      padding:0 16px !important; height:28px !important; flex:none;
+    }
+    #pgt-list .card .pgt-edit-wrap{ flex:0 0 100%; }
+    .pgt-hero-box{
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+    }
+    .pgt-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+    .pgt-hero-badges{
+      justify-content: flex-start !important;
+      gap: 8px !important;
+    }
+    .pgt-hero-sublabel,
+    .pgt-hero-desc{
+      display: none !important;
+    }
+    .pgt-hero-counter{
+      margin-top: 2px !important;
+    }
+    .pgt-hero-title{
+      font-size: 13px !important;
+      line-height: 1.1 !important;
+    }
+    .pgt-hero-stats-row{
+      flex: none !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 16px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+    }
+    .pgt-hero-stat-card{
+      flex: none !important;
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+      min-width: 0 !important;
+    }
+  }
+
+  .pgt-hero-box{
+    background:var(--ink); color:#fff; border-radius:14px;
+    padding:12px 16px; margin-bottom:12px; box-sizing:border-box;
+  }
+  .pgt-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .pgt-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .pgt-hero-badge-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+  }
+  .pgt-hero-sublabel{
+    font-size: 10px;
+    opacity: .65;
+    margin-top: 8px;
+  }
+  .pgt-hero-title{
+    font-size: 14px;
+    font-weight: 800;
+    margin-top: 1px;
+  }
+  .pgt-hero-desc{
+    font-size: 10.5px;
+    opacity: .7;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .pgt-hero-stats-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.14);
+  }
+  .pgt-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 10px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pgt-hero-stat-icon{
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .pgt-hero-stat-label{
+    font-size: 9px;
+    opacity: .65;
+  }
+  .pgt-hero-stat-val{
+    font-size: 11.5px;
+    font-weight: 800;
+    margin-top: 1px;
+  }
+</style>
+
+  <!-- Hero ringkasan -->
+  <div class="pgt-hero-box">
+    <div class="pgt-hero-main-col">
+      <div class="pgt-hero-badges">
+        <span class="pgt-hero-badge-pill">
+          <span style="width:5px; height:5px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+          KONFIGURASI MANAJER
+        </span>
+      </div>
+      <div class="pgt-hero-counter">
+        <div class="pgt-hero-sublabel">Kebijakan Administrasi</div>
+        <div class="pgt-hero-title">Aturan Presensi &amp; Denda</div>
+        <div class="pgt-hero-desc">Batas maksimal lapor, honor visit, dan denda keterlambatan presensi.</div>
+      </div>
+    </div>
+
+    <div class="pgt-hero-stats-row">
+      <div class="pgt-hero-stat-card">
+        <span class="pgt-hero-stat-icon" style="background:rgba(245,158,11,.2); color:#FBBF24;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div class="pgt-hero-stat-label">Batas Lapor</div>
+          <div class="pgt-hero-stat-val" id="pgt-heroJam">-</div>
+        </div>
+      </div>
+      <div class="pgt-hero-stat-card">
+        <span class="pgt-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="9" width="15" height="9" rx="1.5"/><path d="M16 12h3l3 3v3h-6"/><circle cx="6" cy="20" r="1.6"/><circle cx="17.5" cy="20" r="1.6"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div class="pgt-hero-stat-label">Nominal Visit</div>
+          <div class="pgt-hero-stat-val" id="pgt-heroVisit">-</div>
+        </div>
+      </div>
+      <div class="pgt-hero-stat-card">
+        <span class="pgt-hero-stat-icon" style="background:rgba(255,59,48,.2); color:#ff9c94;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div class="pgt-hero-stat-label">Denda Telat</div>
+          <div class="pgt-hero-stat-val" id="pgt-heroDenda">-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pgt-list">
+    <div class="empty-state">Memuat pengaturan...</div>
+  </div>
+
+  <div class="card" style="display:flex; gap:8px; align-items:flex-start; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px;">
+    <span style="color:var(--ink-soft); flex:none; font-size:14px; margin-top:1px;">&#9432;</span>
+    <div style="font-size:11px; color:var(--ink-soft); line-height:1.5;">
+      Semua aturan berlaku saat presensi disetujui (Terima/Visit) — termasuk laporan yang masih menunggu approval saat nilai ini diubah. Presensi yang sudah lebih dulu disetujui tidak akan ikut berubah.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+
+  // Metadata tampilan + preset per kunci pengaturan.
+  var PGT_META = {
+    batas_jam_telat: {
+      label: 'Batas Waktu Lapor',
+      color: '#F59E0B',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>',
+      unit: 'Jam',
+      presets: [12, 24, 48],
+      format: function (v) { return v + ' Jam'; },
+      detailText: function (v) {
+        return 'Tutor wajib lapor maksimal <b>' + v + ' jam</b> setelah Pembelajaran. Lewat dari itu otomatis dianggap terlambat dan kena denda.';
+      }
+    },
+    nominal_visit: {
+      label: 'Nominal Visit Tutor',
+      color: '#1C1AAF',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="9" width="15" height="9" rx="1.5"/><path d="M16 12h3l3 3v3h-6"/><circle cx="6" cy="20" r="1.6"/><circle cx="17.5" cy="20" r="1.6"/></svg>',
+      unit: 'Rupiah',
+      presets: [20000, 30000, 40000, 50000],
+      format: function (v) { return 'Rp ' + Math.round(v).toLocaleString('id-ID'); },
+      detailText: function (v) {
+        return 'Tutor dibayar flat <b>Rp ' + Math.round(v).toLocaleString('id-ID') + '</b> tiap sesi kunjungan, menggantikan uang transport dari kontrak.';
+      }
+    },
+    persen_denda_telat: {
+      label: 'Denda Keterlambatan',
+      color: '#D4070F',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 21h20L12 2z"/><path d="M12 9v5"/><circle cx="12" cy="17" r=".5" fill="#fff"/></svg>',
+      unit: 'Persen (%)',
+      presets: [1, 2, 3, 5],
+      format: function (v) { return v + '%'; },
+      detailText: function (v) {
+        return 'Laporan yang telat kena potongan <b>' + v + '%</b> dari fee mengajar, dipotong otomatis di slip gaji.';
+      }
+    }
+  };
+  var PGT_DEFAULTS = { nominal_visit: '30000', persen_denda_telat: '2', batas_jam_telat: '24' };
+  var PGT_ORDER = ['batas_jam_telat', 'nominal_visit', 'persen_denda_telat'];
+
+  var pgtRows = {};
+  var pgtCanEdit = false;
+  var pgtOpenKey = null;
+
+  window.genioModuleHandlers['pengaturan'] = function () {
+    pgtLoadList();
+  };
+
+  function pgtEscape(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+
+  async function pgtLoadList() {
+    var listEl = document.getElementById('pgt-list');
+    try {
+      var s = genioGetSession();
+      pgtCanEdit = (s.role === 'manajer' || s.role === 'super_admin');
+
+      var rows = await supaRest('pengaturan?select=*,users(nama)', s.access_token);
+
+      pgtRows = {};
+      rows.forEach(function (r) { pgtRows[r.kunci] = r; });
+
+      if (pgtRows.batas_jam_telat) document.getElementById('pgt-heroJam').textContent = pgtRows.batas_jam_telat.nilai + ' Jam';
+      if (pgtRows.nominal_visit) document.getElementById('pgt-heroVisit').textContent = 'Rp ' + Math.round(pgtRows.nominal_visit.nilai / 1000) + ' Rb';
+      if (pgtRows.persen_denda_telat) document.getElementById('pgt-heroDenda').textContent = pgtRows.persen_denda_telat.nilai + '%';
+
+      pgtRerenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="empty-state">Gagal memuat pengaturan: ' + pgtEscape(err.message) + '</div>';
+    }
+  }
+
+  function pgtRenderCard(key, r) {
+    var meta = PGT_META[key];
+    var val = parseFloat(r.nilai);
+    var displayVal = meta.format(val);
+    var isOpen = pgtOpenKey === key;
+
+    var editBtn = pgtCanEdit
+      ? '<button class="pgt-toggle-btn" data-key="' + key + '" style="width:100%; height:28px; margin-top:10px; background:var(--ink); color:#fff; border:none; border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; cursor:pointer;">' +
+          (isOpen ? 'Tutup' : 'Edit') +
+        '</button>'
+      : '';
+
+    var presetsHtml = meta.presets.map(function (p) {
+      var active = p === val;
+      return '<button class="pgt-preset-btn" data-key="' + key + '" data-val="' + p + '" data-color="' + meta.color + '" style="flex:1; padding:6px 4px; border-radius:8px; border:1.2px solid ' + (active ? meta.color : 'var(--border)') + '; background:' + (active ? meta.color : '#fff') + '; color:' + (active ? '#fff' : 'var(--ink)') + '; font-size:11px; font-weight:700; cursor:pointer;">' + meta.format(p) + '</button>';
+    }).join('');
+
+    // Edit section SELALU dirender ke DOM (bukan cuma pas isOpen) supaya animasi slide
+    // bisa jalan mulus via transisi max-height, bukan muncul/hilang instan.
+    var editSection =
+      '<div class="pgt-edit-wrap" data-key="' + key + '" style="max-height:' + (isOpen ? '600px' : '0') + '; opacity:' + (isOpen ? '1' : '0') + '; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;">' +
+        '<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border);">' +
+          '<div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:6px;">Pilih Preset</div>' +
+          '<div style="display:flex; gap:5px; margin-bottom:10px;">' + presetsHtml + '</div>' +
+          '<div class="field" style="margin-bottom:10px;">' +
+            '<label style="display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:3px;">Nilai Custom (' + meta.unit + ')</label>' +
+            '<input type="number" class="pgt-custom-input" data-key="' + key + '" step="any" value="' + val + '" style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 10px; font-size:11.5px; background:var(--surface); color:var(--ink); box-sizing:border-box; outline:none;">' +
+          '</div>' +
+          '<div id="pgt-alert-' + key + '" class="alert alert-error" hidden style="margin-bottom:10px;"></div>' +
+          '<div style="display:flex; justify-content:flex-end; gap:6px;">' +
+            '<button type="button" class="pgt-cancel-btn" data-key="' + key + '" style="background:var(--surface); border:1px solid var(--border); border-radius:8px; height:28px; padding:0 12px; font-size:11.5px; font-weight:700; color:var(--ink-soft); cursor:pointer; font-family:var(--font);">Batal</button>' +
+            '<button type="button" class="pgt-save-btn" data-key="' + key + '" style="background:var(--ink); border:none; border-radius:8px; height:28px; padding:0 12px; font-size:11.5px; font-weight:700; color:#fff; cursor:pointer; font-family:var(--font);">Simpan</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    var detailText = '<div style="margin-top:6px; font-size:11px; color:var(--ink-soft); line-height:1.5;">' + meta.detailText(val) + '</div>';
+
+    var updatedName = r.users && r.users.nama;
+    var updatedLine = updatedName
+      ? '<span style="display:inline-flex; align-items:center; gap:5px; background:rgba(30,142,90,.12); color:var(--green); font-size:9.5px; font-weight:700; padding:2px 8px 2px 6px; border-radius:999px; margin-top:6px;">' +
+          '<span style="width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block;"></span>' +
+          'Terakhir diubah oleh ' + pgtEscape(updatedName) +
+        '</span>'
+      : '';
+
+    return '' +
+      '<div class="card" data-card="' + key + '" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
+        '<div style="display:flex; gap:10px; min-width:0;">' +
+          '<div style="width:32px; height:32px; border-radius:8px; background:' + meta.color + '; display:flex; align-items:center; justify-content:center; flex:none;">' +
+            '<span style="width:16px; height:16px; display:block;">' + meta.icon + '</span>' +
+          '</div>' +
+          '<div style="min-width:0;">' +
+            '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+              '<p class="card-title" style="margin:0; font-size:13px; font-weight:700;">' + pgtEscape(meta.label) + '</p>' +
+              '<span style="background:' + meta.color + '1A; color:' + meta.color + '; font-size:9.5px; font-weight:800; padding:1.5px 7px; border-radius:999px;">' + pgtEscape(displayVal) + '</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="padding-top:2px;">' + detailText + '<div>' + updatedLine + '</div></div>' +
+        editBtn +
+        editSection +
+      '</div>';
+  }
+
+  function pgtBindCardEvents() {
+    document.querySelectorAll('.pgt-toggle-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        pgtToggleCard(btn.dataset.key);
+      });
+    });
+    document.querySelectorAll('.pgt-preset-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.dataset.key;
+        var input = document.querySelector('.pgt-custom-input[data-key="' + key + '"]');
+        if (input) input.value = btn.dataset.val;
+
+        // Update highlight semua tombol preset di kartu ini secara langsung (tanpa render ulang,
+        // supaya kalau lagi fokus di input custom, keyboard/fokusnya nggak keganggu).
+        document.querySelectorAll('.pgt-preset-btn[data-key="' + key + '"]').forEach(function (sibling) {
+          var isThis = sibling === btn;
+          var color = sibling.dataset.color;
+          sibling.style.background = isThis ? color : '#fff';
+          sibling.style.color = isThis ? '#fff' : 'var(--ink)';
+          sibling.style.borderColor = isThis ? color : 'var(--border)';
+        });
+      });
+    });
+    document.querySelectorAll('.pgt-cancel-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        pgtToggleCard(btn.dataset.key, true);
+      });
+    });
+    document.querySelectorAll('.pgt-save-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { pgtSaveValue(btn.dataset.key); });
+    });
+  }
+
+  // Buka/tutup kartu dengan animasi slide (max-height) — nggak render ulang seluruh
+  // list, supaya smooth dan nggak ganggu fokus input yang lain.
+  function pgtToggleCard(key, forceClose) {
+    var wrap = document.querySelector('.pgt-edit-wrap[data-key="' + key + '"]');
+    var btn = document.querySelector('.pgt-toggle-btn[data-key="' + key + '"]');
+    if (!wrap) return;
+
+    var closingThis = forceClose || pgtOpenKey === key;
+
+    // Tutup kartu lain yang mungkin masih terbuka
+    if (pgtOpenKey && pgtOpenKey !== key) {
+      var prevWrap = document.querySelector('.pgt-edit-wrap[data-key="' + pgtOpenKey + '"]');
+      var prevBtn = document.querySelector('.pgt-toggle-btn[data-key="' + pgtOpenKey + '"]');
+      if (prevWrap) { prevWrap.style.maxHeight = '0px'; prevWrap.style.opacity = '0'; }
+      if (prevBtn) prevBtn.textContent = 'Edit';
+    }
+
+    if (closingThis) {
+      wrap.style.maxHeight = '0px';
+      wrap.style.opacity = '0';
+      if (btn) btn.textContent = 'Edit';
+      pgtOpenKey = null;
+    } else {
+      wrap.style.maxHeight = '600px';
+      wrap.style.opacity = '1';
+      if (btn) btn.textContent = 'Tutup';
+      pgtOpenKey = key;
+    }
+  }
+
+  function pgtRerenderList() {
+    var listEl = document.getElementById('pgt-list');
+    var notice = !pgtCanEdit
+      ? '<div class="alert" style="background:var(--surface); color:var(--ink-soft); border:1px solid var(--border); margin-bottom:12px;">Kamu cuma bisa melihat pengaturan ini. Hanya Manajer yang bisa mengubahnya.</div>'
+      : '';
+    listEl.innerHTML = notice + PGT_ORDER.map(function (key) {
+      var r = pgtRows[key];
+      if (!r) return '';
+      return pgtRenderCard(key, r);
+    }).join('');
+    pgtBindCardEvents();
+  }
+
+  async function pgtSaveValue(key) {
+    var input = document.querySelector('.pgt-custom-input[data-key="' + key + '"]');
+    var alertEl = document.getElementById('pgt-alert-' + key);
+    var nilai = input.value;
+
+    if (nilai === '' || isNaN(parseFloat(nilai))) {
+      alertEl.textContent = 'Nilai wajib diisi dengan angka.'; alertEl.hidden = false; return;
+    }
+    if (parseFloat(nilai) < 0) {
+      alertEl.textContent = 'Nilai tidak boleh negatif.'; alertEl.hidden = false; return;
+    }
+    alertEl.hidden = true;
+
+    var saveBtn = document.querySelector('.pgt-save-btn[data-key="' + key + '"]');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+    try {
+      var s = genioGetSession();
+      await supaRest('pengaturan?id=eq.' + pgtRows[key].id, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ nilai: String(parseFloat(nilai)), updated_by: s.user_id })
+      });
+      genioToast(PGT_META[key].label + ' berhasil diperbarui', 'success');
+      pgtOpenKey = null;
+      pgtLoadList();
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menyimpan.'; alertEl.hidden = false;
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Simpan';
+    }
+  }
+</script>

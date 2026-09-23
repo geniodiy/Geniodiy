@@ -1,0 +1,3447 @@
+<div class="module-panel" data-module="presensi" hidden>
+
+<style>
+  .ps-card{ background:#fff; border:1px solid var(--border); border-radius:16px; }
+  .ps-status-badge{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; padding:5px 11px; border-radius:999px; white-space:nowrap;}
+  .ps-detail-row{display:flex; justify-content:space-between; gap:10px; padding:6px 0; font-size:12.5px;}
+  .ps-detail-row span:first-child{color:var(--ink-soft);}
+  .ps-detail-row span:last-child{color:var(--ink); font-weight:700; text-align:right;}
+  .ps-lampiran-wrap{max-height:0; overflow:hidden; opacity:0; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;}
+  .ps-action-btn{flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:10px 4px; border-radius:12px; border:none; font-size:12px; font-weight:700; cursor:pointer; height:38px; box-sizing:border-box;}
+  #ps-openWakilBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+  #ps-openWakilBtn:active{ transform:scale(.82); }
+
+  /* Popup "Terima kasih" di tengah layar, muncul sekilas lalu hilang otomatis */
+  .ps-thanks-popup{
+    position:fixed; inset:0; z-index:9998;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(20,22,43,.25);
+    opacity:0; pointer-events:none;
+    transition:opacity .25s ease;
+  }
+  .ps-thanks-popup.show{ opacity:1; }
+  .ps-thanks-card{
+    background:#fff; border-radius:16px; padding:26px 30px;
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    box-shadow:0 24px 55px -12px rgba(20,22,43,.3);
+    transform:scale(.8);
+    transition:transform .32s cubic-bezier(.34,1.56,.64,1);
+    max-width:260px; text-align:center;
+  }
+  .ps-thanks-popup.show .ps-thanks-card{ transform:scale(1); }
+
+  .ps-periode-sec{
+    margin-bottom: 10px;
+    padding: 8px 14px;
+    border-radius: 12px;
+  }
+  .ps-hero-sec{
+    background: var(--ink);
+    color: #fff;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+  .ps-wakilcard-sec{
+    margin-bottom: 10px;
+    border-radius: 12px;
+  }
+  .ps-dock-sec{
+    margin-bottom: 10px !important;
+  }
+  .ps-search-sec{
+    margin-bottom: 10px;
+  }
+  #ps-sectionLabel{
+    margin-bottom: 8px;
+  }
+  #ps-desktopAnchor{
+    display: none !important;
+  }
+  .ps-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .ps-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .ps-hero-total-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    padding: 2px 7px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .ps-hero-periode-pill{
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .ps-hero-counter{
+    margin-top: 6px;
+  }
+  .ps-hero-sublabel{
+    display: block;
+    font-size: 9.5px;
+    opacity: .65;
+  }
+  .ps-hero-num-wrap{
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-top: 1px;
+  }
+  .ps-hero-num{
+    font-size: 18px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .ps-hero-unit{
+    font-size: 11px;
+    opacity: .65;
+    font-weight: 600;
+  }
+  .ps-hero-stats-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.14);
+  }
+  .ps-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .ps-hero-stat-icon{
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  @media (min-width:900px){
+    .module-panel[data-module="presensi"][hidden]{ display:none !important; }
+    .module-panel[data-module="presensi"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+    }
+
+    .ps-periode-sec{
+      margin-bottom: 10px !important;
+      padding: 8px 16px !important;
+    }
+    #ps-sectionLabel{
+      margin-bottom: 8px !important;
+    }
+
+    #ps-list{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start; }
+    #ps-list > .ps-card{ margin-bottom:0 !important; }
+    #ps-list > .ps-full-width{ grid-column:1/-1; }
+
+    #ps-heroRow{ display:flex; gap:10px; align-items:stretch; margin-bottom:10px; }
+    #ps-heroRow .ps-hero-sec{
+      flex: 1.7;
+      margin-bottom: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+    }
+    #ps-heroRow .ps-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+    #ps-heroRow .ps-hero-badges{
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+    #ps-heroRow .ps-hero-sublabel{
+      display: none !important;
+    }
+    #ps-heroRow .ps-hero-counter{
+      margin-top: 1px !important;
+    }
+    #ps-heroRow .ps-hero-num{
+      font-size: 18px !important;
+    }
+    #ps-heroRow .ps-hero-stats-row{
+      flex: 1 !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 12px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+    }
+    #ps-heroRow .ps-hero-stat-card{
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+    }
+    #ps-heroRow .ps-wakilcard-sec{
+      flex: 1;
+      margin-bottom: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      padding: 0 !important;
+      border-radius: 12px !important;
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+    }
+    #ps-heroRow .ps-wakilcard-sec > div{
+      width: 100% !important;
+      padding: 8px 14px !important;
+      box-sizing: border-box !important;
+    }
+
+    #ps-toolbarRow{ display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+    #ps-toolbarRow .ps-dock-sec{ flex:none; width:auto; min-width:240px; margin-bottom:0 !important; }
+    #ps-toolbarRow .ps-search-sec{ flex:1; margin-bottom:0 !important; }
+  }
+
+  /* ===== Tab switcher: style biasa, rounded konten (10px), geser kanan-kiri murni ===== */
+  .ps-dock{
+    position:relative;
+    display:flex; align-items:center;
+    background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px;
+    height:38px; box-sizing:border-box;
+    margin-bottom:10px !important;
+    touch-action:none; -webkit-user-select:none; user-select:none;
+  }
+  .ps-dock-glider{
+    position:absolute; top:3px; bottom:3px;
+    border-radius:8px; background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
+    transition:left .22s cubic-bezier(.2,0,0,1), width .22s cubic-bezier(.2,0,0,1);
+    z-index:1; pointer-events:none;
+  }
+  .ps-dock-btn{
+    position:relative; z-index:2; flex:1;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    background:none; border:none; cursor:pointer;
+    height:32px; padding:0 12px; font-size:11.5px; font-family:var(--font);
+    color:var(--ink-soft); font-weight:600; white-space:nowrap;
+    transition:color .18s ease;
+  }
+  .ps-dock-btn.ps-dock-active{ color:var(--ink); font-weight:700; }
+
+  /* Modal popup di Module Presensi — proporsional, minimalis, dan padat (selaras dengan ModuleOrtuSiswa & ModuleKontrak) */
+  #ps-wakilModal, #ps-editStatusModal, #ps-deleteConfirmModal, #ps-filterModal, #ps-pickerModal, #ps-wakilPickerModal, #ps-datePickerModal, #ps-timePickerModal, #ps-previewModal, #ps-tolakModal{
+    align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;
+  }
+  #ps-wakilModal.show, #ps-editStatusModal.show, #ps-deleteConfirmModal.show, #ps-filterModal.show, #ps-pickerModal.show, #ps-wakilPickerModal.show, #ps-datePickerModal.show, #ps-timePickerModal.show, #ps-previewModal.show, #ps-tolakModal.show{ opacity:1; }
+  #ps-wakilModal .modal-sheet, #ps-editStatusModal .modal-sheet, #ps-deleteConfirmModal .modal-sheet, #ps-filterModal .modal-sheet, #ps-pickerModal .modal-sheet, #ps-wakilPickerModal .modal-sheet, #ps-datePickerModal .modal-sheet, #ps-timePickerModal .modal-sheet, #ps-previewModal .modal-sheet, #ps-tolakModal .modal-sheet{
+    border-radius:16px;
+    width:100%;
+    max-width:390px;
+    margin:0 auto;
+    max-height:88vh;
+    overflow-y:auto;
+    padding:16px 18px 18px;
+    box-sizing:border-box;
+    box-shadow:0 14px 36px -8px rgba(20,22,43,.16);
+    transform:scale(.88) translateY(10px);
+    transition:transform .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #ps-tolakModal .modal-sheet{ max-width:360px; }
+  #ps-deleteConfirmModal .modal-sheet{ max-width:340px; }
+  #ps-datePickerModal .modal-sheet{ max-width:300px; }
+  #ps-timePickerModal .modal-sheet{ max-width:260px; }
+  #ps-previewModal .modal-sheet{
+    max-width:480px;
+    width:100%;
+    padding:0 !important;
+    border-radius:16px;
+    overflow:hidden;
+  }
+  #ps-wakilModal.show .modal-sheet, #ps-editStatusModal.show .modal-sheet, #ps-deleteConfirmModal.show .modal-sheet, #ps-filterModal.show .modal-sheet, #ps-pickerModal.show .modal-sheet, #ps-wakilPickerModal.show .modal-sheet, #ps-datePickerModal.show .modal-sheet, #ps-timePickerModal.show .modal-sheet, #ps-previewModal.show .modal-sheet, #ps-tolakModal.show .modal-sheet{ transform:scale(1) translateY(0); }
+  #ps-wakilModal h3, #ps-editStatusModal h3, #ps-deleteConfirmModal h3, #ps-filterModal h3, #ps-pickerModal h3, #ps-wakilPickerModal h3, #ps-datePickerModal h3, #ps-timePickerModal h3, #ps-previewModal h3, #ps-tolakModal h3{
+    font-size:13.5px;
+    font-weight:700;
+    margin:0 0 4px;
+    color:var(--ink);
+  }
+  #ps-wakilModal p, #ps-editStatusModal p, #ps-deleteConfirmModal p, #ps-filterModal p, #ps-pickerModal p, #ps-wakilPickerModal p, #ps-datePickerModal p, #ps-timePickerModal p, #ps-previewModal p, #ps-tolakModal p{
+    font-size:11px;
+    line-height:1.45;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+  }
+  #ps-wakilModal .alert, #ps-editStatusModal .alert, #ps-tolakModal .alert{ font-size:11px; padding:8px 12px; border-radius:8px; margin-bottom:12px; }
+  #ps-wakilModal .btn, #ps-editStatusModal .btn, #ps-deleteConfirmModal .btn, #ps-filterModal .btn, #ps-pickerModal .btn, #ps-wakilPickerModal .btn, #ps-datePickerModal .btn, #ps-timePickerModal .btn, #ps-previewModal .btn, #ps-tolakModal .btn{
+    font-size:12px !important;
+    font-weight:600 !important;
+    height:36px !important;
+    padding:0 16px !important;
+    border-radius:9px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-family:var(--font) !important;
+    box-shadow:0 1px 2px rgba(0,0,0,.06) !important;
+  }
+  #ps-wakilModal .modal-actions, #ps-editStatusModal .modal-actions, #ps-deleteConfirmModal .modal-actions, #ps-filterModal .modal-actions, #ps-pickerModal .modal-actions, #ps-wakilPickerModal .modal-actions, #ps-datePickerModal .modal-actions, #ps-timePickerModal .modal-actions, #ps-tolakModal .modal-actions{
+    gap:8px;
+    margin-top:14px;
+  }
+  .ps-editstatus-opt{
+    height:34px !important;
+    padding:0 12px !important;
+    border-radius:8px !important;
+    font-size:11.5px !important;
+    font-weight:600 !important;
+    gap:6px !important;
+  }
+
+  .ps-dp-day{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:var(--ink); border-radius:6px; cursor:pointer; background:none; border:none; font-family:var(--font); height:26px; }
+  .ps-dp-day:hover{ background:var(--surface); }
+  .ps-dp-day.ps-dp-selected{ background:var(--ink-soft); color:#fff; font-weight:700; box-shadow:none !important; }
+  .ps-dp-day.ps-dp-empty{ visibility:hidden; cursor:default; }
+  .ps-tp-opt{ display:block; width:100%; text-align:center; padding:6px 0; font-size:12px; font-family:monospace; background:none; border:none; cursor:pointer; color:var(--ink); scroll-snap-align:start; border-radius:6px; }
+  .ps-tp-opt.ps-tp-selected{ background:var(--surface); border:1.5px solid var(--border); color:var(--ink); font-weight:700; }
+
+  /* Grouped-list ala iOS: satu kartu per section, pembatas kanan-kiri dihilangkan, cuma frame atas-bawah */
+  .ps-wakil-group-title{ font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:0 4px 5px; }
+  .ps-wakil-group{ background:#fff; border-top:1px solid var(--border) !important; border-bottom:1px solid var(--border) !important; border-left:none !important; border-right:none !important; border-radius:0 !important; overflow:hidden; margin-bottom:12px; }
+  .ps-wakil-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
+  .ps-wakil-row:last-child{ border-bottom:none; }
+  .ps-wakil-row label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:3px; }
+  .ps-wakil-row select, .ps-wakil-row input[type="date"], .ps-wakil-row input[type="time"],
+  .ps-wakil-row input[type="url"], .ps-wakil-row input[type="file"], .ps-wakil-row textarea{
+    width:100%; border:none; padding:0; font-family:var(--font); font-size:11.5px;
+    background:none; color:var(--ink); outline:none; resize:vertical;
+  }
+
+  #ps-list.ps-view-table{
+    display: block !important;
+  }
+  .ps-table-card{
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+    margin-bottom: 16px;
+  }
+  .ps-table-wrap{
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ps-table{
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: var(--font);
+    font-size: 11.5px;
+  }
+  .ps-table th{
+    padding: 6px 8px;
+    background: rgba(0,0,0,.025);
+    border-bottom: 1.5px solid var(--border);
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    white-space: nowrap;
+  }
+  .ps-table td{
+    padding: 5px 8px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    color: var(--ink);
+    vertical-align: middle;
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+  .ps-table tbody tr:last-child td{
+    border-bottom: none;
+  }
+  .ps-table tbody tr{
+    transition: background .12s ease;
+  }
+  .ps-table tbody tr:hover{
+    background: rgba(0,122,255,.03);
+  }
+  .ps-sort-th{
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background .12s ease, color .12s ease;
+  }
+  .ps-sort-th:hover{
+    background: rgba(0,0,0,.045) !important;
+    color: var(--ink) !important;
+  }
+  .ps-sort-th:hover svg{
+    opacity: .75 !important;
+  }
+  @keyframes psPop{
+    0% { transform: scale(1); }
+    35% { transform: scale(1.18); }
+    70% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+  }
+  .ps-btn-pop{
+    animation: psPop .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #ps-viewToggleBtn:active{
+    transform: scale(.9);
+  }
+  .ps-table .ps-action-btn{
+    flex: none !important;
+    padding: 3px 8px !important;
+    border-radius: 8px !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    gap: 4px !important;
+    display: inline-flex !important;
+    height: 24px !important;
+  }
+  .ps-table-icon-btn{
+    width: 24px !important;
+    height: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    flex: none;
+    background: var(--surface) !important;
+    color: var(--ink-soft) !important;
+    border: 1.5px solid var(--border) !important;
+    box-sizing: border-box !important;
+    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .ps-table-icon-btn:hover{
+    background: #fff !important;
+    color: var(--ink) !important;
+    border-color: rgba(20, 22, 43, 0.22) !important;
+  }
+  .ps-table-icon-btn:active{
+    transform: scale(.9);
+  }
+  .ps-lampiran-action-btn{
+    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .ps-lampiran-action-btn:hover{
+    background: #fff !important;
+    border-color: rgba(20, 22, 43, 0.22) !important;
+    color: var(--ink) !important;
+  }
+  .ps-lampiran-action-btn:active{
+    transform: scale(.96);
+  }
+  .ps-table .ps-edit-status-btn{
+    height: 24px !important;
+    padding: 0 10px !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    border-radius: 999px !important;
+  }
+  .ps-table-status-cell{
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+  }
+  .ps-table-status-cell .ps-delete-btn,
+  .ps-table-status-cell .ps-download-pdf-btn{
+    position: absolute;
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: var(--surface) !important;
+    color: var(--ink-soft) !important;
+    border: 1.5px solid var(--border) !important;
+    cursor: pointer;
+    flex: none;
+    transition: transform .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .ps-table-status-cell .ps-delete-btn:hover,
+  .ps-table-status-cell .ps-download-pdf-btn:hover{
+    background: #fff !important;
+    border-color: rgba(20, 22, 43, 0.22) !important;
+    color: var(--ink) !important;
+    transform: translateY(-50%) scale(1.08);
+  }
+  .ps-table-status-cell .ps-delete-btn:active,
+  .ps-table-status-cell .ps-download-pdf-btn:active{
+    transform: translateY(-50%) scale(.92);
+  }
+  .ps-table-status-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    width: 88px;
+    min-width: 88px;
+    max-width: 88px;
+    height: 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0 6px 0 7px;
+    font-family: var(--font);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    outline: none;
+    transition: all .15s ease;
+    white-space: nowrap;
+    line-height: 1;
+    box-sizing: border-box;
+  }
+  .ps-table-status-btn:hover{
+    border-color: var(--ink-soft);
+    background: var(--surface);
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .ps-table-status-btn:active, .ps-table-status-btn.active{
+    transform: scale(.96);
+    border-color: var(--blue);
+    background: var(--surface);
+  }
+  .ps-table-status-btn .ps-status-dot{
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex: none;
+    margin-right: 4px;
+  }
+  .ps-table-status-btn .ps-status-label{
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ps-table-status-btn .ps-status-arrow{
+    width: 10px;
+    height: 10px;
+    flex: none;
+    opacity: .55;
+    margin-left: 4px;
+    pointer-events: none;
+  }
+  .ps-status-dropdown-menu{
+    position: fixed;
+    z-index: 9999;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px -4px rgba(20,22,43,.12), 0 2px 6px rgba(20,22,43,.05);
+    padding: 3px;
+    min-width: 125px;
+    animation: psDropdownIn .15s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes psDropdownIn{
+    from{ opacity: 0; transform: translateY(-4px) scale(.97); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .ps-status-dropdown-item{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 5px 8px;
+    height: 28px;
+    border-radius: 6px;
+    background: none;
+    border: none;
+    font-family: var(--font);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .12s ease;
+    text-align: left;
+    box-sizing: border-box;
+  }
+  .ps-status-dropdown-item:hover{
+    background: var(--surface);
+  }
+  .ps-status-dropdown-item:active{
+    background: var(--blue-tint);
+  }
+</style>
+
+<div>
+  <!-- Pemilih periode: persis pola kontainer periode di Home -->
+  <div class="card ps-card ps-periode-sec" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+    <div id="ps-periodeLabelWrap" style="min-width:0; cursor:pointer;" title="Pilih Periode">
+      <div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em;">Periode Presensi</div>
+      <div style="font-size:13px; font-weight:700; color:var(--ink); margin-top:1px;" id="ps-periodeLabel">-</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:6px; flex:none; position:relative;">
+      <button id="ps-refreshBtn" aria-label="Refresh data" style="width:32px; height:32px; border-radius:9px; background:var(--surface); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; color:var(--ink-soft);">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
+      </button>
+      <button id="ps-pilihPeriodeBtn" type="button" style="height:32px; border:1.5px solid var(--border); border-radius:9px; padding:0 10px; font-family:var(--font); font-size:11.5px; font-weight:600; color:var(--ink); background:var(--surface); display:flex; align-items:center; gap:5px; cursor:pointer; white-space:nowrap;">
+        Pilih Bulan
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      </button>
+      <input type="month" id="ps-periodeInput" style="position:absolute; right:0; bottom:0; width:1px; height:1px; opacity:0; pointer-events:none; border:none;">
+    </div>
+  </div>
+
+  <div id="ps-desktopAnchor"></div>
+
+  <!-- Hero -->
+  <div class="ps-hero-sec">
+    <div class="ps-hero-main-col">
+      <div class="ps-hero-badges">
+        <span class="ps-hero-total-pill">
+          <span style="width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block; flex:none;"></span>
+          TOTAL PRESENSI
+        </span>
+        <span class="ps-hero-periode-pill" id="ps-heroPeriodeBadge">-</span>
+      </div>
+      <div class="ps-hero-counter">
+        <div class="ps-hero-sublabel">Jumlah Presensi Periode Ini</div>
+        <div class="ps-hero-num-wrap">
+          <span class="ps-hero-num" id="ps-heroTotal">0</span>
+          <span class="ps-hero-unit">Presensi</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-hero-stats-row">
+      <div class="ps-hero-stat-card">
+        <span class="ps-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div style="font-size:8.5px; opacity:.7; white-space:nowrap;">Presensi Diterima</div>
+          <div style="font-size:11.5px; font-weight:700; margin-top:1px; white-space:nowrap;" id="ps-heroValidasi">0%</div>
+          <div style="font-size:8px; opacity:.6; margin-top:1px; white-space:nowrap;" id="ps-heroValidasiCount">0 dari 0 presensi</div>
+        </div>
+      </div>
+      <div class="ps-hero-stat-card">
+        <span class="ps-hero-stat-icon" style="background:rgba(255,59,48,.2); color:#ff3b30;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div style="font-size:8.5px; opacity:.7; white-space:nowrap;">Presensi Telat</div>
+          <div style="font-size:11.5px; font-weight:700; margin-top:1px; white-space:nowrap;" id="ps-heroTelat">0 Presensi</div>
+          <div style="font-size:8px; opacity:.6; margin-top:1px; white-space:nowrap;" id="ps-heroTelatDenda">Kena denda 0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Isi Presensi untuk Tutor (diwakilkan) -->
+  <div class="card ps-card ps-wakilcard-sec" style="padding:0; overflow:hidden;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 14px; width:100%; box-sizing:border-box;">
+      <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+        <div class="ps-wakil-icon" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1.5px solid var(--border); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; flex:none;">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+        </div>
+        <div style="min-width:0;">
+          <p class="card-title" style="margin:0; font-size:12px; font-weight:700; line-height:1.2;">Isi Presensi untuk Tutor</p>
+          <div style="font-size:10px; color:var(--ink-soft); margin-top:1px; line-height:1.2;">Untuk tutor yang kendala teknis mengisi presensi</div>
+        </div>
+      </div>
+      <button id="ps-openWakilBtn" aria-label="Isi presensi untuk tutor" style="width:32px; height:32px; border-radius:8px; background:var(--ink); color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab switcher: dock + glider, persis mekanisme bottom bar -->
+  <div class="ps-dock ps-dock-sec" id="ps-dock">
+    <div class="ps-dock-glider" id="ps-dockGlider"></div>
+    <button class="ps-dock-btn ps-tab-btn ps-dock-active" data-tab="approval">
+      <span>Approval</span>
+      <span id="ps-approvalCount" style="background:var(--red); color:#fff; font-size:8.5px; font-weight:800; padding:0 5px; height:14px; min-width:14px; line-height:14px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center;">0</span>
+    </button>
+    <button class="ps-dock-btn ps-tab-btn" data-tab="riwayat">
+      <span>Riwayat</span>
+      <span id="ps-riwayatCount" style="background:var(--border); color:var(--ink-soft); font-size:8.5px; font-weight:800; padding:0 5px; height:14px; min-width:14px; line-height:14px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center;">0</span>
+    </button>
+  </div>
+
+  <!-- Search -->
+  <div class="ps-search-sec" style="display:flex; gap:6px;">
+    <div style="flex:1; display:flex; align-items:center; gap:6px; background:#fff; border:1.5px solid var(--border); border-radius:8px; height:32px; padding:0 10px; box-sizing:border-box;">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2" style="flex:none;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="ps-searchInput" placeholder="Cari nama tutor, siswa, tanggal..." style="border:none; outline:none; flex:1; font-size:11.5px; font-family:var(--font); background:none; min-width:0;">
+    </div>
+    <button id="ps-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      <span id="ps-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8px; font-weight:800; min-width:13px; height:13px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 2px;">0</span>
+    </button>
+    <button id="ps-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+    </button>
+  </div>
+
+  <div id="ps-sectionLabel" style="display:flex; align-items:center; justify-content:space-between;">
+    <div id="ps-sectionLabelText">
+      <div style="font-size:10px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Antrean Verifikasi</div>
+      <div style="font-size:11px; color:var(--ink-soft); margin-top:1px;">Menunggu persetujuan manajer</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:6px; flex:none;">
+      <span id="ps-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:600; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Presensi</span>
+      <button id="ps-sortBtn" style="display:inline-flex; align-items:center; justify-content:center; gap:5px; height:24px; background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:0 9px; cursor:pointer; font-family:var(--font); box-sizing:border-box;">
+        <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M6 12h12M9 18h6"/></svg>
+        <span id="ps-sortLabel" style="font-size:10.5px; font-weight:600; color:var(--ink);">Terbaru</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="ps-list">
+    <div class="empty-state ps-full-width">Memuat presensi...</div>
+  </div>
+
+</div>
+
+  <!-- Modal Tolak (Popup Alasan Penolakan) -->
+  <div class="modal-overlay" id="ps-tolakModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-width:360px;">
+      <h3>Tolak Presensi</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 10px;">Jelaskan alasan penolakan supaya tutor tahu apa yang perlu diperbaiki.</p>
+      <div id="ps-tolakAlert" class="alert alert-error" hidden></div>
+      <div class="field">
+        <label for="ps-tolakCatatan" style="font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:3px; display:block;">Catatan Penolakan</label>
+        <textarea id="ps-tolakCatatan" rows="3" placeholder="mis. Foto bukti kurang jelas, mohon unggah ulang." style="width:100%; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-family:var(--font); font-size:11.5px; resize:vertical; box-sizing:border-box;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-tolakCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ps-tolakConfirmBtn" style="background:#ff3b30;">Tolak Presensi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Dropdown Menu Status (Approval & Riwayat) -->
+  <div id="ps-statusDropdownMenu" class="ps-status-dropdown-menu" hidden>
+    <div id="ps-statusDropdownItems"></div>
+  </div>
+
+  <!-- Modal Filter Lanjutan -->
+  <div class="modal-overlay" id="ps-filterModal" hidden>
+    <div class="modal-sheet" style="max-height:86vh; overflow-y:auto;">
+      <h3>Filter Presensi</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar presensi sesuai kebutuhan. Bisa dikombinasikan dengan pencarian di atas.</p>
+
+      <div class="ps-wakil-group-title">Unit / Cabang</div>
+      <div class="ps-wakil-group">
+        <button type="button" class="ps-filter-row-btn" data-picker="unit" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="ps-filterUnitSummary">Semua Unit</span>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="ps-wakil-group-title">Metode Input</div>
+      <div class="ps-wakil-group">
+        <button type="button" class="ps-filter-row-btn" data-picker="metode" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="ps-filterMetodeSummary">Semua Metode</span>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="ps-wakil-group-title">Tutor</div>
+      <div class="ps-wakil-group">
+        <button type="button" class="ps-filter-row-btn" data-picker="tutor" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="ps-filterTutorSummary">Semua Tutor</span>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="ps-wakil-group-title">Siswa</div>
+      <div class="ps-wakil-group">
+        <button type="button" class="ps-filter-row-btn" data-picker="siswa" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="ps-filterSiswaSummary">Semua Siswa</span>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="ps-wakil-group-title">Orang Tua</div>
+      <div class="ps-wakil-group">
+        <button type="button" class="ps-filter-row-btn" data-picker="ortu" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="ps-filterOrtuSummary">Semua Orang Tua</span>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="ps-wakil-group-title">Lainnya</div>
+      <div class="ps-wakil-group">
+        <div class="ps-wakil-row" style="display:flex; align-items:center; justify-content:space-between;">
+          <label for="ps-filterTerlambat" style="margin:0; font-size:11.5px;">Cuma yang Terlambat</label>
+          <input type="checkbox" id="ps-filterTerlambat" style="width:16px; height:16px; accent-color:var(--blue);">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-filterResetBtn">Reset</button>
+        <button type="button" class="btn btn-primary" id="ps-filterApplyBtn">Terapkan Filter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Picker (dipakai bergantian oleh Unit/Metode/Tutor/Siswa/Ortu) -->
+  <div class="modal-overlay" id="ps-pickerModal" hidden style="z-index:70;">
+    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
+      <h3 id="ps-pickerTitle">Pilih</h3>
+      <div id="ps-pickerList" style="margin-bottom:6px;"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-pickerCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ps-pickerDoneBtn">Selesai</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Hapus Presensi -->
+  <div class="modal-overlay" id="ps-deleteConfirmModal" hidden>
+    <div class="modal-sheet" style="max-width:340px;">
+      <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </div>
+      <h3 style="text-align:center; margin:0 0 4px;">Hapus Presensi Ini?</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;">Presensi yang ditolak ini akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-deleteCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ps-deleteConfirmBtn" style="background:#ff3b30;">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Status Presensi (khusus Riwayat, Manajer) -->
+  <div class="modal-overlay" id="ps-editStatusModal" hidden>
+    <div class="modal-sheet">
+      <h3>Ubah Status Presensi</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 10px;">Nominal akan dihitung ulang memakai aturan Pengaturan yang berlaku <b>sekarang</b>, bukan aturan saat presensi aslinya terjadi.</p>
+      <div id="ps-editStatusAlert" class="alert alert-error" hidden></div>
+
+      <div class="field">
+        <label style="font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:4px; display:block;">Pilih Status Baru</label>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="diterima" style="background:var(--surface); color:var(--ink); border:1.5px solid transparent;">
+            <span class="ps-editstatus-icon" style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            Diterima
+          </button>
+          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="visit" style="background:var(--surface); color:var(--ink); border:1.5px solid transparent;">
+            <span class="ps-editstatus-icon" style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            Visit
+          </button>
+          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="ditolak" style="background:var(--surface); color:var(--ink); border:1.5px solid transparent;">
+            <span class="ps-editstatus-icon" style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+            Tolak
+          </button>
+        </div>
+      </div>
+
+      <div class="field" id="ps-editStatusCatatanWrap" hidden>
+        <label for="ps-editStatusCatatan" style="font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:3px; display:block;">Catatan Penolakan</label>
+        <textarea id="ps-editStatusCatatan" rows="3" placeholder="Alasan penolakan..." style="width:100%; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-family:var(--font); font-size:11.5px; resize:vertical; box-sizing:border-box;"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-editStatusCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ps-editStatusSaveBtn">Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Kalender (Tanggal) -->
+  <div class="modal-overlay" id="ps-datePickerModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-width:300px;">
+      <h3 style="text-align:center; margin:0 0 8px;">Pilih Tanggal</h3>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <button type="button" id="ps-dpPrevYear" style="background:var(--surface); border:none; width:24px; height:24px; border-radius:6px; cursor:pointer; color:var(--ink); font-size:12px;">&laquo;</button>
+        <button type="button" id="ps-dpPrevMonth" style="background:var(--surface); border:none; width:24px; height:24px; border-radius:6px; cursor:pointer; color:var(--ink); font-size:14px;">&lsaquo;</button>
+        <span id="ps-dpMonthYear" style="font-size:12px; font-weight:700; color:var(--ink);">-</span>
+        <button type="button" id="ps-dpNextMonth" style="background:var(--surface); border:none; width:24px; height:24px; border-radius:6px; cursor:pointer; color:var(--ink); font-size:14px;">&rsaquo;</button>
+        <button type="button" id="ps-dpNextYear" style="background:var(--surface); border:none; width:24px; height:24px; border-radius:6px; cursor:pointer; color:var(--ink); font-size:12px;">&raquo;</button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:3px;">
+        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:2px 0;">Min</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:2px 0;">Sen</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:2px 0;">Sel</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:2px 0;">Rab</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:2px 0;">Kam</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:2px 0;">Jum</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:2px 0;">Sab</span>
+      </div>
+      <div id="ps-dpGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:10px;"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-dpCancelBtn">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Pilih Jam -->
+  <div class="modal-overlay" id="ps-timePickerModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-width:260px;">
+      <h3 style="text-align:center; margin:0 0 8px;">Pilih Jam Mulai</h3>
+      <div style="display:flex; gap:8px; justify-content:center; align-items:center; margin:4px 0 12px;">
+        <div id="ps-tpHourList" style="height:140px; overflow-y:auto; width:60px; border:1px solid var(--border); border-radius:8px; scroll-snap-type:y mandatory;"></div>
+        <span style="font-size:16px; font-weight:700; color:var(--ink);">:</span>
+        <div id="ps-tpMinuteList" style="height:140px; overflow-y:auto; width:60px; border:1px solid var(--border); border-radius:8px; scroll-snap-type:y mandatory;"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-tpCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ps-tpConfirmBtn">Pilih</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Pilih Tutor/Kontrak (dengan search bar) — dipakai di form Isi Presensi untuk Tutor -->
+  <div class="modal-overlay" id="ps-wakilPickerModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
+      <h3 id="ps-wakilPickerTitle">Pilih</h3>
+      <div style="position:relative; margin-bottom:8px;">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="ps-wakilPickerSearchInput" placeholder="Cari..." style="width:100%; border:1px solid var(--border); border-radius:8px; padding:0 10px 0 30px; height:32px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+      </div>
+      <div id="ps-wakilPickerList" style="margin-bottom:6px;"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-wakilPickerCancelBtn">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Isi Presensi untuk Tutor (diwakilkan) -->
+  <div class="modal-overlay" id="ps-wakilModal" hidden>
+    <div class="modal-sheet" style="max-height:86vh; overflow-y:auto;">
+      <h3>Isi Presensi untuk Tutor</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 10px;">Untuk tutor yang kendala teknis mengisi presensi. Presensi ini otomatis berstatus <b>Diterima</b>, tanpa denda keterlambatan.</p>
+      <div id="ps-wakilAlert" class="alert alert-error" hidden></div>
+
+      <div class="ps-wakil-group-title">Tutor &amp; Jadwal</div>
+      <div class="ps-wakil-group">
+        <div class="ps-wakil-row">
+          <label for="ps-wakilTutorBtn">Pilih Tutor</label>
+          <button type="button" id="ps-wakilTutorBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:11.5px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+            <span id="ps-wakilTutorLabel">Memuat daftar tutor...</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+          <input type="hidden" id="ps-wakilTutor">
+        </div>
+        <div class="ps-wakil-row">
+          <label for="ps-wakilKontrakBtn">Pilih Kontrak / Jadwal</label>
+          <button type="button" id="ps-wakilKontrakBtn" disabled style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:11.5px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+            <span id="ps-wakilKontrakLabel">Pilih tutor dulu</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+          <input type="hidden" id="ps-wakilKontrak">
+        </div>
+      </div>
+
+      <div class="ps-wakil-group-title">Waktu Pelaksanaan</div>
+      <div class="ps-wakil-group">
+        <div class="ps-wakil-row" style="display:flex; gap:12px;">
+          <div style="flex:1;">
+            <label for="ps-wakilTanggalBtn">Tanggal</label>
+            <button type="button" id="ps-wakilTanggalBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:11.5px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ps-wakilTanggalLabel">Pilih tanggal...</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+            <input type="hidden" id="ps-wakilTanggal">
+          </div>
+          <div style="flex:1; border-left:1px solid var(--border); padding-left:12px;">
+            <label for="ps-wakilJamBtn">Jam Mulai</label>
+            <button type="button" id="ps-wakilJamBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:11.5px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ps-wakilJamLabel">Pilih jam...</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+            </button>
+            <input type="hidden" id="ps-wakilJam">
+          </div>
+        </div>
+      </div>
+
+      <div class="ps-wakil-group-title">Laporan Pembelajaran</div>
+      <div class="ps-wakil-group">
+        <div class="ps-wakil-row">
+          <label for="ps-wakilMateri">Ringkasan Sesi (wajib)</label>
+          <textarea id="ps-wakilMateri" rows="3" placeholder="Ringkasan materi/perkembangan siswa selama sesi ini."></textarea>
+        </div>
+      </div>
+
+      <div class="ps-wakil-group-title">Lampiran (Opsional)</div>
+      <div class="ps-wakil-group">
+        <div class="ps-wakil-row">
+          <label for="ps-wakilLink">Tautan Materi Belajar</label>
+          <input type="url" id="ps-wakilLink" placeholder="https://...">
+        </div>
+        <div class="ps-wakil-row">
+          <label for="ps-wakilFotoFile">Dokumentasi Presensi (wajib)</label>
+          <input type="file" id="ps-wakilFotoFile" accept="image/*" required>
+          <div id="ps-wakilFotoStatus" style="font-size:10.5px; color:var(--ink-soft); margin-top:4px;"></div>
+        </div>
+        <div class="ps-wakil-row">
+          <label for="ps-wakilCatatanFile">Catatan Pembelajaran</label>
+          <input type="file" id="ps-wakilCatatanFile" accept="image/*,.pdf">
+          <div id="ps-wakilCatatanStatus" style="font-size:10.5px; color:var(--ink-soft); margin-top:4px;"></div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="ps-wakilCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ps-wakilSaveBtn">Simpan Presensi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Preview Lampiran Presensi (Foto / Berkas / Link) -->
+  <div class="modal-overlay" id="ps-previewModal" hidden style="z-index:90; justify-content:center;">
+    <div class="modal-sheet" style="max-width:480px; width:100%; padding:0; overflow:hidden; border-radius:16px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px 10px;">
+        <div style="min-width:0;">
+          <h3 id="ps-previewTitle" style="margin:0; font-size:13.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Lampiran</h3>
+          <div id="ps-previewSub" style="font-size:10.5px; color:var(--ink-soft); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+        </div>
+        <button type="button" id="ps-previewCloseX" aria-label="Tutup" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft); flex:none; margin-left:10px;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div id="ps-previewMediaBox" style="position:relative; width:100%; height:52vh; max-height:55vh; background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); border-left:none; border-right:none; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:0;">
+        <div id="ps-previewSpinner" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--ink-soft); font-size:11.5px; font-weight:600; padding:30px 20px;">
+          <span class="spinner" style="border-color:rgba(20,22,43,.2); border-top-color:var(--blue); width:22px; height:22px;"></span>
+          <span>Memuat berkas...</span>
+        </div>
+        <img id="ps-previewImg" alt="Preview Lampiran" style="display:none; width:100%; height:100%; object-fit:contain; border-radius:0;">
+        <iframe id="ps-previewIframe" style="display:none; width:100%; height:100%; border:none;" allowfullscreen></iframe>
+        <div id="ps-previewExternalCard" hidden style="text-align:center; padding:20px 16px; font-size:11.5px; color:var(--ink);">
+          <div style="width:38px; height:38px; border-radius:50%; background:rgba(0,122,255,.12); color:#007aff; display:flex; align-items:center; justify-content:center; margin:0 auto 8px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </div>
+          <div id="ps-previewExternalUrlText" style="word-break:break-all; font-weight:600; font-size:11px; color:var(--ink-soft); margin-bottom:10px; max-height:50px; overflow:hidden;"></div>
+          <a id="ps-previewExternalBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:11.5px; height:32px; padding:0 14px; width:auto; margin:0 auto; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; font-weight:600;">
+            Buka Tautan Web &rarr;
+          </a>
+        </div>
+        <div id="ps-previewTextCard" hidden style="width:100%; max-height:50vh; overflow-y:auto; padding:14px 16px; box-sizing:border-box; text-align:left; background:#fff; border-radius:0;">
+          <div id="ps-previewTextBadge" style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;">Laporan Pembelajaran</div>
+          <p id="ps-previewTextContent" style="font-size:11.5px; color:var(--ink); line-height:1.55; white-space:pre-wrap; margin:0; word-break:break-word; font-family:var(--font);"></p>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="padding:10px 16px 14px; margin-top:0;">
+        <a id="ps-previewDirectLink" href="#" target="_blank" rel="noopener noreferrer" class="btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:11.5px; height:32px; padding:0 14px; width:100%; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; font-weight:600; box-sizing:border-box;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Buka di Tab Baru
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+
+  var PS_HARI = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+
+  var psState = {
+    tab: 'approval',
+    periode: null,
+    approvalRows: [],
+    riwayatRows: [],
+    jadwalMap: {},
+    search: '',
+    openCard: null,
+    tolakTargetId: null,
+    sortAsc: false,
+    sortField: 'tanggal',
+    sortDir: 'desc',
+    viewMode: (function () {
+      try {
+        var isDesktop = typeof window !== 'undefined' && window.innerWidth >= 900;
+        var saved = localStorage.getItem('genio_ps_view_mode');
+        if (saved === 'table' || saved === 'cards') return saved;
+        return isDesktop ? 'table' : 'cards';
+      } catch (e) {
+        return (typeof window !== 'undefined' && window.innerWidth >= 900) ? 'table' : 'cards';
+      }
+    })(),
+    role: null,
+    editTargetId: null,
+    filterUnit: '',
+    filterTutor: [],
+    filterSiswa: [],
+    filterOrtu: [],
+    filterMetode: '',
+    filterTerlambat: false
+  };
+
+  window.genioModuleHandlers['presensi'] = function () {
+    psInit();
+  };
+  window.genioModuleHandlers['presensi-goto'] = function (type) {
+    var targetTab = type === 'approval' ? 'approval' : 'riwayat';
+    setTimeout(function () { psSwitchTab(targetTab); }, 60);
+  };
+
+  function psInit() {
+    if (!psState.periode) {
+      var now = new Date();
+      psState.periode = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    }
+    psUpdatePeriodeLabel();
+
+    function psOpenPeriodePicker() {
+      if (typeof genioOpenMonthYearPicker === 'function') {
+        genioOpenMonthYearPicker({
+          currentValue: psState.periode,
+          title: 'Periode Presensi',
+          onSelect: function (val) {
+            psState.periode = val;
+            document.getElementById('ps-periodeInput').value = val;
+            psUpdatePeriodeLabel();
+            psLoadAll();
+          }
+        });
+      } else {
+        var input = document.getElementById('ps-periodeInput');
+        try { input.showPicker(); } catch (e) { input.focus(); input.click(); }
+      }
+    }
+    document.getElementById('ps-pilihPeriodeBtn').onclick = psOpenPeriodePicker;
+    var psLabelWrap = document.getElementById('ps-periodeLabelWrap') || document.getElementById('ps-periodeLabel');
+    if (psLabelWrap) psLabelWrap.onclick = psOpenPeriodePicker;
+    document.getElementById('ps-periodeInput').onchange = function (e) {
+      psState.periode = e.target.value;
+      psUpdatePeriodeLabel();
+      psLoadAll();
+    };
+    document.getElementById('ps-refreshBtn').onclick = function () {
+      var icon = this.querySelector('svg');
+      if (icon) {
+        icon.style.transition = 'transform .5s ease';
+        icon.style.transform = 'rotate(360deg)';
+        setTimeout(function () { icon.style.transition = 'none'; icon.style.transform = 'rotate(0deg)'; }, 500);
+      }
+      psLoadAll();
+    };
+
+    initPsTabScrubbing();
+
+    document.getElementById('ps-searchInput').oninput = function (e) {
+      psState.search = e.target.value.toLowerCase();
+      psRenderList();
+    };
+
+    document.getElementById('ps-filterBtn').onclick = function () {
+      psOpenFilterModal();
+    };
+    document.getElementById('ps-sortBtn').onclick = function () {
+      psState.sortField = 'tanggal';
+      psState.sortDir = (psState.sortDir === 'asc') ? 'desc' : 'asc';
+      psState.sortAsc = (psState.sortDir === 'asc');
+      document.getElementById('ps-sortLabel').textContent = psState.sortAsc ? 'Terlama' : 'Terbaru';
+      psRenderList();
+    };
+
+    var viewToggleBtn = document.getElementById('ps-viewToggleBtn');
+    if (viewToggleBtn) {
+      viewToggleBtn.onclick = psToggleViewMode;
+    }
+
+    document.getElementById('ps-tolakCancelBtn').onclick = psCloseTolakModal;
+    var tolakModalEl = document.getElementById('ps-tolakModal');
+    if (tolakModalEl) {
+      tolakModalEl.onclick = function (e) {
+        if (e.target === this) psCloseTolakModal();
+      };
+    }
+    document.getElementById('ps-tolakConfirmBtn').onclick = psConfirmTolak;
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('#ps-statusDropdownMenu') && !e.target.closest('.ps-table-status-btn')) {
+        psCloseStatusDropdown();
+      }
+    });
+    window.addEventListener('scroll', function () {
+      psCloseStatusDropdown();
+    }, { passive: true });
+
+    var psPrevCloseBtnEl = document.getElementById('ps-previewCloseBtn');
+    if (psPrevCloseBtnEl) psPrevCloseBtnEl.onclick = psClosePreview;
+    var psPrevCloseXEl = document.getElementById('ps-previewCloseX');
+    if (psPrevCloseXEl) psPrevCloseXEl.onclick = psClosePreview;
+    var psPrevModalEl = document.getElementById('ps-previewModal');
+    if (psPrevModalEl) {
+      psPrevModalEl.onclick = function (e) {
+        if (e.target === this) psClosePreview();
+      };
+    }
+
+    var listEl = document.getElementById('ps-list');
+    if (listEl && !listEl._previewBound) {
+      listEl._previewBound = true;
+      listEl.addEventListener('click', function (e) {
+        var sortTh = e.target.closest('.ps-sort-th');
+        if (sortTh) {
+          var field = sortTh.dataset.sort || sortTh.getAttribute('data-sort');
+          if (field) psHandleSort(field);
+          return;
+        }
+        var btn = e.target.closest('.ps-preview-lampiran-btn');
+        if (btn) {
+          e.preventDefault();
+          e.stopPropagation();
+          psOpenPreview(btn.dataset.url || btn.getAttribute('data-url'), btn.dataset.title || btn.getAttribute('data-title'), btn.dataset.sub || btn.getAttribute('data-sub'));
+          return;
+        }
+        var lapBtn = e.target.closest('.ps-table-laporan-btn');
+        if (lapBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          var txt = lapBtn.dataset.laporan || lapBtn.getAttribute('data-laporan');
+          var title = lapBtn.dataset.title || lapBtn.getAttribute('data-title') || 'Laporan Pembelajaran';
+          var sub = lapBtn.dataset.sub || lapBtn.getAttribute('data-sub') || '';
+          if (txt) psOpenPreviewText(txt, title, sub, 'Laporan Pembelajaran');
+          return;
+        }
+        var alasanBtn = e.target.closest('.ps-table-alasan-btn');
+        if (alasanBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          var alasanTxt = alasanBtn.dataset.alasan || alasanBtn.getAttribute('data-alasan') || 'Tidak ada catatan penolakan spesifik.';
+          var alasanTitle = alasanBtn.dataset.title || alasanBtn.getAttribute('data-title') || 'Alasan Penolakan';
+          var alasanSub = alasanBtn.dataset.sub || alasanBtn.getAttribute('data-sub') || '';
+          psOpenPreviewText(alasanTxt, alasanTitle, alasanSub, 'Alasan Penolakan');
+          return;
+        }
+        var statusBtn = e.target.closest('.ps-table-status-btn');
+        if (statusBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          var id = statusBtn.dataset.id || statusBtn.getAttribute('data-id');
+          var curStatus = statusBtn.dataset.status || statusBtn.getAttribute('data-status');
+          psOpenStatusDropdown(statusBtn, id, curStatus);
+          return;
+        }
+        var delBtn = e.target.closest('.ps-delete-btn');
+        if (delBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          var delId = delBtn.dataset.id || delBtn.getAttribute('data-id');
+          if (delId) psDeletePresensi(delId);
+          return;
+        }
+      });
+    }
+
+    setTimeout(psUpdateDockGlider, 50);
+    window.addEventListener('resize', psUpdateDockGlider);
+
+    psApplyResponsiveLayout();
+    var psLayoutResizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(psLayoutResizeTimer);
+      psLayoutResizeTimer = setTimeout(psApplyResponsiveLayout, 150);
+    });
+
+    psLoadAll();
+  }
+
+  /* Layout desktop: Hero + kartu "Isi Presensi untuk Tutor" jadi sebaris, Tab switcher +
+     Search/Filter jadi satu baris toolbar. Di mobile semua balik ke urutan asli. */
+  var PS_MOBILE_ORDER = ['.ps-hero-sec', '.ps-wakilcard-sec', '.ps-dock-sec', '.ps-search-sec'];
+
+  function psApplyResponsiveLayout() {
+    var anchor = document.getElementById('ps-desktopAnchor');
+    if (!anchor) return;
+    var isDesktop = window.matchMedia('(min-width:900px)').matches;
+    var heroRow = document.getElementById('ps-heroRow');
+    var toolbarRow = document.getElementById('ps-toolbarRow');
+
+    if (isDesktop) {
+      if (!heroRow) {
+        heroRow = document.createElement('div');
+        heroRow.id = 'ps-heroRow';
+        anchor.parentNode.insertBefore(heroRow, anchor.nextSibling);
+      }
+      if (!toolbarRow) {
+        toolbarRow = document.createElement('div');
+        toolbarRow.id = 'ps-toolbarRow';
+        anchor.parentNode.insertBefore(toolbarRow, heroRow.nextSibling);
+      }
+      var heroEl = document.querySelector('.ps-hero-sec');
+      if (heroEl) heroRow.appendChild(heroEl);
+      var wakilEl = document.querySelector('.ps-wakilcard-sec');
+      if (wakilEl) heroRow.appendChild(wakilEl);
+      var dockEl = document.querySelector('.ps-dock-sec');
+      if (dockEl) toolbarRow.appendChild(dockEl);
+      var searchEl = document.querySelector('.ps-search-sec');
+      if (searchEl) toolbarRow.appendChild(searchEl);
+    } else if (heroRow || toolbarRow) {
+      var cursor = anchor;
+      PS_MOBILE_ORDER.forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (el) { cursor.parentNode.insertBefore(el, cursor.nextSibling); cursor = el; }
+      });
+      if (heroRow) heroRow.remove();
+      if (toolbarRow) toolbarRow.remove();
+    }
+  }
+
+  function psUpdatePeriodeLabel() {
+    var bulanNama = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    var parts = psState.periode.split('-');
+    var label = bulanNama[parseInt(parts[1], 10) - 1] + ' ' + parts[0];
+    document.getElementById('ps-periodeLabel').textContent = label;
+    document.getElementById('ps-heroPeriodeBadge').textContent = label;
+  }
+
+  function psPeriodeRange() {
+    var parts = psState.periode.split('-');
+    var year = parseInt(parts[0], 10), month = parseInt(parts[1], 10);
+    var start = psState.periode + '-01';
+    var lastDay = new Date(year, month, 0).getDate();
+    var end = psState.periode + '-' + String(lastDay).padStart(2, '0');
+    return { start: start, end: end };
+  }
+
+  var PS_TABS = ['approval', 'riwayat'];
+
+  /* Drag/geser + animasi zoom-tahan — mekanisme sama persis seperti bottom bar & tab Unit di Home */
+  function initPsTabScrubbing() {
+    var dock = document.getElementById('ps-dock');
+    var glider = document.getElementById('ps-dockGlider');
+    if (!dock || !glider || dock._psScrubBound) return;
+    dock._psScrubBound = true;
+
+    var isPointerDown = false, isDragging = false, hasDragged = false, suppressClick = false;
+    var startX = 0, startY = 0, pointerId = null;
+    var cachedLeft = 0, cachedWidth = 0, cachedGliderWidth = 0, targetTab = psState.tab;
+    var DRAG_THRESHOLD = 8;
+
+    dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    dock.addEventListener('click', function (e) {
+      if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+
+    dock.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
+      pointerId = e.pointerId; startX = e.clientX; startY = e.clientY;
+      var rect = dock.getBoundingClientRect();
+      cachedLeft = rect.left; cachedWidth = rect.width;
+      cachedGliderWidth = glider.offsetWidth || (rect.width / PS_TABS.length);
+      targetTab = psState.tab;
+    });
+
+    dock.addEventListener('pointermove', function (e) {
+      if (!isPointerDown) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!hasDragged) {
+        if (Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+          isDragging = true; hasDragged = true; suppressClick = true;
+          try { dock.setPointerCapture(pointerId); } catch (_) {}
+        }
+      }
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        var relX = e.clientX - cachedLeft;
+        var clampedPx = Math.max(0, Math.min(cachedWidth - cachedGliderWidth, relX - cachedGliderWidth / 2));
+        glider.style.transition = 'none';
+        glider.style.left = clampedPx + 'px';
+        var ratio = Math.max(0, Math.min(0.999, relX / cachedWidth));
+        var newIdx = Math.min(PS_TABS.length - 1, Math.max(0, Math.floor(ratio * PS_TABS.length)));
+        targetTab = PS_TABS[newIdx];
+        document.querySelectorAll('.ps-dock-btn').forEach(function (b) {
+          b.classList.toggle('ps-dock-active', b.dataset.tab === targetTab);
+        });
+      }
+    });
+
+    function endScrub() {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      glider.style.transition = '';
+      if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+      if (hasDragged) {
+        isDragging = false;
+        psSwitchTab(targetTab);
+        setTimeout(function () { suppressClick = false; }, 80);
+      } else {
+        suppressClick = false;
+      }
+    }
+    dock.addEventListener('pointerup', endScrub);
+    dock.addEventListener('pointercancel', function () {
+      endScrub();
+    });
+
+    document.querySelectorAll('.ps-tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (!hasDragged) psSwitchTab(btn.dataset.tab);
+      });
+    });
+  }
+
+  function psUpdateDockGlider() {
+    var activeBtn = document.querySelector('.ps-dock-btn.ps-dock-active');
+    var dock = document.getElementById('ps-dock');
+    var glider = document.getElementById('ps-dockGlider');
+    if (!activeBtn || !dock || !glider) return;
+    var dockRect = dock.getBoundingClientRect();
+    var btnRect = activeBtn.getBoundingClientRect();
+    glider.style.left = (btnRect.left - dockRect.left) + 'px';
+    glider.style.width = btnRect.width + 'px';
+  }
+
+  function psSwitchTab(tab) {
+    psState.tab = tab;
+    psState.openCard = null;
+    document.querySelectorAll('.ps-dock-btn').forEach(function (btn) {
+      btn.classList.toggle('ps-dock-active', btn.dataset.tab === tab);
+    });
+    psUpdateDockGlider();
+    var sectionLabel = document.getElementById('ps-sectionLabelText');
+    if (tab === 'approval') {
+      sectionLabel.innerHTML = '<div style="font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Antrean Verifikasi</div><div style="font-size:11.5px; color:var(--ink-soft); margin-top:1px;">Menunggu persetujuan manajer</div>';
+    } else {
+      sectionLabel.innerHTML = '<div style="font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Riwayat Presensi</div><div style="font-size:11.5px; color:var(--ink-soft); margin-top:1px;">Periode ' + document.getElementById('ps-periodeLabel').textContent + '</div>';
+    }
+    psRenderList();
+  }
+
+  function psEscape(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+  function psFormatRp(n) { return 'Rp ' + Math.round(n || 0).toLocaleString('id-ID'); }
+  function psFormatTanggal(iso) {
+    var d = new Date(iso + 'T00:00:00');
+    var bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    return d.getDate() + ' ' + bulan[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function psHariFromTanggal(iso) {
+    var d = new Date(iso + 'T00:00:00');
+    return PS_HARI[d.getDay()];
+  }
+  function psAddMinutes(hhmm, minutes) {
+    var parts = hhmm.split(':');
+    var totalMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10) + minutes;
+    totalMin = ((totalMin % 1440) + 1440) % 1440;
+    var h = Math.floor(totalMin / 60), m = totalMin % 60;
+    return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+  }
+  function psTimeDiffMinutes(start, end) {
+    var sp = start.split(':'), ep = end.split(':');
+    var sMin = parseInt(sp[0], 10) * 60 + parseInt(sp[1], 10);
+    var eMin = parseInt(ep[0], 10) * 60 + parseInt(ep[1], 10);
+    var diff = eMin - sMin;
+    if (diff < 0) diff += 1440;
+    return diff;
+  }
+
+  var PS_EMBED = 'id,tanggal,jam,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,status,catatan_approval,kontrak_tutor_id,nominal_dibayar,terlambat,unit_id,metode_input,pdf_url,' +
+    'kontrak_tutor(mapel,fee_mengajar,uang_transport,tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url),kontrak_siswa(siswa(nama,orangtua(nama))))';
+
+  async function psLoadAll() {
+    var listEl = document.getElementById('ps-list');
+    try {
+      var s = genioGetSession();
+      psState.role = s.role;
+      var range = psPeriodeRange();
+      if (!psUnitsLoaded) {
+        await psLoadFilterUnits();
+      }
+
+      var results = await Promise.all([
+        supaRest('presensi?status=eq.pending&select=' + PS_EMBED + '&order=tanggal.asc,jam.asc', s.access_token),
+        supaRest('presensi?tanggal=gte.' + range.start + '&tanggal=lte.' + range.end + '&status=neq.pending&select=' + PS_EMBED + '&order=tanggal.desc,jam.desc', s.access_token)
+      ]);
+      psState.approvalRows = results[0];
+      psState.riwayatRows = results[1];
+
+      var allRows = psState.approvalRows.concat(psState.riwayatRows);
+      var ktIds = Array.from(new Set(allRows.map(function (r) { return r.kontrak_tutor_id; }).filter(Boolean)));
+      if (ktIds.length) {
+        var jadwalRows = await supaRest('jadwal?kontrak_tutor_id=in.(' + ktIds.join(',') + ')&select=kontrak_tutor_id,hari,jam_mulai,jam_selesai', s.access_token);
+        psState.jadwalMap = {};
+        jadwalRows.forEach(function (j) {
+          psState.jadwalMap[j.kontrak_tutor_id + '|' + j.hari] = j;
+        });
+      }
+
+      var periodeRows = psState.riwayatRows;
+      var totalPresensi = periodeRows.length;
+      var diterimaCount = periodeRows.filter(function (r) { return r.status === 'diterima'; }).length;
+      var diterimaPct = totalPresensi ? Math.round((diterimaCount / totalPresensi) * 100) : 0;
+      var telatCount = periodeRows.filter(function (r) { return r.terlambat; }).length;
+
+      document.getElementById('ps-heroTotal').textContent = totalPresensi;
+      document.getElementById('ps-heroValidasi').textContent = diterimaPct + '%';
+      document.getElementById('ps-heroValidasiCount').textContent = diterimaCount + ' dari ' + totalPresensi + ' presensi';
+      document.getElementById('ps-heroTelat').textContent = telatCount + ' Presensi';
+
+      try {
+        var pengaturan = await supaRest('pengaturan?select=persen_denda_telat&limit=1', s.access_token);
+        var persenDenda = (pengaturan && pengaturan[0] && pengaturan[0].persen_denda_telat) || 0;
+        document.getElementById('ps-heroTelatDenda').textContent = 'Kena denda ' + persenDenda + '%';
+      } catch (err) {
+        document.getElementById('ps-heroTelatDenda').textContent = 'Kena denda -';
+      }
+
+      document.getElementById('ps-approvalCount').textContent = psState.approvalRows.length;
+      document.getElementById('ps-riwayatCount').textContent = periodeRows.length;
+
+      psRenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="ps-card ps-full-width" style="padding:40px 20px; text-align:center; color:#8e8e93; font-size:13px;">Gagal memuat presensi: ' + psEscape(err.message) + '</div>';
+    }
+  }
+
+  function psGetWaktu(row) {
+    var kt = row.kontrak_tutor;
+    var hari = psHariFromTanggal(row.tanggal);
+    var jadwal = kt ? psState.jadwalMap[row.kontrak_tutor_id + '|' + hari] : null;
+    var jamStart = row.jam ? row.jam.slice(0, 5) : '-';
+    if (jadwal) {
+      var durasi = psTimeDiffMinutes(jadwal.jam_mulai, jadwal.jam_selesai);
+      var jamEnd = psAddMinutes(jamStart, durasi);
+      return { text: jamStart + ' - ' + jamEnd + ' WIB', durasiMenit: durasi };
+    }
+    return { text: jamStart + ' WIB', durasiMenit: null };
+  }
+
+  function psMatchesSearch(row) {
+    if (!psState.search) return true;
+    var kt = row.kontrak_tutor || {};
+    var tutorNama = (kt.users && kt.users.nama || '').toLowerCase();
+    var siswaNama = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama || '').toLowerCase();
+    var tanggal = psFormatTanggal(row.tanggal).toLowerCase();
+    return tutorNama.indexOf(psState.search) !== -1 || siswaNama.indexOf(psState.search) !== -1 || tanggal.indexOf(psState.search) !== -1;
+  }
+
+  function psMatchesFilters(row) {
+    if (psState.filterUnit && row.unit_id !== psState.filterUnit) return false;
+    var kt = row.kontrak_tutor || {};
+    var tutorNama = kt.users && kt.users.nama;
+    var siswaNama = kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama;
+    var ortuNama = kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.orangtua && kt.kontrak_siswa.siswa.orangtua.nama;
+    if (psState.filterTutor.length && psState.filterTutor.indexOf(tutorNama) === -1) return false;
+    if (psState.filterSiswa.length && psState.filterSiswa.indexOf(siswaNama) === -1) return false;
+    if (psState.filterOrtu.length && psState.filterOrtu.indexOf(ortuNama) === -1) return false;
+    if (psState.filterMetode && row.metode_input !== psState.filterMetode) return false;
+    if (psState.filterTerlambat && !row.terlambat) return false;
+    return true;
+  }
+
+  function psActiveFilterCount() {
+    var n = 0;
+    if (psState.filterUnit) n++;
+    if (psState.filterTutor.length) n++;
+    if (psState.filterSiswa.length) n++;
+    if (psState.filterOrtu.length) n++;
+    if (psState.filterMetode) n++;
+    if (psState.filterTerlambat) n++;
+    return n;
+  }
+
+  function psGetUnitName(row) {
+    if (row.unit_id && psUnitMap[row.unit_id]) return psUnitMap[row.unit_id];
+    var kt = row.kontrak_tutor;
+    if (kt && kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.unit_id && psUnitMap[kt.kontrak_siswa.siswa.unit_id]) {
+      return psUnitMap[kt.kontrak_siswa.siswa.unit_id];
+    }
+    return '-';
+  }
+
+  function psUpdateViewToggleUI() {
+    var btn = document.getElementById('ps-viewToggleBtn');
+    if (!btn) return;
+    var isTable = psState.viewMode === 'table';
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color = 'var(--ink)';
+    btn.style.background = '#fff';
+    if (isTable) {
+      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Kartu');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
+    } else {
+      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Tabel');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+    }
+  }
+
+  function psToggleViewMode() {
+    var btn = document.getElementById('ps-viewToggleBtn');
+    if (btn) {
+      btn.classList.remove('ps-btn-pop');
+      void btn.offsetWidth;
+      btn.classList.add('ps-btn-pop');
+    }
+    psState.viewMode = (psState.viewMode === 'table') ? 'cards' : 'table';
+    try {
+      localStorage.setItem('genio_ps_view_mode', psState.viewMode);
+    } catch (e) {}
+    psRenderList();
+  }
+
+  function psGetSortIcon(field) {
+    if (psState.sortField === field) {
+      if (psState.sortDir === 'asc') {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+      } else {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
+      }
+    }
+    return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; opacity:.2; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+  }
+
+  function psSortRows(rows) {
+    var field = psState.sortField || 'tanggal';
+    var dir = psState.sortDir || 'desc';
+    var sorted = rows.slice();
+    sorted.sort(function (a, b) {
+      if (field === 'nominal') {
+        var ktA = a.kontrak_tutor || {};
+        var ktB = b.kontrak_tutor || {};
+        var numA = (a.status === 'pending')
+          ? (parseFloat(ktA.fee_mengajar || 0) + parseFloat(ktA.uang_transport || 0))
+          : (parseFloat(a.nominal_dibayar || 0) || (parseFloat(ktA.fee_mengajar || 0) + parseFloat(ktA.uang_transport || 0)));
+        var numB = (b.status === 'pending')
+          ? (parseFloat(ktB.fee_mengajar || 0) + parseFloat(ktB.uang_transport || 0))
+          : (parseFloat(b.nominal_dibayar || 0) || (parseFloat(ktB.fee_mengajar || 0) + parseFloat(ktB.uang_transport || 0)));
+        return dir === 'asc' ? (numA - numB) : (numB - numA);
+      }
+      if (field === 'tanggal') {
+        var da = a.tanggal || '';
+        var db = b.tanggal || '';
+        if (da < db) return dir === 'asc' ? -1 : 1;
+        if (da > db) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      if (field === 'jam') {
+        var ja = a.jam || '';
+        var jb = b.jam || '';
+        if (ja < jb) return dir === 'asc' ? -1 : 1;
+        if (ja > jb) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      if (field === 'tutor') {
+        var tA = (a.kontrak_tutor && a.kontrak_tutor.users && a.kontrak_tutor.users.nama || '').toLowerCase();
+        var tB = (b.kontrak_tutor && b.kontrak_tutor.users && b.kontrak_tutor.users.nama || '').toLowerCase();
+        if (tA < tB) return dir === 'asc' ? -1 : 1;
+        if (tA > tB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      if (field === 'siswa') {
+        var sA = (a.kontrak_tutor && a.kontrak_tutor.kontrak_siswa && a.kontrak_tutor.kontrak_siswa.siswa && a.kontrak_tutor.kontrak_siswa.siswa.nama || '').toLowerCase();
+        var sB = (b.kontrak_tutor && b.kontrak_tutor.kontrak_siswa && b.kontrak_tutor.kontrak_siswa.siswa && b.kontrak_tutor.kontrak_siswa.siswa.nama || '').toLowerCase();
+        if (sA < sB) return dir === 'asc' ? -1 : 1;
+        if (sA > sB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      if (field === 'mapel') {
+        var mA = (a.kontrak_tutor && a.kontrak_tutor.mapel || '').toLowerCase();
+        var mB = (b.kontrak_tutor && b.kontrak_tutor.mapel || '').toLowerCase();
+        if (mA < mB) return dir === 'asc' ? -1 : 1;
+        if (mA > mB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      if (field === 'unit') {
+        var uA = (psGetUnitName(a) || '').toLowerCase();
+        var uB = (psGetUnitName(b) || '').toLowerCase();
+        if (uA < uB) return dir === 'asc' ? -1 : 1;
+        if (uA > uB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
+      if (field === 'terlambat') {
+        var tltA = a.terlambat ? 1 : 0;
+        var tltB = b.terlambat ? 1 : 0;
+        return dir === 'asc' ? (tltA - tltB) : (tltB - tltA);
+      }
+      return 0;
+    });
+    return sorted;
+  }
+
+  function psHandleSort(field) {
+    if (psState.sortField === field) {
+      psState.sortDir = (psState.sortDir === 'asc') ? 'desc' : 'asc';
+    } else {
+      psState.sortField = field;
+      psState.sortDir = (field === 'nominal' || field === 'tanggal' || field === 'jam') ? 'desc' : 'asc';
+    }
+    psState.sortAsc = (psState.sortDir === 'asc');
+    var sortLabel = document.getElementById('ps-sortLabel');
+    if (sortLabel) sortLabel.textContent = (psState.sortField === 'tanggal' && psState.sortAsc) ? 'Terlama' : 'Terbaru';
+    psRenderList();
+  }
+
+  function psFindRow(id) {
+    var all = psState.approvalRows.concat(psState.riwayatRows);
+    for (var i = 0; i < all.length; i++) {
+      if (String(all[i].id) === String(id)) return all[i];
+    }
+    return null;
+  }
+
+  function psBuildLaporanPayload(row, targetStatus) {
+    var kt = row.kontrak_tutor || {};
+    var tutor = kt.users || {};
+    var ks = kt.kontrak_siswa || {};
+    var siswa = ks.siswa || {};
+    var ortu = siswa.orangtua || {};
+    var waktu = psGetWaktu(row);
+    var unitNama = psGetUnitName(row);
+    var st = targetStatus || row.status || 'diterima';
+
+    return {
+      id: row.id,
+      siswaNama: siswa.nama || '-',
+      ortuNama: ortu.nama || '-',
+      tutorNama: tutor.nama || '-',
+      mapel: kt.mapel || '-',
+      unit: unitNama || '-',
+      tanggal: psFormatTanggal(row.tanggal),
+      tanggalRaw: row.tanggal,
+      jam: waktu.text,
+      durasi: waktu.durasiMenit ? waktu.durasiMenit + ' Menit' : '-',
+      status: st,
+      materiTeks: row.materi_teks || '',
+      materiLink: row.materi_link || '',
+      catatanPembelajaranUrl: row.catatan_pembelajaran_url || '',
+      catatanApproval: row.catatan_approval || ''
+    };
+  }
+
+  async function psGenerateAndSaveLaporanPdf(row, targetStatus) {
+    var payload = psBuildLaporanPayload(row, targetStatus);
+    var s = genioGetSession();
+
+    var pdfUrl = await new Promise(function (resolve, reject) {
+      if (window.google && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function (result) {
+            if (result && result.success) resolve(result.url);
+            else reject(new Error((result && result.error) || 'Gagal generate PDF Laporan ke Google Drive'));
+          })
+          .withFailureHandler(function (err) { reject(err); })
+          .generateLaporanBelajarPdf(payload);
+      } else {
+        // Fallback jika di browser luar Google Apps Script
+        var mockUrl = 'https://drive.google.com/file/d/genio_laporan_' + row.id + '/view';
+        setTimeout(function () { resolve(mockUrl); }, 600);
+      }
+    });
+
+    if (pdfUrl) {
+      await supaRest('presensi?id=eq.' + row.id, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ pdf_url: pdfUrl })
+      });
+      row.pdf_url = pdfUrl;
+    }
+
+    return pdfUrl;
+  }
+
+  async function psOpenLaporanPdf(id) {
+    var row = psFindRow(id);
+    if (!row) return;
+
+    if (row.pdf_url) {
+      window.open(row.pdf_url, '_blank');
+      return;
+    }
+
+    try {
+      genioToast('Membuat PDF Laporan Belajar Siswa...', 'loading', true);
+      var url = await psGenerateAndSaveLaporanPdf(row, row.status);
+      genioToast('PDF Laporan Belajar Siswa siap', 'success');
+      if (url) {
+        window.open(url, '_blank');
+      }
+      psRenderList();
+    } catch (err) {
+      genioToast('Gagal membuat PDF: ' + err.message, 'error');
+    }
+  }
+
+  var psActiveDropdownTarget = null;
+
+  function psOpenStatusDropdown(btn, id, currentStatus) {
+    var menu = document.getElementById('ps-statusDropdownMenu');
+    if (!menu) return;
+
+    if (!menu.hidden && psActiveDropdownTarget && psActiveDropdownTarget.id === id) {
+      psCloseStatusDropdown();
+      return;
+    }
+
+    psCloseStatusDropdown();
+
+    psActiveDropdownTarget = { id: id, currentStatus: currentStatus, btn: btn };
+    btn.classList.add('active');
+
+    var isApproval = (psState.tab === 'approval');
+    var itemsEl = document.getElementById('ps-statusDropdownItems');
+
+    var checkSvg = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--blue)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><polyline points="20 6 9 17 4 12"/></svg>';
+
+    var html = '';
+    if (isApproval) {
+      html =
+        '<button type="button" class="ps-status-dropdown-item" data-status="diterima">' +
+          '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<span style="width:7px; height:7px; border-radius:50%; background:#34c759; flex:none;"></span>' +
+            '<span>Setujui</span>' +
+          '</div>' +
+        '</button>' +
+        '<button type="button" class="ps-status-dropdown-item" data-status="visit">' +
+          '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<span style="width:7px; height:7px; border-radius:50%; background:#007aff; flex:none;"></span>' +
+            '<span>Visit</span>' +
+          '</div>' +
+        '</button>' +
+        '<button type="button" class="ps-status-dropdown-item" data-status="ditolak" style="color:#ff3b30;">' +
+          '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<span style="width:7px; height:7px; border-radius:50%; background:#ff3b30; flex:none;"></span>' +
+            '<span>Tolak</span>' +
+          '</div>' +
+        '</button>';
+    } else {
+      var isDiterima = (currentStatus === 'diterima');
+      var isVisit = (currentStatus === 'visit');
+      var isDitolak = (currentStatus === 'ditolak');
+
+      html =
+        '<button type="button" class="ps-status-dropdown-item" data-status="diterima">' +
+          '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<span style="width:7px; height:7px; border-radius:50%; background:#34c759; flex:none;"></span>' +
+            '<span>Disetujui</span>' +
+          '</div>' +
+          (isDiterima ? checkSvg : '') +
+        '</button>' +
+        '<button type="button" class="ps-status-dropdown-item" data-status="visit">' +
+          '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<span style="width:7px; height:7px; border-radius:50%; background:#007aff; flex:none;"></span>' +
+            '<span>Visit</span>' +
+          '</div>' +
+          (isVisit ? checkSvg : '') +
+        '</button>' +
+        '<button type="button" class="ps-status-dropdown-item" data-status="ditolak" style="' + (isDitolak ? 'color:#ff3b30;' : '') + '">' +
+          '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<span style="width:7px; height:7px; border-radius:50%; background:#ff3b30; flex:none;"></span>' +
+            '<span>Ditolak</span>' +
+          '</div>' +
+          (isDitolak ? checkSvg : '') +
+        '</button>';
+    }
+
+    itemsEl.innerHTML = html;
+
+    itemsEl.querySelectorAll('.ps-status-dropdown-item').forEach(function (optBtn) {
+      optBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var targetStatus = optBtn.dataset.status;
+        var rowId = psActiveDropdownTarget.id;
+        var curStat = psActiveDropdownTarget.currentStatus;
+        psCloseStatusDropdown();
+        psHandleStatusSelection(rowId, targetStatus, curStat);
+      });
+    });
+
+    menu.hidden = false;
+
+    var rect = btn.getBoundingClientRect();
+    var menuWidth = 140;
+    var left = rect.left;
+    if (left + menuWidth > window.innerWidth - 12) {
+      left = window.innerWidth - menuWidth - 12;
+    }
+    if (left < 10) left = 10;
+
+    var menuHeight = 115;
+    var top = rect.bottom + 4;
+    if (top + menuHeight > window.innerHeight - 10) {
+      top = rect.top - menuHeight - 4;
+    }
+
+    menu.style.top = top + 'px';
+    menu.style.left = left + 'px';
+  }
+
+  function psCloseStatusDropdown() {
+    var menu = document.getElementById('ps-statusDropdownMenu');
+    if (menu) menu.hidden = true;
+    if (psActiveDropdownTarget && psActiveDropdownTarget.btn) {
+      psActiveDropdownTarget.btn.classList.remove('active');
+    }
+    psActiveDropdownTarget = null;
+  }
+
+  async function psHandleStatusSelection(id, targetStatus, currentStatus) {
+    if (targetStatus === currentStatus) return;
+
+    if (targetStatus === 'ditolak') {
+      psOpenTolakModal(id);
+      return;
+    }
+
+    if (targetStatus === 'diterima' || targetStatus === 'visit') {
+      await psApprove(id, targetStatus);
+    }
+  }
+
+  function psRenderList() {
+    var listEl = document.getElementById('ps-list');
+    var rows = (psState.tab === 'approval' ? psState.approvalRows : psState.riwayatRows).filter(psMatchesSearch).filter(psMatchesFilters);
+    rows = psSortRows(rows);
+    document.getElementById('ps-resultCount').textContent = rows.length + ' Presensi';
+    psUpdateViewToggleUI();
+
+    if (!rows.length) {
+      listEl.classList.remove('ps-view-table');
+      listEl.innerHTML = '<div class="ps-card ps-full-width" style="padding:48px 24px; text-align:center;">' +
+        '<div style="width:56px; height:56px; margin:0 auto 12px; border-radius:50%; background:rgba(0,122,255,.1); color:#007aff; display:flex; align-items:center; justify-content:center;">' +
+          '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</div>' +
+        '<h4 style="font-size:14px; font-weight:800; color:#1c1c1e; margin:0 0 4px;">Tidak Ada Data Presensi</h4>' +
+        '<p style="font-size:12px; color:#8e8e93; margin:0; max-width:240px; margin-left:auto; margin-right:auto;">' + (psState.tab === 'approval' ? 'Semua presensi telah disetujui atau tidak sesuai filter.' : 'Belum ada riwayat presensi di periode ini.') + '</p>' +
+      '</div>';
+      return;
+    }
+
+    if (psState.viewMode === 'table') {
+      listEl.classList.add('ps-view-table');
+      listEl.innerHTML = psRenderTable(rows);
+    } else {
+      listEl.classList.remove('ps-view-table');
+      listEl.innerHTML = rows.map(function (row) { return psRenderCard(row); }).join('');
+    }
+    psBindCardEvents();
+  }
+
+  function psRenderTable(rows) {
+    var isApproval = (psState.tab === 'approval');
+
+    var trs = rows.map(function (row, idx) {
+      var kt = row.kontrak_tutor || {};
+      var tutor = kt.users || {};
+      var tutorNama = tutor.nama || '-';
+      var siswaNama = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || '-';
+      var mapel = kt.mapel || '-';
+      var unitNama = psGetUnitName(row);
+      var estimasiHonor = parseFloat(kt.fee_mengajar || 0) + parseFloat(kt.uang_transport || 0);
+      var honorVal = isApproval ? estimasiHonor : (parseFloat(row.nominal_dibayar || 0) || estimasiHonor);
+      var subtitle = (tutor.nama || 'Tutor') + ' • ' + psFormatTanggal(row.tanggal);
+
+      // Lampiran column (Foto, Materi Link, Catatan Berkas, Laporan Teks, PDF, Alasan)
+      var lampiranBtns = [];
+      if (row.foto_url) {
+        lampiranBtns.push(
+          '<button type="button" class="ps-preview-lampiran-btn ps-table-icon-btn" data-url="' + psEscape(row.foto_url) + '" data-title="Dokumentasi Presensi" data-sub="' + psEscape(subtitle) + '" title="Lihat Foto Dokumentasi">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' +
+          '</button>'
+        );
+      }
+      if (row.materi_link) {
+        lampiranBtns.push(
+          '<button type="button" class="ps-preview-lampiran-btn ps-table-icon-btn" data-url="' + psEscape(row.materi_link) + '" data-title="Tautan Materi Belajar" data-sub="' + psEscape(subtitle) + '" title="Buka Materi Belajar">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
+          '</button>'
+        );
+      }
+      if (row.catatan_pembelajaran_url) {
+        lampiranBtns.push(
+          '<button type="button" class="ps-preview-lampiran-btn ps-table-icon-btn" data-url="' + psEscape(row.catatan_pembelajaran_url) + '" data-title="Catatan Pembelajaran" data-sub="' + psEscape(subtitle) + '" title="Lihat Catatan Pembelajaran">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/></svg>' +
+          '</button>'
+        );
+      }
+      if (row.materi_teks) {
+        lampiranBtns.push(
+          '<button type="button" class="ps-table-laporan-btn ps-table-icon-btn" data-laporan="' + psEscape(row.materi_teks) + '" data-title="Laporan Pembelajaran" data-sub="' + psEscape(subtitle) + '" title="Lihat Laporan Pembelajaran">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
+          '</button>'
+        );
+      }
+      if (row.status === 'ditolak') {
+        var alasanCatatan = row.catatan_approval || 'Tidak ada catatan penolakan spesifik.';
+        lampiranBtns.push(
+          '<button type="button" class="ps-table-alasan-btn ps-table-icon-btn" data-alasan="' + psEscape(alasanCatatan) + '" data-title="Alasan Penolakan" data-sub="' + psEscape(subtitle) + '" title="Lihat Alasan Penolakan">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+          '</button>'
+        );
+      }
+      var lampiranHtml = lampiranBtns.length
+        ? '<div style="display:inline-flex; align-items:center; gap:4px;">' + lampiranBtns.join('') + '</div>'
+        : '<span style="color:var(--ink-soft); font-size:11px; opacity:.4;">-</span>';
+
+      // Status column with popup dropdown trigger button and side action button (Download PDF / Delete)
+      var statusHtml = '';
+      if (isApproval) {
+        statusHtml =
+          '<div class="ps-table-status-cell">' +
+            '<button type="button" class="ps-table-status-btn" data-id="' + row.id + '" data-status="pending" title="Klik untuk ubah status">' +
+              '<span class="ps-status-dot" style="background:#ff9500;"></span>' +
+              '<span class="ps-status-label">Menunggu</span>' +
+              '<svg class="ps-status-arrow" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+            '</button>' +
+          '</div>';
+      } else {
+        var dotColor = (row.status === 'diterima') ? '#34c759' : ((row.status === 'visit') ? '#007aff' : '#ff3b30');
+        var statusLabel = (row.status === 'diterima') ? 'Disetujui' : ((row.status === 'visit') ? 'Visit' : 'Ditolak');
+
+        var sideBtnHtml = '';
+        if (row.status === 'ditolak') {
+          sideBtnHtml =
+            '<button type="button" class="ps-delete-btn ps-table-icon-btn" data-id="' + row.id + '" aria-label="Hapus presensi" title="Hapus Presensi">' +
+              '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+            '</button>';
+        } else if (row.status === 'diterima' || row.status === 'visit') {
+          sideBtnHtml =
+            '<button type="button" class="ps-download-pdf-btn ps-table-icon-btn" data-id="' + row.id + '" aria-label="Unduh PDF Laporan Belajar Siswa" title="Unduh PDF Laporan Belajar Siswa">' +
+              '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+            '</button>';
+        }
+
+        statusHtml =
+          '<div class="ps-table-status-cell">' +
+            '<button type="button" class="ps-table-status-btn" data-id="' + row.id + '" data-status="' + row.status + '" title="Klik untuk ubah status">' +
+              '<span class="ps-status-dot" style="background:' + dotColor + ';"></span>' +
+              '<span class="ps-status-label">' + statusLabel + '</span>' +
+              '<svg class="ps-status-arrow" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+            '</button>' +
+            sideBtnHtml +
+          '</div>';
+      }
+
+      return '' +
+        '<tr>' +
+          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + psEscape(psFormatTanggal(row.tanggal)) + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + (row.jam ? row.jam.slice(0, 5) + ' WIB' : '-') + '</td>' +
+          '<td><span style="color:var(--ink); font-size:11.5px; font-weight:600; white-space:nowrap;">' + psEscape(tutorNama) + '</span></td>' +
+          '<td><span style="color:var(--ink); font-size:11.5px; font-weight:400; white-space:nowrap;">' + psEscape(siswaNama) + '</span></td>' +
+          '<td><span style="color:var(--ink); font-size:11.5px; font-weight:400; white-space:nowrap;">' + psEscape(mapel) + '</span></td>' +
+          '<td><span style="color:var(--ink); font-size:11.5px; font-weight:400; white-space:nowrap;">' + psEscape(unitNama) + '</span></td>' +
+          '<td style="text-align:right; white-space:nowrap;"><span style="color:var(--ink); font-size:11.5px; font-weight:600;">' + psFormatRp(honorVal) + '</span></td>' +
+          '<td style="text-align:center; white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + (row.terlambat ? 'Ya' : 'Tidak') + '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + lampiranHtml + '</td>' +
+          '<td style="text-align:center; white-space:nowrap; min-width:170px;">' + statusHtml + '</td>' +
+        '</tr>';
+    }).join('');
+
+    return '' +
+      '<div class="ps-table-card">' +
+        '<div class="ps-table-wrap">' +
+          '<table class="ps-table">' +
+            '<thead>' +
+              '<tr>' +
+                '<th style="width:36px; text-align:center;">No</th>' +
+                '<th class="ps-sort-th" data-sort="tanggal" title="Urutkan Tanggal">' +
+                  '<span style="display:inline-flex; align-items:center;">Tanggal' + psGetSortIcon('tanggal') + '</span>' +
+                '</th>' +
+                '<th class="ps-sort-th" data-sort="jam" title="Urutkan Jam">' +
+                  '<span style="display:inline-flex; align-items:center;">Jam' + psGetSortIcon('jam') + '</span>' +
+                '</th>' +
+                '<th class="ps-sort-th" data-sort="tutor" title="Urutkan Tutor (A - Z)">' +
+                  '<span style="display:inline-flex; align-items:center;">Tutor' + psGetSortIcon('tutor') + '</span>' +
+                '</th>' +
+                '<th class="ps-sort-th" data-sort="siswa" title="Urutkan Siswa (A - Z)">' +
+                  '<span style="display:inline-flex; align-items:center;">Siswa' + psGetSortIcon('siswa') + '</span>' +
+                '</th>' +
+                '<th class="ps-sort-th" data-sort="mapel" title="Urutkan Mapel (A - Z)">' +
+                  '<span style="display:inline-flex; align-items:center;">Mapel' + psGetSortIcon('mapel') + '</span>' +
+                '</th>' +
+                '<th class="ps-sort-th" data-sort="unit" title="Urutkan Unit (A - Z)">' +
+                  '<span style="display:inline-flex; align-items:center;">Unit' + psGetSortIcon('unit') + '</span>' +
+                '</th>' +
+                '<th class="ps-sort-th" data-sort="nominal" title="Urutkan Fee Tutor" style="text-align:right;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:flex-end; width:100%;">Fee Tutor' + psGetSortIcon('nominal') + '</span>' +
+                '</th>' +
+                '<th class="ps-sort-th" data-sort="terlambat" title="Urutkan Keterlambatan" style="text-align:center;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:center; width:100%;">Keterlambatan' + psGetSortIcon('terlambat') + '</span>' +
+                '</th>' +
+                '<th style="text-align:center;">Lampiran</th>' +
+                '<th style="text-align:center; min-width:175px;">Status</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' +
+              trs +
+            '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>';
+  }
+
+  /* ===== Filter Lanjutan ===== */
+  var psUnitsLoaded = false;
+
+  var PS_FILTER_DEFS = {
+    unit: { title: 'Pilih Unit / Cabang', multi: false, allLabel: 'Semua Unit' },
+    metode: { title: 'Pilih Metode Input', multi: false, allLabel: 'Semua Metode' },
+    tutor: { title: 'Pilih Tutor', multi: true, allLabel: 'Semua Tutor' },
+    siswa: { title: 'Pilih Siswa', multi: true, allLabel: 'Semua Siswa' },
+    ortu: { title: 'Pilih Orang Tua', multi: true, allLabel: 'Semua Orang Tua' }
+  };
+  var psFilterUnitOptions = [];
+  var psPickerCurrentType = null;
+  var psPickerTempSelected = [];
+
+  function psOpenFilterModal() {
+    if (!psUnitsLoaded) psLoadFilterUnits().then(psUpdateAllFilterSummaries);
+    psUpdateAllFilterSummaries();
+    document.getElementById('ps-filterTerlambat').checked = psState.filterTerlambat;
+    var modal = document.getElementById('ps-filterModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function psCloseFilterModal() {
+    var modal = document.getElementById('ps-filterModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+
+  var psUnitMap = {};
+  async function psLoadFilterUnits() {
+    try {
+      var s = genioGetSession();
+      var units = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+      psFilterUnitOptions = units.map(function (u) { return { value: u.id, label: u.nama_unit }; });
+      psUnitMap = {};
+      units.forEach(function (u) { psUnitMap[u.id] = u.nama_unit; });
+      psUnitsLoaded = true;
+    } catch (err) { psFilterUnitOptions = []; }
+  }
+
+  function psBuildNameSet(rows, extractor) {
+    var set = {};
+    rows.forEach(function (r) { var v = extractor(r); if (v) set[v] = true; });
+    return Object.keys(set).sort();
+  }
+
+  function psGetFilterOptions(type) {
+    if (type === 'unit') return psFilterUnitOptions;
+    if (type === 'metode') return [{ value: 'mandiri', label: 'Mandiri (Tutor Sendiri)' }, { value: 'diwakilkan', label: 'Diwakilkan (Manajer/Kepala Unit)' }];
+    var allRows = psState.approvalRows.concat(psState.riwayatRows);
+    var extractor;
+    if (type === 'tutor') extractor = function (r) { return r.kontrak_tutor && r.kontrak_tutor.users && r.kontrak_tutor.users.nama; };
+    if (type === 'siswa') extractor = function (r) { return r.kontrak_tutor && r.kontrak_tutor.kontrak_siswa && r.kontrak_tutor.kontrak_siswa.siswa && r.kontrak_tutor.kontrak_siswa.siswa.nama; };
+    if (type === 'ortu') extractor = function (r) { return r.kontrak_tutor && r.kontrak_tutor.kontrak_siswa && r.kontrak_tutor.kontrak_siswa.siswa && r.kontrak_tutor.kontrak_siswa.siswa.orangtua && r.kontrak_tutor.kontrak_siswa.siswa.orangtua.nama; };
+    return psBuildNameSet(allRows, extractor).map(function (n) { return { value: n, label: n }; });
+  }
+
+  function psGetFilterState(type) {
+    if (type === 'unit') return psState.filterUnit ? [psState.filterUnit] : [];
+    if (type === 'metode') return psState.filterMetode ? [psState.filterMetode] : [];
+    if (type === 'tutor') return psState.filterTutor;
+    if (type === 'siswa') return psState.filterSiswa;
+    if (type === 'ortu') return psState.filterOrtu;
+    return [];
+  }
+  function psSetFilterState(type, values) {
+    if (type === 'unit') psState.filterUnit = values[0] || '';
+    else if (type === 'metode') psState.filterMetode = values[0] || '';
+    else if (type === 'tutor') psState.filterTutor = values;
+    else if (type === 'siswa') psState.filterSiswa = values;
+    else if (type === 'ortu') psState.filterOrtu = values;
+  }
+
+  function psUpdateFilterSummary(type) {
+    var def = PS_FILTER_DEFS[type];
+    var selected = psGetFilterState(type);
+    var summaryEl = document.getElementById('ps-filter' + type.charAt(0).toUpperCase() + type.slice(1) + 'Summary');
+    if (!summaryEl) return;
+    if (!selected.length) {
+      summaryEl.textContent = def.allLabel;
+    } else if (selected.length === 1) {
+      var opt = psGetFilterOptions(type).filter(function (o) { return o.value === selected[0]; })[0];
+      summaryEl.textContent = opt ? opt.label : selected[0];
+    } else {
+      summaryEl.textContent = selected.length + ' dipilih';
+    }
+  }
+  function psUpdateAllFilterSummaries() {
+    Object.keys(PS_FILTER_DEFS).forEach(psUpdateFilterSummary);
+  }
+
+  document.querySelectorAll('.ps-filter-row-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { psOpenPicker(btn.dataset.picker); });
+  });
+
+  function psOpenPicker(type) {
+    psPickerCurrentType = type;
+    document.getElementById('ps-pickerTitle').textContent = PS_FILTER_DEFS[type].title;
+    psPickerTempSelected = psGetFilterState(type).slice();
+    psRenderPickerList(type);
+    var modal = document.getElementById('ps-pickerModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function psClosePicker() {
+    var modal = document.getElementById('ps-pickerModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+
+  var psPickerSearch = '';
+
+  function psRenderPickerList(type) {
+    psPickerSearch = '';
+    var listEl = document.getElementById('ps-pickerList');
+    listEl.innerHTML =
+      '<div style="position:relative; margin-bottom:8px;">' +
+        '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+        '<input type="text" id="ps-pickerSearchInput" placeholder="Cari..." style="width:100%; border:1px solid var(--border); border-radius:8px; padding:0 10px 0 30px; height:32px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">' +
+      '</div>' +
+      '<div id="ps-pickerRows"></div>';
+    document.getElementById('ps-pickerSearchInput').addEventListener('input', function (e) {
+      psPickerSearch = e.target.value.toLowerCase();
+      psRenderPickerRows(type);
+    });
+    document.getElementById('ps-pickerSearchInput').addEventListener('focus', function (e) {
+      var el = e.target;
+      setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+    });
+    psRenderPickerRows(type);
+  }
+
+  function psRenderPickerRows(type) {
+    var def = PS_FILTER_DEFS[type];
+    var allOptions = psGetFilterOptions(type);
+    var options = psPickerSearch ? allOptions.filter(function (o) { return o.label.toLowerCase().indexOf(psPickerSearch) !== -1; }) : allOptions;
+    var rowsEl = document.getElementById('ps-pickerRows');
+    var inputType = def.multi ? 'checkbox' : 'radio';
+    var allRow = !psPickerSearch ? '<label style="display:flex; align-items:center; gap:8px; padding:8px 4px; font-size:11.5px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
+      '<input type="' + inputType + '" name="ps-picker-opt" class="ps-picker-opt" value="" ' + (psPickerTempSelected.length === 0 ? 'checked' : '') + ' style="width:15px; height:15px; accent-color:var(--blue); flex:none;">' +
+      def.allLabel +
+    '</label>' : '';
+    var rows = !options.length
+      ? '<div style="font-size:11.5px; color:var(--ink-soft); padding:12px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data.') + '</div>'
+      : options.map(function (opt) {
+          var checked = psPickerTempSelected.indexOf(opt.value) !== -1;
+          return '<label style="display:flex; align-items:center; gap:8px; padding:8px 4px; font-size:11.5px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
+            '<input type="' + inputType + '" name="ps-picker-opt" class="ps-picker-opt" value="' + psEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:15px; height:15px; accent-color:var(--blue); flex:none;">' +
+            psEscape(opt.label) +
+          '</label>';
+        }).join('');
+    rowsEl.innerHTML = allRow + rows;
+
+    rowsEl.querySelectorAll('.ps-picker-opt').forEach(function (input) {
+      input.addEventListener('change', function () {
+        if (!def.multi) {
+          psPickerTempSelected = input.value ? [input.value] : [];
+        } else if (input.value === '') {
+          psPickerTempSelected = [];
+          rowsEl.querySelectorAll('.ps-picker-opt').forEach(function (o) { if (o.value !== '') o.checked = false; });
+        } else {
+          if (input.checked) {
+            psPickerTempSelected.push(input.value);
+            var allOpt = rowsEl.querySelector('.ps-picker-opt[value=""]');
+            if (allOpt) allOpt.checked = false;
+          } else {
+            psPickerTempSelected = psPickerTempSelected.filter(function (v) { return v !== input.value; });
+          }
+        }
+      });
+    });
+  }
+
+  document.getElementById('ps-pickerCancelBtn').addEventListener('click', function () { psClosePicker(); });
+  document.getElementById('ps-pickerDoneBtn').addEventListener('click', function () {
+    psSetFilterState(psPickerCurrentType, psPickerTempSelected);
+    psUpdateFilterSummary(psPickerCurrentType);
+    psClosePicker();
+  });
+
+  function psUpdateFilterBadge() {
+    var badge = document.getElementById('ps-filterCount');
+    var n = psActiveFilterCount();
+    if (n > 0) {
+      badge.textContent = n;
+      badge.hidden = false;
+    } else {
+      badge.hidden = true;
+    }
+  }
+
+  document.getElementById('ps-filterApplyBtn').addEventListener('click', function () {
+    psState.filterTerlambat = document.getElementById('ps-filterTerlambat').checked;
+    psUpdateFilterBadge();
+    psCloseFilterModal();
+    psRenderList();
+  });
+  document.getElementById('ps-filterResetBtn').addEventListener('click', function () {
+    psState.filterUnit = ''; psState.filterTutor = []; psState.filterSiswa = []; psState.filterOrtu = [];
+    psState.filterMetode = ''; psState.filterTerlambat = false;
+    document.getElementById('ps-filterTerlambat').checked = false;
+    psUpdateAllFilterSummaries();
+    psUpdateFilterBadge();
+    psCloseFilterModal();
+    psRenderList();
+  });
+
+  var PS_STATUS_META = {
+    pending: { label: 'Menunggu', bg: 'rgba(255,149,0,.12)', color: '#ff9500', icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
+    diterima: { label: 'Disetujui', bg: 'rgba(52,199,89,.14)', color: '#28a745', icon: '<polyline points="20 6 9 17 4 12"/>' },
+    ditolak: { label: 'Ditolak', bg: 'rgba(255,59,48,.12)', color: '#ff3b30', icon: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' },
+    visit: { label: 'Telah Visit', bg: 'rgba(0,122,255,.12)', color: '#007aff', icon: '<path d="M5 12h14M12 5l7 7-7 7"/>' }
+  };
+
+  function psRenderCard(row) {
+    var kt = row.kontrak_tutor || {};
+    var tutor = kt.users || {};
+    var siswaNama = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || '-';
+    var waktu = psGetWaktu(row);
+    var statusMeta = PS_STATUS_META[row.status] || PS_STATUS_META.pending;
+    var isOpen = psState.openCard === row.id;
+    var estimasiHonor = parseFloat(kt.fee_mengajar || 0) + parseFloat(kt.uang_transport || 0);
+    var honorLabel = row.status === 'pending' ? 'Estimasi Honor Tutor' : 'Honor Tutor';
+    var honorValue = row.status === 'pending' ? estimasiHonor : (row.nominal_dibayar || 0);
+
+    var avatar = tutor.foto_profil_url
+      ? '<img src="' + tutor.foto_profil_url + '" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1.5px solid #fff; box-shadow:0 1px 2px rgba(0,0,0,.06); flex:none;">'
+      : '<div style="width:32px; height:32px; border-radius:50%; background:#eaf3ff; color:#007aff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; border:1.5px solid #fff; box-shadow:0 1px 2px rgba(0,0,0,.06); flex:none;">' + psEscape((tutor.nama || '?').charAt(0)) + '</div>';
+
+    var lampiranRows = [];
+    if (row.materi_link) {
+      lampiranRows.push({
+        icon: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+        label: 'Tautan Materi Belajar',
+        field: 'materi_link',
+        btnLabel: 'Buka Link'
+      });
+    }
+    if (row.foto_url) {
+      lampiranRows.push({
+        icon: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+        label: 'Dokumentasi Presensi',
+        field: 'foto_url',
+        btnLabel: 'Lihat Foto'
+      });
+    }
+    if (row.catatan_pembelajaran_url) {
+      lampiranRows.push({
+        icon: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+        label: 'Catatan Pembelajaran',
+        field: 'catatan_pembelajaran_url',
+        btnLabel: 'Lihat Catatan'
+      });
+    }
+    if (row.status === 'diterima' || row.status === 'visit') {
+      lampiranRows.push({
+        isPdf: true,
+        icon: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+        label: 'PDF Laporan Belajar Siswa',
+        rowId: row.id,
+        btnLabel: 'Unduh'
+      });
+    }
+
+    var lampiranBtnStyle = 'background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:7px; padding:0 8px; font-size:10.5px; font-weight:700; cursor:pointer; flex:none; width:84px; min-width:84px; height:28px; box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-family:var(--font);';
+
+    var lampiranHtml = lampiranRows.map(function (item) {
+      if (item.isPdf) {
+        return '<div style="padding:8px 10px; border-radius:8px; background:rgba(255,255,255,.9); border:1px solid rgba(0,0,0,.05); display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">' +
+          '<div style="display:flex; align-items:center; gap:6px; min-width:0; font-size:11px; color:#1c1c1e; font-weight:500;">' + item.icon + '<span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + item.label + '</span></div>' +
+          '<button type="button" class="ps-download-pdf-btn ps-lampiran-action-btn" data-id="' + item.rowId + '" style="' + lampiranBtnStyle + '">' + item.btnLabel + '</button>' +
+        '</div>';
+      }
+      var subtitle = (tutor.nama || 'Tutor') + ' • ' + psFormatTanggal(row.tanggal);
+      return '<div style="padding:8px 10px; border-radius:8px; background:rgba(255,255,255,.9); border:1px solid rgba(0,0,0,.05); display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">' +
+        '<div style="display:flex; align-items:center; gap:6px; min-width:0; font-size:11px; color:#1c1c1e; font-weight:500;">' + item.icon + '<span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + item.label + '</span></div>' +
+        '<button type="button" class="ps-preview-lampiran-btn ps-lampiran-action-btn" data-url="' + psEscape(row[item.field]) + '" data-title="' + psEscape(item.label) + '" data-sub="' + psEscape(subtitle) + '" style="' + lampiranBtnStyle + '">' + item.btnLabel + '</button>' +
+      '</div>';
+    }).join('');
+
+    var catatanApprovalHtml = row.catatan_approval
+      ? '<div style="background:rgba(255,59,48,.08); color:#ff3b30; border-radius:8px; padding:8px 10px; font-size:11px; margin-top:6px;"><b>Catatan Penolakan:</b> ' + psEscape(row.catatan_approval) + '</div>'
+      : '';
+
+    var lampiranSection =
+      '<div style="margin-top:8px;">' +
+        '<button class="ps-lampiran-toggle" data-id="' + row.id + '" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,.04); border:none; border-radius:8px; padding:9px 11px; font-size:11px; font-weight:600; color:#8e8e93; cursor:pointer;">' +
+          'Lampiran &amp; Laporan Mengajar' +
+          '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#8e8e93" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .25s ease; transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</button>' +
+        '<div class="ps-lampiran-wrap" data-id="' + row.id + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
+          '<div style="padding-top:8px;">' +
+            (row.materi_teks
+              ? '<div style="padding:8px 10px; border-radius:8px; background:rgba(255,255,255,.9); border:1px solid rgba(0,0,0,.05); margin-bottom:6px;"><span style="font-size:9px; font-weight:700; color:#8e8e93; text-transform:uppercase; letter-spacing:.03em; display:block; margin-bottom:2px;">Laporan Presensi:</span><p style="font-size:11px; color:#1c1c1e; line-height:1.5; margin:0;">' + psEscape(row.materi_teks) + '</p></div>'
+              : '') +
+            lampiranHtml +
+            catatanApprovalHtml +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    var actionButtons = row.status === 'pending'
+      ? '<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:8px;">' +
+          '<button class="ps-action-btn" data-action="tolak" data-id="' + row.id + '" style="background:rgba(255,59,48,.12); color:#ff3b30; height:30px; border-radius:7px; font-size:11px;">' +
+            '<span style="width:14px; height:14px; border-radius:50%; background:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>' +
+            'Tolak' +
+          '</button>' +
+          '<button class="ps-action-btn" data-action="visit" data-id="' + row.id + '" style="background:rgba(0,122,255,.12); color:#007aff; height:30px; border-radius:7px; font-size:11px;">' +
+            '<span style="width:14px; height:14px; border-radius:50%; background:#007aff; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>' +
+            'Visit' +
+          '</button>' +
+          '<button class="ps-action-btn" data-action="setujui" data-id="' + row.id + '" style="background:rgba(52,199,89,.14); color:#28a745; height:30px; border-radius:7px; font-size:11px;">' +
+            '<span style="width:14px; height:14px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>' +
+            'Setujui' +
+          '</button>' +
+        '</div>'
+      : '';
+
+    var editDeleteBtns = '';
+    if (psState.tab === 'riwayat' && row.status !== 'pending') {
+      var canEdit = psState.role === 'manajer';
+      var canDelete = row.status === 'ditolak' && (psState.role === 'manajer' || psState.role === 'kepala_unit');
+      editDeleteBtns =
+        (canEdit
+          ? '<button class="ps-edit-status-btn" data-id="' + row.id + '" style="background:#1c1c1e; color:#fff; border:none; border-radius:999px; padding:0 10px; height:22px; font-size:10px; font-weight:700; cursor:pointer; flex:none;">Edit</button>'
+          : '') +
+        (canDelete
+          ? '<button class="ps-delete-btn" data-id="' + row.id + '" aria-label="Hapus presensi" style="width:22px; height:22px; border-radius:50%; background:var(--surface); color:var(--ink-soft); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
+          : '');
+    }
+
+    var terlambatPill = row.terlambat
+      ? '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(255,149,0,.14); color:#ff9500; font-size:9.5px; font-weight:700; padding:0 8px; border-radius:999px; height:22px; box-sizing:border-box; flex:none;">' +
+          '<span style="width:12px; height:12px; border-radius:50%; background:#ff9500; display:flex; align-items:center; justify-content:center; flex:none;">' +
+            '<svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>' +
+          '</span>' +
+          'Terlambat' +
+        '</span>'
+      : '';
+
+    return '' +
+      '<div class="ps-card" style="padding:12px 14px; margin-bottom:10px;">' +
+        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; flex-wrap:wrap;">' +
+          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
+            avatar +
+            '<div style="min-width:0; flex:1;">' +
+              '<h4 style="font-size:12.5px; font-weight:700; color:#1c1c1e; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">' + psEscape(tutor.nama || '-') + '</h4>' +
+              '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Siswa: ' + psEscape(siswaNama) + (waktu.durasiMenit ? ' &bull; ' + waktu.durasiMenit + ' Mnt' : '') + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex; align-items:center; gap:5px; flex:none;">' +
+            editDeleteBtns +
+            terlambatPill +
+            '<span class="ps-status-badge" style="background:' + statusMeta.bg + '; color:' + statusMeta.color + '; height:22px; box-sizing:border-box;">' +
+              '<span style="width:12px; height:12px; border-radius:50%; background:' + statusMeta.color + '; display:flex; align-items:center; justify-content:center; flex:none;">' +
+                '<svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' + statusMeta.icon + '</svg>' +
+              '</span>' +
+              statusMeta.label +
+            '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div style="background:rgba(0,0,0,.03); border:1px solid rgba(0,0,0,.04); border-radius:9px; padding:8px 10px; margin-top:8px;">' +
+          '<div class="ps-detail-row"><span>Mata Pelajaran:</span><span>' + psEscape(kt.mapel || '-') + '</span></div>' +
+          '<div class="ps-detail-row"><span>Waktu:</span><span>' + waktu.text + '</span></div>' +
+          '<div class="ps-detail-row"><span>Tanggal:</span><span>' + psFormatTanggal(row.tanggal) + '</span></div>' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; padding-top:6px; margin-top:3px; border-top:1px solid rgba(0,0,0,.06); font-size:10px;"><span style="color:#8e8e93; font-weight:500;">' + honorLabel + ':</span><span style="font-weight:800; color:#1c1c1e; font-size:11.5px;">' + psFormatRp(honorValue) + '</span></div>' +
+        '</div>' +
+        lampiranSection +
+        actionButtons +
+      '</div>';
+  }
+
+  function psBindCardEvents() {
+    document.querySelectorAll('.ps-lampiran-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.dataset.id;
+        var wrap = document.querySelector('.ps-lampiran-wrap[data-id="' + id + '"]');
+        var chevron = btn.querySelector('svg');
+        var isOpen = psState.openCard === id;
+        if (isOpen) {
+          psState.openCard = null;
+          wrap.style.maxHeight = '0px';
+          wrap.style.opacity = '0';
+          chevron.style.transform = 'rotate(0deg)';
+        } else {
+          if (psState.openCard) {
+            var prevWrap = document.querySelector('.ps-lampiran-wrap[data-id="' + psState.openCard + '"]');
+            if (prevWrap) { prevWrap.style.maxHeight = '0px'; prevWrap.style.opacity = '0'; }
+          }
+          psState.openCard = id;
+          wrap.style.maxHeight = '600px';
+          wrap.style.opacity = '1';
+          chevron.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
+    document.querySelectorAll('.ps-action-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.dataset.id, action = btn.dataset.action;
+        if (action === 'tolak') { psOpenTolakModal(id); }
+        else if (action === 'visit') { psApprove(id, 'visit'); }
+        else if (action === 'setujui') { psApprove(id, 'diterima'); }
+      });
+    });
+    document.querySelectorAll('.ps-edit-status-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { psOpenEditStatusModal(btn.dataset.id); });
+    });
+    document.querySelectorAll('.ps-delete-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { psDeletePresensi(btn.dataset.id); });
+    });
+    document.querySelectorAll('.ps-preview-lampiran-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        psOpenPreview(btn.dataset.url || btn.getAttribute('data-url'), btn.dataset.title || btn.getAttribute('data-title'), btn.dataset.sub || btn.getAttribute('data-sub'));
+      });
+    });
+    document.querySelectorAll('.ps-table-laporan-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var txt = btn.dataset.laporan || btn.getAttribute('data-laporan');
+        var title = btn.dataset.title || btn.getAttribute('data-title') || 'Laporan Pembelajaran';
+        var sub = btn.dataset.sub || btn.getAttribute('data-sub') || '';
+        if (txt) psOpenPreviewText(txt, title, sub, 'Laporan Pembelajaran');
+      });
+    });
+    document.querySelectorAll('.ps-table-alasan-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var txt = btn.dataset.alasan || btn.getAttribute('data-alasan') || 'Tidak ada catatan penolakan spesifik.';
+        var title = btn.dataset.title || btn.getAttribute('data-title') || 'Alasan Penolakan';
+        var sub = btn.dataset.sub || btn.getAttribute('data-sub') || '';
+        psOpenPreviewText(txt, title, sub, 'Alasan Penolakan');
+      });
+    });
+    document.querySelectorAll('.ps-download-pdf-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var id = btn.dataset.id || btn.getAttribute('data-id');
+        if (id) psOpenLaporanPdf(id);
+      });
+    });
+  }
+
+  function psOpenTolakModal(id) {
+    psState.tolakTargetId = id;
+    var row = psFindRow(id);
+    document.getElementById('ps-tolakCatatan').value = (row && row.catatan_approval) || '';
+    document.getElementById('ps-tolakAlert').hidden = true;
+    var modal = document.getElementById('ps-tolakModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+
+  function psCloseTolakModal() {
+    var modal = document.getElementById('ps-tolakModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+    if (typeof psState.tolakCancelCallback === 'function') {
+      psState.tolakCancelCallback();
+      psState.tolakCancelCallback = null;
+    }
+  }
+
+  async function psConfirmTolak() {
+    var catatan = document.getElementById('ps-tolakCatatan').value.trim();
+    var alertEl = document.getElementById('ps-tolakAlert');
+    if (!catatan) { alertEl.textContent = 'Catatan penolakan wajib diisi.'; alertEl.hidden = false; return; }
+
+    var btn = document.getElementById('ps-tolakConfirmBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Memproses...';
+    try {
+      var s = genioGetSession();
+      await supaRest('presensi?id=eq.' + psState.tolakTargetId, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ status: 'ditolak', catatan_approval: catatan, approved_by: s.user_id, approved_at: new Date().toISOString() })
+      });
+      genioToast('Presensi ditolak, tutor akan diminta merevisi', 'success');
+      psCloseTolakModal();
+      psLoadAll();
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menolak presensi.'; alertEl.hidden = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Tolak Presensi';
+    }
+  }
+
+  async function psApprove(id, status) {
+    try {
+      var s = genioGetSession();
+      var row = psFindRow(id);
+
+      genioToast(
+        (status === 'visit' ? 'Memproses Visit' : 'Menyetujui') + ' & membuat PDF Laporan Belajar...',
+        'loading',
+        true
+      );
+
+      await supaRest('presensi?id=eq.' + id, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ status: status, approved_by: s.user_id, approved_at: new Date().toISOString(), catatan_approval: null })
+      });
+
+      if (row) {
+        row.status = status;
+        row.catatan_approval = null;
+      }
+
+      if (status === 'diterima' || status === 'visit') {
+        try {
+          if (row) {
+            await psGenerateAndSaveLaporanPdf(row, status);
+          }
+        } catch (pdfErr) {
+          console.error('Auto generate PDF error:', pdfErr);
+          genioToast('Presensi ' + (status === 'visit' ? 'Visit' : 'disetujui') + ', namun pembuatan PDF Laporan tertunda: ' + pdfErr.message, 'warning');
+          psLoadAll();
+          return;
+        }
+      }
+
+      genioToast(status === 'visit' ? 'Presensi ditandai Visit & PDF Laporan berhasil dibuat' : 'Presensi disetujui & PDF Laporan berhasil dibuat', 'success');
+      psLoadAll();
+    } catch (err) {
+      genioToast('Gagal memproses: ' + err.message, 'error');
+    }
+  }
+
+  /* ===== Edit Status Presensi (Riwayat, Manajer) ===== */
+  var psEditStatusSelected = null;
+
+  var PS_EDITSTATUS_COLORS = {
+    diterima: { solid: '#34c759', tintBg: 'rgba(52,199,89,.14)', tintColor: '#28a745' },
+    visit: { solid: '#007aff', tintBg: 'rgba(0,122,255,.12)', tintColor: '#007aff' },
+    ditolak: { solid: '#ff3b30', tintBg: 'rgba(255,59,48,.12)', tintColor: '#ff3b30' }
+  };
+  function psResetEditStatusOptions() {
+    document.querySelectorAll('.ps-editstatus-opt').forEach(function (b) {
+      b.style.background = 'var(--surface)'; b.style.color = 'var(--ink)'; b.style.borderColor = 'transparent';
+      var icon = b.querySelector('.ps-editstatus-icon');
+      if (icon) icon.style.background = '#8e8e93';
+    });
+  }
+
+  function psOpenEditStatusModal(id) {
+    psState.editTargetId = id;
+    psEditStatusSelected = null;
+    document.getElementById('ps-editStatusAlert').hidden = true;
+    document.getElementById('ps-editStatusCatatan').value = '';
+    document.getElementById('ps-editStatusCatatanWrap').hidden = true;
+    psResetEditStatusOptions();
+    var modal = document.getElementById('ps-editStatusModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function psCloseEditStatusModal() {
+    var modal = document.getElementById('ps-editStatusModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+  document.getElementById('ps-editStatusCancelBtn').addEventListener('click', function () {
+    psCloseEditStatusModal();
+  });
+  document.querySelectorAll('.ps-editstatus-opt').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      psEditStatusSelected = btn.dataset.status;
+      document.querySelectorAll('.ps-editstatus-opt').forEach(function (b) {
+        var active = b === btn;
+        var c = PS_EDITSTATUS_COLORS[b.dataset.status];
+        var icon = b.querySelector('.ps-editstatus-icon');
+        b.style.background = active ? c.tintBg : 'var(--surface)';
+        b.style.color = active ? c.tintColor : 'var(--ink)';
+        b.style.borderColor = active ? c.tintColor : 'transparent';
+        if (icon) icon.style.background = active ? c.solid : '#8e8e93';
+      });
+      document.getElementById('ps-editStatusCatatanWrap').hidden = (psEditStatusSelected !== 'ditolak');
+    });
+  });
+  document.getElementById('ps-editStatusSaveBtn').addEventListener('click', async function () {
+    var alertEl = document.getElementById('ps-editStatusAlert');
+    if (!psEditStatusSelected) { alertEl.textContent = 'Pilih status baru dulu.'; alertEl.hidden = false; return; }
+    var catatan = document.getElementById('ps-editStatusCatatan').value.trim();
+    if (psEditStatusSelected === 'ditolak' && !catatan) { alertEl.textContent = 'Catatan penolakan wajib diisi.'; alertEl.hidden = false; return; }
+    alertEl.hidden = true;
+
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    try {
+      var s = genioGetSession();
+      var targetRow = psFindRow(psState.editTargetId);
+      await supaRest('presensi?id=eq.' + psState.editTargetId, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({
+          status: psEditStatusSelected,
+          approved_by: s.user_id,
+          approved_at: new Date().toISOString(),
+          catatan_approval: psEditStatusSelected === 'ditolak' ? catatan : null
+        })
+      });
+
+      if (targetRow) {
+        targetRow.status = psEditStatusSelected;
+        targetRow.catatan_approval = psEditStatusSelected === 'ditolak' ? catatan : null;
+      }
+
+      if ((psEditStatusSelected === 'diterima' || psEditStatusSelected === 'visit') && targetRow && !targetRow.pdf_url) {
+        try {
+          await psGenerateAndSaveLaporanPdf(targetRow, psEditStatusSelected);
+        } catch (pdfErr) {
+          console.warn('Auto PDF on edit error:', pdfErr);
+        }
+      }
+
+      genioToast('Status presensi berhasil diubah', 'success');
+      psCloseEditStatusModal();
+      psLoadAll();
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal mengubah status.'; alertEl.hidden = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Simpan Perubahan';
+    }
+  });
+
+  var psDeleteTargetId = null;
+
+  function psDeletePresensi(id) {
+    psDeleteTargetId = id;
+    var modal = document.getElementById('ps-deleteConfirmModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function psCloseDeleteConfirmModal() {
+    var modal = document.getElementById('ps-deleteConfirmModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+  document.getElementById('ps-deleteCancelBtn').addEventListener('click', function () {
+    psCloseDeleteConfirmModal();
+  });
+  document.getElementById('ps-deleteConfirmBtn').addEventListener('click', async function () {
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Menghapus...';
+    try {
+      var s = genioGetSession();
+      await supaRest('presensi?id=eq.' + psDeleteTargetId, s.access_token, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+      genioToast('Presensi berhasil dihapus', 'success');
+      psCloseDeleteConfirmModal();
+      psLoadAll();
+    } catch (err) {
+      genioToast('Gagal menghapus: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Ya, Hapus';
+    }
+  });
+
+  /* ===== Isi Presensi untuk Tutor (diwakilkan) ===== */
+  var psWakilKontrakList = [];
+  var psWakilTutorsLoaded = false;
+
+  function psOpenWakilModal() {
+    var modal = document.getElementById('ps-wakilModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function psCloseWakilModal() {
+    var modal = document.getElementById('ps-wakilModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+
+  // Pastikan field yang lagi difokus selalu kelihatan di atas keyboard virtual —
+  // tanpa ini, textarea Laporan & input Link bisa ketutup keyboard di HP.
+  document.querySelectorAll('#ps-wakilModal input, #ps-wakilModal select, #ps-wakilModal textarea, #ps-editStatusModal input, #ps-editStatusModal textarea').forEach(function (el) {
+    el.addEventListener('focus', function () {
+      setTimeout(function () {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    });
+  });
+
+  document.getElementById('ps-openWakilBtn').addEventListener('click', function () {
+    document.getElementById('ps-wakilAlert').hidden = true;
+    var defaultTgl = new Date().toISOString().slice(0, 10);
+    document.getElementById('ps-wakilTanggal').value = defaultTgl;
+    document.getElementById('ps-wakilTanggalLabel').textContent = psFormatTanggalPanjang(defaultTgl);
+    document.getElementById('ps-wakilTanggalLabel').style.color = 'var(--ink)';
+    document.getElementById('ps-wakilJam').value = '';
+    document.getElementById('ps-wakilJamLabel').textContent = 'Pilih jam...';
+    document.getElementById('ps-wakilJamLabel').style.color = 'var(--ink-soft)';
+    document.getElementById('ps-wakilMateri').value = '';
+    document.getElementById('ps-wakilLink').value = '';
+    document.getElementById('ps-wakilFotoFile').value = '';
+    document.getElementById('ps-wakilCatatanFile').value = '';
+    document.getElementById('ps-wakilFotoStatus').textContent = '';
+    document.getElementById('ps-wakilCatatanStatus').textContent = '';
+    document.getElementById('ps-wakilKontrak').value = '';
+    document.getElementById('ps-wakilKontrakLabel').textContent = 'Pilih tutor dulu';
+    document.getElementById('ps-wakilKontrakLabel').style.color = 'var(--ink-soft)';
+    document.getElementById('ps-wakilKontrakBtn').disabled = true;
+    document.getElementById('ps-wakilTutor').value = '';
+    document.getElementById('ps-wakilTutorLabel').textContent = psWakilTutorsLoaded ? 'Pilih tutor...' : 'Memuat daftar tutor...';
+    document.getElementById('ps-wakilTutorLabel').style.color = 'var(--ink-soft)';
+    psWakilSelectedTutorId = ''; psWakilSelectedKontrakIdx = ''; psWakilKontrakList = [];
+    var saveBtnReset = document.getElementById('ps-wakilSaveBtn');
+    saveBtnReset.disabled = false;
+    saveBtnReset.textContent = 'Simpan Presensi';
+    psOpenWakilModal();
+    if (!psWakilTutorsLoaded) psLoadWakilTutors();
+  });
+  document.getElementById('ps-wakilCancelBtn').addEventListener('click', function () {
+    psCloseWakilModal();
+  });
+
+  // Tampilkan nama file + ukuran begitu dipilih, biar ada feedback sebelum upload beneran terjadi
+  document.getElementById('ps-wakilFotoFile').addEventListener('change', function (e) {
+    var f = e.target.files[0];
+    document.getElementById('ps-wakilFotoStatus').textContent = f ? f.name + ' (' + (f.size / 1024).toFixed(0) + ' KB) — akan diunggah saat disimpan' : '';
+  });
+  document.getElementById('ps-wakilCatatanFile').addEventListener('change', function (e) {
+    var f = e.target.files[0];
+    document.getElementById('ps-wakilCatatanStatus').textContent = f ? f.name + ' (' + (f.size / 1024).toFixed(0) + ' KB) — akan diunggah saat disimpan' : '';
+  });
+
+  var PS_MAX_FILE_MB = 8;
+  function psReadFileAsBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result.split(',')[1]); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  function psUploadToDrive(file, jenis) {
+    return new Promise(function (resolve, reject) {
+      psReadFileAsBase64(file).then(function (base64) {
+        google.script.run
+          .withSuccessHandler(function (result) {
+            if (result && result.success) resolve(result.url);
+            else reject(new Error((result && result.error) || 'Upload gagal'));
+          })
+          .withFailureHandler(function (err) { reject(err); })
+          .uploadPresensiFile(base64, file.name, file.type, jenis);
+      }).catch(reject);
+    });
+  }
+
+  var psWakilTutorList = [];
+  var psWakilSelectedTutorId = '';
+  var psWakilSelectedKontrakIdx = '';
+
+  async function psLoadWakilTutors() {
+    try {
+      var s = genioGetSession();
+      psWakilTutorList = await supaRest('users?role=eq.tutor&status=eq.aktif&select=id,nama&order=nama.asc', s.access_token);
+      document.getElementById('ps-wakilTutorLabel').textContent = 'Pilih tutor...';
+      psWakilTutorsLoaded = true;
+    } catch (err) {
+      document.getElementById('ps-wakilTutorLabel').textContent = 'Gagal memuat tutor';
+    }
+  }
+
+  async function psSelectWakilTutor(tutorId, tutorNama) {
+    psWakilSelectedTutorId = tutorId;
+    document.getElementById('ps-wakilTutor').value = tutorId;
+    document.getElementById('ps-wakilTutorLabel').textContent = tutorNama;
+    document.getElementById('ps-wakilTutorLabel').style.color = 'var(--ink)';
+
+    psWakilSelectedKontrakIdx = '';
+    document.getElementById('ps-wakilKontrak').value = '';
+    var kontrakBtn = document.getElementById('ps-wakilKontrakBtn');
+    var kontrakLabel = document.getElementById('ps-wakilKontrakLabel');
+    kontrakBtn.disabled = true;
+    kontrakLabel.textContent = 'Memuat kontrak...';
+    kontrakLabel.style.color = 'var(--ink-soft)';
+
+    try {
+      var s = genioGetSession();
+      psWakilKontrakList = await supaRest('kontrak_tutor?tutor_id=eq.' + tutorId + '&status=eq.aktif&select=id,mapel,fee_mengajar,uang_transport,kontrak_siswa(siswa(nama,unit_id)),jadwal(hari,jam_mulai,jam_selesai)', s.access_token);
+      if (!psWakilKontrakList.length) {
+        kontrakLabel.textContent = 'Tutor ini belum punya kontrak aktif';
+        return;
+      }
+      kontrakLabel.textContent = 'Pilih kontrak/jadwal...';
+      kontrakBtn.disabled = false;
+    } catch (err) {
+      kontrakLabel.textContent = 'Gagal memuat kontrak';
+    }
+  }
+
+  function psWakilKontrakLabel(k) {
+    var siswaNama = (k.kontrak_siswa && k.kontrak_siswa.siswa && k.kontrak_siswa.siswa.nama) || '-';
+    var jw = (k.jadwal && k.jadwal[0]) || null;
+    var jadwalText = jw ? (jw.hari.charAt(0).toUpperCase() + jw.hari.slice(1) + ' ' + jw.jam_mulai.slice(0, 5) + '-' + jw.jam_selesai.slice(0, 5)) : 'Jadwal belum diatur';
+    return k.mapel + ' - ' + siswaNama + ' (' + jadwalText + ')';
+  }
+
+  var PS_HARI_KE_ANGKA = { minggu: 0, senin: 1, selasa: 2, rabu: 3, kamis: 4, jumat: 5, sabtu: 6 };
+  function psNearestPastWeekday(targetDow) {
+    var d = new Date();
+    while (d.getDay() !== targetDow) d.setDate(d.getDate() - 1);
+    return d.toISOString().slice(0, 10);
+  }
+
+  function psSelectWakilKontrak(idx) {
+    psWakilSelectedKontrakIdx = idx;
+    document.getElementById('ps-wakilKontrak').value = idx;
+    var k = psWakilKontrakList[idx];
+    document.getElementById('ps-wakilKontrakLabel').textContent = psWakilKontrakLabel(k);
+    document.getElementById('ps-wakilKontrakLabel').style.color = 'var(--ink)';
+    var jw = k.jadwal && k.jadwal[0];
+    if (jw && jw.hari !== 'fleksibel') {
+      var jamVal = jw.jam_mulai.slice(0, 5);
+      document.getElementById('ps-wakilJam').value = jamVal;
+      document.getElementById('ps-wakilJamLabel').textContent = jamVal + ' WIB';
+      document.getElementById('ps-wakilJamLabel').style.color = 'var(--ink)';
+
+      if (PS_HARI_KE_ANGKA.hasOwnProperty(jw.hari)) {
+        var tglVal = psNearestPastWeekday(PS_HARI_KE_ANGKA[jw.hari]);
+        document.getElementById('ps-wakilTanggal').value = tglVal;
+        document.getElementById('ps-wakilTanggalLabel').textContent = psFormatTanggalPanjang(tglVal);
+        document.getElementById('ps-wakilTanggalLabel').style.color = 'var(--ink)';
+      }
+    }
+  }
+
+  /* ===== Popup Pilih Tutor/Kontrak (search bar) ===== */
+  var psWakilPickerModal = document.getElementById('ps-wakilPickerModal');
+  var psWakilPickerType = null;
+  var psWakilPickerSearch = '';
+
+  function psOpenWakilPicker(type) {
+    psWakilPickerType = type;
+    psWakilPickerSearch = '';
+    document.getElementById('ps-wakilPickerSearchInput').value = '';
+    document.getElementById('ps-wakilPickerTitle').textContent = type === 'tutor' ? 'Pilih Tutor' : 'Pilih Kontrak / Jadwal';
+    psRenderWakilPickerList();
+    psWakilPickerModal.hidden = false;
+    requestAnimationFrame(function () { psWakilPickerModal.classList.add('show'); });
+  }
+  function psCloseWakilPicker() {
+    psWakilPickerModal.classList.remove('show');
+    setTimeout(function () { psWakilPickerModal.hidden = true; }, 280);
+  }
+
+  function psRenderWakilPickerList() {
+    var listEl = document.getElementById('ps-wakilPickerList');
+    var items;
+    if (psWakilPickerType === 'tutor') {
+      items = psWakilTutorList.map(function (t) { return { value: t.id, label: t.nama }; });
+    } else {
+      items = psWakilKontrakList.map(function (k, idx) { return { value: String(idx), label: psWakilKontrakLabel(k) }; });
+    }
+    var filtered = psWakilPickerSearch ? items.filter(function (it) { return it.label.toLowerCase().indexOf(psWakilPickerSearch) !== -1; }) : items;
+
+    if (!filtered.length) {
+      listEl.innerHTML = '<div style="font-size:11.5px; color:var(--ink-soft); padding:12px 4px; text-align:center;">' + (items.length ? 'Tidak ada hasil.' : 'Belum ada data.') + '</div>';
+      return;
+    }
+    listEl.innerHTML = filtered.map(function (it, i) {
+      return '<button type="button" class="ps-wakil-picker-opt" data-value="' + psEscape(it.value) + '" style="width:100%; text-align:left; display:block; background:none; border:none; padding:8px 4px; font-size:11.5px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' + psEscape(it.label) + '</button>';
+    }).join('');
+    listEl.querySelectorAll('.ps-wakil-picker-opt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (psWakilPickerType === 'tutor') {
+          var t = psWakilTutorList.find(function (x) { return x.id === btn.dataset.value; });
+          psSelectWakilTutor(t.id, t.nama);
+        } else {
+          psSelectWakilKontrak(btn.dataset.value);
+        }
+        psCloseWakilPicker();
+      });
+    });
+  }
+
+  document.getElementById('ps-wakilTutorBtn').addEventListener('click', function () { psOpenWakilPicker('tutor'); });
+  document.getElementById('ps-wakilKontrakBtn').addEventListener('click', function () { if (!this.disabled) psOpenWakilPicker('kontrak'); });
+  document.getElementById('ps-wakilPickerCancelBtn').addEventListener('click', psCloseWakilPicker);
+  document.getElementById('ps-wakilPickerSearchInput').addEventListener('input', function (e) {
+    psWakilPickerSearch = e.target.value.toLowerCase();
+    psRenderWakilPickerList();
+  });
+  document.getElementById('ps-wakilPickerSearchInput').addEventListener('focus', function (e) {
+    var el = e.target;
+    setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+  });
+
+  document.getElementById('ps-wakilSaveBtn').addEventListener('click', function () {
+    var alertEl = document.getElementById('ps-wakilAlert');
+    var kontrakIdx = document.getElementById('ps-wakilKontrak').value;
+    var tanggal = document.getElementById('ps-wakilTanggal').value;
+    var jam = document.getElementById('ps-wakilJam').value;
+    var materi = document.getElementById('ps-wakilMateri').value.trim();
+
+    if (!document.getElementById('ps-wakilTutor').value) { alertEl.textContent = 'Pilih tutor dulu.'; alertEl.hidden = false; return; }
+    if (kontrakIdx === '') { alertEl.textContent = 'Pilih kontrak/jadwal dulu.'; alertEl.hidden = false; return; }
+    if (!tanggal || !jam) { alertEl.textContent = 'Tanggal dan jam wajib diisi.'; alertEl.hidden = false; return; }
+    if (!materi) { alertEl.textContent = 'Laporan presensi wajib diisi.'; alertEl.hidden = false; return; }
+    alertEl.hidden = true;
+
+    var k = psWakilKontrakList[kontrakIdx];
+    var unitId = k.kontrak_siswa && k.kontrak_siswa.siswa && k.kontrak_siswa.siswa.unit_id;
+    if (!unitId) { alertEl.textContent = 'Data unit siswa tidak ditemukan untuk kontrak ini.'; alertEl.hidden = false; return; }
+
+    var fotoFile = document.getElementById('ps-wakilFotoFile').files[0];
+    var catatanFile = document.getElementById('ps-wakilCatatanFile').files[0];
+    if (!fotoFile) { alertEl.textContent = 'Dokumentasi Presensi wajib diunggah.'; alertEl.hidden = false; return; }
+    if (fotoFile.size > PS_MAX_FILE_MB * 1024 * 1024) { alertEl.textContent = 'Ukuran file Dokumentasi maksimal ' + PS_MAX_FILE_MB + ' MB.'; alertEl.hidden = false; return; }
+    if (catatanFile && catatanFile.size > PS_MAX_FILE_MB * 1024 * 1024) { alertEl.textContent = 'Ukuran file Catatan Pembelajaran maksimal ' + PS_MAX_FILE_MB + ' MB.'; alertEl.hidden = false; return; }
+
+    // Validasi lolos — tutup form SEKARANG, biar bisa langsung isi presensi baru
+    // lagi tanpa nunggu. Proses unggah+simpan jalan di belakang, dilaporkan lewat
+    // notifikasi toast di atas (loading -> sukses/gagal).
+    var tutorNama = document.getElementById('ps-wakilTutorLabel').textContent;
+    psCloseWakilModal();
+    psShowThanksPopup();
+    psSubmitWakilInBackground({
+      kontrakTutorId: k.id, unitId: unitId, tanggal: tanggal, jam: jam, materi: materi,
+      materiLink: document.getElementById('ps-wakilLink').value.trim() || null,
+      fotoFile: fotoFile, catatanFile: catatanFile, tutorNama: tutorNama
+    });
+  });
+
+  function psShowThanksPopup() {
+    var el = document.createElement('div');
+    el.className = 'ps-thanks-popup';
+    el.innerHTML =
+      '<div class="ps-thanks-card">' +
+        '<div style="width:46px; height:46px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center;">' +
+          '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="animation:genioToastSpin .9s linear infinite;"><path d="M12 3a9 9 0 1 1-6.36 2.64"/></svg>' +
+        '</div>' +
+        '<div style="font-size:14px; font-weight:800; color:var(--ink);">Terima kasih!</div>' +
+        '<div style="font-size:12px; color:var(--ink-soft); line-height:1.5;">Presensi sedang diproses di latar belakang.</div>' +
+      '</div>';
+    document.body.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add('show'); });
+    setTimeout(function () {
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+    }, 2800);
+  }
+
+  async function psSubmitWakilInBackground(data) {
+    genioToast('Menyimpan presensi ' + data.tutorNama + '...', 'loading', true);
+    try {
+      var fotoUrl = null, catatanUrl = null;
+      if (data.fotoFile) {
+        genioToast('Mengunggah dokumentasi ' + data.tutorNama + '...', 'loading', true);
+        fotoUrl = await psUploadToDrive(data.fotoFile, 'foto');
+      }
+      if (data.catatanFile) {
+        genioToast('Mengunggah catatan ' + data.tutorNama + '...', 'loading', true);
+        catatanUrl = await psUploadToDrive(data.catatanFile, 'catatan');
+      }
+      genioToast('Menyimpan presensi ' + data.tutorNama + '...', 'loading', true);
+
+      var s = genioGetSession();
+      await supaRest('presensi', s.access_token, {
+        method: 'POST',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({
+          kontrak_tutor_id: data.kontrakTutorId,
+          unit_id: data.unitId,
+          tanggal: data.tanggal,
+          jam: data.jam,
+          status: 'diterima',
+          metode_input: 'diwakilkan',
+          diinput_oleh: s.user_id,
+          materi_teks: data.materi,
+          materi_link: data.materiLink,
+          foto_url: fotoUrl,
+          catatan_pembelajaran_url: catatanUrl
+        })
+      });
+      genioToast('Presensi ' + data.tutorNama + ' berhasil disimpan', 'success');
+      psLoadAll();
+    } catch (err) {
+      genioToast('Gagal simpan presensi ' + data.tutorNama + ': ' + err.message, 'error');
+    }
+  }
+
+  /* ===== Popup Kalender (Tanggal) — form Isi Presensi untuk Tutor ===== */
+  var PS_BULAN_NAMA = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  var psDatePickerModal = document.getElementById('ps-datePickerModal');
+  var psDpViewYear, psDpViewMonth, psDpSelectedDate;
+
+  function psFormatTanggalPanjang(iso) {
+    if (!iso) return null;
+    var parts = iso.split('-');
+    var y = parseInt(parts[0], 10), m = parseInt(parts[1], 10), d = parseInt(parts[2], 10);
+    return d + ' ' + PS_BULAN_NAMA[m - 1] + ' ' + y;
+  }
+
+  function psOpenDatePicker() {
+    var currentVal = document.getElementById('ps-wakilTanggal').value;
+    psDpSelectedDate = currentVal || null;
+    var base = currentVal ? new Date(currentVal + 'T00:00:00') : new Date();
+    psDpViewYear = base.getFullYear();
+    psDpViewMonth = base.getMonth();
+    psRenderDatePicker();
+    psDatePickerModal.hidden = false;
+    requestAnimationFrame(function () { psDatePickerModal.classList.add('show'); });
+  }
+  function psCloseDatePicker() {
+    psDatePickerModal.classList.remove('show');
+    setTimeout(function () { psDatePickerModal.hidden = true; }, 280);
+  }
+  function psRenderDatePicker() {
+    document.getElementById('ps-dpMonthYear').textContent = PS_BULAN_NAMA[psDpViewMonth] + ' ' + psDpViewYear;
+    var gridEl = document.getElementById('ps-dpGrid');
+    var firstDay = new Date(psDpViewYear, psDpViewMonth, 1).getDay();
+    var daysInMonth = new Date(psDpViewYear, psDpViewMonth + 1, 0).getDate();
+    var todayIso = new Date().toISOString().slice(0, 10);
+
+    var html = '';
+    for (var i = 0; i < firstDay; i++) html += '<span class="ps-dp-day ps-dp-empty">-</span>';
+    for (var d = 1; d <= daysInMonth; d++) {
+      var iso = psDpViewYear + '-' + String(psDpViewMonth + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+      var isSelected = iso === psDpSelectedDate;
+      var isToday = iso === todayIso;
+      html += '<button type="button" class="ps-dp-day' + (isSelected ? ' ps-dp-selected' : '') + '" data-iso="' + iso + '" style="' + (isToday && !isSelected ? 'box-shadow:inset 0 0 0 1.5px var(--ink-soft);' : '') + '">' + d + '</button>';
+    }
+    gridEl.innerHTML = html;
+    gridEl.querySelectorAll('.ps-dp-day:not(.ps-dp-empty)').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        psDpSelectedDate = btn.dataset.iso;
+        document.getElementById('ps-wakilTanggal').value = psDpSelectedDate;
+        document.getElementById('ps-wakilTanggalLabel').textContent = psFormatTanggalPanjang(psDpSelectedDate);
+        document.getElementById('ps-wakilTanggalLabel').style.color = 'var(--ink)';
+        psCloseDatePicker();
+      });
+    });
+  }
+  document.getElementById('ps-wakilTanggalBtn').addEventListener('click', psOpenDatePicker);
+  document.getElementById('ps-dpPrevMonth').addEventListener('click', function () {
+    psDpViewMonth--; if (psDpViewMonth < 0) { psDpViewMonth = 11; psDpViewYear--; }
+    psRenderDatePicker();
+  });
+  document.getElementById('ps-dpNextMonth').addEventListener('click', function () {
+    psDpViewMonth++; if (psDpViewMonth > 11) { psDpViewMonth = 0; psDpViewYear++; }
+    psRenderDatePicker();
+  });
+  document.getElementById('ps-dpPrevYear').addEventListener('click', function () { psDpViewYear--; psRenderDatePicker(); });
+  document.getElementById('ps-dpNextYear').addEventListener('click', function () { psDpViewYear++; psRenderDatePicker(); });
+  document.getElementById('ps-dpCancelBtn').addEventListener('click', psCloseDatePicker);
+
+  /* ===== Popup Pilih Jam Mulai — form Isi Presensi untuk Tutor ===== */
+  var psTimePickerModal = document.getElementById('ps-timePickerModal');
+  var psTpHour = 8, psTpMinute = 0;
+
+  function psOpenTimePicker() {
+    var current = document.getElementById('ps-wakilJam').value;
+    if (current) {
+      var parts = current.split(':');
+      psTpHour = parseInt(parts[0], 10);
+      psTpMinute = Math.round(parseInt(parts[1], 10) / 5) * 5 % 60;
+    }
+    var hourList = document.getElementById('ps-tpHourList');
+    var minuteList = document.getElementById('ps-tpMinuteList');
+    hourList.innerHTML = '';
+    for (var h = 0; h < 24; h++) {
+      var hb = document.createElement('button');
+      hb.type = 'button'; hb.className = 'ps-tp-opt' + (h === psTpHour ? ' ps-tp-selected' : ''); hb.dataset.val = h;
+      hb.textContent = String(h).padStart(2, '0');
+      hb.addEventListener('click', function () {
+        psTpHour = parseInt(this.dataset.val, 10);
+        hourList.querySelectorAll('.ps-tp-opt').forEach(function (o) { o.classList.remove('ps-tp-selected'); });
+        this.classList.add('ps-tp-selected');
+      });
+      hourList.appendChild(hb);
+    }
+    minuteList.innerHTML = '';
+    for (var m = 0; m < 60; m += 5) {
+      var mb = document.createElement('button');
+      mb.type = 'button'; mb.className = 'ps-tp-opt' + (m === psTpMinute ? ' ps-tp-selected' : ''); mb.dataset.val = m;
+      mb.textContent = String(m).padStart(2, '0');
+      mb.addEventListener('click', function () {
+        psTpMinute = parseInt(this.dataset.val, 10);
+        minuteList.querySelectorAll('.ps-tp-opt').forEach(function (o) { o.classList.remove('ps-tp-selected'); });
+        this.classList.add('ps-tp-selected');
+      });
+      minuteList.appendChild(mb);
+    }
+    psTimePickerModal.hidden = false;
+    requestAnimationFrame(function () {
+      psTimePickerModal.classList.add('show');
+      var selH = hourList.querySelector('.ps-tp-selected');
+      var selM = minuteList.querySelector('.ps-tp-selected');
+      if (selH) hourList.scrollTop = selH.offsetTop - hourList.clientHeight / 2 + selH.clientHeight / 2;
+      if (selM) minuteList.scrollTop = selM.offsetTop - minuteList.clientHeight / 2 + selM.clientHeight / 2;
+    });
+  }
+  function psCloseTimePicker() {
+    psTimePickerModal.classList.remove('show');
+    setTimeout(function () { psTimePickerModal.hidden = true; }, 280);
+  }
+  document.getElementById('ps-wakilJamBtn').addEventListener('click', psOpenTimePicker);
+  document.getElementById('ps-tpCancelBtn').addEventListener('click', psCloseTimePicker);
+  document.getElementById('ps-tpConfirmBtn').addEventListener('click', function () {
+    var val = String(psTpHour).padStart(2, '0') + ':' + String(psTpMinute).padStart(2, '0');
+    document.getElementById('ps-wakilJam').value = val;
+    document.getElementById('ps-wakilJamLabel').textContent = val + ' WIB';
+    document.getElementById('ps-wakilJamLabel').style.color = 'var(--ink)';
+    psCloseTimePicker();
+  });
+
+  /* ===== Modal Preview Lampiran Presensi (Foto / Berkas / Link) ===== */
+  function psGetDriveId(url) {
+    if (!url) return null;
+    var isDrive = url.indexOf('drive.google.com') !== -1 || url.indexOf('docs.google.com') !== -1;
+    if (!isDrive) return null;
+    var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+            url.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+            url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    return m ? m[1] : null;
+  }
+
+  function psOpenPreview(url, title, subtitle) {
+    if (!url) return;
+    url = (url + '').trim();
+    if (!url) return;
+
+    var modal = document.getElementById('ps-previewModal');
+    if (!modal) return;
+    var img = document.getElementById('ps-previewImg');
+    var iframe = document.getElementById('ps-previewIframe');
+    var spinner = document.getElementById('ps-previewSpinner');
+    var link = document.getElementById('ps-previewDirectLink');
+    var titleEl = document.getElementById('ps-previewTitle');
+    var subEl = document.getElementById('ps-previewSub');
+    var extCard = document.getElementById('ps-previewExternalCard');
+    var extUrlText = document.getElementById('ps-previewExternalUrlText');
+    var extBtn = document.getElementById('ps-previewExternalBtn');
+    var mediaBox = document.getElementById('ps-previewMediaBox');
+
+    if (titleEl) titleEl.textContent = title || 'Lampiran';
+    if (subEl) subEl.textContent = subtitle || '';
+    if (link) { link.href = url; link.style.display = ''; }
+    if (extBtn) extBtn.href = url;
+    if (extUrlText) extUrlText.textContent = url;
+
+    var textCard = document.getElementById('ps-previewTextCard');
+    if (textCard) { textCard.hidden = true; textCard.style.display = 'none'; }
+
+    if (img) { img.style.display = 'none'; img.onload = null; img.onerror = null; img.src = ''; }
+    if (iframe) { iframe.style.display = 'none'; iframe.src = ''; }
+    if (extCard) extCard.hidden = true;
+    if (spinner) spinner.style.display = 'flex';
+
+    var driveId = psGetDriveId(url);
+    var lower = url.toLowerCase();
+    var isCatatanOrPdf = (title && (title.indexOf('Catatan') !== -1 || title.indexOf('PDF') !== -1)) || lower.indexOf('.pdf') !== -1;
+
+    if (isCatatanOrPdf) {
+      if (mediaBox) {
+        mediaBox.style.height = '62vh';
+        mediaBox.style.maxHeight = '65vh';
+      }
+      var previewSrc = '';
+      if (driveId) {
+        previewSrc = 'https://drive.google.com/file/d/' + driveId + '/preview';
+      } else if (url.indexOf('/view') !== -1) {
+        previewSrc = url.replace('/view', '/preview');
+      } else {
+        previewSrc = url;
+      }
+      if (iframe) {
+        iframe.onload = function () {
+          if (spinner) spinner.style.display = 'none';
+          iframe.style.display = 'block';
+        };
+        iframe.src = previewSrc;
+      }
+    } else if (driveId) {
+      if (mediaBox) {
+        mediaBox.style.height = 'auto';
+        mediaBox.style.maxHeight = '65vh';
+      }
+      var triedFallback = false;
+      img.onload = function () {
+        if (spinner) spinner.style.display = 'none';
+        img.style.display = 'block';
+      };
+      img.onerror = function () {
+        if (!triedFallback) {
+          triedFallback = true;
+          img.src = 'https://lh3.googleusercontent.com/d/' + driveId;
+        } else {
+          img.style.display = 'none';
+          if (spinner) spinner.style.display = 'none';
+          if (iframe) {
+            if (mediaBox) mediaBox.style.height = '62vh';
+            iframe.onload = function () {
+              if (spinner) spinner.style.display = 'none';
+              iframe.style.display = 'block';
+            };
+            iframe.src = 'https://drive.google.com/file/d/' + driveId + '/preview';
+          }
+        }
+      };
+      img.src = 'https://drive.google.com/thumbnail?id=' + driveId + '&sz=w1200';
+    } else {
+      if (mediaBox) {
+        mediaBox.style.height = 'auto';
+        mediaBox.style.maxHeight = '65vh';
+      }
+      var isDirectImg = lower.match(/\.(jpeg|jpg|png|webp|gif)($|\?)/);
+      if (isDirectImg) {
+        img.onload = function () {
+          if (spinner) spinner.style.display = 'none';
+          img.style.display = 'block';
+        };
+        img.onerror = function () {
+          if (spinner) spinner.style.display = 'none';
+          if (extCard) extCard.hidden = false;
+        };
+        img.src = url;
+      } else {
+        if (spinner) spinner.style.display = 'none';
+        if (extCard) extCard.hidden = false;
+      }
+    }
+
+    modal.hidden = false;
+    modal.removeAttribute('hidden');
+    modal.style.display = 'flex';
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+
+  function psOpenPreviewText(text, title, subtitle, badgeText) {
+    var modal = document.getElementById('ps-previewModal');
+    if (!modal) return;
+    var img = document.getElementById('ps-previewImg');
+    var iframe = document.getElementById('ps-previewIframe');
+    var spinner = document.getElementById('ps-previewSpinner');
+    var link = document.getElementById('ps-previewDirectLink');
+    var titleEl = document.getElementById('ps-previewTitle');
+    var subEl = document.getElementById('ps-previewSub');
+    var extCard = document.getElementById('ps-previewExternalCard');
+    var textCard = document.getElementById('ps-previewTextCard');
+    var textContent = document.getElementById('ps-previewTextContent');
+    var badgeEl = document.getElementById('ps-previewTextBadge');
+    var mediaBox = document.getElementById('ps-previewMediaBox');
+
+    if (mediaBox) {
+      mediaBox.style.minHeight = '0';
+      mediaBox.style.height = 'auto';
+    }
+
+    if (titleEl) titleEl.textContent = title || 'Laporan Pembelajaran';
+    if (subEl) subEl.textContent = subtitle || '';
+    if (badgeEl) {
+      badgeEl.textContent = badgeText || (title ? title.toUpperCase() : 'LAPORAN PEMBELAJARAN');
+      if (title && title.toLowerCase().includes('alasan')) {
+        badgeEl.style.color = '#ff3b30';
+      } else {
+        badgeEl.style.color = 'var(--ink-soft)';
+      }
+    }
+    if (link) link.style.display = 'none';
+
+    if (img) { img.style.display = 'none'; img.onload = null; img.onerror = null; img.src = ''; }
+    if (iframe) { iframe.style.display = 'none'; iframe.src = ''; }
+    if (extCard) extCard.hidden = true;
+    if (spinner) spinner.style.display = 'none';
+
+    if (textCard && textContent) {
+      textContent.textContent = text || '-';
+      textCard.hidden = false;
+      textCard.style.display = 'block';
+    }
+
+    modal.hidden = false;
+    modal.removeAttribute('hidden');
+    modal.style.display = 'flex';
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+
+  function psClosePreview() {
+    var modal = document.getElementById('ps-previewModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    setTimeout(function () {
+      modal.hidden = true;
+      modal.setAttribute('hidden', '');
+      modal.style.display = 'none';
+      var img = document.getElementById('ps-previewImg');
+      var iframe = document.getElementById('ps-previewIframe');
+      var link = document.getElementById('ps-previewDirectLink');
+      var textCard = document.getElementById('ps-previewTextCard');
+      var mediaBox = document.getElementById('ps-previewMediaBox');
+      if (mediaBox) {
+        mediaBox.style.minHeight = '';
+        mediaBox.style.height = '';
+      }
+      if (img) { img.onload = null; img.onerror = null; img.src = ''; }
+      if (iframe) {
+        iframe.src = '';
+        iframe.style.display = 'none';
+      }
+      if (link) link.style.display = '';
+      if (textCard) { textCard.hidden = true; textCard.style.display = 'none'; }
+    }, 280);
+  }
+
+  var psPrevCloseBtn = document.getElementById('ps-previewCloseBtn');
+  if (psPrevCloseBtn) psPrevCloseBtn.addEventListener('click', psClosePreview);
+  var psPrevCloseX = document.getElementById('ps-previewCloseX');
+  if (psPrevCloseX) psPrevCloseX.addEventListener('click', psClosePreview);
+  var psPrevModal = document.getElementById('ps-previewModal');
+  if (psPrevModal) {
+    psPrevModal.addEventListener('click', function (e) {
+      if (e.target === this) psClosePreview();
+    });
+  }
+</script>

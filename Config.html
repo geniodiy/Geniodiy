@@ -1,0 +1,615 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14162B;
+    --ink-soft:#5B5F76;
+    --blue:#1C1AAF;
+    --blue-dark:#131288;
+    --blue-tint:#EEEEFB;
+    --red:#D4070F;
+    --red-soft:#FDEAEA;
+    --green:#1E8E5A;
+    --green-soft:#E9F7EF;
+    --surface:#F5F6FB;
+    --border:#E3E5F0;
+    --white:#FFFFFF;
+    --bg-page:#F0F2F5;
+    --radius-lg:28px;
+    --radius-md:14px;
+    --radius-sm:10px;
+    --font:'Geist',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--font);
+    color:var(--ink);
+    background:var(--bg-page);
+    -webkit-font-smoothing:antialiased;
+    -webkit-tap-highlight-color:transparent;
+  }
+  h1,h2,h3{font-family:var(--font);}
+  p{line-height:1.5;}
+  a{color:inherit;}
+
+  .btn{
+    width:100%;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 18px;
+    border-radius:var(--radius-sm);
+    border:none;
+    font-family:var(--font);
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform .08s ease, opacity .15s ease, background .15s ease;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn:disabled{opacity:.6; cursor:default; transform:none;}
+  .btn-primary{background:var(--blue); color:#fff;}
+  .btn-primary:hover{background:var(--blue-dark);}
+  .btn-outline{background:#fff; border:1.5px solid var(--border); color:var(--ink);}
+  .btn-outline:hover{border-color:var(--blue);}
+
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .field input,
+  .field select{
+    width:100%;
+    padding:13px 14px;
+    border-radius:var(--radius-sm);
+    border:1.5px solid var(--border);
+    background:var(--surface);
+    font-family:var(--font);
+    font-size:15px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .field input:focus,
+  .field select:focus{
+    border-color:var(--blue);
+    background:#fff;
+  }
+  .field-hint{font-size:12px; color:var(--ink-soft); margin-top:6px;}
+
+  .password-wrap{position:relative; display:flex; align-items:center;}
+  .password-wrap input{padding-right:72px;}
+  .toggle-pw{
+    position:absolute; right:6px;
+    background:none; border:none;
+    font-family:var(--font);
+    font-size:13px; font-weight:700;
+    color:var(--blue);
+    cursor:pointer;
+    padding:8px 8px;
+  }
+
+  .alert{
+    padding:12px 14px;
+    border-radius:var(--radius-sm);
+    font-size:13.5px;
+    line-height:1.45;
+    margin-bottom:18px;
+    display:flex; gap:8px; align-items:flex-start;
+  }
+  .alert-error{background:var(--red-soft); color:var(--red); border:1px solid rgba(212,7,15,.18);}
+  .alert-success{background:var(--green-soft); color:var(--green); border:1px solid rgba(30,142,90,.18);}
+  .alert[hidden]{display:none;}
+
+  .divider{display:flex; align-items:center; gap:12px; margin:20px 0; color:var(--ink-soft); font-size:12.5px;}
+  .divider::before,.divider::after{content:''; flex:1; height:1px; background:var(--border);}
+
+  .link-accent{color:var(--red); font-weight:700; text-decoration:none;}
+  .link-accent:active{opacity:.7;}
+
+  .spinner{
+    width:16px; height:16px;
+    border:2px solid rgba(255,255,255,.4);
+    border-top-color:#fff;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ===== Komponen bersama untuk Dashboard & modul-modul ===== */
+  .badge{
+    display:inline-flex; align-items:center;
+    font-size:12px; font-weight:700;
+    padding:4px 10px; border-radius:999px;
+  }
+  .badge-aktif{background:var(--green-soft); color:var(--green);}
+  .badge-nonaktif{background:var(--surface); color:var(--ink-soft);}
+  .badge-pending{background:#FFF4E0; color:#A15C00;}
+
+  .card{
+    background:#fff;
+    border:1.5px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .card-row{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .card-title{font-size:15px; font-weight:700; margin:0 0 2px;}
+  .card-sub{font-size:12.5px; color:var(--ink-soft); margin:0;}
+
+  .icon-btn{
+    width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface); border:1.5px solid var(--border);
+    cursor:pointer; flex:none; font-size:15px; color:var(--ink);
+  }
+  .icon-btn:active{transform:scale(.95);}
+
+  .fab{
+    position:fixed; right:20px; bottom:24px;
+    width:56px; height:56px; border-radius:50%;
+    background:var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; font-weight:400;
+    border:none; cursor:pointer; z-index:40;
+  }
+  .fab:active{transform:scale(.95);}
+
+  .empty-state{
+    text-align:center; padding:48px 20px;
+    color:var(--ink-soft); font-size:14px;
+  }
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(20,22,43,.45);
+    z-index:60; display:flex; align-items:flex-end;
+  }
+  .modal-overlay[hidden]{display:none;}
+  .modal-sheet{
+    background:#fff; width:100%;
+    border-radius:24px 24px 0 0;
+    padding:22px 22px 28px;
+    max-height:88vh; overflow-y:auto;
+    box-shadow:0 16px 40px -10px rgba(20,22,43,.18);
+  }
+  .modal-sheet h3{font-size:18px; margin:0 0 18px; font-weight:800;}
+  .modal-actions{display:flex; gap:10px; margin-top:6px;}
+  .modal-actions .btn{width:auto; flex:1;}
+  @media (max-width: 600px){
+    .modal-sheet{
+      border-radius:24px 24px 0 0;
+    }
+  }
+
+  .toast{
+    position:fixed; left:50%; top:18px; transform:translateX(-50%) translateY(-24px) scale(.92);
+    background:var(--ink); color:#fff;
+    padding:10px 18px 10px 10px; border-radius:999px;
+    font-size:13px; font-weight:600; z-index:9999;
+    display:flex; align-items:center; gap:10px; max-width:88%;
+    opacity:0; pointer-events:none;
+    box-shadow:0 12px 28px -8px rgba(0,0,0,.35);
+    transition:opacity .22s ease, transform .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0) scale(1);}
+  .toast span:last-child{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .toast .toast-icon{
+    flex:none; display:flex; align-items:center; justify-content:center;
+    width:24px; height:24px; border-radius:50%;
+  }
+  .toast .toast-icon.success{ background:#34C759; }
+  .toast .toast-icon.error{ background:#FF3B30; }
+  .toast .toast-icon.loading{ background:#007AFF; }
+  @keyframes genioToastSpin{ to{ transform:rotate(360deg); } }
+  .toast .toast-icon.loading svg{ animation:genioToastSpin .9s linear infinite; }
+
+  /* ===== Global Popup Pemilih Periode (Bulan & Tahun) ===== */
+  .genio-myp-overlay{
+    position: fixed; inset: 0;
+    background: rgba(20, 22, 43, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9990;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+    opacity: 0; pointer-events: none;
+    transition: opacity .22s ease;
+  }
+  .genio-myp-overlay.show{
+    opacity: 1; pointer-events: auto;
+  }
+  .genio-myp-card{
+    background: #fff;
+    width: 100%; max-width: 324px;
+    border-radius: 20px;
+    padding: 18px 18px 16px;
+    box-shadow: 0 24px 50px -12px rgba(20, 22, 43, 0.28), 0 0 0 1px rgba(0,0,0,0.06);
+    transform: scale(0.9) translateY(8px);
+    transition: transform .26s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-sizing: border-box;
+  }
+  .genio-myp-overlay.show .genio-myp-card{
+    transform: scale(1) translateY(0);
+  }
+  .genio-myp-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .genio-myp-month-btn{
+    position: relative;
+    height: 48px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all .16s cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: 2px 4px;
+    box-sizing: border-box;
+    outline: none;
+  }
+  .genio-myp-month-btn:hover{
+    background: #fff;
+    border-color: var(--ink-soft);
+    transform: translateY(-1px);
+    box-shadow: none;
+  }
+  .genio-myp-month-btn:active{
+    transform: scale(0.95);
+  }
+  .genio-myp-month-btn.active{
+    background: var(--ink-soft) !important;
+    border-color: var(--ink-soft) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+  }
+  .genio-myp-month-btn.active .genio-myp-sub{
+    color: rgba(255,255,255,0.85) !important;
+  }
+  .genio-myp-month-btn .genio-myp-main{
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .genio-myp-month-btn.active .genio-myp-main{
+    color: #fff;
+  }
+  .genio-myp-month-btn .genio-myp-sub{
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+  .genio-myp-dot-now{
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--ink-soft);
+  }
+  .genio-myp-month-btn.active .genio-myp-dot-now{
+    background: #fff;
+  }
+</style>
+
+<script>
+  var SUPABASE_URL = 'https://lmtockvqirnqjabdhxbh.supabase.co';
+  // Kunci "anon/publishable" ini memang didesain untuk aman ditaruh di sisi client —
+  // seluruh proteksi data ada di Row Level Security (RLS) di database, bukan di kunci ini.
+  var SUPABASE_ANON_KEY = 'sb_publishable_Y2uTCD5at4pnnjDTpxjHjg_ZykEYQHz';
+
+  // Panggil endpoint Supabase Auth (signup / token login / dst.)
+  async function supaAuth(path, body) {
+    var res = await fetch(SUPABASE_URL + '/auth/v1/' + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify(body)
+    });
+    var data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error_description || data.msg || data.error || 'Terjadi kesalahan, coba lagi.');
+    }
+    return data;
+  }
+
+  // Panggil endpoint PostgREST (tabel-tabel di schema public), otomatis kena RLS sesuai token yang dikirim
+  async function supaRest(path, token, options) {
+    options = options || {};
+    var headers = Object.assign({
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + token
+    }, options.headers || {});
+    var res = await fetch(SUPABASE_URL + '/rest/v1/' + path, Object.assign({}, options, { headers: headers }));
+    var data = null;
+    try { data = await res.json(); } catch (e) { /* respons kosong, mis. saat Prefer: return=minimal */ }
+    if (!res.ok) {
+      // Auto-refresh token jika sesi kedaluwarsa (401) agar user tidak perlu hapus cache browser
+      if (res.status === 401 && !options._isRetry) {
+        var s = genioGetSession();
+        if (s && s.refresh_token) {
+          try {
+            var rfRes = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+              body: JSON.stringify({ refresh_token: s.refresh_token })
+            });
+            var rfData = await rfRes.json();
+            if (rfRes.ok && rfData.access_token) {
+              s.access_token = rfData.access_token;
+              s.refresh_token = rfData.refresh_token || s.refresh_token;
+              genioSaveSession(s);
+              return await supaRest(path, s.access_token, Object.assign({}, options, { _isRetry: true }));
+            }
+          } catch (rfErr) {
+            console.warn('Gagal auto-refresh token:', rfErr);
+          }
+        }
+      }
+      var msg = (data && (data.message || data.hint)) || 'Gagal memproses data.';
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  function genioSaveSession(session) {
+    sessionStorage.setItem('genio_session', JSON.stringify(session));
+  }
+  function genioGetSession() {
+    try { return JSON.parse(sessionStorage.getItem('genio_session') || 'null'); }
+    catch (e) { return null; }
+  }
+  function genioClearSession() {
+    sessionStorage.removeItem('genio_session');
+  }
+  // Panggil di awal setiap halaman dashboard: redirect ke Login kalau belum ada sesi.
+  function genioRequireSession() {
+    var s = genioGetSession();
+    if (!s || !s.access_token) {
+      // SCRIPT_URL (didefinisikan di setiap halaman, lihat scriptUrl dari Code.gs) dipakai
+      // sebagai URL absolut supaya navigasi tidak salah resolve akibat redirect Apps Script.
+      window.top.location.href = SCRIPT_URL + '?page=login';
+      return null;
+    }
+    return s;
+  }
+  function genioLogout() {
+    var s = genioGetSession();
+    if (s && s.user_id) {
+      try {
+        sessionStorage.removeItem('genio_session_hidden_notifs_' + s.user_id);
+        localStorage.removeItem('genio_read_notifs_' + s.user_id);
+      } catch (e) {}
+    }
+    genioClearSession();
+    window.top.location.href = SCRIPT_URL + '?page=login';
+  }
+
+  var GENIO_TOAST_ICONS = {
+    success: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.4l4.5 4.5L20 6"/></svg>',
+    error: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
+    loading: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M12 3a9 9 0 1 1-6.36 2.64"/></svg>'
+  };
+  function genioEscapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s == null ? '' : s;
+    return d.innerHTML;
+  }
+  function genioToast(msg, type, persist) {
+    type = (type === 'success' || type === 'error') ? type : 'loading';
+    var el = document.getElementById('genioToast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'genioToast';
+      el.className = 'toast';
+      document.body.appendChild(el);
+    }
+    el.innerHTML = '<span class="toast-icon ' + type + '">' + GENIO_TOAST_ICONS[type] + '</span><span>' + genioEscapeHtml(msg) + '</span>';
+    el.classList.add('show');
+    clearTimeout(el._t);
+    // Default: selalu auto-hide seperti biasa. Cuma dipakai kalau ada pemanggil yang
+    // sengaja minta toast bertahan (persist=true) sampai proses beneran selesai,
+    // misal alur upload presensi yang bisa makan waktu lebih dari 2.6 detik.
+    if (!persist) {
+      el._t = setTimeout(function () { el.classList.remove('show'); }, 2600);
+    }
+  }
+
+  /* ===== Global Popup Pemilih Periode (Bulan & Tahun) ===== */
+  var GENIO_BULAN_NAMA = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  var GENIO_BULAN_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+  var _genioMypState = {
+    viewYear: new Date().getFullYear(),
+    selectedYear: new Date().getFullYear(),
+    selectedMonth: new Date().getMonth(), // 0-indexed
+    onSelect: null
+  };
+
+  function genioFormatPeriodeLabel(yyyyMm) {
+    if (!yyyyMm) return '-';
+    var parts = yyyyMm.split('-');
+    var y = parseInt(parts[0], 10);
+    var m = parseInt(parts[1], 10);
+    return GENIO_BULAN_NAMA[m - 1] + ' ' + y;
+  }
+
+  function genioOpenMonthYearPicker(opts) {
+    opts = opts || {};
+    var val = opts.currentValue;
+    var now = new Date();
+    var curYear = now.getFullYear();
+    var curMonth = now.getMonth();
+
+    if (val && typeof val === 'string' && val.indexOf('-') !== -1) {
+      var parts = val.split('-');
+      _genioMypState.selectedYear = parseInt(parts[0], 10) || curYear;
+      _genioMypState.selectedMonth = (parseInt(parts[1], 10) - 1);
+    } else {
+      _genioMypState.selectedYear = curYear;
+      _genioMypState.selectedMonth = curMonth;
+    }
+    _genioMypState.viewYear = _genioMypState.selectedYear;
+    _genioMypState.onSelect = opts.onSelect || null;
+
+    var overlay = document.getElementById('genioMonthYearOverlay');
+    if (!overlay) {
+      overlay = genioCreateMonthYearModal();
+    }
+
+    var titleEl = document.getElementById('genioMypTitle');
+    if (titleEl) {
+      titleEl.textContent = opts.title || 'Pilih Periode';
+    }
+
+    genioRenderMonthYearPicker();
+    overlay.hidden = false;
+    requestAnimationFrame(function () {
+      overlay.classList.add('show');
+    });
+  }
+
+  function genioCloseMonthYearPicker() {
+    var overlay = document.getElementById('genioMonthYearOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('show');
+    setTimeout(function () {
+      overlay.hidden = true;
+    }, 260);
+  }
+
+  function genioRenderMonthYearPicker() {
+    var yearEl = document.getElementById('genioMypYearLabel');
+    if (yearEl) yearEl.textContent = _genioMypState.viewYear;
+
+    var grid = document.getElementById('genioMypMonthsGrid');
+    if (!grid) return;
+
+    var now = new Date();
+    var nowYear = now.getFullYear();
+    var nowMonth = now.getMonth();
+
+    var html = '';
+    for (var i = 0; i < 12; i++) {
+      var isSelected = (_genioMypState.viewYear === _genioMypState.selectedYear && i === _genioMypState.selectedMonth);
+      var isNow = (_genioMypState.viewYear === nowYear && i === nowMonth);
+      html += '<button type="button" class="genio-myp-month-btn' + (isSelected ? ' active' : '') + '" data-month="' + i + '">' +
+        '<span class="genio-myp-main">' + GENIO_BULAN_SHORT[i] + '</span>' +
+        '<span class="genio-myp-sub">' + GENIO_BULAN_NAMA[i] + '</span>' +
+        (isNow ? '<span class="genio-myp-dot-now" title="Bulan sekarang"></span>' : '') +
+      '</button>';
+    }
+    grid.innerHTML = html;
+
+    grid.querySelectorAll('.genio-myp-month-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var m = parseInt(btn.dataset.month, 10);
+        _genioMypState.selectedYear = _genioMypState.viewYear;
+        _genioMypState.selectedMonth = m;
+        grid.querySelectorAll('.genio-myp-month-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        var yyyyMm = _genioMypState.selectedYear + '-' + String(m + 1).padStart(2, '0');
+        var label = GENIO_BULAN_NAMA[m] + ' ' + _genioMypState.selectedYear;
+
+        setTimeout(function () {
+          genioCloseMonthYearPicker();
+          if (typeof _genioMypState.onSelect === 'function') {
+            _genioMypState.onSelect(yyyyMm, label);
+          }
+        }, 120);
+      });
+    });
+  }
+
+  function genioCreateMonthYearModal() {
+    var overlay = document.createElement('div');
+    overlay.id = 'genioMonthYearOverlay';
+    overlay.className = 'genio-myp-overlay';
+    overlay.hidden = true;
+    overlay.innerHTML =
+      '<div class="genio-myp-card" role="dialog" aria-modal="true">' +
+        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">' +
+          '<div>' +
+            '<div id="genioMypTitle" style="font-size:15px; font-weight:800; color:var(--ink);">Pilih Periode</div>' +
+            '<div style="font-size:11px; color:var(--ink-soft); margin-top:1px;">Pilih bulan dan tahun data</div>' +
+          '</div>' +
+          '<button type="button" id="genioMypCloseBtn" aria-label="Tutup" style="width:30px; height:30px; border-radius:50%; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft);">' +
+            '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+          '</button>' +
+        '</div>' +
+
+        '<div style="display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:4px 6px; margin:12px 0 14px;">' +
+          '<button type="button" id="genioMypPrevYear" aria-label="Tahun Sebelumnya" style="width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); color:var(--ink); font-size:17px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,.05);">&lsaquo;</button>' +
+          '<span id="genioMypYearLabel" style="font-size:15px; font-weight:800; color:var(--ink); letter-spacing:.02em; font-family:var(--font);">-</span>' +
+          '<button type="button" id="genioMypNextYear" aria-label="Tahun Berikutnya" style="width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); color:var(--ink); font-size:17px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,.05);">&rsaquo;</button>' +
+        '</div>' +
+
+        '<div id="genioMypMonthsGrid" class="genio-myp-grid"></div>' +
+
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:10px; border-top:1px solid var(--border);">' +
+          '<button type="button" id="genioMypCurrentBtn" style="background:var(--surface); border:1px solid var(--border); border-radius:10px; font-size:11.5px; font-weight:700; color:var(--ink); padding:8px 14px; cursor:pointer; font-family:var(--font);">' +
+            'Bulan Ini' +
+          '</button>' +
+          '<button type="button" id="genioMypCancelBtn" style="background:none; border:none; font-size:11.5px; font-weight:600; color:var(--ink-soft); padding:8px 10px; cursor:pointer; font-family:var(--font);">' +
+            'Batal' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) genioCloseMonthYearPicker();
+    });
+    document.getElementById('genioMypCloseBtn').addEventListener('click', genioCloseMonthYearPicker);
+    document.getElementById('genioMypCancelBtn').addEventListener('click', genioCloseMonthYearPicker);
+
+    document.getElementById('genioMypPrevYear').addEventListener('click', function () {
+      _genioMypState.viewYear--;
+      genioRenderMonthYearPicker();
+    });
+    document.getElementById('genioMypNextYear').addEventListener('click', function () {
+      _genioMypState.viewYear++;
+      genioRenderMonthYearPicker();
+    });
+
+    document.getElementById('genioMypCurrentBtn').addEventListener('click', function () {
+      var now = new Date();
+      _genioMypState.viewYear = now.getFullYear();
+      _genioMypState.selectedYear = now.getFullYear();
+      _genioMypState.selectedMonth = now.getMonth();
+      var yyyyMm = _genioMypState.selectedYear + '-' + String(_genioMypState.selectedMonth + 1).padStart(2, '0');
+      var label = GENIO_BULAN_NAMA[_genioMypState.selectedMonth] + ' ' + _genioMypState.selectedYear;
+      genioRenderMonthYearPicker();
+      setTimeout(function () {
+        genioCloseMonthYearPicker();
+        if (typeof _genioMypState.onSelect === 'function') {
+          _genioMypState.onSelect(yyyyMm, label);
+        }
+      }, 120);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('show')) {
+        genioCloseMonthYearPicker();
+      }
+    });
+
+    return overlay;
+  }
+</script>

@@ -1,0 +1,2058 @@
+<div class="module-panel" data-module="jadwal" hidden>
+<style>
+  /* Base Hero Styles */
+  .jdw-hero-sec{
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .jdw-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .jdw-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .jdw-hero-badge-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .jdw-hero-unit-pill{
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .jdw-hero-sublabel{
+    display: block;
+    font-size: 9.5px;
+    opacity: .65;
+    margin-top: 6px;
+  }
+  .jdw-hero-counter{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .jdw-hero-num-wrap{
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .jdw-hero-num{
+    font-size: 20px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .jdw-hero-unit{
+    font-size: 11px;
+    opacity: .65;
+    font-weight: 600;
+  }
+  .jdw-hero-stats-row{
+    display: flex;
+    gap: 6px;
+    margin-top: 9px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(255,255,255,.14);
+    align-items: stretch;
+  }
+  .jdw-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 8px;
+    padding: 5px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .jdw-hero-stat-icon{
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .jdw-hero-stat-icon svg{
+    width: 11px;
+    height: 11px;
+  }
+  .jdw-hero-stat-info{
+    min-width: 0;
+    flex: 1;
+  }
+  .jdw-hero-stat-lbl{
+    font-size: 8px;
+    opacity: .7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .jdw-hero-stat-val{
+    font-size: 11px;
+    font-weight: 800;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .jdw-hero-add-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    border: none;
+    border-radius: 999px;
+    padding: 0 12px;
+    height: 30px;
+    font-family: var(--font);
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    flex: none;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .jdw-hero-add-btn:active{ transform: scale(.94); }
+
+  /* Search & Controls Bar */
+  .jdw-search-sec{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  .jdw-search-wrap{
+    position: relative;
+    flex: 1;
+    min-width: 0;
+  }
+  .jdw-search-input{
+    width: 100%;
+    height: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 10px 0 32px;
+    font-family: var(--font);
+    font-size: 11.5px;
+    background: #fff;
+    color: var(--ink);
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+  .jdw-search-input:focus{
+    border-color: var(--blue);
+  }
+  .jdw-search-icon{
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--ink-soft);
+  }
+  .jdw-group-title{ font-size:10px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
+  .jdw-group-title:first-of-type{ margin-top:0; }
+  .jdw-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .jdw-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
+  .jdw-row:last-child{ border-bottom:none; }
+  .jdw-row label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:2px; }
+  .jdw-filter-select{
+    width: 100%;
+    border: none;
+    padding: 0;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+  }
+  .jdw-icon-btn{
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex: none;
+    transition: background .15s ease, transform .1s ease;
+  }
+  .jdw-icon-btn:active{ transform: scale(.93); }
+
+  /* Dropdown Select Styles */
+  .jdw-select{
+    width: 100%;
+    height: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 8px;
+    font-family: var(--font);
+    font-size: 11.5px;
+    color: var(--ink);
+    background: #fff;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .jdw-select:focus{
+    border-color: var(--blue);
+  }
+
+  /* WhatsApp Action Card in Modal */
+  .jdw-wa-action-card{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all .15s ease;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .jdw-wa-action-card:hover{
+    background: rgba(52,199,89,.06);
+    border-color: #25D366;
+  }
+  .jdw-wa-action-card:active{ transform: scale(.98); }
+  .jdw-wa-action-icon{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #25D366;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    box-shadow: 0 2px 5px rgba(37,211,102,.25);
+  }
+
+  /* Desktop Density Optimizations */
+  @media (min-width: 900px) {
+    .module-panel[data-module="jadwal"][hidden]{ display:none !important; }
+    .module-panel[data-module="jadwal"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+    }
+
+    .jdw-hero-sec{
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+    }
+    .jdw-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
+    .jdw-hero-badges{
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+    .jdw-hero-badge-pill{
+      font-size: 8.5px !important;
+      padding: 2px 7px !important;
+    }
+    .jdw-hero-unit-pill{
+      font-size: 9px !important;
+      padding: 2px 7px !important;
+    }
+    .jdw-hero-sublabel{
+      display: none !important;
+    }
+    .jdw-hero-counter{
+      margin-top: 0 !important;
+      gap: 10px !important;
+    }
+    .jdw-hero-num{
+      font-size: 18px !important;
+    }
+    .jdw-hero-unit{
+      font-size: 10.5px !important;
+    }
+    .jdw-hero-add-btn{
+      height: 26px !important;
+      padding: 0 9px !important;
+      font-size: 10.5px !important;
+      border-radius: 7px !important;
+      margin-left: 2px !important;
+    }
+    .jdw-hero-stats-row{
+      flex: none !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 14px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+    }
+    .jdw-hero-stat-card{
+      flex: none !important;
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+    }
+    .jdw-hero-stat-icon{
+      width: 18px !important;
+      height: 18px !important;
+      border-radius: 5px !important;
+    }
+    .jdw-hero-stat-lbl{
+      font-size: 8px !important;
+    }
+    .jdw-hero-stat-val{
+      font-size: 11px !important;
+    }
+
+    .jdw-search-input{
+      height: 30px !important;
+      font-size: 11px !important;
+      border-radius: 7px !important;
+    }
+    #jdw-filterBtn,
+    .jdw-icon-btn{
+      width: 30px !important;
+      height: 30px !important;
+      border-radius: 7px !important;
+    }
+  }
+
+  /* Table Styles (Universal Base) */
+  .jdw-table-card{
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+    margin-bottom: 12px;
+  }
+  .jdw-table-wrap{
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .jdw-table{
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 11.5px;
+  }
+  .jdw-table thead{
+    background: #fafafa;
+    border-bottom: 1px solid var(--border);
+  }
+  .jdw-table th{
+    padding: 6px 8px !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    user-select: none;
+  }
+  .jdw-table th.jdw-sort-th{
+    cursor: pointer;
+  }
+  .jdw-table th.jdw-sort-th:hover{
+    color: var(--ink);
+  }
+  .jdw-table td{
+    padding: 5px 8px !important;
+    font-size: 11.5px !important;
+    line-height: 1.3 !important;
+    border-bottom: 1px solid rgba(0,0,0,.04);
+    color: var(--ink);
+  }
+  .jdw-table tbody tr:last-child td{
+    border-bottom: none;
+  }
+  .jdw-table tbody tr:hover{
+    background: rgba(0,0,0,.018);
+  }
+
+  /* Table Action Buttons */
+  .jdw-table-icon-btn{
+    width: 24px !important;
+    height: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    flex: none;
+    background: var(--surface) !important;
+    color: var(--ink-soft) !important;
+    border: 1px solid var(--border) !important;
+    box-sizing: border-box !important;
+    transition: all .15s ease;
+    text-decoration: none;
+  }
+  .jdw-table-icon-btn:hover{
+    background: #fff !important;
+    color: var(--ink) !important;
+    border-color: rgba(0,0,0,.2) !important;
+  }
+  .jdw-table-icon-btn.jdw-del-btn:hover{
+    background: rgba(255,59,48,.12) !important;
+    color: #ff3b30 !important;
+    border-color: rgba(255,59,48,.3) !important;
+  }
+
+  /* Card Container Grid Layout: 1 baris di mobile, 2 baris di desktop */
+  #jdw-list.jdw-cards-view{
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  @media (min-width: 900px) {
+    #jdw-list.jdw-cards-view{
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+      align-items: stretch !important;
+    }
+  }
+  .jdw-card{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.03);
+    transition: transform .15s ease, box-shadow .15s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  #jdw-list.jdw-cards-view > .jdw-card{
+    margin-bottom: 0 !important;
+  }
+  .jdw-card:active{
+    transform: scale(.99);
+  }
+
+  .jdw-card-wa-btn{
+    flex: 1;
+    height: 26px;
+    background: rgba(52,199,89,.12);
+    color: #1DB954;
+    border: none;
+    border-radius: 7px;
+    padding: 0 8px;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    font-family: var(--font);
+    min-width: 0;
+    transition: background .15s ease, transform .1s ease;
+  }
+  .jdw-card-wa-btn:active{
+    transform: scale(.95);
+  }
+
+  /* Weekly Visual Widget Styles */
+  #jdw-jadwalMingguanCard{
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  #jdw-jmGrid{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 3px;
+  }
+  .jdw-jm-grid{
+    display: grid;
+    grid-template-columns: 26px repeat(8, minmax(28px, 1fr));
+    grid-auto-rows: minmax(18px, auto);
+    gap: 2px;
+    align-items: stretch;
+    min-width: 260px;
+  }
+  .jdw-jm-head{
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-align: center;
+    padding-bottom: 2px;
+  }
+  .jdw-jm-hour{
+    font-size: 8px;
+    color: var(--ink-soft);
+    text-align: right;
+    padding-right: 3px;
+    align-self: center;
+    font-family: monospace;
+  }
+  .jdw-jm-cell{
+    background: var(--surface);
+    border-radius: 4px;
+    min-height: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    gap: 1.5px;
+    padding: 1.5px;
+  }
+  .jdw-jm-dot{
+    width: 7.5px;
+    height: 7.5px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex: none;
+    border: none;
+    padding: 0;
+    transition: transform .12s ease;
+  }
+  .jdw-jm-dot:hover{ transform: scale(1.3); }
+
+  /* Modals */
+  #jdw-modal, #jdw-contractPickerModal, #jdw-hariPickerModal, #jdw-timePickerModal, #jdw-confirmModal, #jdw-filterModal, #jdw-waModal{
+    align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    opacity: 0; transition: opacity .28s ease;
+  }
+  #jdw-modal.show, #jdw-contractPickerModal.show, #jdw-hariPickerModal.show, #jdw-timePickerModal.show, #jdw-confirmModal.show, #jdw-filterModal.show, #jdw-waModal.show{ opacity: 1; }
+  #jdw-modal .modal-sheet, #jdw-contractPickerModal .modal-sheet, #jdw-hariPickerModal .modal-sheet, #jdw-timePickerModal .modal-sheet, #jdw-confirmModal .modal-sheet, #jdw-filterModal .modal-sheet, #jdw-waModal .modal-sheet{
+    border-radius: 16px; width: 100%; max-width: 400px; margin: 0 auto; max-height: 88vh; overflow-y: auto; padding: 16px 18px 18px; box-sizing: border-box;
+    transform: scale(.88) translateY(10px); transition: transform .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #jdw-modal.show .modal-sheet, #jdw-contractPickerModal.show .modal-sheet, #jdw-hariPickerModal.show .modal-sheet, #jdw-timePickerModal.show .modal-sheet, #jdw-confirmModal.show .modal-sheet, #jdw-filterModal.show .modal-sheet, #jdw-waModal.show .modal-sheet{
+    transform: scale(1) translateY(0);
+  }
+  #jdw-modal .modal-actions .btn, #jdw-contractPickerModal .modal-actions .btn, #jdw-hariPickerModal .modal-actions .btn, #jdw-timePickerModal .modal-actions .btn, #jdw-confirmModal .modal-actions .btn, #jdw-filterModal .modal-actions .btn, #jdw-waModal .modal-actions .btn{
+    height: 36px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 9px !important;
+    padding: 0 16px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
+  }
+
+  .jdw-group-title{ font-size: 10px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .05em; margin: 10px 4px 4px; }
+  .jdw-group-title:first-of-type{ margin-top: 0; }
+  .jdw-group{ background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .jdw-row{ padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  .jdw-row:last-child{ border-bottom: none; }
+  .jdw-row label{ display: block; font-size: 10px; font-weight: 600; color: var(--ink-soft); margin-bottom: 2px; }
+
+  .jdw-hari-opt{
+    display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; font-size: 12px; color: var(--ink);
+    cursor: pointer; border-bottom: 1px solid var(--border); width: 100%; text-align: left; background: none; border-left: none; border-right: none; border-top: none; font-family: var(--font);
+  }
+  .jdw-hari-opt.jdw-hari-selected{ color: var(--blue); font-weight: 800; }
+
+  .jdw-tp-opt{ display: block; width: 100%; text-align: center; padding: 9px 0; font-size: 13px; font-family: monospace; background: none; border: none; cursor: pointer; color: var(--ink); scroll-snap-align: start; }
+  .jdw-tp-opt.jdw-tp-selected{ background: var(--blue-tint); color: var(--blue); font-weight: 800; }
+
+  @keyframes jdwRowFlash {
+    0% { background-color: rgba(55,138,221,.25); }
+    100% { background-color: transparent; }
+  }
+  tr.jdw-row-highlight td, .jdw-card.jdw-row-highlight {
+    animation: jdwRowFlash 2.2s cubic-bezier(.25, 1, .5, 1) forwards !important;
+  }
+</style>
+
+  <!-- Hero Highlight (Warna Hitam var(--ink)) -->
+  <div class="jdw-hero-sec" id="jdw-heroCard">
+    <div class="jdw-hero-main-col">
+      <div class="jdw-hero-badges">
+        <span class="jdw-hero-badge-pill">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+          JADWAL MENGAJAR
+        </span>
+        <span class="jdw-hero-unit-pill" id="jdw-heroUnitBadge">-</span>
+      </div>
+      <div class="jdw-hero-sublabel">Total Sesi Terjadwal</div>
+      <div class="jdw-hero-counter">
+        <div class="jdw-hero-num-wrap">
+          <span class="jdw-hero-num" id="jdw-heroTotal">0</span>
+          <span class="jdw-hero-unit">Sesi Belajar</span>
+        </div>
+        <button id="jdw-addBtn" aria-label="Tambah Jadwal" class="jdw-hero-add-btn">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Tambah Jadwal
+        </button>
+      </div>
+    </div>
+
+    <div class="jdw-hero-stats-row">
+      <div class="jdw-hero-stat-card">
+        <span class="jdw-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </span>
+        <div class="jdw-hero-stat-info">
+          <div class="jdw-hero-stat-lbl">Sesi Hari Ini</div>
+          <div class="jdw-hero-stat-val" id="jdw-heroToday">0 Sesi</div>
+        </div>
+      </div>
+      <div class="jdw-hero-stat-card">
+        <span class="jdw-hero-stat-icon" style="background:rgba(0,122,255,.2); color:#80BFFF;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span>
+        <div class="jdw-hero-stat-info">
+          <div class="jdw-hero-stat-lbl">Tutor Aktif</div>
+          <div class="jdw-hero-stat-val" id="jdw-heroTutor">0 Tutor</div>
+        </div>
+      </div>
+      <div class="jdw-hero-stat-card">
+        <span class="jdw-hero-stat-icon" style="background:rgba(255,149,0,.2); color:#FFD182;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="3.6" y1="9" x2="20.4" y2="9"/><line x1="3.6" y1="15" x2="20.4" y2="15"/></svg>
+        </span>
+        <div class="jdw-hero-stat-info">
+          <div class="jdw-hero-stat-lbl">Sesi Fleksibel</div>
+          <div class="jdw-hero-stat-val" id="jdw-heroFlex">0 Sesi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widget Jadwal Mingguan (Visual Grid & Legend) -->
+  <div id="jdw-jadwalMingguanCard">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; gap:6px;">
+      <div style="font-size:11.5px; font-weight:800; color:var(--ink); white-space:nowrap;">Jadwal Mingguan</div>
+      <div style="font-size:9.5px; color:var(--ink-soft); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="jdw-jmHeaderHint">Klik titik warna untuk detail sesi</div>
+    </div>
+    <div id="jdw-jmGrid"><div class="empty-state" style="padding:16px;">Memuat matriks jadwal...</div></div>
+    <div id="jdw-jmLegend" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;"></div>
+
+    <!-- Interactive Popover Preview on Dot Click -->
+    <div id="jdw-jmPreviewModal" style="position:absolute; display:none; flex-direction:column; background:#fff; border-radius:12px; box-shadow:0 8px 24px rgba(20,22,43,.18); padding:9px 12px; max-width:250px; z-index:20; gap:6px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div id="jdw-jmPreviewAvatar" style="width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; color:#fff; flex:none;">-</div>
+        <div style="min-width:0; flex:1;">
+          <div id="jdw-jmPreviewTutor" style="font-size:11.5px; font-weight:800; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+          <div id="jdw-jmPreviewSiswa" style="font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+          <div id="jdw-jmPreviewJadwal" style="font-size:10px; color:var(--ink-soft); font-family:monospace; margin-top:1px;">-</div>
+        </div>
+        <button type="button" id="jdw-jmPreviewGotoBtn" aria-label="Lihat jadwal di tabel" title="Sorot jadwal di tabel" style="width:24px; height:24px; border-radius:50%; background:#fff; border:1px solid var(--border); color:var(--ink); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#1c1c1e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div style="display:flex; flex-wrap:nowrap; gap:6px; width:100%;">
+        <a id="jdw-jmChatTutorBtn" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:0; background:rgba(52,199,89,.12); color:#1DB954; border-radius:999px; padding:4px 8px 4px 4px; font-size:10px; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap; overflow:hidden;">
+          <span style="width:16px; height:16px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="9" height="9" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>
+          Chat Tutor
+        </a>
+        <a id="jdw-jmChatOrtuBtn" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:0; background:rgba(52,199,89,.12); color:#1DB954; border-radius:999px; padding:4px 8px 4px 4px; font-size:10px; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap; overflow:hidden;">
+          <span style="width:16px; height:16px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="9" height="9" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>
+          Chat Ortu
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Controls Toolbar -->
+  <div class="jdw-search-sec" id="jdw-searchSec">
+    <div class="jdw-search-wrap">
+      <svg class="jdw-search-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="jdw-searchInput" class="jdw-search-input" placeholder="Cari tutor, mapel, siswa, paket...">
+    </div>
+    <button id="jdw-filterBtn" type="button" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:border-color .15s ease, color .15s ease;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      <span id="jdw-filterBadge" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:800; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
+    </button>
+    <button type="button" class="jdw-icon-btn" id="jdw-viewToggleBtn" title="Ganti Tampilan Tabel/Kartu" aria-label="Ganti Tampilan">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+    </button>
+  </div>
+
+  <!-- Result Counter & Section Label -->
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding:0 2px;">
+    <div style="font-size:11px; font-weight:700; color:var(--ink);" id="jdw-sectionLabel">Daftar Jadwal Mengajar</div>
+    <div style="font-size:10px; color:var(--ink-soft); font-family:monospace;" id="jdw-resultCount">0 Sesi</div>
+  </div>
+
+  <!-- Main Content Area: Cards Container (Mobile) or Table (Desktop) -->
+  <div id="jdw-list"><div class="empty-state" style="padding:24px;">Memuat data jadwal...</div></div>
+
+  <!-- Modal Tambah Jadwal -->
+  <div class="modal-overlay" id="jdw-modal" hidden>
+    <div class="modal-sheet">
+      <h3 id="jdw-modalTitle" style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Tambah Jadwal Mengajar</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 10px;">Atur hari dan jam sesi belajar untuk kontrak tutor.</p>
+      <div id="jdw-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
+
+      <div class="jdw-group-title">Pilih Kontrak &amp; Tutor</div>
+      <div class="jdw-group" style="margin-bottom:8px;">
+        <div class="jdw-row">
+          <label for="jdw-kontrakTutorBtn">Kontrak Siswa / Tutor</label>
+          <button type="button" id="jdw-kontrakTutorBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+            <span id="jdw-kontrakTutorLabel" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;">Pilih kontrak tutor...</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+          <input type="hidden" id="jdw-selectedKontrakTutorId">
+        </div>
+      </div>
+
+      <div class="jdw-group-title">Waktu Sesi</div>
+      <div class="jdw-group">
+        <div class="jdw-row">
+          <label for="jdw-hariBtn">Hari Belajar</label>
+          <button type="button" id="jdw-hariBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+            <span id="jdw-hariLabel">Senin</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+          <input type="hidden" id="jdw-hariValue" value="senin">
+        </div>
+        <div class="jdw-row">
+          <label for="jdw-jamMulaiBtn">Jam Mulai</label>
+          <button type="button" id="jdw-jamMulaiBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+            <span id="jdw-jamMulaiLabel">Pilih jam mulai...</span>
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+          </button>
+          <input type="hidden" id="jdw-jamMulaiValue">
+        </div>
+      </div>
+      <p style="font-size:10.5px; color:var(--ink-soft); margin:6px 4px 0;" id="jdw-durasiInfo">Jam selesai otomatis dihitung berdasarkan durasi sesi tutor.</p>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="jdw-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="jdw-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Pemilih Kontrak Tutor (dengan Search Bar) -->
+  <div class="modal-overlay" id="jdw-contractPickerModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 8px;">Pilih Kontrak Tutor</h3>
+      <div style="position:relative; margin-bottom:8px;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="jdw-contractSearchInput" placeholder="Cari siswa, tutor, atau mapel..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box; outline:none;">
+      </div>
+      <div id="jdw-contractList" style="margin-bottom:6px; max-height:50vh; overflow-y:auto;"></div>
+      <div class="modal-actions" style="margin-top:10px;">
+        <button type="button" class="btn btn-outline" id="jdw-contractCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Pilih Hari -->
+  <div class="modal-overlay" id="jdw-hariPickerModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-width:320px;">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 8px;">Pilih Hari</h3>
+      <div id="jdw-hariPickerList"></div>
+      <div class="modal-actions" style="margin-top:10px;">
+        <button type="button" class="btn btn-outline" id="jdw-hariPickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Pilih Jam Mulai (Apple Style) -->
+  <div class="modal-overlay" id="jdw-timePickerModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-width:300px;">
+      <h3 style="text-align:center; font-size:13.5px; font-weight:700; margin:0 0 8px;">Pilih Jam Mulai</h3>
+      <div style="display:flex; gap:10px; justify-content:center; align-items:center; margin:6px 0 14px;">
+        <div id="jdw-tpHourList" style="height:160px; overflow-y:auto; width:70px; border:1px solid var(--border); border-radius:10px; scroll-snap-type:y mandatory;"></div>
+        <span style="font-size:18px; font-weight:800; color:var(--ink);">:</span>
+        <div id="jdw-tpMinuteList" style="height:160px; overflow-y:auto; width:70px; border:1px solid var(--border); border-radius:10px; scroll-snap-type:y mandatory;"></div>
+      </div>
+      <div class="modal-actions" style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-outline" id="jdw-tpCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="jdw-tpConfirmBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Pilih</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Hapus Jadwal -->
+  <div class="modal-overlay" id="jdw-confirmModal" hidden>
+    <div class="modal-sheet" style="max-width:360px;">
+      <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </div>
+      <h3 style="text-align:center; font-size:13.5px; font-weight:700; margin:0 0 4px;" id="jdw-confirmTitle">Hapus Slot Jadwal?</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;" id="jdw-confirmDesc">Slot jadwal ini akan dihapus permanen.</p>
+      <div class="modal-actions" style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-outline" id="jdw-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="jdw-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1; background:#ff3b30;">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Filter Jadwal -->
+  <div class="modal-overlay" id="jdw-filterModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-height:88vh; overflow-y:auto; max-width:400px;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px;">
+        <div>
+          <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Filter</h3>
+          <p style="font-size:11px; color:var(--ink-soft); margin:0;">Saring daftar jadwal sesuai kebutuhan.</p>
+        </div>
+        <button type="button" id="jdw-filterCloseXBtn" aria-label="Tutup" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:4px; display:flex; margin-top:-2px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="jdw-group-title">Hari Belajar</div>
+      <div class="jdw-group" style="margin-bottom:4px;">
+        <div class="jdw-row">
+          <select id="jdw-filterHari" class="jdw-filter-select">
+            <option value="semua">Semua Hari</option>
+            <option value="hari_ini">Hari Ini</option>
+            <option value="senin">Senin</option>
+            <option value="selasa">Selasa</option>
+            <option value="rabu">Rabu</option>
+            <option value="kamis">Kamis</option>
+            <option value="jumat">Jumat</option>
+            <option value="sabtu">Sabtu</option>
+            <option value="minggu">Minggu</option>
+            <option value="fleksibel">Fleksibel</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="jdw-group-title">Tutor</div>
+      <div class="jdw-group" style="margin-bottom:4px;">
+        <div class="jdw-row">
+          <select id="jdw-filterTutor" class="jdw-filter-select">
+            <option value="">Semua Tutor</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="jdw-group-title">Siswa</div>
+      <div class="jdw-group" style="margin-bottom:4px;">
+        <div class="jdw-row">
+          <select id="jdw-filterSiswa" class="jdw-filter-select">
+            <option value="">Semua Siswa</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="jdw-group-title">Paket Belajar</div>
+      <div class="jdw-group" style="margin-bottom:4px;">
+        <div class="jdw-row">
+          <select id="jdw-filterPaket" class="jdw-filter-select">
+            <option value="">Semua Paket Belajar</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="jdw-filterResetBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Reset</button>
+        <button type="button" class="btn btn-primary" id="jdw-filterApplyBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Terapkan Filter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Pilihan WhatsApp (Tutor atau Ortu) -->
+  <div class="modal-overlay" id="jdw-waModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-width:360px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <div style="font-size:13px; font-weight:700; color:var(--ink);">Hubungi via WhatsApp</div>
+        <button type="button" id="jdw-waCloseXBtn" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:4px; display:flex;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Info Jadwal Ringkas -->
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:11px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+          <span style="color:var(--ink-soft);">Siswa:</span>
+          <span style="font-weight:600; color:var(--ink);" id="jdw-waModalSiswa">-</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+          <span style="color:var(--ink-soft);">Tutor &amp; Mapel:</span>
+          <span style="font-weight:600; color:var(--ink);"><span id="jdw-waModalTutor">-</span> (<span id="jdw-waModalMapel">-</span>)</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--ink-soft);">Jadwal:</span>
+          <span style="font-weight:600; color:var(--ink);" id="jdw-waModalJadwal">-</span>
+        </div>
+      </div>
+
+      <!-- Pilihan WA -->
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button type="button" id="jdw-waActionTutor" class="jdw-wa-action-card">
+          <div class="jdw-wa-action-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg>
+          </div>
+          <div style="min-width:0; text-align:left; flex:1;">
+            <div style="font-size:12px; font-weight:700; color:var(--ink);">Chat WhatsApp Tutor</div>
+            <div id="jdw-waActionTutorSub" style="font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;">-</div>
+          </div>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button type="button" id="jdw-waActionOrtu" class="jdw-wa-action-card">
+          <div class="jdw-wa-action-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg>
+          </div>
+          <div style="min-width:0; text-align:left; flex:1;">
+            <div style="font-size:12px; font-weight:700; color:var(--ink);">Chat WhatsApp Orang Tua</div>
+            <div id="jdw-waActionOrtuSub" style="font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;">-</div>
+          </div>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-actions" style="margin-top:12px;">
+        <button type="button" class="btn btn-outline" id="jdw-waCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['jadwal'] = function () { jdwInit(); };
+
+  var JDW_HARI_MAP = {
+    'senin': 'Senin', 'selasa': 'Selasa', 'rabu': 'Rabu',
+    'kamis': 'Kamis', 'jumat': 'Jumat', 'sabtu': 'Sabtu',
+    'minggu': 'Minggu', 'fleksibel': 'Fleksibel'
+  };
+  var JDW_HARI_ORDER = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu', 'fleksibel'];
+  var JDW_HARI_OPTIONS = [
+    { value: 'senin', label: 'Senin' }, { value: 'selasa', label: 'Selasa' }, { value: 'rabu', label: 'Rabu' },
+    { value: 'kamis', label: 'Kamis' }, { value: 'jumat', label: 'Jumat' }, { value: 'sabtu', label: 'Sabtu' },
+    { value: 'minggu', label: 'Minggu' }, { value: 'fleksibel', label: 'Fleksibel (Berubah-ubah)' }
+  ];
+
+  var JDW_COLORS = ['#378ADD', '#E24B4A', '#639922', '#7F77DD', '#D85A30', '#D4537E', '#0F9E86', '#BA7517'];
+  function jdwColorForTutor(tutorId) {
+    var str = String(tutorId || 'tutor');
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+    return JDW_COLORS[hash % JDW_COLORS.length];
+  }
+
+  var jdwState = {
+    initialized: false,
+    kontrakList: [],
+    scheduleRows: [],        // 1 item = 1 schedule slot
+    activeContractTutors: [],// active contract tutor options for the modal
+    filterHari: 'semua',
+    filterTutor: '',
+    filterSiswa: '',
+    filterPaket: '',
+    search: '',
+    sortField: 'hari',
+    sortDir: 'asc',
+    viewMode: (function () {
+      try {
+        var saved = localStorage.getItem('genio_jdw_view_mode');
+        if (saved === 'cards' || saved === 'table') return saved;
+      } catch (e) {}
+      var isDesktop = window.matchMedia && window.matchMedia('(min-width: 900px)').matches;
+      return isDesktop ? 'table' : 'cards';
+    })(),
+    selectedContractTutor: null
+  };
+
+  function jdwEscape(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+  function jdwCapitalize(s) {
+    if (!s) return '';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+  function jdwWaLink(hp) {
+    if (!hp) return '';
+    var clean = String(hp).replace(/\D/g, '');
+    if (clean.startsWith('0')) clean = '62' + clean.slice(1);
+    return 'https://wa.me/' + clean;
+  }
+
+  function jdwInit() {
+    if (!jdwState.initialized) {
+      jdwState.initialized = true;
+
+      // Event listeners
+      document.getElementById('jdw-addBtn').addEventListener('click', function () { jdwOpenModal(); });
+      document.getElementById('jdw-searchInput').addEventListener('input', function (e) {
+        jdwState.search = e.target.value.trim().toLowerCase();
+        jdwRenderList();
+      });
+
+      var viewBtn = document.getElementById('jdw-viewToggleBtn');
+      if (viewBtn) viewBtn.addEventListener('click', jdwToggleViewMode);
+
+      // Filter modal buttons
+      document.getElementById('jdw-filterBtn').addEventListener('click', jdwOpenFilterModal);
+      document.getElementById('jdw-filterCloseXBtn').addEventListener('click', jdwCloseFilterModal);
+      document.getElementById('jdw-filterResetBtn').addEventListener('click', jdwResetFilters);
+      document.getElementById('jdw-filterApplyBtn').addEventListener('click', jdwApplyFilters);
+      document.getElementById('jdw-filterModal').addEventListener('click', function (e) {
+        if (e.target === this) jdwCloseFilterModal();
+      });
+
+      // WhatsApp modal buttons
+      document.getElementById('jdw-waCloseXBtn').addEventListener('click', jdwCloseWaModal);
+      document.getElementById('jdw-waCancelBtn').addEventListener('click', jdwCloseWaModal);
+      document.getElementById('jdw-waModal').addEventListener('click', function (e) {
+        if (e.target === this) jdwCloseWaModal();
+      });
+
+      // Modal Tambah Jadwal buttons
+      document.getElementById('jdw-cancelBtn').addEventListener('click', jdwCloseModal);
+      document.getElementById('jdw-saveBtn').addEventListener('click', jdwSubmitForm);
+      document.getElementById('jdw-kontrakTutorBtn').addEventListener('click', jdwOpenContractPicker);
+      document.getElementById('jdw-contractCancelBtn').addEventListener('click', jdwCloseContractPicker);
+      document.getElementById('jdw-contractSearchInput').addEventListener('input', function (e) {
+        jdwRenderContractPickerList(e.target.value.trim().toLowerCase());
+      });
+
+      document.getElementById('jdw-hariBtn').addEventListener('click', jdwOpenHariPicker);
+      document.getElementById('jdw-hariPickerCancelBtn').addEventListener('click', jdwCloseHariPicker);
+
+      document.getElementById('jdw-jamMulaiBtn').addEventListener('click', jdwOpenTimePicker);
+      document.getElementById('jdw-tpCancelBtn').addEventListener('click', jdwCloseTimePicker);
+      document.getElementById('jdw-tpConfirmBtn').addEventListener('click', jdwConfirmTimePicker);
+
+      document.getElementById('jdw-confirmCancelBtn').addEventListener('click', jdwCloseConfirmModal);
+    }
+    jdwLoadAll();
+  }
+
+  /* ===== Filter Modal Functions ===== */
+  var jdwFilterModal = document.getElementById('jdw-filterModal');
+
+  function jdwOpenFilterModal() {
+    jdwPopulateFilterDropdowns();
+    jdwFilterModal.hidden = false;
+    requestAnimationFrame(function () { jdwFilterModal.classList.add('show'); });
+  }
+
+  function jdwCloseFilterModal() {
+    jdwFilterModal.classList.remove('show');
+    setTimeout(function () { jdwFilterModal.hidden = true; }, 280);
+  }
+
+  function jdwPopulateFilterDropdowns() {
+    var tutorSelect = document.getElementById('jdw-filterTutor');
+    var siswaSelect = document.getElementById('jdw-filterSiswa');
+    var paketSelect = document.getElementById('jdw-filterPaket');
+    var hariSelect = document.getElementById('jdw-filterHari');
+
+    var curTutor = jdwState.filterTutor;
+    var curSiswa = jdwState.filterSiswa;
+    var curPaket = jdwState.filterPaket;
+
+    var tutors = {};
+    var siswas = {};
+    var pakets = {};
+
+    jdwState.scheduleRows.forEach(function (r) {
+      if (r.tutorNama) tutors[r.tutorNama] = true;
+      if (r.siswaNama) siswas[r.siswaNama] = true;
+      if (r.paketNama && r.paketNama !== '-') pakets[r.paketNama] = true;
+    });
+
+    if (tutorSelect) {
+      var tutorOpts = '<option value="">Semua Tutor</option>';
+      Object.keys(tutors).sort().forEach(function (t) {
+        tutorOpts += '<option value="' + jdwEscape(t) + '"' + (curTutor === t ? ' selected' : '') + '>' + jdwEscape(t) + '</option>';
+      });
+      tutorSelect.innerHTML = tutorOpts;
+    }
+
+    if (siswaSelect) {
+      var siswaOpts = '<option value="">Semua Siswa</option>';
+      Object.keys(siswas).sort().forEach(function (s) {
+        siswaOpts += '<option value="' + jdwEscape(s) + '"' + (curSiswa === s ? ' selected' : '') + '>' + jdwEscape(s) + '</option>';
+      });
+      siswaSelect.innerHTML = siswaOpts;
+    }
+
+    if (paketSelect) {
+      var paketOpts = '<option value="">Semua Paket Belajar</option>';
+      Object.keys(pakets).sort().forEach(function (p) {
+        paketOpts += '<option value="' + jdwEscape(p) + '"' + (curPaket === p ? ' selected' : '') + '>' + jdwEscape(p) + '</option>';
+      });
+      paketSelect.innerHTML = paketOpts;
+    }
+
+    if (hariSelect) {
+      hariSelect.value = jdwState.filterHari || 'semua';
+    }
+  }
+
+  function jdwApplyFilters() {
+    var hariSelect = document.getElementById('jdw-filterHari');
+    var tutorSelect = document.getElementById('jdw-filterTutor');
+    var siswaSelect = document.getElementById('jdw-filterSiswa');
+    var paketSelect = document.getElementById('jdw-filterPaket');
+
+    jdwState.filterHari = (hariSelect && hariSelect.value) || 'semua';
+    jdwState.filterTutor = (tutorSelect && tutorSelect.value) || '';
+    jdwState.filterSiswa = (siswaSelect && siswaSelect.value) || '';
+    jdwState.filterPaket = (paketSelect && paketSelect.value) || '';
+
+    jdwUpdateFilterBadge();
+    jdwCloseFilterModal();
+    jdwRenderList();
+  }
+
+  function jdwResetFilters() {
+    jdwState.filterHari = 'semua';
+    jdwState.filterTutor = '';
+    jdwState.filterSiswa = '';
+    jdwState.filterPaket = '';
+
+    var hariSelect = document.getElementById('jdw-filterHari');
+    var tutorSelect = document.getElementById('jdw-filterTutor');
+    var siswaSelect = document.getElementById('jdw-filterSiswa');
+    var paketSelect = document.getElementById('jdw-filterPaket');
+    if (hariSelect) hariSelect.value = 'semua';
+    if (tutorSelect) tutorSelect.value = '';
+    if (siswaSelect) siswaSelect.value = '';
+    if (paketSelect) paketSelect.value = '';
+
+    jdwUpdateFilterBadge();
+    jdwCloseFilterModal();
+    jdwRenderList();
+  }
+
+  function jdwUpdateFilterBadge() {
+    var count = 0;
+    if (jdwState.filterHari && jdwState.filterHari !== 'semua') count++;
+    if (jdwState.filterTutor) count++;
+    if (jdwState.filterSiswa) count++;
+    if (jdwState.filterPaket) count++;
+
+    var badgeEl = document.getElementById('jdw-filterBadge');
+    var filterBtn = document.getElementById('jdw-filterBtn');
+    if (!badgeEl || !filterBtn) return;
+
+    badgeEl.textContent = count;
+    badgeEl.hidden = (count === 0);
+    filterBtn.style.borderColor = count > 0 ? 'var(--blue)' : 'var(--border)';
+    filterBtn.style.color = count > 0 ? 'var(--blue)' : 'var(--ink)';
+  }
+
+  /* ===== WhatsApp Choice Modal ===== */
+  var jdwWaModal = document.getElementById('jdw-waModal');
+
+  function jdwOpenWaModal(scheduleId) {
+    var row = jdwState.scheduleRows.find(function (s) { return String(s.id) === String(scheduleId); });
+    if (!row) return;
+
+    var timePart = row.jamMulai ? (row.jamMulai + (row.jamSelesai ? ' - ' + row.jamSelesai : '')) : '';
+    var formattedJadwal = jdwCapitalize(row.hari) + (timePart ? ' [' + timePart + ']' : '');
+
+    document.getElementById('jdw-waModalSiswa').textContent = row.siswaNama || '-';
+    document.getElementById('jdw-waModalTutor').textContent = row.tutorNama || '-';
+    document.getElementById('jdw-waModalMapel').textContent = row.mapel || '-';
+    document.getElementById('jdw-waModalJadwal').textContent = formattedJadwal;
+
+    var tutorSub = document.getElementById('jdw-waActionTutorSub');
+    tutorSub.textContent = row.tutorNama + (row.tutorHp ? ' (' + row.tutorHp + ')' : ' (Nomor belum tersedia)');
+    var tutorBtn = document.getElementById('jdw-waActionTutor');
+    tutorBtn.onclick = function () {
+      if (!row.tutorHp) {
+        genioToast('Nomor WhatsApp tutor belum tersedia', 'error');
+        return;
+      }
+      window.open(jdwWaLink(row.tutorHp), '_blank');
+      jdwCloseWaModal();
+    };
+
+    var ortuSub = document.getElementById('jdw-waActionOrtuSub');
+    var ortuLabel = row.ortuNama || ('Orang Tua ' + row.siswaNama);
+    ortuSub.textContent = ortuLabel + (row.ortuHp ? ' (' + row.ortuHp + ')' : ' (Nomor belum tersedia)');
+    var ortuBtn = document.getElementById('jdw-waActionOrtu');
+    ortuBtn.onclick = function () {
+      if (!row.ortuHp) {
+        genioToast('Nomor WhatsApp orang tua belum tersedia', 'error');
+        return;
+      }
+      window.open(jdwWaLink(row.ortuHp), '_blank');
+      jdwCloseWaModal();
+    };
+
+    jdwWaModal.hidden = false;
+    requestAnimationFrame(function () { jdwWaModal.classList.add('show'); });
+  }
+
+  function jdwCloseWaModal() {
+    if (!jdwWaModal) return;
+    jdwWaModal.classList.remove('show');
+    setTimeout(function () { jdwWaModal.hidden = true; }, 280);
+  }
+
+  function jdwToggleViewMode() {
+    jdwState.viewMode = (jdwState.viewMode === 'table') ? 'cards' : 'table';
+    try { localStorage.setItem('genio_jdw_view_mode', jdwState.viewMode); } catch (e) {}
+    jdwUpdateViewToggleUI();
+    jdwRenderList();
+  }
+
+  function jdwUpdateViewToggleUI() {
+    var btn = document.getElementById('jdw-viewToggleBtn');
+    if (!btn) return;
+    var isTable = jdwState.viewMode === 'table';
+    if (isTable) {
+      btn.setAttribute('title', 'Tampilkan sebagai Kartu Mobile');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Kartu');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
+    } else {
+      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Tabel');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+    }
+  }
+
+  /* ===== Load data ===== */
+  async function jdwLoadAll() {
+    var listEl = document.getElementById('jdw-list');
+    try {
+      var s = genioGetSession();
+      var results = await Promise.all([
+        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(id,nama,kelas,sekolah,unit_id,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp),jadwal(id,hari,jam_mulai,jam_selesai))&order=created_at.desc', s.access_token),
+        supaRest('units?select=id&order=nama_unit.asc', s.access_token)
+      ]);
+
+      jdwState.kontrakList = results[0] || [];
+      var unitCount = (results[1] && results[1].length) || 0;
+
+      // Extract all schedule rows (1 record per schedule slot) & active contract tutors
+      jdwState.scheduleRows = [];
+      jdwState.activeContractTutors = [];
+      var tutorCountSet = {};
+      var flexCount = 0;
+
+      var todayIdx = new Date().getDay(); // 0=Min, 1=Sen, ...
+      var todayHariCode = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][todayIdx];
+      var todayCount = 0;
+
+      jdwState.kontrakList.forEach(function (k) {
+        var isKontrakAktif = k.status === 'aktif';
+        (k.kontrak_tutor || []).forEach(function (kt) {
+          if (isKontrakAktif && kt.status === 'aktif') {
+            jdwState.activeContractTutors.push({
+              kontrakTutorId: kt.id,
+              kontrakId: k.id,
+              nomorKontrak: k.nomor_kontrak,
+              tutorId: kt.tutor_id,
+              tutorNama: (kt.users && kt.users.nama) || 'Tutor',
+              tutorHp: kt.users && kt.users.no_hp || '',
+              mapel: kt.mapel || 'Semua Mapel',
+              durasiMenit: kt.durasi_menit || 90,
+              siswaNama: (k.siswa && k.siswa.nama) || 'Siswa',
+              siswaKelas: (k.siswa && k.siswa.kelas) || '',
+              paketNama: (k.paket_belajar && k.paket_belajar.nama_paket) || '-',
+              unitNama: (k.units && k.units.nama_unit) || '',
+              jadwalCount: (kt.jadwal || []).length
+            });
+          }
+
+          (kt.jadwal || []).forEach(function (j) {
+            var hariLower = String(j.hari || '').toLowerCase();
+            if (hariLower === 'fleksibel') flexCount++;
+            if (hariLower === todayHariCode) todayCount++;
+            if (kt.tutor_id) tutorCountSet[kt.tutor_id] = true;
+
+            jdwState.scheduleRows.push({
+              id: j.id,
+              kontrakTutorId: kt.id,
+              kontrakId: k.id,
+              nomorKontrak: k.nomor_kontrak,
+              hari: hariLower,
+              jamMulai: (j.jam_mulai || '').slice(0, 5),
+              jamSelesai: (j.jam_selesai || '').slice(0, 5),
+              tutorId: kt.tutor_id,
+              tutorNama: (kt.users && kt.users.nama) || 'Tutor',
+              tutorHp: kt.users && kt.users.no_hp || '',
+              mapel: kt.mapel || '-',
+              durasiMenit: kt.durasi_menit || 90,
+              siswaNama: (k.siswa && k.siswa.nama) || '-',
+              siswaKelas: (k.siswa && k.siswa.kelas) || '',
+              siswaSekolah: (k.siswa && k.siswa.sekolah) || '',
+              ortuNama: (k.siswa && k.siswa.orangtua && k.siswa.orangtua.nama) || '',
+              ortuHp: (k.siswa && k.siswa.orangtua && k.siswa.orangtua.no_hp) || '',
+              paketNama: (k.paket_belajar && k.paket_belajar.nama_paket) || '-',
+              unitNama: (k.units && k.units.nama_unit) || '',
+              kontrakStatus: k.status
+            });
+          });
+        });
+      });
+
+      // Update Hero Stats
+      document.getElementById('jdw-heroUnitBadge').textContent = unitCount + ' Unit Cabang';
+      document.getElementById('jdw-heroTotal').textContent = jdwState.scheduleRows.length;
+      document.getElementById('jdw-heroToday').textContent = todayCount + ' Sesi';
+      document.getElementById('jdw-heroTutor').textContent = Object.keys(tutorCountSet).length + ' Tutor';
+      document.getElementById('jdw-heroFlex').textContent = flexCount + ' Sesi';
+
+      jdwPopulateFilterDropdowns();
+      jdwUpdateFilterBadge();
+      jdwRenderWeeklyMatrix();
+      jdwRenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="empty-state">Gagal memuat jadwal: ' + jdwEscape(err.message) + '</div>';
+    }
+  }
+
+  /* ===== Weekly Visual Grid Widget ===== */
+  var JDW_JM_HARI = ['fleksibel', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+  var JDW_JM_HARI_LABEL = { senin: 'Sen', selasa: 'Sel', rabu: 'Rab', kamis: 'Kam', jumat: 'Jum', sabtu: 'Sab', minggu: 'Min', fleksibel: 'Flx' };
+
+  function jdwRenderWeeklyMatrix() {
+    var gridEl = document.getElementById('jdw-jmGrid');
+    var legendEl = document.getElementById('jdw-jmLegend');
+
+    if (!jdwState.scheduleRows.length) {
+      gridEl.innerHTML = '<div class="empty-state" style="padding:14px; font-size:11px;">Belum ada jadwal sesi belajar. Tambahkan jadwal dengan tombol di atas.</div>';
+      legendEl.innerHTML = '';
+      return;
+    }
+
+    var jamSet = {};
+    jdwState.scheduleRows.forEach(function (s) {
+      if (s.jamMulai) jamSet[s.jamMulai] = true;
+    });
+    var jamList = Object.keys(jamSet).sort();
+    if (!jamList.length) jamList = ['08:00', '10:00', '13:00', '15:30', '19:00'];
+
+    var todayIdx = new Date().getDay();
+    var todayHari = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][todayIdx];
+
+    var html = '<div class="jdw-jm-grid">';
+    html += '<div></div>';
+    JDW_JM_HARI.forEach(function (h) {
+      var isToday = h === todayHari;
+      var isFlx = h === 'fleksibel';
+      var headStyle = (isToday || isFlx) ? ' style="background:var(--blue-tint); color:var(--blue); border-radius:4px; padding:2px 0;"' : '';
+      html += '<div class="jdw-jm-head"' + headStyle + '>' + JDW_JM_HARI_LABEL[h] + '</div>';
+    });
+
+    jamList.forEach(function (jam) {
+      html += '<div class="jdw-jm-hour">' + jam + '</div>';
+      JDW_JM_HARI.forEach(function (hari) {
+        var isToday = hari === todayHari;
+        var matches = jdwState.scheduleRows.filter(function (s) { return s.hari === hari && s.jamMulai === jam; });
+        var dots = matches.map(function (s) {
+          var color = jdwColorForTutor(s.tutorId);
+          var idx = jdwState.scheduleRows.indexOf(s);
+          return '<button type="button" class="jdw-jm-dot" data-idx="' + idx + '" style="background:' + color + ';" title="' + jdwEscape(s.tutorNama + ' - ' + s.siswaNama) + '" aria-label="' + jdwEscape(s.tutorNama) + '"></button>';
+        }).join('');
+        var cellStyle = isToday ? ' style="background:rgba(55,138,221,.08);"' : '';
+        html += '<div class="jdw-jm-cell"' + cellStyle + '>' + dots + '</div>';
+      });
+    });
+    html += '</div>';
+    gridEl.innerHTML = html;
+
+    // Dot click listeners for preview popover
+    document.querySelectorAll('.jdw-jm-dot').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var row = jdwState.scheduleRows[parseInt(btn.dataset.idx, 10)];
+        if (row) jdwOpenJmPreview(row, btn);
+      });
+    });
+
+    // Legend
+    var tutorMap = {};
+    jdwState.scheduleRows.forEach(function (s) {
+      if (s.tutorId) tutorMap[s.tutorId] = s.tutorNama;
+    });
+    legendEl.innerHTML = Object.keys(tutorMap).slice(0, 10).map(function (id) {
+      return '<span style="display:flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:' + jdwColorForTutor(id) + '; display:inline-block;"></span><span style="font-size:9.5px; color:var(--ink-soft);">' + jdwEscape(tutorMap[id]) + '</span></span>';
+    }).join('');
+  }
+
+  /* Popover Preview Logic */
+  var jdwJmPreviewModal = document.getElementById('jdw-jmPreviewModal');
+  var jdwJmPreviewRowId = null;
+
+  function jdwOpenJmPreview(row, dotEl) {
+    jdwJmPreviewRowId = row.id;
+    var initials = (row.tutorNama || 'T').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+    var color = jdwColorForTutor(row.tutorId);
+
+    var avatarEl = document.getElementById('jdw-jmPreviewAvatar');
+    avatarEl.textContent = initials;
+    avatarEl.style.background = color;
+    document.getElementById('jdw-jmPreviewTutor').textContent = row.tutorNama + (row.mapel ? ' (' + row.mapel + ')' : '');
+    document.getElementById('jdw-jmPreviewSiswa').textContent = 'Siswa: ' + row.siswaNama;
+    document.getElementById('jdw-jmPreviewJadwal').textContent = jdwCapitalize(row.hari) + ' \u2022 ' + row.jamMulai + (row.jamSelesai ? ' - ' + row.jamSelesai : '');
+
+    var chatTutorBtn = document.getElementById('jdw-jmChatTutorBtn');
+    var chatOrtuBtn = document.getElementById('jdw-jmChatOrtuBtn');
+    chatTutorBtn.href = jdwWaLink(row.tutorHp) || '#';
+    chatTutorBtn.onclick = row.tutorHp ? null : function (e) { e.preventDefault(); genioToast('Nomor WhatsApp tutor belum tersedia', 'error'); };
+    chatOrtuBtn.href = jdwWaLink(row.ortuHp) || '#';
+    chatOrtuBtn.onclick = row.ortuHp ? null : function (e) { e.preventDefault(); genioToast('Nomor WhatsApp orang tua belum tersedia', 'error'); };
+
+    var card = document.getElementById('jdw-jadwalMingguanCard');
+    var cardRect = card.getBoundingClientRect();
+    var dotRect = dotEl.getBoundingClientRect();
+    jdwJmPreviewModal.style.display = 'flex';
+    var popW = jdwJmPreviewModal.offsetWidth || 230;
+    var left = dotRect.left - cardRect.left + dotRect.width / 2 - popW / 2;
+    left = Math.max(4, Math.min(left, cardRect.width - popW - 4));
+    var top = dotRect.top - cardRect.top - jdwJmPreviewModal.offsetHeight - 8;
+    if (top < 0) top = dotRect.bottom - cardRect.top + 8;
+    jdwJmPreviewModal.style.left = left + 'px';
+    jdwJmPreviewModal.style.top = top + 'px';
+
+    clearTimeout(window._jdwJmPreviewTimer);
+    window._jdwJmPreviewTimer = setTimeout(jdwCloseJmPreview, 5000);
+  }
+  function jdwCloseJmPreview() {
+    jdwJmPreviewModal.style.display = 'none';
+  }
+  document.addEventListener('click', function (e) {
+    if (jdwJmPreviewModal.style.display === 'flex' && !jdwJmPreviewModal.contains(e.target) && !e.target.classList.contains('jdw-jm-dot')) {
+      jdwCloseJmPreview();
+    }
+  });
+  document.getElementById('jdw-jmPreviewGotoBtn').addEventListener('click', function () {
+    jdwCloseJmPreview();
+    if (jdwJmPreviewRowId) jdwScrollToSchedule(jdwJmPreviewRowId);
+  });
+
+  function jdwScrollToSchedule(id) {
+    var targetEl = document.querySelector('[data-schedule-id="' + id + '"]');
+    if (!targetEl) {
+      jdwResetFilters();
+      setTimeout(function () {
+        var el = document.querySelector('[data-schedule-id="' + id + '"]');
+        if (el) jdwAnimateHighlight(el);
+      }, 150);
+      return;
+    }
+    jdwAnimateHighlight(targetEl);
+  }
+  function jdwAnimateHighlight(el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.remove('jdw-row-highlight');
+    void el.offsetWidth;
+    el.classList.add('jdw-row-highlight');
+    setTimeout(function () { el.classList.remove('jdw-row-highlight'); }, 2400);
+  }
+
+  /* ===== Filtering & Sorting ===== */
+  function jdwGetFilteredRows() {
+    var todayIdx = new Date().getDay();
+    var todayHariCode = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][todayIdx];
+
+    return jdwState.scheduleRows.filter(function (r) {
+      // Filter Hari
+      if (jdwState.filterHari === 'hari_ini') {
+        if (r.hari !== todayHariCode) return false;
+      } else if (jdwState.filterHari && jdwState.filterHari !== 'semua') {
+        if (r.hari !== jdwState.filterHari) return false;
+      }
+
+      // Filter Tutor
+      if (jdwState.filterTutor && r.tutorNama !== jdwState.filterTutor) {
+        return false;
+      }
+
+      // Filter Siswa
+      if (jdwState.filterSiswa && r.siswaNama !== jdwState.filterSiswa) {
+        return false;
+      }
+
+      // Filter Paket Belajar
+      if (jdwState.filterPaket && r.paketNama !== jdwState.filterPaket) {
+        return false;
+      }
+
+      // Kata Kunci Search
+      if (jdwState.search) {
+        var q = jdwState.search;
+        var text = [r.tutorNama, r.mapel, r.siswaNama, r.paketNama, r.nomorKontrak, r.unitNama, r.hari].join(' ').toLowerCase();
+        if (text.indexOf(q) === -1) return false;
+      }
+      return true;
+    }).sort(function (a, b) {
+      var field = jdwState.sortField;
+      var dir = jdwState.sortDir === 'asc' ? 1 : -1;
+
+      if (field === 'hari') {
+        var oA = JDW_HARI_ORDER.indexOf(a.hari);
+        var oB = JDW_HARI_ORDER.indexOf(b.hari);
+        if (oA !== oB) return (oA - oB) * dir;
+        return (a.jamMulai || '').localeCompare(b.jamMulai || '') * dir;
+      }
+      if (field === 'tutor') return (a.tutorNama || '').localeCompare(b.tutorNama || '') * dir;
+      if (field === 'mapel') return (a.mapel || '').localeCompare(b.mapel || '') * dir;
+      if (field === 'siswa') return (a.siswaNama || '').localeCompare(b.siswaNama || '') * dir;
+      if (field === 'paket') return (a.paketNama || '').localeCompare(b.paketNama || '') * dir;
+      return 0;
+    });
+  }
+
+  function jdwGetSortIcon(field) {
+    if (jdwState.sortField === field) {
+      if (jdwState.sortDir === 'asc') {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+      } else {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
+      }
+    }
+    return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; opacity:.2; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+  }
+
+  /* ===== Main Render ===== */
+  function jdwRenderList() {
+    var listEl = document.getElementById('jdw-list');
+    var rows = jdwGetFilteredRows();
+
+    document.getElementById('jdw-resultCount').textContent = rows.length + ' Sesi';
+    jdwUpdateViewToggleUI();
+
+    if (!rows.length) {
+      listEl.classList.remove('jdw-cards-view');
+      listEl.innerHTML = '<div class="empty-state" style="padding:28px; background:#fff; border-radius:12px; border:1px solid var(--border);">' +
+        '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--ink-soft)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px; opacity:.6;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+        '<div style="font-size:12px; font-weight:700; color:var(--ink);">Tidak ada jadwal yang cocok</div>' +
+        '<div style="font-size:11px; color:var(--ink-soft); margin-top:2px;">Silakan sesuaikan filter, kata kunci pencarian, atau buat jadwal baru.</div>' +
+      '</div>';
+      return;
+    }
+
+    if (jdwState.viewMode === 'table') {
+      listEl.classList.remove('jdw-cards-view');
+      listEl.innerHTML = jdwRenderTable(rows);
+      jdwBindSortEvents();
+    } else {
+      listEl.classList.add('jdw-cards-view');
+      listEl.innerHTML = rows.map(jdwRenderCard).join('');
+    }
+    jdwBindActionEvents();
+  }
+
+  /* Desktop Table Render */
+  function jdwRenderTable(rows) {
+    var trs = rows.map(function (r, idx) {
+      var initials = (r.tutorNama || 'T').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+      var color = jdwColorForTutor(r.tutorId);
+
+      var unitBadge = r.unitNama
+        ? '<span style="background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); font-size:9px; font-weight:400; padding:1px 5px; border-radius:4px; margin-left:4px; white-space:nowrap;">' + jdwEscape(r.unitNama) + '</span>'
+        : '';
+
+      var sekolahLine = [r.siswaKelas, r.siswaSekolah].filter(Boolean).join(' • ');
+
+      var timePart = r.jamMulai ? (r.jamMulai + (r.jamSelesai ? ' - ' + r.jamSelesai : '')) : '';
+      var formattedJadwal = jdwCapitalize(r.hari) + (timePart ? ' [' + timePart + ']' : '');
+
+      return '' +
+        '<tr class="jdw-table-row" data-schedule-id="' + r.id + '">' +
+          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
+          '<td>' +
+            '<div style="display:flex; align-items:center; gap:6px;">' +
+              '<div style="width:20px; height:20px; border-radius:50%; background:' + color + '; color:#fff; display:flex; align-items:center; justify-content:center; font-size:8.5px; font-weight:700; flex:none;">' + initials + '</div>' +
+              '<span style="font-weight:400; color:var(--ink); font-size:11.5px;">' + jdwEscape(r.tutorNama) + '</span>' +
+            '</div>' +
+          '</td>' +
+          '<td>' +
+            '<span style="font-weight:400; color:var(--ink); font-size:11.5px;">' + jdwEscape(r.mapel) + '</span>' +
+          '</td>' +
+          '<td>' +
+            '<div style="display:flex; align-items:center; flex-wrap:wrap; gap:2px;">' +
+              '<span style="font-weight:400; color:var(--ink); font-size:11.5px;">' + jdwEscape(r.siswaNama) + '</span>' +
+              unitBadge +
+            '</div>' +
+            (sekolahLine ? '<div style="color:var(--ink-soft); font-size:10px; font-weight:400; margin-top:1.5px;">' + jdwEscape(sekolahLine) + '</div>' : '') +
+          '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' +
+            jdwEscape(r.paketNama) +
+          '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' +
+            jdwEscape(formattedJadwal) +
+          '</td>' +
+          '<td style="text-align:center; white-space:nowrap; width:70px;">' +
+            '<div style="display:inline-flex; align-items:center; gap:4px;">' +
+              '<button type="button" class="jdw-table-icon-btn jdw-wa-btn" data-id="' + r.id + '" title="Hubungi via WhatsApp" aria-label="WhatsApp" style="color:#25D366 !important;">' +
+                '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg>' +
+              '</button>' +
+              '<button type="button" class="jdw-table-icon-btn jdw-del-btn" data-id="' + r.id + '" title="Hapus Jadwal" aria-label="Hapus Jadwal">' +
+                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+              '</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+    }).join('');
+
+    return '' +
+      '<div class="jdw-table-card">' +
+        '<div class="jdw-table-wrap">' +
+          '<table class="jdw-table">' +
+            '<thead>' +
+              '<tr>' +
+                '<th style="width:34px; text-align:center;">No</th>' +
+                '<th class="jdw-sort-th" data-sort="tutor" title="Urutkan Tutor">' +
+                  '<span style="display:inline-flex; align-items:center;">Tutor' + jdwGetSortIcon('tutor') + '</span>' +
+                '</th>' +
+                '<th class="jdw-sort-th" data-sort="mapel" title="Urutkan Mapel">' +
+                  '<span style="display:inline-flex; align-items:center;">Mapel' + jdwGetSortIcon('mapel') + '</span>' +
+                '</th>' +
+                '<th class="jdw-sort-th" data-sort="siswa" title="Urutkan Siswa">' +
+                  '<span style="display:inline-flex; align-items:center;">Siswa' + jdwGetSortIcon('siswa') + '</span>' +
+                '</th>' +
+                '<th class="jdw-sort-th" data-sort="paket" title="Urutkan Paket">' +
+                  '<span style="display:inline-flex; align-items:center;">Paket Belajar' + jdwGetSortIcon('paket') + '</span>' +
+                '</th>' +
+                '<th class="jdw-sort-th" data-sort="hari" title="Urutkan Jadwal">' +
+                  '<span style="display:inline-flex; align-items:center;">Jadwal' + jdwGetSortIcon('hari') + '</span>' +
+                '</th>' +
+                '<th style="text-align:center; width:70px;">Aksi</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' + trs + '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>';
+  }
+
+  /* Card Render (Container View: 2 per row, Tutor on top, Siswa inside) */
+  function jdwRenderCard(r) {
+    var tutorInitials = (r.tutorNama || 'T').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+    var tutorColor = jdwColorForTutor(r.tutorId);
+
+    var unitBadge = r.unitNama
+      ? '<span style="background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); font-size:8.5px; font-weight:500; padding:1px 5px; border-radius:4px; white-space:nowrap; flex:none;">' + jdwEscape(r.unitNama) + '</span>'
+      : '';
+
+    var sekolahLine = [r.siswaKelas, r.siswaSekolah].filter(Boolean).join(' • ');
+
+    var timePart = r.jamMulai ? (r.jamMulai + (r.jamSelesai ? ' - ' + r.jamSelesai : '')) : '';
+    var formattedJadwal = jdwCapitalize(r.hari) + (timePart ? ' [' + timePart + ']' : '');
+
+    return '' +
+      '<div class="jdw-card" data-schedule-id="' + r.id + '">' +
+        '<div>' +
+          '<!-- Bagian Atas: Tutor & Jadwal -->' +
+          '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">' +
+            '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
+              '<div style="width:28px; height:28px; border-radius:50%; background:' + tutorColor + '; color:#fff; display:flex; align-items:center; justify-content:center; font-size:9.5px; font-weight:700; flex:none;">' + tutorInitials + '</div>' +
+              '<div style="min-width:0; flex:1;">' +
+                '<div style="font-size:12px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + jdwEscape(r.tutorNama) + '">' + jdwEscape(r.tutorNama) + '</div>' +
+                '<div style="font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + jdwEscape(r.mapel) + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="font-size:10.5px; font-weight:600; color:var(--ink); background:rgba(0,0,0,.035); border-radius:6px; padding:3px 7px; white-space:nowrap; flex:none;" title="' + jdwEscape(formattedJadwal) + '">' +
+              '<span style="color:var(--blue); font-weight:700;">' + jdwCapitalize(r.hari) + '</span>' + (timePart ? ' [' + timePart + ']' : '') +
+            '</div>' +
+          '</div>' +
+
+          '<!-- Bagian Dalam: Siswa -->' +
+          '<div style="background:#f8f9fb; border:1px solid var(--border); border-radius:8px; padding:7px 10px; margin-top:7px;">' +
+            '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">' +
+              '<div style="font-size:11px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;" title="' + jdwEscape(r.siswaNama) + '">' +
+                jdwEscape(r.siswaNama) +
+              '</div>' +
+              unitBadge +
+            '</div>' +
+            (sekolahLine ? '<div style="font-size:9.5px; color:var(--ink-soft); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + jdwEscape(sekolahLine) + '">' + jdwEscape(sekolahLine) + '</div>' : '') +
+            '<div style="font-size:9.5px; font-weight:600; color:var(--ink-soft); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + jdwEscape(r.paketNama) + '">' +
+              jdwEscape(r.paketNama) +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        '<!-- Aksi Bawah: WhatsApp & Hapus -->' +
+        '<div style="display:flex; gap:6px; margin-top:8px; align-items:center;">' +
+          '<button type="button" class="jdw-card-wa-btn" data-id="' + r.id + '" title="Hubungi via WhatsApp">' +
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="flex:none;"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg>' +
+            '<span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">WhatsApp</span>' +
+          '</button>' +
+          '<button type="button" class="jdw-table-icon-btn jdw-del-btn" data-id="' + r.id + '" title="Hapus Jadwal" aria-label="Hapus" style="height:26px !important; width:26px !important; border-radius:7px !important; flex:none;">' +
+            '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function jdwBindSortEvents() {
+    document.querySelectorAll('#jdw-list .jdw-sort-th').forEach(function (th) {
+      th.addEventListener('click', function () {
+        var field = th.dataset.sort;
+        if (jdwState.sortField === field) {
+          jdwState.sortDir = jdwState.sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          jdwState.sortField = field;
+          jdwState.sortDir = 'asc';
+        }
+        jdwRenderList();
+      });
+    });
+  }
+
+  function jdwBindActionEvents() {
+    document.querySelectorAll('#jdw-list .jdw-del-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.dataset.id;
+        jdwOpenConfirm('Hapus Slot Jadwal?', 'Slot jadwal ini akan dihapus permanen dari sistem.', function () {
+          return jdwDeleteSchedule(id);
+        });
+      });
+    });
+
+    document.querySelectorAll('#jdw-list .jdw-wa-btn, #jdw-list .jdw-card-wa-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.dataset.id;
+        jdwOpenWaModal(id);
+      });
+    });
+  }
+
+  /* ===== Generic Confirm Modal ===== */
+  var jdwConfirmModal = document.getElementById('jdw-confirmModal');
+  var jdwConfirmCallback = null;
+
+  function jdwOpenConfirm(title, desc, callback) {
+    document.getElementById('jdw-confirmTitle').textContent = title;
+    document.getElementById('jdw-confirmDesc').textContent = desc;
+    jdwConfirmCallback = callback;
+    jdwConfirmModal.hidden = false;
+    requestAnimationFrame(function () { jdwConfirmModal.classList.add('show'); });
+  }
+  function jdwCloseConfirmModal() {
+    jdwConfirmModal.classList.remove('show');
+    setTimeout(function () { jdwConfirmModal.hidden = true; }, 280);
+  }
+  document.getElementById('jdw-confirmOkBtn').addEventListener('click', async function () {
+    var btn = this;
+    var originalLabel = btn.textContent;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Memproses...';
+    try {
+      if (jdwConfirmCallback) await jdwConfirmCallback();
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      jdwCloseConfirmModal();
+    }
+  });
+
+  async function jdwDeleteSchedule(id) {
+    try {
+      var s = genioGetSession();
+      await supaRest('jadwal?id=eq.' + id, s.access_token, {
+        method: 'DELETE',
+        headers: { 'Prefer': 'return=minimal' }
+      });
+      genioToast('Jadwal berhasil dihapus', 'success');
+      jdwLoadAll();
+    } catch (err) {
+      genioToast('Gagal menghapus jadwal: ' + err.message, 'error');
+    }
+  }
+
+  /* ===== Modal Tambah Jadwal ===== */
+  var jdwModal = document.getElementById('jdw-modal');
+
+  function jdwOpenModal(defaultKontrakTutorId) {
+    document.getElementById('jdw-modalAlert').hidden = true;
+    jdwState.selectedContractTutor = null;
+
+    if (defaultKontrakTutorId) {
+      var opt = jdwState.activeContractTutors.find(function (c) { return c.kontrakTutorId === defaultKontrakTutorId; });
+      if (opt) jdwSelectContractTutor(opt);
+    } else if (jdwState.activeContractTutors.length > 0) {
+      // Pick first or keep empty
+      document.getElementById('jdw-selectedKontrakTutorId').value = '';
+      document.getElementById('jdw-kontrakTutorLabel').textContent = 'Pilih kontrak tutor...';
+      document.getElementById('jdw-kontrakTutorLabel').style.color = 'var(--ink-soft)';
+      document.getElementById('jdw-durasiInfo').textContent = 'Pilih kontrak tutor untuk menghitung jam selesai.';
+    }
+
+    document.getElementById('jdw-hariValue').value = 'senin';
+    document.getElementById('jdw-hariLabel').textContent = 'Senin';
+    document.getElementById('jdw-jamMulaiValue').value = '';
+    document.getElementById('jdw-jamMulaiLabel').textContent = 'Pilih jam mulai...';
+    document.getElementById('jdw-jamMulaiLabel').style.color = 'var(--ink-soft)';
+
+    jdwModal.hidden = false;
+    requestAnimationFrame(function () { jdwModal.classList.add('show'); });
+  }
+  function jdwCloseModal() {
+    jdwModal.classList.remove('show');
+    setTimeout(function () { jdwModal.hidden = true; }, 280);
+  }
+
+  function jdwSelectContractTutor(item) {
+    jdwState.selectedContractTutor = item;
+    document.getElementById('jdw-selectedKontrakTutorId').value = item.kontrakTutorId;
+    document.getElementById('jdw-kontrakTutorLabel').textContent = item.siswaNama + ' — ' + item.tutorNama + ' (' + item.mapel + ')';
+    document.getElementById('jdw-kontrakTutorLabel').style.color = 'var(--ink)';
+
+    jdwUpdateDurasiInfo();
+  }
+
+  function jdwUpdateDurasiInfo() {
+    var item = jdwState.selectedContractTutor;
+    var jamMulai = document.getElementById('jdw-jamMulaiValue').value;
+    var infoEl = document.getElementById('jdw-durasiInfo');
+
+    if (!item) {
+      infoEl.textContent = 'Pilih kontrak tutor untuk menghitung jam selesai.';
+      return;
+    }
+
+    var durasi = item.durasiMenit || 90;
+    if (jamMulai) {
+      var parts = jamMulai.split(':');
+      var totalMenit = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10) + durasi;
+      var jamSelesai = String(Math.floor(totalMenit / 60) % 24).padStart(2, '0') + ':' + String(totalMenit % 60).padStart(2, '0');
+      infoEl.innerHTML = 'Durasi: <b>' + durasi + ' menit</b> &bull; Jam Selesai: <b style="color:var(--ink);">' + jamSelesai + ' WIB</b>';
+    } else {
+      infoEl.textContent = 'Durasi sesi tutor ini: ' + durasi + ' menit. Jam selesai otomatis dihitung setelah jam mulai dipilih.';
+    }
+  }
+
+  async function jdwSubmitForm() {
+    var alertEl = document.getElementById('jdw-modalAlert');
+    var kontrakTutorId = document.getElementById('jdw-selectedKontrakTutorId').value;
+    var hari = document.getElementById('jdw-hariValue').value;
+    var jamMulai = document.getElementById('jdw-jamMulaiValue').value;
+
+    if (!kontrakTutorId) {
+      alertEl.textContent = 'Pilih kontrak tutor terlebih dahulu.'; alertEl.hidden = false; return;
+    }
+    if (!jamMulai) {
+      alertEl.textContent = 'Jam mulai sesi wajib dipilih.'; alertEl.hidden = false; return;
+    }
+    alertEl.hidden = true;
+
+    var item = jdwState.selectedContractTutor;
+    var durasi = (item && item.durasiMenit) || 90;
+    var parts = jamMulai.split(':');
+    var totalMenit = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10) + durasi;
+    var jamSelesai = String(Math.floor(totalMenit / 60) % 24).padStart(2, '0') + ':' + String(totalMenit % 60).padStart(2, '0');
+
+    var saveBtn = document.getElementById('jdw-saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+    try {
+      var s = genioGetSession();
+      await supaRest('jadwal', s.access_token, {
+        method: 'POST',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({
+          kontrak_tutor_id: kontrakTutorId,
+          hari: hari,
+          jam_mulai: jamMulai,
+          jam_selesai: jamSelesai
+        })
+      });
+      genioToast('Jadwal baru berhasil ditambahkan', 'success');
+      jdwCloseModal();
+      jdwLoadAll();
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menyimpan jadwal.';
+      alertEl.hidden = false;
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Simpan';
+    }
+  }
+
+  /* ===== Contract Tutor Selector Modal ===== */
+  var jdwContractPickerModal = document.getElementById('jdw-contractPickerModal');
+
+  function jdwOpenContractPicker() {
+    document.getElementById('jdw-contractSearchInput').value = '';
+    jdwRenderContractPickerList('');
+    jdwContractPickerModal.hidden = false;
+    requestAnimationFrame(function () { jdwContractPickerModal.classList.add('show'); });
+  }
+  function jdwCloseContractPicker() {
+    jdwContractPickerModal.classList.remove('show');
+    setTimeout(function () { jdwContractPickerModal.hidden = true; }, 280);
+  }
+
+  function jdwRenderContractPickerList(q) {
+    var container = document.getElementById('jdw-contractList');
+    var filtered = jdwState.activeContractTutors.filter(function (c) {
+      if (!q) return true;
+      var str = [c.siswaNama, c.tutorNama, c.mapel, c.paketNama, c.nomorKontrak, c.unitNama].join(' ').toLowerCase();
+      return str.indexOf(q) !== -1;
+    });
+
+    if (!filtered.length) {
+      container.innerHTML = '<div style="text-align:center; padding:16px; color:var(--ink-soft); font-size:11.5px;">Tidak ada kontrak tutor yang cocok.</div>';
+      return;
+    }
+
+    container.innerHTML = filtered.map(function (c) {
+      var scheduleBadge = c.jadwalCount > 0
+        ? '<span style="font-size:9.5px; font-weight:700; background:rgba(52,199,89,.12); color:#28a745; padding:2px 6px; border-radius:999px;">' + c.jadwalCount + ' Sesi</span>'
+        : '<span style="font-size:9.5px; font-weight:700; background:rgba(255,149,0,.12); color:#d97706; padding:2px 6px; border-radius:999px;">Belum Ada Jadwal</span>';
+
+      return '' +
+        '<button type="button" class="jdw-contract-opt" data-id="' + c.kontrakTutorId + '" style="display:block; width:100%; text-align:left; background:none; border:none; border-bottom:1px solid var(--border); padding:8px 6px; cursor:pointer; font-family:var(--font);">' +
+          '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">' +
+            '<div style="font-size:12px; font-weight:700; color:var(--ink);">' + jdwEscape(c.siswaNama) + '</div>' +
+            scheduleBadge +
+          '</div>' +
+          '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">' +
+            'Tutor: <b style="color:var(--ink);">' + jdwEscape(c.tutorNama) + '</b> (' + jdwEscape(c.mapel) + ') &bull; ' + jdwEscape(c.paketNama) +
+          '</div>' +
+        '</button>';
+    }).join('');
+
+    container.querySelectorAll('.jdw-contract-opt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var opt = jdwState.activeContractTutors.find(function (c) { return c.kontrakTutorId === btn.dataset.id; });
+        if (opt) jdwSelectContractTutor(opt);
+        jdwCloseContractPicker();
+      });
+    });
+  }
+
+  /* ===== Hari Picker Modal ===== */
+  var jdwHariPickerModal = document.getElementById('jdw-hariPickerModal');
+  function jdwOpenHariPicker() {
+    var cur = document.getElementById('jdw-hariValue').value;
+    document.getElementById('jdw-hariPickerList').innerHTML = JDW_HARI_OPTIONS.map(function (h) {
+      return '<button type="button" class="jdw-hari-opt' + (h.value === cur ? ' jdw-hari-selected' : '') + '" data-val="' + h.value + '">' +
+        '<span>' + h.label + '</span>' +
+        (h.value === cur ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : '') +
+      '</button>';
+    }).join('');
+
+    document.querySelectorAll('.jdw-hari-opt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var val = btn.dataset.val;
+        document.getElementById('jdw-hariValue').value = val;
+        document.getElementById('jdw-hariLabel').textContent = JDW_HARI_OPTIONS.find(function (h) { return h.value === val; }).label;
+        jdwCloseHariPicker();
+      });
+    });
+    jdwHariPickerModal.hidden = false;
+    requestAnimationFrame(function () { jdwHariPickerModal.classList.add('show'); });
+  }
+  function jdwCloseHariPicker() {
+    jdwHariPickerModal.classList.remove('show');
+    setTimeout(function () { jdwHariPickerModal.hidden = true; }, 280);
+  }
+
+  /* ===== Time Picker Modal ===== */
+  var jdwTimePickerModal = document.getElementById('jdw-timePickerModal');
+  var jdwTpHour = 8, jdwTpMinute = 0;
+
+  function jdwOpenTimePicker() {
+    var current = document.getElementById('jdw-jamMulaiValue').value;
+    if (current) {
+      var parts = current.split(':');
+      jdwTpHour = parseInt(parts[0], 10);
+      jdwTpMinute = Math.round(parseInt(parts[1], 10) / 5) * 5 % 60;
+    }
+    var hourList = document.getElementById('jdw-tpHourList');
+    var minuteList = document.getElementById('jdw-tpMinuteList');
+    hourList.innerHTML = '';
+    for (var h = 0; h < 24; h++) {
+      var hb = document.createElement('button');
+      hb.type = 'button'; hb.className = 'jdw-tp-opt' + (h === jdwTpHour ? ' jdw-tp-selected' : ''); hb.dataset.val = h;
+      hb.textContent = String(h).padStart(2, '0');
+      hb.addEventListener('click', function () {
+        jdwTpHour = parseInt(this.dataset.val, 10);
+        hourList.querySelectorAll('.jdw-tp-opt').forEach(function (o) { o.classList.remove('jdw-tp-selected'); });
+        this.classList.add('jdw-tp-selected');
+      });
+      hourList.appendChild(hb);
+    }
+    minuteList.innerHTML = '';
+    for (var m = 0; m < 60; m += 5) {
+      var mb = document.createElement('button');
+      mb.type = 'button'; mb.className = 'jdw-tp-opt' + (m === jdwTpMinute ? ' jdw-tp-selected' : ''); mb.dataset.val = m;
+      mb.textContent = String(m).padStart(2, '0');
+      mb.addEventListener('click', function () {
+        jdwTpMinute = parseInt(this.dataset.val, 10);
+        minuteList.querySelectorAll('.jdw-tp-opt').forEach(function (o) { o.classList.remove('jdw-tp-selected'); });
+        this.classList.add('jdw-tp-selected');
+      });
+      minuteList.appendChild(mb);
+    }
+    jdwTimePickerModal.hidden = false;
+    requestAnimationFrame(function () {
+      jdwTimePickerModal.classList.add('show');
+      var selH = hourList.querySelector('.jdw-tp-selected');
+      var selM = minuteList.querySelector('.jdw-tp-selected');
+      if (selH) hourList.scrollTop = selH.offsetTop - hourList.clientHeight / 2 + selH.clientHeight / 2;
+      if (selM) minuteList.scrollTop = selM.offsetTop - minuteList.clientHeight / 2 + selM.clientHeight / 2;
+    });
+  }
+  function jdwCloseTimePicker() {
+    jdwTimePickerModal.classList.remove('show');
+    setTimeout(function () { jdwTimePickerModal.hidden = true; }, 280);
+  }
+  function jdwConfirmTimePicker() {
+    var val = String(jdwTpHour).padStart(2, '0') + ':' + String(jdwTpMinute).padStart(2, '0');
+    document.getElementById('jdw-jamMulaiValue').value = val;
+    document.getElementById('jdw-jamMulaiLabel').textContent = val + ' WIB';
+    document.getElementById('jdw-jamMulaiLabel').style.color = 'var(--ink)';
+    jdwCloseTimePicker();
+    jdwUpdateDurasiInfo();
+  }
+</script>

@@ -1,0 +1,468 @@
+<div class="module-panel" data-module="kelola-unit" hidden>
+<style>
+  @media (min-width:900px){
+    .module-panel[data-module="kelola-unit"][hidden]{ display:none !important; }
+    .module-panel[data-module="kelola-unit"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+    }
+    .ku-hero-box{
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+    }
+    .ku-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
+    .ku-hero-badges{
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+    .ku-hero-badge-pill{
+      font-size: 8.5px !important;
+      padding: 2px 7px !important;
+    }
+    .ku-hero-sublabel{
+      display: none !important;
+    }
+    .ku-hero-counter{
+      margin-top: 0 !important;
+    }
+    .ku-hero-num-wrap{
+      display: flex !important;
+      align-items: baseline !important;
+      gap: 6px !important;
+      margin-top: 0 !important;
+    }
+    .ku-hero-val{
+      font-size: 18px !important;
+      line-height: 1.1 !important;
+    }
+    .ku-hero-unit{
+      font-size: 10.5px !important;
+    }
+    .ku-hero-stats-row{
+      flex: none !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 16px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+    }
+    .ku-hero-stat-card{
+      flex: none !important;
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+      min-width: 0 !important;
+    }
+    #ku-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+    #ku-list > .ku-card{ margin-bottom:0 !important; }
+    #ku-list > .ku-full-width{ grid-column:1/-1; }
+  }
+
+  .ku-hero-box{
+    background:var(--ink); color:#fff; border-radius:14px;
+    padding:12px 16px; margin-bottom:12px; box-sizing:border-box;
+  }
+  .ku-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .ku-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .ku-hero-badge-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+  }
+  .ku-hero-sublabel{
+    font-size: 10px;
+    opacity: .65;
+    margin-top: 8px;
+  }
+  .ku-hero-num-wrap{
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-top: 1px;
+  }
+  .ku-hero-val{
+    font-size: 21px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .ku-hero-unit{
+    font-size: 11.5px;
+    opacity: .6;
+    font-weight: 600;
+  }
+  .ku-hero-stats-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.14);
+  }
+  .ku-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 10px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ku-hero-stat-icon{
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .ku-hero-stat-label{
+    font-size: 9px;
+    opacity: .65;
+  }
+  .ku-hero-stat-val{
+    font-size: 11.5px;
+    font-weight: 800;
+    margin-top: 1px;
+  }
+
+  .ku-status-badge{
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:9.5px; font-weight:700; padding:0 8px; height:22px;
+    border-radius:999px; box-sizing:border-box; flex:none;
+  }
+
+  .radio-row{ display:flex; gap:8px; }
+  .radio-opt{
+    flex:1; text-align:center; padding:6px 10px; border-radius:8px;
+    border:1px solid var(--border); background:var(--surface);
+    font-size:11.5px; font-weight:600; color:var(--ink-soft); cursor:pointer; user-select:none;
+  }
+  .radio-opt input{ display:none; }
+  .radio-opt.checked{ border-color:var(--blue); background:var(--blue-tint); color:var(--blue); }
+
+  #ku-modal{ align-items:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease; }
+  #ku-modal.show{ opacity:1; }
+  #ku-modal .modal-sheet{
+    border-radius:16px; width:100%; max-width:400px; margin:0 auto; padding:16px 18px 18px;
+    transform:scale(.92) translateY(8px); transition:transform .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #ku-modal.show .modal-sheet{ transform:scale(1) translateY(0); }
+  #ku-modal .modal-sheet h3{ font-size:13.5px; font-weight:800; margin:0 0 10px; }
+  #ku-modal .field{ margin-bottom:10px; }
+  #ku-modal .field label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:3px; }
+  #ku-modal .field input[type="text"]{
+    width:100%; height:32px; border:1px solid var(--border); border-radius:8px;
+    padding:0 10px; font-family:var(--font); font-size:11.5px; background:var(--surface);
+    color:var(--ink); box-sizing:border-box; outline:none;
+  }
+  #ku-modal .modal-actions{ margin-top:14px; gap:8px; }
+  #ku-modal .modal-actions .btn{
+    height: 36px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 9px !important;
+    padding: 0 16px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
+  }
+
+  #ku-addBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+  #ku-addBtn:active{ transform:scale(.92); }
+</style>
+
+  <!-- Hero -->
+  <div class="ku-hero-box">
+    <div class="ku-hero-main-col">
+      <div class="ku-hero-badges">
+        <span class="ku-hero-badge-pill">
+          <span style="width:5px; height:5px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+          KELOLA UNIT
+        </span>
+      </div>
+      <div class="ku-hero-counter">
+        <div class="ku-hero-sublabel">Total Unit Terdaftar</div>
+        <div class="ku-hero-num-wrap">
+          <span class="ku-hero-val" id="ku-heroTotal">0</span>
+          <span class="ku-hero-unit">Unit</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ku-hero-stats-row">
+      <div class="ku-hero-stat-card">
+        <span class="ku-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div class="ku-hero-stat-label">Aktif</div>
+          <div class="ku-hero-stat-val" id="ku-heroAktif">0 Unit</div>
+        </div>
+      </div>
+      <div class="ku-hero-stat-card">
+        <span class="ku-hero-stat-icon" style="background:rgba(142,142,147,.25); color:#c7c7cc;">
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div class="ku-hero-stat-label">Nonaktif</div>
+          <div class="ku-hero-stat-val" id="ku-heroNonaktif">0 Unit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div style="display:flex; gap:6px; margin-bottom:10px;">
+    <div style="flex:1; position:relative;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="ku-searchInput" placeholder="Cari nama unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 32px; font-family:var(--font); font-size:11.5px; background:#fff; outline:none; box-sizing:border-box;">
+    </div>
+    <button id="ku-addBtn" aria-label="Tambah unit" style="width:32px; height:32px; border-radius:8px; background:var(--ink); color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
+
+  <div id="ku-list">
+    <div class="empty-state">Memuat data unit...</div>
+  </div>
+
+  <!-- Modal tambah/edit -->
+  <div class="modal-overlay" id="ku-modal" hidden>
+    <div class="modal-sheet">
+      <h3 id="ku-modalTitle">Tambah Unit</h3>
+      <div id="ku-modalAlert" class="alert alert-error" hidden></div>
+
+      <form id="ku-form">
+        <input type="hidden" id="ku-id">
+        <div class="field">
+          <label for="ku-nama">Nama unit</label>
+          <input type="text" id="ku-nama" required placeholder="mis. Condongcatur">
+        </div>
+        <div class="field" id="ku-statusField" hidden>
+          <label>Status</label>
+          <div class="radio-row">
+            <label class="radio-opt" data-val="aktif"><input type="radio" name="ku-status" value="aktif"> Aktif</label>
+            <label class="radio-opt" data-val="nonaktif"><input type="radio" name="ku-status" value="nonaktif"> Nonaktif</label>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="ku-cancelBtn">Batal</button>
+          <button type="submit" class="btn btn-primary" id="ku-saveBtn">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+
+  var kuLoaded = false;
+  var kuUnits = [];
+  var kuSearch = '';
+
+  window.genioModuleHandlers['kelola-unit'] = function () {
+    kuLoadList();
+  };
+
+  function kuEscape(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+
+  async function kuLoadList() {
+    var listEl = document.getElementById('ku-list');
+    try {
+      var s = genioGetSession();
+      var results = await Promise.all([
+        supaRest('units?select=*&order=nama_unit.asc', s.access_token),
+        supaRest('siswa?status=eq.aktif&select=unit_id', s.access_token)
+      ]);
+      kuUnits = results[0];
+      kuLoaded = true;
+
+      var siswaCountMap = {};
+      results[1].forEach(function (r) {
+        if (r.unit_id) siswaCountMap[r.unit_id] = (siswaCountMap[r.unit_id] || 0) + 1;
+      });
+      kuUnits.forEach(function (u) { u._siswaCount = siswaCountMap[u.id] || 0; });
+
+      var aktifCount = kuUnits.filter(function (u) { return u.status === 'aktif'; }).length;
+      var nonaktifCount = kuUnits.length - aktifCount;
+      document.getElementById('ku-heroTotal').textContent = kuUnits.length;
+      document.getElementById('ku-heroAktif').textContent = aktifCount + ' Unit';
+      document.getElementById('ku-heroNonaktif').textContent = nonaktifCount + ' Unit';
+
+      kuRenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="empty-state">Gagal memuat data unit: ' + kuEscape(err.message) + '</div>';
+    }
+  }
+
+  function kuRenderList() {
+    var listEl = document.getElementById('ku-list');
+    var rows = kuUnits.filter(function (u) {
+      return !kuSearch || u.nama_unit.toLowerCase().indexOf(kuSearch) !== -1;
+    });
+
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="ku-card ku-full-width empty-state">' +
+        (kuUnits.length ? 'Tidak ada unit yang cocok dengan pencarian.' : 'Belum ada unit. Tap tombol + untuk menambah.') +
+      '</div>';
+      return;
+    }
+
+    listEl.innerHTML = rows.map(function (u, idx) {
+      var isAktif = u.status === 'aktif';
+      var badge = isAktif
+        ? '<span class="ku-status-badge" style="background:rgba(52,199,89,.14); color:#28a745;"><span style="width:14px; height:14px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
+        : '<span class="ku-status-badge" style="background:rgba(142,142,147,.16); color:#8e8e93;"><span style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
+
+      return '' +
+        '<div class="card ku-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
+          '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
+            '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
+              '<div style="width:32px; height:32px; border-radius:8px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; flex:none; font-weight:800; font-size:12px;">' +
+                (idx + 1) +
+              '</div>' +
+              '<div style="min-width:0;">' +
+                '<h4 style="font-size:13px; font-weight:700; color:#1c1c1e; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + kuEscape(u.nama_unit) + '</h4>' +
+                '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:1px 0 0;">' + u._siswaCount + ' Siswa Aktif</p>' +
+              '</div>' +
+            '</div>' +
+            badge +
+          '</div>' +
+          '<button class="ku-edit-btn" data-edit="' + u.id + '" style="width:100%; height:28px; margin-top:10px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; cursor:pointer;">Edit Unit</button>' +
+        '</div>';
+    }).join('');
+
+    document.querySelectorAll('.ku-edit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var unit = kuUnits.find(function (u) { return u.id === btn.dataset.edit; });
+        kuOpenModal(unit);
+      });
+    });
+  }
+
+  document.getElementById('ku-searchInput').addEventListener('input', function (e) {
+    kuSearch = e.target.value.toLowerCase();
+    kuRenderList();
+  });
+
+  var kuModal = document.getElementById('ku-modal');
+  var kuForm = document.getElementById('ku-form');
+  var kuAlert = document.getElementById('ku-modalAlert');
+
+  function kuShowError(msg) { kuAlert.textContent = msg; kuAlert.hidden = false; }
+  function kuHideError() { kuAlert.hidden = true; }
+
+  function kuOpenModal(unit) {
+    kuHideError();
+    kuForm.reset();
+    document.querySelectorAll('#ku-form .radio-opt').forEach(function (o) { o.classList.remove('checked'); });
+
+    if (unit) {
+      document.getElementById('ku-modalTitle').textContent = 'Edit Unit';
+      document.getElementById('ku-id').value = unit.id;
+      document.getElementById('ku-nama').value = unit.nama_unit;
+      document.getElementById('ku-statusField').hidden = false;
+      var opt = document.querySelector('#ku-form .radio-opt[data-val="' + unit.status + '"]');
+      if (opt) { opt.classList.add('checked'); opt.querySelector('input').checked = true; }
+    } else {
+      document.getElementById('ku-modalTitle').textContent = 'Tambah Unit';
+      document.getElementById('ku-id').value = '';
+      document.getElementById('ku-statusField').hidden = true;
+    }
+    kuModal.hidden = false;
+    requestAnimationFrame(function () { kuModal.classList.add('show'); });
+  }
+  function kuCloseModal() {
+    kuModal.classList.remove('show');
+    setTimeout(function () { kuModal.hidden = true; }, 280);
+  }
+
+  document.getElementById('ku-addBtn').addEventListener('click', function () { kuOpenModal(null); });
+  document.getElementById('ku-cancelBtn').addEventListener('click', function () { kuCloseModal(); });
+
+  document.querySelectorAll('#ku-form .radio-opt').forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      document.querySelectorAll('#ku-form .radio-opt').forEach(function (o) { o.classList.remove('checked'); });
+      opt.classList.add('checked');
+      opt.querySelector('input').checked = true;
+    });
+  });
+
+  kuForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    kuHideError();
+
+    var id = document.getElementById('ku-id').value;
+    var nama = document.getElementById('ku-nama').value.trim();
+    if (!nama) { kuShowError('Nama unit wajib diisi.'); return; }
+
+    var saveBtn = document.getElementById('ku-saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+    try {
+      var s = genioGetSession();
+
+      if (id) {
+        var statusChecked = document.querySelector('#ku-form input[name="ku-status"]:checked');
+        await supaRest('units?id=eq.' + id, s.access_token, {
+          method: 'PATCH',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ nama_unit: nama, status: statusChecked ? statusChecked.value : 'aktif' })
+        });
+        genioToast('Unit berhasil diperbarui', 'success');
+      } else {
+        await supaRest('units', s.access_token, {
+          method: 'POST',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ nama_unit: nama, status: 'aktif' })
+        });
+        genioToast('Unit berhasil ditambahkan', 'success');
+      }
+
+      kuCloseModal();
+      kuLoadList();
+    } catch (err) {
+      kuShowError(err.message || 'Gagal menyimpan unit. Nama mungkin sudah dipakai.');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Simpan';
+    }
+  });
+</script>

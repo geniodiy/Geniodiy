@@ -1,0 +1,1441 @@
+<div class="module-panel" data-module="ortu-siswa" hidden>
+<style>
+  @media (min-width:900px){
+    .module-panel[data-module="ortu-siswa"][hidden]{ display:none !important; }
+    .module-panel[data-module="ortu-siswa"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+    }
+    .os-hero-sec{
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+    }
+    .os-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
+    .os-hero-badges{
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+    .os-hero-badge-pill{
+      font-size: 8.5px !important;
+      padding: 2px 7px !important;
+    }
+    .os-hero-unit-badge{
+      font-size: 9px !important;
+      padding: 2px 7px !important;
+    }
+    .os-hero-sublabel{
+      display: none !important;
+    }
+    .os-hero-counter{
+      margin-top: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+    }
+    .os-hero-num-wrap{
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      margin-top: 0 !important;
+    }
+    .os-hero-num{
+      font-size: 18px !important;
+      line-height: 1.1 !important;
+    }
+    .os-hero-unit{
+      font-size: 10.5px !important;
+    }
+    .os-hero-add-btn{
+      height: 26px !important;
+      font-size: 10.5px !important;
+      padding: 0 10px !important;
+      border-radius: 7px !important;
+      margin-left: 2px !important;
+    }
+    .os-hero-stats-row{
+      flex: none !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 16px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+    }
+    .os-hero-stat-card{
+      flex: none !important;
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+      min-width: 0 !important;
+    }
+    #os-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+    #os-list > .os-card{ margin-bottom:0 !important; }
+    #os-list > .os-full-width{ grid-column:1/-1; }
+
+    #os-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:12px; }
+    #os-toolbarRow .os-dock-sec{ flex:none; width:220px; margin-bottom:0 !important; }
+    #os-toolbarRow .os-search-sec{ flex:1; margin-bottom:0 !important; }
+  }
+
+  /* Tab switcher: dock + glider — sama persis mekanisme Gaji/Presensi */
+  .os-dock{
+    position:relative;
+    display:flex; align-items:center; height:38px;
+    background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px;
+    margin-bottom:12px;
+    touch-action:none; -webkit-user-select:none; user-select:none;
+    box-sizing:border-box;
+  }
+  .os-dock-glider{
+    position:absolute; top:3px; bottom:3px;
+    border-radius:8px; background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 1px 3px rgba(20,22,43,.08);
+    transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1);
+    z-index:1; pointer-events:none;
+  }
+  .os-dock-btn{
+    position:relative; z-index:2; flex:1; height:32px;
+    display:flex; align-items:center; justify-content:center; gap:5px;
+    background:none; border:none; cursor:pointer;
+    padding:0 10px; font-size:11.5px; font-family:var(--font);
+    color:var(--ink-soft); font-weight:700;
+    transition:color .18s ease; white-space:nowrap;
+  }
+  .os-dock-btn.os-dock-active{ color:var(--ink); font-weight:800; }
+
+  .os-status-badge{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:10px; font-weight:800; padding:0 9px; height:24px;
+    border-radius:999px; box-sizing:border-box; flex:none;
+  }
+
+  #os-addBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+  #os-addBtn:active{ transform:scale(.85); }
+
+  #os-modal, #os-editModal, #os-editOrtuBiodataModal, #os-editSiswaModal, #os-filterModal, #os-pickerModal, #os-ortuPickerModal{ align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease; }
+  #os-modal.show, #os-editModal.show, #os-editOrtuBiodataModal.show, #os-editSiswaModal.show, #os-filterModal.show, #os-pickerModal.show, #os-ortuPickerModal.show{ opacity:1; }
+  #os-modal .modal-sheet, #os-editModal .modal-sheet, #os-editOrtuBiodataModal .modal-sheet, #os-editSiswaModal .modal-sheet, #os-filterModal .modal-sheet, #os-pickerModal .modal-sheet, #os-ortuPickerModal .modal-sheet{ border-radius:16px; width:100%; max-width:400px; margin:0 auto; transform:scale(.88) translateY(10px); transition:transform .32s cubic-bezier(.34,1.56,.64,1); max-height:88vh; overflow-y:auto; padding:16px 18px 18px; box-sizing:border-box; }
+  #os-modal.show .modal-sheet, #os-editModal.show .modal-sheet, #os-editOrtuBiodataModal.show .modal-sheet, #os-editSiswaModal.show .modal-sheet, #os-filterModal.show .modal-sheet, #os-pickerModal.show .modal-sheet, #os-ortuPickerModal.show .modal-sheet{ transform:scale(1) translateY(0); }
+  #os-modal .field label{ font-size:10px; }
+
+  #os-modal .modal-actions .btn, #os-editModal .modal-actions .btn, #os-editOrtuBiodataModal .modal-actions .btn, #os-editSiswaModal .modal-actions .btn, #os-filterModal .modal-actions .btn, #os-pickerModal .modal-actions .btn, #os-ortuPickerModal .modal-actions .btn{
+    height: 36px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 9px !important;
+    padding: 0 16px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
+  }
+
+  .os-group-title{ font-size:10px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
+  .os-group-title:first-of-type{ margin-top:0; }
+  .os-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .os-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
+  .os-row:last-child{ border-bottom:none; }
+  .os-row label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:2px; }
+  .os-row input, .os-row select{
+    width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
+    background:none; color:var(--ink); outline:none;
+  }
+
+  .os-siswa-toggle-icon{ transition:transform .25s ease; }
+
+  /* Hero Ortu Siswa */
+  .os-hero-sec{
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .os-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .os-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .os-hero-badge-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .os-hero-unit-badge{
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .os-hero-sublabel{
+    font-size: 10.5px;
+    opacity: .65;
+    margin-top: 8px;
+  }
+  .os-hero-num-wrap{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .os-hero-num{
+    font-size: 21px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .os-hero-unit{
+    font-size: 11.5px;
+    opacity: .6;
+    font-weight: 600;
+  }
+  .os-hero-add-btn{
+    background: #fff;
+    color: var(--ink);
+    border: none;
+    border-radius: 8px;
+    height: 28px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--font);
+    flex: none;
+    white-space: nowrap;
+  }
+  .os-hero-stats-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.14);
+  }
+  .os-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 10px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .os-hero-stat-icon{
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .os-hero-stat-label{
+    font-size: 9.5px;
+    opacity: .65;
+  }
+  .os-hero-stat-val{
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: 1px;
+  }
+</style>
+
+  <!-- Hero -->
+  <div class="os-hero-sec">
+    <div class="os-hero-main-col">
+      <div class="os-hero-badges">
+        <span class="os-hero-badge-pill">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+          DATABASE WALI MURID
+        </span>
+        <span class="os-hero-unit-badge" id="os-heroUnitBadge">-</span>
+      </div>
+      <div class="os-hero-counter">
+        <div class="os-hero-sublabel">Total Orang Tua Terdaftar</div>
+        <div class="os-hero-num-wrap">
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span class="os-hero-num" id="os-heroTotal">0</span>
+            <span class="os-hero-unit">Orang Tua</span>
+          </div>
+          <button id="os-addBtn" aria-label="Tambah siswa" class="os-hero-add-btn">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Siswa
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="os-hero-stats-row">
+      <div class="os-hero-stat-card">
+        <span class="os-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div class="os-hero-stat-label">Siswa Aktif</div>
+          <div class="os-hero-stat-val" id="os-heroSiswaAktif">0 Siswa</div>
+        </div>
+      </div>
+      <div class="os-hero-stat-card">
+        <span class="os-hero-stat-icon" style="background:rgba(255,59,48,.2); color:#ff9c94;">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div class="os-hero-stat-label">Siswa Nonaktif</div>
+          <div class="os-hero-stat-val" id="os-heroSiswaNonaktif">0 Siswa</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="os-desktopAnchor"></div>
+
+  <!-- Tab switcher -->
+  <div class="os-dock os-dock-sec" id="os-dock">
+    <div class="os-dock-glider" id="os-dockGlider"></div>
+    <button class="os-dock-btn os-tab-btn os-dock-active" data-tab="aktif">
+      <span>Aktif</span>
+      <span id="os-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+    </button>
+    <button class="os-dock-btn os-tab-btn" data-tab="nonaktif">
+      <span>Nonaktif</span>
+      <span id="os-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+    </button>
+  </div>
+
+  <!-- Search + Filter -->
+  <div class="os-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
+    <div style="flex:1; position:relative;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="os-searchInput" placeholder="Cari nama orang tua, anak, sekolah, nomor WA, unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+    </div>
+    <button id="os-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      <span id="os-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:800; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
+    </button>
+  </div>
+
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+    <div id="os-sectionLabel" style="font-size:11.5px; color:var(--ink-soft); font-weight:600;">Data Orang Tua Aktif</div>
+    <span id="os-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:700; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Orang Tua</span>
+  </div>
+
+  <div id="os-list">
+    <div class="empty-state">Memuat data...</div>
+  </div>
+
+  <!-- Modal Filter -->
+  <div class="modal-overlay" id="os-filterModal" hidden>
+    <div class="modal-sheet" style="max-height:88vh; overflow-y:auto;">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Filter</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar orang tua berdasarkan unit atau jenjang anaknya.</p>
+
+      <div class="os-group-title">Unit / Cabang</div>
+      <div class="os-group" style="margin-bottom:4px;">
+        <button type="button" class="os-filter-row-btn" data-picker="unit" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="os-filterUnitSummary">Semua Unit</span>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="os-group-title">Jenjang</div>
+      <div class="os-group">
+        <button type="button" class="os-filter-row-btn" data-picker="jenjang" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+          <span id="os-filterJenjangSummary">Semua Jenjang</span>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="os-filterResetBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Reset</button>
+        <button type="button" class="btn btn-primary" id="os-filterApplyBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Terapkan Filter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Picker -->
+  <div class="modal-overlay" id="os-pickerModal" hidden style="z-index:70;">
+    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
+      <h3 id="os-pickerTitle" style="font-size:13.5px; font-weight:700; margin:0 0 10px;">Pilih</h3>
+      <div id="os-pickerList" style="margin-bottom:6px;"></div>
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
+        <button type="button" class="btn btn-outline" id="os-pickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="os-pickerDoneBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Selesai</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Pilih Orang Tua (dengan search bar) -->
+  <div class="modal-overlay" id="os-ortuPickerModal" hidden style="z-index:75;">
+    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 8px;">Pilih Orang Tua</h3>
+      <div style="position:relative; margin-bottom:8px;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="os-ortuPickerSearchInput" placeholder="Cari nama orang tua..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+      </div>
+      <div id="os-ortuPickerList" style="margin-bottom:6px;"></div>
+      <div class="modal-actions" style="margin-top:10px;">
+        <button type="button" class="btn btn-outline" id="os-ortuPickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Orang Tua -->
+  <div class="modal-overlay" id="os-editModal" hidden>
+    <div class="modal-sheet" style="max-height:88vh; overflow-y:auto;">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Edit Orang Tua</h3>
+      <div id="os-editOrtuAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
+
+      <div class="os-group-title">Biodata Orang Tua</div>
+      <div class="os-group" style="margin-bottom:8px;">
+        <div class="os-row"><span style="font-size:10px; font-weight:600; color:var(--ink-soft);">Nama Orang Tua</span><div id="os-viewOrtuNama" style="font-size:12.5px; font-weight:700; color:var(--ink); margin-top:1px;">-</div></div>
+        <div class="os-row"><span style="font-size:10px; font-weight:600; color:var(--ink-soft);">Nomor WhatsApp</span><div id="os-viewOrtuHp" style="font-size:12.5px; font-weight:700; color:var(--ink); margin-top:1px;">-</div></div>
+        <div class="os-row"><span style="font-size:10px; font-weight:600; color:var(--ink-soft);">Alamat</span><div id="os-viewOrtuAlamat" style="font-size:12.5px; font-weight:700; color:var(--ink); margin-top:1px;">-</div></div>
+      </div>
+      <button type="button" id="os-editOrtuBiodataBtn" style="width:100%; margin-bottom:14px; background:var(--ink); color:#fff; border:none; border-radius:8px; height:32px; font-size:11.5px; font-weight:700; cursor:pointer;">Edit Biodata</button>
+
+      <div class="os-group-title">Daftar Anak</div>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 8px;">Status aktif/nonaktif diubah lewat Edit Siswa.</p>
+      <div id="os-editList"></div>
+      <div class="modal-actions" style="margin-top:12px;">
+        <button type="button" class="btn btn-outline" id="os-editCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Edit Biodata Orang Tua -->
+  <div class="modal-overlay" id="os-editOrtuBiodataModal" hidden>
+    <div class="modal-sheet">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Edit Biodata Orang Tua</h3>
+      <div id="os-editOrtuBiodataAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
+
+      <div class="os-group-title">Data Orang Tua</div>
+      <div class="os-group">
+        <div class="os-row"><label for="os-editOrtuNama">Nama Orang Tua</label><input type="text" id="os-editOrtuNama"></div>
+        <div class="os-row"><label for="os-editOrtuHp">Nomor WhatsApp</label><input type="tel" id="os-editOrtuHp"></div>
+        <div class="os-row"><label for="os-editOrtuAlamat">Alamat</label><input type="text" id="os-editOrtuAlamat" placeholder="Opsional"></div>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="os-editOrtuBiodataCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="os-editOrtuSaveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Siswa -->
+  <div class="modal-overlay" id="os-editSiswaModal" hidden>
+    <div class="modal-sheet">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Edit Data Siswa</h3>
+      <div id="os-editSiswaAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
+      <input type="hidden" id="os-editSiswaId">
+      <input type="hidden" id="os-editSiswaOrtuId">
+
+      <div class="os-group-title">Data Siswa</div>
+      <div class="os-group">
+        <div class="os-row"><label for="os-editSiswaNama">Nama Siswa</label><input type="text" id="os-editSiswaNama"></div>
+        <div class="os-row"><label for="os-editSiswaKelas">Kelas</label><input type="text" id="os-editSiswaKelas"></div>
+        <div class="os-row"><label for="os-editSiswaSekolah">Sekolah</label><input type="text" id="os-editSiswaSekolah"></div>
+        <div class="os-row"><label for="os-editSiswaJenjang">Jenjang</label>
+          <select id="os-editSiswaJenjang">
+            <option value="">Pilih jenjang...</option>
+            <option value="SD">SD</option>
+            <option value="SMP">SMP</option>
+            <option value="SMA">SMA</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div class="os-row"><label>Jenis Kelamin</label>
+          <div style="display:flex; gap:6px; margin-top:2px;">
+            <label class="os-gender-opt" data-val="L" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-editSiswaGender" value="L" style="display:none;"> Laki-laki</label>
+            <label class="os-gender-opt" data-val="P" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-editSiswaGender" value="P" style="display:none;"> Perempuan</label>
+          </div>
+        </div>
+        <div class="os-row"><label>Status</label>
+          <div style="display:flex; gap:6px; margin-top:2px;">
+            <label class="os-editstatus-opt" data-val="aktif" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-editSiswaStatus" value="aktif" style="display:none;"> Aktif</label>
+            <label class="os-editstatus-opt" data-val="nonaktif" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-editSiswaStatus" value="nonaktif" style="display:none;"> Nonaktif</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="os-editSiswaCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="os-editSiswaSaveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tambah Orang Tua & Siswa -->
+  <div class="modal-overlay" id="os-modal" hidden>
+    <div class="modal-sheet">
+      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Tambah Siswa</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Pilih apakah siswa ini anak dari orang tua yang sudah terdaftar atau orang tua baru.</p>
+      <div id="os-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
+
+      <div class="field">
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="os-ortu-mode-btn" data-mode="baru" style="flex:1; padding:7px 4px; border-radius:8px; border:1.5px solid var(--blue); background:var(--blue-tint); color:var(--blue); font-size:11px; font-weight:700; cursor:pointer;">Orang Tua Baru</button>
+          <button type="button" class="os-ortu-mode-btn" data-mode="lama" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-size:11px; font-weight:700; cursor:pointer;">Orang Tua Lama</button>
+        </div>
+      </div>
+
+      <form id="os-form">
+        <div class="os-group-title">Data Orang Tua</div>
+        <div class="os-group" id="os-ortuBaruGroup" style="margin-bottom:4px;">
+          <div class="os-row"><label for="os-ortuNama">Nama Orang Tua</label><input type="text" id="os-ortuNama" placeholder="mis. Ridwan Fathir"></div>
+          <div class="os-row"><label for="os-ortuHp">Nomor WhatsApp</label><input type="tel" id="os-ortuHp" placeholder="08xxxxxxxxxx"></div>
+          <div class="os-row"><label for="os-ortuAlamat">Alamat</label><input type="text" id="os-ortuAlamat" placeholder="Opsional"></div>
+        </div>
+        <div class="os-group" id="os-ortuLamaGroup" style="margin-bottom:4px; display:none;">
+          <div class="os-row"><label for="os-ortuExistingBtn">Pilih Orang Tua</label>
+            <button type="button" id="os-ortuExistingBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="os-ortuExistingLabel">Pilih orang tua...</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+            <input type="hidden" id="os-ortuExisting">
+          </div>
+        </div>
+
+        <div class="os-group-title">Data Siswa</div>
+        <div class="os-group">
+          <div class="os-row"><label for="os-siswaNama">Nama Siswa</label><input type="text" id="os-siswaNama" required placeholder="mis. Almer Fathir"></div>
+          <div class="os-row"><label for="os-siswaKelas">Kelas</label><input type="text" id="os-siswaKelas" placeholder="mis. 9"></div>
+          <div class="os-row"><label for="os-siswaSekolah">Sekolah</label><input type="text" id="os-siswaSekolah" placeholder="mis. SMAN 8 Jakarta"></div>
+          <div class="os-row"><label for="os-siswaJenjang">Jenjang</label>
+            <select id="os-siswaJenjang" required style="font-weight:600;">
+              <option value="">Pilih jenjang...</option>
+              <option value="SD">SD</option>
+              <option value="SMP">SMP</option>
+              <option value="SMA">SMA</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="os-row"><label>Jenis Kelamin</label>
+            <div style="display:flex; gap:6px; margin-top:2px;">
+              <label class="os-gender-opt" data-val="L" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-siswaGender" value="L" style="display:none;"> Laki-laki</label>
+              <label class="os-gender-opt" data-val="P" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-siswaGender" value="P" style="display:none;"> Perempuan</label>
+            </div>
+          </div>
+          <div class="os-row"><label for="os-siswaUnit">Unit / Cabang</label>
+            <select id="os-siswaUnit" required style="font-weight:600;">
+              <option value="">Pilih unit...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+          <button type="button" class="btn btn-outline" id="os-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+          <button type="submit" class="btn btn-primary" id="os-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['ortu-siswa'] = function () { osInit(); };
+
+  var osState = {
+    tab: 'aktif',
+    ortuList: [],
+    search: '',
+    openCard: null,
+    initialized: false,
+    ortuMode: 'baru',
+    filterUnit: '',
+    filterJenjang: ''
+  };
+
+  function osEscape(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+
+  /* Layout desktop: Tab switcher + Search/Filter jadi satu baris toolbar.
+     Di mobile semua balik ke urutan asli. */
+  var OS_MOBILE_ORDER = ['.os-dock-sec', '.os-search-sec'];
+
+  function osApplyResponsiveLayout() {
+    var anchor = document.getElementById('os-desktopAnchor');
+    if (!anchor) return;
+    var isDesktop = window.matchMedia('(min-width:900px)').matches;
+    var toolbarRow = document.getElementById('os-toolbarRow');
+
+    if (isDesktop) {
+      if (!toolbarRow) {
+        toolbarRow = document.createElement('div');
+        toolbarRow.id = 'os-toolbarRow';
+        anchor.parentNode.insertBefore(toolbarRow, anchor.nextSibling);
+      }
+      var dockEl = document.querySelector('.os-dock-sec');
+      if (dockEl) toolbarRow.appendChild(dockEl);
+      var searchEl = document.querySelector('.os-search-sec');
+      if (searchEl) toolbarRow.appendChild(searchEl);
+    } else if (toolbarRow) {
+      var cursor = anchor;
+      OS_MOBILE_ORDER.forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (el) { cursor.parentNode.insertBefore(el, cursor.nextSibling); cursor = el; }
+      });
+      toolbarRow.remove();
+    }
+  }
+
+  function osInit() {
+    if (!osState.initialized) {
+      osState.initialized = true;
+      initOsTabScrubbing();
+      setTimeout(osUpdateDockGlider, 50);
+      window.addEventListener('resize', osUpdateDockGlider);
+
+      osApplyResponsiveLayout();
+      var osLayoutResizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(osLayoutResizeTimer);
+        osLayoutResizeTimer = setTimeout(osApplyResponsiveLayout, 150);
+      });
+
+      document.getElementById('os-searchInput').addEventListener('input', function (e) {
+        osState.search = e.target.value.toLowerCase();
+        osRenderList();
+      });
+      document.getElementById('os-addBtn').addEventListener('click', osOpenModal);
+      document.getElementById('os-cancelBtn').addEventListener('click', osCloseModal);
+      document.getElementById('os-form').addEventListener('submit', osSubmitForm);
+      document.getElementById('os-editCancelBtn').addEventListener('click', osCloseEditModal);
+      document.getElementById('os-filterBtn').addEventListener('click', osOpenFilterModal);
+
+      document.querySelectorAll('.os-ortu-mode-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () { osSetOrtuMode(btn.dataset.mode); });
+      });
+
+      document.querySelectorAll('#os-modal .os-gender-opt').forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          document.querySelectorAll('#os-modal .os-gender-opt').forEach(function (o) {
+            o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
+          });
+          opt.style.background = opt.dataset.val === 'P' ? 'rgba(255,59,48,.1)' : 'var(--blue-tint)';
+          opt.style.color = opt.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)';
+          opt.style.borderColor = opt.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)';
+          opt.querySelector('input').checked = true;
+        });
+      });
+
+      document.querySelectorAll('#os-modal input, #os-modal select, #os-editOrtuBiodataModal input, #os-editSiswaModal input, #os-editSiswaModal select').forEach(function (el) {
+        el.addEventListener('focus', function () {
+          setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+        });
+      });
+    }
+    osLoadAll();
+  }
+
+  async function osLoadAll() {
+    var listEl = document.getElementById('os-list');
+    try {
+      var s = genioGetSession();
+      var results = await Promise.all([
+        supaRest('orangtua?select=id,nama,no_hp,alamat&order=nama.asc', s.access_token),
+        supaRest('siswa?select=id,nama,orangtua_id,unit_id,status,kelas,sekolah,jenjang,jenis_kelamin,units(nama_unit)', s.access_token),
+        supaRest('units?select=id&order=nama_unit.asc', s.access_token)
+      ]);
+      var ortuRows = results[0];
+      var siswaRows = results[1];
+      var unitCount = results[2].length;
+
+      var siswaByOrtu = {};
+      siswaRows.forEach(function (sw) {
+        if (!sw.orangtua_id) return;
+        (siswaByOrtu[sw.orangtua_id] = siswaByOrtu[sw.orangtua_id] || []).push(sw);
+      });
+
+      osState.ortuList = ortuRows.map(function (o) {
+        var anak = siswaByOrtu[o.id] || [];
+        var aktifCount = anak.filter(function (a) { return a.status === 'aktif'; }).length;
+        var nonaktifCount = anak.length - aktifCount;
+        var unitNama = (anak[0] && anak[0].units && anak[0].units.nama_unit) || null;
+        return {
+          id: o.id, nama: o.nama, no_hp: o.no_hp, alamat: o.alamat,
+          anak: anak, aktifCount: aktifCount, nonaktifCount: nonaktifCount,
+          status: aktifCount > 0 ? 'aktif' : 'nonaktif',
+          unitNama: unitNama
+        };
+      });
+
+      var totalSiswaAktif = siswaRows.filter(function (sw) { return sw.status === 'aktif'; }).length;
+      var totalSiswaNonaktif = siswaRows.length - totalSiswaAktif;
+      var aktifOrtuCount = osState.ortuList.filter(function (o) { return o.status === 'aktif'; }).length;
+      var nonaktifOrtuCount = osState.ortuList.length - aktifOrtuCount;
+
+      document.getElementById('os-heroUnitBadge').textContent = unitCount + ' Unit';
+      document.getElementById('os-heroTotal').textContent = osState.ortuList.length;
+      document.getElementById('os-heroSiswaAktif').textContent = totalSiswaAktif + ' Siswa';
+      document.getElementById('os-heroSiswaNonaktif').textContent = totalSiswaNonaktif + ' Siswa';
+      document.getElementById('os-aktifCount').textContent = aktifOrtuCount;
+      document.getElementById('os-nonaktifCount').textContent = nonaktifOrtuCount;
+
+      osRenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + osEscape(err.message) + '</div>';
+    }
+  }
+
+  function osMatchesSearch(o) {
+    if (!osState.search) return true;
+    var q = osState.search;
+    if ((o.nama || '').toLowerCase().indexOf(q) !== -1) return true;
+    if ((o.no_hp || '').toLowerCase().indexOf(q) !== -1) return true;
+    if ((o.unitNama || '').toLowerCase().indexOf(q) !== -1) return true;
+    return o.anak.some(function (a) {
+      return (a.nama || '').toLowerCase().indexOf(q) !== -1 || (a.sekolah || '').toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  function osMatchesFilters(o) {
+    if (!osState.filterUnit && !osState.filterJenjang) return true;
+    return o.anak.some(function (a) {
+      var okUnit = !osState.filterUnit || a.unit_id === osState.filterUnit;
+      var okJenjang = !osState.filterJenjang || a.jenjang === osState.filterJenjang;
+      return okUnit && okJenjang;
+    });
+  }
+
+  function osRenderList() {
+    var listEl = document.getElementById('os-list');
+    var rows = osState.ortuList.filter(function (o) { return o.status === osState.tab; }).filter(osMatchesSearch).filter(osMatchesFilters);
+
+    document.getElementById('os-sectionLabel').textContent = osState.tab === 'aktif' ? 'Data Orang Tua Aktif' : 'Data Orang Tua Nonaktif';
+    document.getElementById('os-resultCount').textContent = rows.length + ' Orang Tua';
+
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="os-card os-full-width empty-state">Tidak ada data orang tua yang cocok.</div>';
+      return;
+    }
+
+    listEl.innerHTML = rows.map(osRenderCard).join('');
+    osBindCardEvents();
+  }
+
+  function osRenderCard(o) {
+    var isAktif = o.status === 'aktif';
+    var initials = (o.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+    var statusBadge = isAktif
+      ? '<span class="os-status-badge" style="background:rgba(52,199,89,.14); color:#28a745;"><span style="width:14px; height:14px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
+      : '<span class="os-status-badge" style="background:rgba(255,59,48,.12); color:#ff3b30;"><span style="width:14px; height:14px; border-radius:50%; background:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
+
+    var unitBadge = o.unitNama
+      ? '<span style="background:var(--blue); color:#fff; font-size:10px; font-weight:700; padding:3px 9px; border-radius:999px; white-space:nowrap;">' + osEscape(o.unitNama) + '</span>'
+      : '';
+
+    var subtitleParts = [];
+    if (o.anak.length === 1) {
+      subtitleParts.push('Wali dari 1 Siswa ' + (o.anak[0].status === 'aktif' ? 'Aktif' : 'Nonaktif'));
+    } else if (o.anak.length > 1) {
+      subtitleParts.push('Wali dari ' + o.anak.length + ' Siswa (' + o.aktifCount + ' Aktif &bull; ' + o.nonaktifCount + ' Nonaktif)');
+    } else {
+      subtitleParts.push('Belum ada siswa terdaftar');
+    }
+
+    var isOpen = osState.openCard === o.id;
+    var waLink = 'https://wa.me/' + (o.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
+
+    var visibleAnak = o.anak;
+    var anakRows = visibleAnak.map(function (a, idx) {
+      var aAktif = a.status === 'aktif';
+      var isPerempuan = a.jenis_kelamin === 'P';
+      var numBg = isPerempuan ? 'rgba(255,59,48,.12)' : 'rgba(0,122,255,.12)';
+      var numColor = isPerempuan ? '#ff3b30' : '#007aff';
+      var aBadge = aAktif
+        ? '<span class="os-status-badge" style="background:rgba(52,199,89,.14); color:#28a745; height:20px; font-size:9.5px;"><span style="width:10px; height:10px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="6" height="6" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
+        : '<span class="os-status-badge" style="background:rgba(255,59,48,.12); color:#ff3b30; height:20px; font-size:9.5px;"><span style="width:10px; height:10px; border-radius:50%; background:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="6" height="6" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
+      var sekolahLine = [a.kelas, a.sekolah].filter(Boolean).join(' &bull; ') || 'Kelas &amp; sekolah belum diisi';
+      return '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:7px 0; ' + (idx > 0 ? 'border-top:1px solid var(--border);' : '') + '">' +
+        '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
+          '<span style="width:22px; height:22px; border-radius:6px; background:' + numBg + '; color:' + numColor + '; font-weight:800; font-size:10.5px; display:flex; align-items:center; justify-content:center; flex:none;">' + (idx + 1) + '</span>' +
+          '<div style="min-width:0;">' +
+            '<div style="font-size:11.5px; font-weight:700; color:#1c1c1e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + osEscape(a.nama) + '</div>' +
+            '<div style="font-size:10px; color:#8e8e93; margin-top:1px;">' + sekolahLine + '</div>' +
+          '</div>' +
+        '</div>' +
+        aBadge +
+      '</div>';
+    }).join('');
+
+    return '' +
+      '<div class="card os-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
+        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
+          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
+            '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + osEscape(initials) + '</div>' +
+            '<div style="min-width:0;">' +
+              '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+                '<h4 style="font-size:12.5px; font-weight:800; color:#1c1c1e; margin:0; line-height:1.3;">' + osEscape(o.nama) + '</h4>' +
+                unitBadge +
+              '</div>' +
+              '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:2px 0 0;">' + subtitleParts.join('') + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex; align-items:center; gap:6px; flex:none;">' +
+            '<button class="os-edit-btn" data-id="' + o.id + '" style="background:#1c1c1e; color:#fff; border:none; border-radius:7px; padding:0 10px; height:26px; font-size:10.5px; font-weight:700; cursor:pointer; flex:none; font-family:var(--font);">Edit</button>' +
+            statusBadge +
+          '</div>' +
+        '</div>' +
+
+        '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:9px; padding:8px 10px; margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">' +
+          '<div>' +
+            '<div style="font-size:9px; color:#8e8e93; text-transform:uppercase; letter-spacing:.02em; font-weight:700;">Nomor WhatsApp</div>' +
+            '<div style="font-size:11.5px; font-weight:700; color:#1c1c1e; margin-top:1px;">' + osEscape(o.no_hp || '-') + '</div>' +
+          '</div>' +
+          (o.no_hp
+            ? '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="background:rgba(52,199,89,.12); color:#1DB954; border-radius:7px; height:28px; padding:0 10px; font-size:11px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-family:var(--font);"><span style="width:16px; height:16px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="9" height="9" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>Hubungi WhatsApp</a>'
+            : '') +
+        '</div>' +
+
+        (visibleAnak.length ? '' +
+          '<button class="os-siswa-toggle" data-id="' + o.id + '" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,.04); border:none; border-radius:8px; padding:7px 10px; font-size:11px; font-weight:700; color:#3a3a3c; cursor:pointer; margin-top:8px; font-family:var(--font);">' +
+            'Daftar Siswa Terdaftar (' + visibleAnak.length + ' Anak)' +
+            '<svg class="os-siswa-toggle-icon" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
+          '</button>' +
+          '<div class="os-siswa-wrap" data-id="' + o.id + '" style="max-height:' + (isOpen ? '600px' : '0') + 'px; opacity:' + (isOpen ? '1' : '0') + '; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease; padding:0 2px;">' +
+            anakRows +
+          '</div>'
+        : '') +
+      '</div>';
+  }
+
+  function osBindCardEvents() {
+    document.querySelectorAll('.os-siswa-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.dataset.id;
+        var wrap = document.querySelector('.os-siswa-wrap[data-id="' + id + '"]');
+        var chevron = btn.querySelector('svg');
+        var isOpen = osState.openCard === id;
+        if (isOpen) {
+          osState.openCard = null;
+          wrap.style.maxHeight = '0px';
+          wrap.style.opacity = '0';
+          chevron.style.transform = 'rotate(0deg)';
+        } else {
+          if (osState.openCard) {
+            var prevWrap = document.querySelector('.os-siswa-wrap[data-id="' + osState.openCard + '"]');
+            var prevBtn = document.querySelector('.os-siswa-toggle[data-id="' + osState.openCard + '"]');
+            if (prevWrap) { prevWrap.style.maxHeight = '0px'; prevWrap.style.opacity = '0'; }
+            if (prevBtn) prevBtn.querySelector('svg').style.transform = 'rotate(0deg)';
+          }
+          osState.openCard = id;
+          wrap.style.maxHeight = '600px';
+          wrap.style.opacity = '1';
+          chevron.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
+    document.querySelectorAll('.os-edit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { osOpenEditModal(btn.dataset.id); });
+    });
+  }
+
+  /* ===== Modal Edit Orang Tua ===== */
+  var osEditModal = document.getElementById('os-editModal');
+  var osEditTargetOrtuId = null;
+
+  function osOpenEditModal(ortuId) {
+    var ortu = osState.ortuList.find(function (o) { return o.id === ortuId; });
+    if (!ortu) return;
+    osEditTargetOrtuId = ortuId;
+    document.getElementById('os-editOrtuAlert').hidden = true;
+    document.getElementById('os-viewOrtuNama').textContent = ortu.nama || '-';
+    document.getElementById('os-viewOrtuHp').textContent = ortu.no_hp || '-';
+    document.getElementById('os-viewOrtuAlamat').textContent = ortu.alamat || '-';
+    osRenderEditList(ortu);
+    osEditModal.hidden = false;
+    requestAnimationFrame(function () { osEditModal.classList.add('show'); });
+  }
+  function osCloseEditModal() {
+    osEditModal.classList.remove('show');
+    setTimeout(function () { osEditModal.hidden = true; }, 280);
+  }
+
+  var osEditOrtuBiodataModal = document.getElementById('os-editOrtuBiodataModal');
+  document.getElementById('os-editOrtuBiodataBtn').addEventListener('click', function () {
+    var ortu = osState.ortuList.find(function (o) { return o.id === osEditTargetOrtuId; });
+    if (!ortu) return;
+    document.getElementById('os-editOrtuBiodataAlert').hidden = true;
+    document.getElementById('os-editOrtuNama').value = ortu.nama || '';
+    document.getElementById('os-editOrtuHp').value = ortu.no_hp || '';
+    document.getElementById('os-editOrtuAlamat').value = ortu.alamat || '';
+    osEditOrtuBiodataModal.hidden = false;
+    requestAnimationFrame(function () { osEditOrtuBiodataModal.classList.add('show'); });
+  });
+  function osCloseOrtuBiodataModal() {
+    osEditOrtuBiodataModal.classList.remove('show');
+    setTimeout(function () { osEditOrtuBiodataModal.hidden = true; }, 280);
+  }
+  document.getElementById('os-editOrtuBiodataCancelBtn').addEventListener('click', osCloseOrtuBiodataModal);
+
+  document.getElementById('os-editOrtuSaveBtn').addEventListener('click', async function () {
+    var alertEl = document.getElementById('os-editOrtuBiodataAlert');
+    var nama = document.getElementById('os-editOrtuNama').value.trim();
+    var hp = document.getElementById('os-editOrtuHp').value.trim();
+    var alamat = document.getElementById('os-editOrtuAlamat').value.trim();
+    if (!nama || !hp) { alertEl.textContent = 'Nama dan Nomor WhatsApp wajib diisi.'; alertEl.hidden = false; return; }
+    alertEl.hidden = true;
+
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    try {
+      var s = genioGetSession();
+      await supaRest('orangtua?id=eq.' + osEditTargetOrtuId, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ nama: nama, no_hp: hp, alamat: alamat || null })
+      });
+      genioToast('Biodata orang tua berhasil diperbarui', 'success');
+      osCloseOrtuBiodataModal();
+      await osLoadAll();
+      document.getElementById('os-viewOrtuNama').textContent = nama;
+      document.getElementById('os-viewOrtuHp').textContent = hp;
+      document.getElementById('os-viewOrtuAlamat').textContent = alamat || '-';
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menyimpan biodata.'; alertEl.hidden = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Simpan';
+    }
+  });
+
+  function osRenderEditList(ortu) {
+    var listEl = document.getElementById('os-editList');
+    if (!ortu.anak.length) {
+      listEl.innerHTML = '<p style="font-size:12.5px; color:var(--ink-soft); text-align:center; padding:20px 0;">Orang tua ini belum punya siswa terdaftar.</p>';
+      return;
+    }
+    listEl.innerHTML = ortu.anak.map(function (a) {
+      var aAktif = a.status === 'aktif';
+      return '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 0; border-bottom:1px solid var(--border);">' +
+        '<div style="min-width:0;">' +
+          '<div style="font-size:13px; font-weight:700; color:#1c1c1e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + osEscape(a.nama) + '</div>' +
+          '<div style="font-size:11px; color:#8e8e93; margin-top:1px;">' + (aAktif ? 'Sedang Aktif' : 'Sedang Nonaktif') + '</div>' +
+        '</div>' +
+        '<button class="os-edit-siswa-btn" data-siswa-id="' + a.id + '" style="background:#1c1c1e; color:#fff; border:none; border-radius:999px; padding:0 14px; height:30px; font-size:11.5px; font-weight:700; cursor:pointer; flex:none;">Edit</button>' +
+      '</div>';
+    }).join('');
+
+    listEl.querySelectorAll('.os-edit-siswa-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { osOpenEditSiswaModal(btn.dataset.siswaId, ortu.id); });
+    });
+  }
+
+  /* ===== Modal Edit Siswa ===== */
+  var osEditSiswaModal = document.getElementById('os-editSiswaModal');
+
+  function osOpenEditSiswaModal(siswaId, ortuId) {
+    var ortu = osState.ortuList.find(function (o) { return o.id === ortuId; });
+    var siswa = ortu && ortu.anak.find(function (a) { return a.id === siswaId; });
+    if (!siswa) return;
+
+    document.getElementById('os-editSiswaAlert').hidden = true;
+    document.getElementById('os-editSiswaId').value = siswa.id;
+    document.getElementById('os-editSiswaOrtuId').value = ortuId;
+    document.getElementById('os-editSiswaNama').value = siswa.nama || '';
+    document.getElementById('os-editSiswaKelas').value = siswa.kelas || '';
+    document.getElementById('os-editSiswaSekolah').value = siswa.sekolah || '';
+    document.getElementById('os-editSiswaJenjang').value = siswa.jenjang || '';
+
+    document.querySelectorAll('#os-editSiswaModal .os-gender-opt').forEach(function (o) {
+      var active = o.dataset.val === siswa.jenis_kelamin;
+      o.style.background = active ? (o.dataset.val === 'P' ? 'rgba(255,59,48,.1)' : 'var(--blue-tint)') : '#fff';
+      o.style.color = active ? (o.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)') : 'var(--ink-soft)';
+      o.style.borderColor = active ? (o.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)') : 'var(--border)';
+      o.querySelector('input').checked = active;
+    });
+
+    document.querySelectorAll('.os-editstatus-opt').forEach(function (o) {
+      var active = o.dataset.val === siswa.status;
+      var isNonaktif = o.dataset.val === 'nonaktif';
+      o.style.background = active ? (isNonaktif ? 'rgba(255,59,48,.1)' : 'rgba(52,199,89,.14)') : '#fff';
+      o.style.color = active ? (isNonaktif ? '#ff3b30' : '#28a745') : 'var(--ink-soft)';
+      o.style.borderColor = active ? (isNonaktif ? '#ff3b30' : '#28a745') : 'var(--border)';
+      o.querySelector('input').checked = active;
+    });
+
+    osEditSiswaModal.hidden = false;
+    requestAnimationFrame(function () { osEditSiswaModal.classList.add('show'); });
+  }
+  function osCloseEditSiswaModal() {
+    osEditSiswaModal.classList.remove('show');
+    setTimeout(function () { osEditSiswaModal.hidden = true; }, 280);
+  }
+
+  document.querySelectorAll('#os-editSiswaModal .os-gender-opt').forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      document.querySelectorAll('#os-editSiswaModal .os-gender-opt').forEach(function (o) {
+        o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
+      });
+      opt.style.background = opt.dataset.val === 'P' ? 'rgba(255,59,48,.1)' : 'var(--blue-tint)';
+      opt.style.color = opt.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)';
+      opt.style.borderColor = opt.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)';
+      opt.querySelector('input').checked = true;
+    });
+  });
+
+  document.querySelectorAll('.os-editstatus-opt').forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      var isNonaktif = opt.dataset.val === 'nonaktif';
+      document.querySelectorAll('.os-editstatus-opt').forEach(function (o) {
+        o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
+      });
+      opt.style.background = isNonaktif ? 'rgba(255,59,48,.1)' : 'rgba(52,199,89,.14)';
+      opt.style.color = isNonaktif ? '#ff3b30' : '#28a745';
+      opt.style.borderColor = isNonaktif ? '#ff3b30' : '#28a745';
+      opt.querySelector('input').checked = true;
+    });
+  });
+
+  document.getElementById('os-editSiswaCancelBtn').addEventListener('click', function () { osCloseEditSiswaModal(); });
+  document.getElementById('os-editSiswaSaveBtn').addEventListener('click', async function () {
+    var alertEl = document.getElementById('os-editSiswaAlert');
+    var siswaId = document.getElementById('os-editSiswaId').value;
+    var ortuId = document.getElementById('os-editSiswaOrtuId').value;
+    var nama = document.getElementById('os-editSiswaNama').value.trim();
+    var kelas = document.getElementById('os-editSiswaKelas').value.trim();
+    var sekolah = document.getElementById('os-editSiswaSekolah').value.trim();
+    var jenjang = document.getElementById('os-editSiswaJenjang').value;
+    var genderEl = document.querySelector('input[name="os-editSiswaGender"]:checked');
+    var gender = genderEl ? genderEl.value : null;
+    var statusEl = document.querySelector('input[name="os-editSiswaStatus"]:checked');
+    var status = statusEl ? statusEl.value : 'aktif';
+
+    if (!nama) { alertEl.textContent = 'Nama siswa wajib diisi.'; alertEl.hidden = false; return; }
+    alertEl.hidden = true;
+
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    try {
+      var s = genioGetSession();
+      await supaRest('siswa?id=eq.' + siswaId, s.access_token, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ nama: nama, kelas: kelas || null, sekolah: sekolah || null, jenjang: jenjang || null, jenis_kelamin: gender, status: status })
+      });
+      genioToast('Data siswa berhasil diperbarui', 'success');
+      osCloseEditSiswaModal();
+      await osLoadAll();
+      if (!osEditModal.hidden) {
+        var ortu = osState.ortuList.find(function (o) { return o.id === ortuId; });
+        if (ortu) osRenderEditList(ortu);
+      }
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menyimpan data siswa.'; alertEl.hidden = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Simpan';
+    }
+  });
+
+
+
+  /* ===== Filter (Unit & Jenjang) — pola picker-popup sama seperti Presensi ===== */
+  var OS_FILTER_DEFS = {
+    unit: { title: 'Pilih Unit / Cabang', allLabel: 'Semua Unit' },
+    jenjang: { title: 'Pilih Jenjang', allLabel: 'Semua Jenjang' }
+  };
+  var osFilterUnitOptions = [];
+  var osUnitsLoadedForFilter = false;
+  var osPickerCurrentType = null;
+  var osPickerTempSelected = '';
+
+  function osOpenFilterModal() {
+    if (!osUnitsLoadedForFilter) osLoadFilterUnits();
+    osUpdateFilterSummary('unit');
+    osUpdateFilterSummary('jenjang');
+    var modal = document.getElementById('os-filterModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function osCloseFilterModal() {
+    var modal = document.getElementById('os-filterModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+
+  async function osLoadFilterUnits() {
+    try {
+      var s = genioGetSession();
+      var units = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+      osFilterUnitOptions = units.map(function (u) { return { value: u.id, label: u.nama_unit }; });
+      osUnitsLoadedForFilter = true;
+    } catch (err) { osFilterUnitOptions = []; }
+  }
+
+  function osGetFilterOptions(type) {
+    if (type === 'unit') return osFilterUnitOptions;
+    return [{ value: 'SD', label: 'SD' }, { value: 'SMP', label: 'SMP' }, { value: 'SMA', label: 'SMA' }, { value: 'Lainnya', label: 'Lainnya' }];
+  }
+  function osGetFilterState(type) { return type === 'unit' ? osState.filterUnit : osState.filterJenjang; }
+  function osSetFilterState(type, value) { if (type === 'unit') osState.filterUnit = value; else osState.filterJenjang = value; }
+
+  function osUpdateFilterSummary(type) {
+    var def = OS_FILTER_DEFS[type];
+    var selected = osGetFilterState(type);
+    var summaryEl = document.getElementById('os-filter' + type.charAt(0).toUpperCase() + type.slice(1) + 'Summary');
+    if (!summaryEl) return;
+    if (!selected) { summaryEl.textContent = def.allLabel; return; }
+    var opt = osGetFilterOptions(type).filter(function (o) { return o.value === selected; })[0];
+    summaryEl.textContent = opt ? opt.label : selected;
+  }
+
+  document.querySelectorAll('.os-filter-row-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { osOpenPicker(btn.dataset.picker); });
+  });
+
+  function osOpenPicker(type) {
+    osPickerCurrentType = type;
+    document.getElementById('os-pickerTitle').textContent = OS_FILTER_DEFS[type].title;
+    osPickerTempSelected = osGetFilterState(type);
+    osRenderPickerList(type);
+    var modal = document.getElementById('os-pickerModal');
+    modal.hidden = false;
+    requestAnimationFrame(function () { modal.classList.add('show'); });
+  }
+  function osClosePicker() {
+    var modal = document.getElementById('os-pickerModal');
+    modal.classList.remove('show');
+    setTimeout(function () { modal.hidden = true; }, 280);
+  }
+
+  function osRenderPickerList(type) {
+    var def = OS_FILTER_DEFS[type];
+    var options = osGetFilterOptions(type);
+    var listEl = document.getElementById('os-pickerList');
+    var allRow = '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
+      '<input type="radio" name="os-picker-opt" class="os-picker-opt" value="" ' + (!osPickerTempSelected ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+      def.allLabel +
+    '</label>';
+    var rows = !options.length
+      ? '<div style="font-size:12.5px; color:var(--ink-soft); padding:14px 4px; text-align:center;">Belum ada data.</div>'
+      : options.map(function (opt) {
+          var checked = osPickerTempSelected === opt.value;
+          return '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
+            '<input type="radio" name="os-picker-opt" class="os-picker-opt" value="' + osEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+            osEscape(opt.label) +
+          '</label>';
+        }).join('');
+    listEl.innerHTML = allRow + rows;
+    listEl.querySelectorAll('.os-picker-opt').forEach(function (input) {
+      input.addEventListener('change', function () { osPickerTempSelected = input.value; });
+    });
+  }
+
+  document.getElementById('os-pickerCancelBtn').addEventListener('click', function () { osClosePicker(); });
+  document.getElementById('os-pickerDoneBtn').addEventListener('click', function () {
+    osSetFilterState(osPickerCurrentType, osPickerTempSelected);
+    osUpdateFilterSummary(osPickerCurrentType);
+    osClosePicker();
+  });
+
+  function osUpdateFilterBadge() {
+    var badge = document.getElementById('os-filterCount');
+    var n = (osState.filterUnit ? 1 : 0) + (osState.filterJenjang ? 1 : 0);
+    if (n > 0) { badge.textContent = n; badge.hidden = false; } else badge.hidden = true;
+  }
+
+  document.getElementById('os-filterApplyBtn').addEventListener('click', function () {
+    osUpdateFilterBadge();
+    osCloseFilterModal();
+    osRenderList();
+  });
+  document.getElementById('os-filterResetBtn').addEventListener('click', function () {
+    osState.filterUnit = ''; osState.filterJenjang = '';
+    osUpdateFilterSummary('unit'); osUpdateFilterSummary('jenjang');
+    osUpdateFilterBadge();
+    osCloseFilterModal();
+    osRenderList();
+  });
+
+  document.querySelectorAll('.os-tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { if (!osTabDragged) osSwitchTab(btn.dataset.tab); });
+  });
+
+  function osSwitchTab(tab) {
+    osState.tab = tab;
+    document.querySelectorAll('.os-dock-btn').forEach(function (b) {
+      b.classList.toggle('os-dock-active', b.dataset.tab === tab);
+    });
+    osUpdateDockGlider();
+    osRenderList();
+  }
+
+  function osUpdateDockGlider() {
+    var activeBtn = document.querySelector('.os-dock-btn.os-dock-active');
+    var glider = document.getElementById('os-dockGlider');
+    if (!activeBtn || !glider) return;
+    glider.style.left = activeBtn.offsetLeft + 'px';
+    glider.style.width = activeBtn.offsetWidth + 'px';
+  }
+
+  var osTabDragged = false;
+
+  function initOsTabScrubbing() {
+    var dock = document.getElementById('os-dock');
+    var glider = document.getElementById('os-dockGlider');
+    if (!dock || !glider) return;
+    var OS_TABS = ['aktif', 'nonaktif'];
+
+    var isPointerDown = false, isDragging = false, hasDragged = false, suppressClick = false;
+    var startX = 0, startY = 0, pointerId = null;
+    var cachedLeft = 0, cachedWidth = 0, cachedGliderWidth = 0, targetTab = osState.tab;
+    var DRAG_THRESHOLD = 8;
+
+    dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    dock.addEventListener('click', function (e) {
+      if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+
+    dock.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
+      pointerId = e.pointerId; startX = e.clientX; startY = e.clientY;
+      var rect = dock.getBoundingClientRect();
+      cachedLeft = rect.left; cachedWidth = rect.width;
+      cachedGliderWidth = glider.offsetWidth || (rect.width / OS_TABS.length);
+      targetTab = osState.tab;
+    });
+
+    dock.addEventListener('pointermove', function (e) {
+      if (!isPointerDown) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!hasDragged) {
+        if (Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+          isDragging = true; hasDragged = true; suppressClick = true; osTabDragged = true;
+          try { dock.setPointerCapture(pointerId); } catch (_) {}
+        }
+      }
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        var relX = e.clientX - cachedLeft;
+        var clampedPx = Math.max(0, Math.min(cachedWidth - cachedGliderWidth, relX - cachedGliderWidth / 2));
+        glider.style.transition = 'none';
+        glider.style.left = clampedPx + 'px';
+        var ratio = Math.max(0, Math.min(0.999, relX / cachedWidth));
+        var newIdx = Math.min(OS_TABS.length - 1, Math.max(0, Math.floor(ratio * OS_TABS.length)));
+        targetTab = OS_TABS[newIdx];
+        document.querySelectorAll('.os-dock-btn').forEach(function (b) {
+          b.classList.toggle('os-dock-active', b.dataset.tab === targetTab);
+        });
+      }
+    });
+
+    function endScrub() {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      glider.style.transition = '';
+      if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+      if (hasDragged) {
+        isDragging = false;
+        osSwitchTab(targetTab);
+        setTimeout(function () { suppressClick = false; osTabDragged = false; }, 80);
+      } else {
+        suppressClick = false;
+      }
+    }
+    dock.addEventListener('pointerup', endScrub);
+    dock.addEventListener('pointercancel', function () {
+      endScrub();
+    });
+  }
+
+  /* ===== Modal Tambah ===== */
+  var osUnitsLoaded = false;
+  var osModal = document.getElementById('os-modal');
+
+  function osSetOrtuMode(mode) {
+    osState.ortuMode = mode;
+    document.querySelectorAll('.os-ortu-mode-btn').forEach(function (b) {
+      var active = b.dataset.mode === mode;
+      b.style.background = active ? 'var(--blue-tint)' : '#fff';
+      b.style.color = active ? 'var(--blue)' : 'var(--ink)';
+      b.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
+    });
+    document.getElementById('os-ortuBaruGroup').style.display = mode === 'baru' ? 'block' : 'none';
+    document.getElementById('os-ortuLamaGroup').style.display = mode === 'lama' ? 'block' : 'none';
+  }
+
+  var osOrtuPickerModal = document.getElementById('os-ortuPickerModal');
+  var osOrtuPickerSearch = '';
+
+  function osResetOrtuExistingField() {
+    document.getElementById('os-ortuExisting').value = '';
+    document.getElementById('os-ortuExistingLabel').textContent = 'Pilih orang tua...';
+    document.getElementById('os-ortuExistingLabel').style.color = 'var(--ink-soft)';
+  }
+
+  function osOpenOrtuPicker() {
+    osOrtuPickerSearch = '';
+    document.getElementById('os-ortuPickerSearchInput').value = '';
+    osRenderOrtuPickerList();
+    osOrtuPickerModal.hidden = false;
+    requestAnimationFrame(function () { osOrtuPickerModal.classList.add('show'); });
+  }
+  function osCloseOrtuPicker() {
+    osOrtuPickerModal.classList.remove('show');
+    setTimeout(function () { osOrtuPickerModal.hidden = true; }, 280);
+  }
+
+  function osRenderOrtuPickerList() {
+    var allOptions = osState.ortuList.slice().sort(function (a, b) { return a.nama.localeCompare(b.nama); });
+    var options = osOrtuPickerSearch ? allOptions.filter(function (o) { return o.nama.toLowerCase().indexOf(osOrtuPickerSearch) !== -1; }) : allOptions;
+    var listEl = document.getElementById('os-ortuPickerList');
+
+    if (!options.length) {
+      listEl.innerHTML = '<div style="font-size:12.5px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data orang tua.') + '</div>';
+      return;
+    }
+    listEl.innerHTML = options.map(function (o) {
+      return '<button type="button" class="os-ortu-picker-opt" data-id="' + o.id + '" style="width:100%; text-align:left; display:block; background:none; border:none; padding:12px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' + osEscape(o.nama) + '</button>';
+    }).join('');
+    listEl.querySelectorAll('.os-ortu-picker-opt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var o = osState.ortuList.find(function (x) { return x.id === btn.dataset.id; });
+        document.getElementById('os-ortuExisting').value = o.id;
+        document.getElementById('os-ortuExistingLabel').textContent = o.nama;
+        document.getElementById('os-ortuExistingLabel').style.color = 'var(--ink)';
+        osCloseOrtuPicker();
+      });
+    });
+  }
+
+  document.getElementById('os-ortuExistingBtn').addEventListener('click', osOpenOrtuPicker);
+  document.getElementById('os-ortuPickerCancelBtn').addEventListener('click', osCloseOrtuPicker);
+  document.getElementById('os-ortuPickerSearchInput').addEventListener('input', function (e) {
+    osOrtuPickerSearch = e.target.value.toLowerCase();
+    osRenderOrtuPickerList();
+  });
+  document.getElementById('os-ortuPickerSearchInput').addEventListener('focus', function (e) {
+    var el = e.target;
+    setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+  });
+
+  async function osOpenModal() {
+    document.getElementById('os-modalAlert').hidden = true;
+    document.getElementById('os-form').reset();
+    document.querySelectorAll('#os-modal .os-gender-opt').forEach(function (o) {
+      o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
+    });
+    osSetOrtuMode('baru');
+    osResetOrtuExistingField();
+    if (!osUnitsLoaded) {
+      try {
+        var s = genioGetSession();
+        var units = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+        var select = document.getElementById('os-siswaUnit');
+        select.innerHTML = '<option value="">Pilih unit...</option>' + units.map(function (u) { return '<option value="' + u.id + '">' + osEscape(u.nama_unit) + '</option>'; }).join('');
+        osUnitsLoaded = true;
+      } catch (err) { /* biarkan tetap kosong kalau gagal */ }
+    }
+    osModal.hidden = false;
+    requestAnimationFrame(function () { osModal.classList.add('show'); });
+  }
+  function osCloseModal() {
+    osModal.classList.remove('show');
+    setTimeout(function () { osModal.hidden = true; }, 280);
+  }
+
+  async function osSubmitForm(e) {
+    e.preventDefault();
+    var alertEl = document.getElementById('os-modalAlert');
+    alertEl.hidden = true;
+
+    var siswaNama = document.getElementById('os-siswaNama').value.trim();
+    var siswaKelas = document.getElementById('os-siswaKelas').value.trim();
+    var siswaSekolah = document.getElementById('os-siswaSekolah').value.trim();
+    var siswaJenjang = document.getElementById('os-siswaJenjang').value;
+    var siswaGenderEl = document.querySelector('input[name="os-siswaGender"]:checked');
+    var siswaGender = siswaGenderEl ? siswaGenderEl.value : null;
+    var siswaUnit = document.getElementById('os-siswaUnit').value;
+
+    if (!siswaNama || !siswaUnit) { alertEl.textContent = 'Nama siswa dan Unit wajib diisi.'; alertEl.hidden = false; return; }
+    if (!siswaJenjang) { alertEl.textContent = 'Jenjang wajib dipilih.'; alertEl.hidden = false; return; }
+
+    var ortuId = null;
+    var ortuNama = '', ortuHp = '', ortuAlamat = '';
+
+    if (osState.ortuMode === 'lama') {
+      ortuId = document.getElementById('os-ortuExisting').value;
+      if (!ortuId) { alertEl.textContent = 'Pilih orang tua yang sudah terdaftar.'; alertEl.hidden = false; return; }
+    } else {
+      ortuNama = document.getElementById('os-ortuNama').value.trim();
+      ortuHp = document.getElementById('os-ortuHp').value.trim();
+      ortuAlamat = document.getElementById('os-ortuAlamat').value.trim();
+      if (!ortuNama || !ortuHp) { alertEl.textContent = 'Nama dan Nomor WhatsApp orang tua wajib diisi.'; alertEl.hidden = false; return; }
+    }
+
+    var saveBtn = document.getElementById('os-saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+    try {
+      var s = genioGetSession();
+
+      if (osState.ortuMode === 'baru') {
+        var ortuResult = await supaRest('orangtua', s.access_token, {
+          method: 'POST',
+          headers: { 'Prefer': 'return=representation' },
+          body: JSON.stringify({ nama: ortuNama, no_hp: ortuHp, alamat: ortuAlamat || null, created_by: s.user_id })
+        });
+        ortuId = ortuResult[0].id;
+      }
+
+      await supaRest('siswa', s.access_token, {
+        method: 'POST',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ nama: siswaNama, orangtua_id: ortuId, unit_id: siswaUnit, status: 'aktif', kelas: siswaKelas || null, sekolah: siswaSekolah || null, jenjang: siswaJenjang, jenis_kelamin: siswaGender })
+      });
+
+      genioToast('Siswa berhasil ditambahkan', 'success');
+      osCloseModal();
+      osLoadAll();
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menyimpan data.'; alertEl.hidden = false;
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Simpan';
+    }
+  }
+</script>

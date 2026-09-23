@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <script>var SCRIPT_URL = '<?!= scriptUrl ?>';</script>
+  <?!= include('Config'); ?>
+  <style>
+    .hero{
+      position:relative;
+      background:var(--blue);
+      color:#fff;
+      padding:52px 28px 60px;
+      overflow:hidden;
+    }
+    .hero::after{
+      content:'';
+      position:absolute; left:-10%; right:-10%; bottom:-1px; height:44px;
+      background:var(--white);
+      border-radius:50% 50% 0 0 / 100% 100% 0 0;
+      transform:scaleX(1.4);
+    }
+    .mark{
+      display:inline-flex; align-items:baseline; gap:2px;
+      font-size:26px; font-weight:800; letter-spacing:-.02em;
+      margin-bottom:22px;
+    }
+    .mark .dot{color:var(--red);}
+    .hero p{font-size:14px; margin:0; opacity:.82; max-width:29ch;}
+
+    .sheet{position:relative; padding:8px 24px 40px; max-width:440px; margin:0 auto;}
+    .sheet form{margin-top:8px;}
+    .view{display:none;}
+    .view.active{display:block;}
+
+    .view-title{font-size:20px; font-weight:800; margin:14px 0 22px; letter-spacing:-.01em;}
+
+    .back-link{
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:13.5px; font-weight:600; color:var(--ink-soft);
+      text-decoration:none; margin-top:18px;
+      background:none; border:none; padding:0; cursor:pointer; font-family:var(--font);
+    }
+
+    .signup-btn{margin-top:4px;}
+
+    .radio-row{display:flex; gap:10px;}
+    .radio-opt{
+      flex:1; text-align:center;
+      padding:12px; border-radius:var(--radius-sm);
+      border:1.5px solid var(--border); background:var(--surface);
+      font-size:14px; font-weight:600; color:var(--ink-soft);
+      cursor:pointer; user-select:none;
+    }
+    .radio-opt input{display:none;}
+    .radio-opt.checked{border-color:var(--blue); background:var(--blue-tint); color:var(--blue);}
+
+    .success-icon{
+      width:64px; height:64px; border-radius:50%;
+      background:var(--green-soft); color:var(--green);
+      display:flex; align-items:center; justify-content:center;
+      margin:24px auto 20px; font-size:30px;
+    }
+    .success-view{text-align:center;}
+    .success-view h2{font-size:19px; margin:0 0 10px;}
+    .success-view p{font-size:14px; color:var(--ink-soft); margin:0 0 28px;}
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="mark"><span>genio</span><span class="dot">.</span></div>
+    <p>Sistem manajemen Genio Institute — presensi, kontrak, dan penggajian dalam satu tempat.</p>
+  </div>
+
+  <div class="sheet">
+
+    <div id="alertBox" class="alert alert-error" hidden></div>
+
+    <!-- ===== VIEW: LOGIN ===== -->
+    <div class="view active" id="view-login">
+      <h2 class="view-title">Masuk ke akun Anda</h2>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="nama@genio.id" autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="password">Kata sandi</label>
+          <div class="password-wrap">
+            <input type="password" id="password" required placeholder="••••••" autocomplete="current-password">
+            <button type="button" class="toggle-pw" data-target="password">Lihat</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="loginBtn">Masuk</button>
+      </form>
+
+      <div class="divider">atau</div>
+
+      <button type="button" class="btn btn-outline signup-btn" id="gotoDaftarBtn">Daftar sebagai Tutor</button>
+    </div>
+
+    <!-- ===== VIEW: DAFTAR ===== -->
+    <div class="view" id="view-daftar">
+      <button type="button" class="back-link" id="gotoLoginBtn">&larr; Kembali ke halaman masuk</button>
+      <h2 class="view-title">Daftar sebagai Tutor</h2>
+      <p style="font-size:13.5px; color:var(--ink-soft); margin:-14px 0 22px;">Lengkapi data di bawah. Akun akan aktif setelah disetujui admin.</p>
+
+      <form id="daftarForm">
+        <div class="field">
+          <label for="nama">Nama lengkap</label>
+          <input type="text" id="nama" required placeholder="Nama sesuai identitas">
+        </div>
+
+        <div class="field">
+          <label>Jenis kelamin</label>
+          <div class="radio-row">
+            <label class="radio-opt" data-val="L"><input type="radio" name="jk" value="L"> Laki-laki</label>
+            <label class="radio-opt" data-val="P"><input type="radio" name="jk" value="P"> Perempuan</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="pendidikan">Pendidikan terakhir</label>
+          <input type="text" id="pendidikan" required placeholder="mis. S1 Pendidikan Matematika - UNY">
+        </div>
+
+        <div class="field">
+          <label for="keahlian">Keahlian / mapel yang dikuasai</label>
+          <input type="text" id="keahlian" required placeholder="mis. Matematika, Fisika">
+          <div class="field-hint">Pisahkan dengan koma jika lebih dari satu.</div>
+        </div>
+
+        <div class="field">
+          <label for="nowa">Nomor WhatsApp</label>
+          <input type="tel" id="nowa" required placeholder="08xxxxxxxxxx">
+        </div>
+
+        <div class="field">
+          <label for="namaBank">Nama Bank</label>
+          <input type="text" id="namaBank" required placeholder="mis. BCA, BNI, Mandiri">
+        </div>
+
+        <div class="field">
+          <label for="noRekening">Nomor Rekening</label>
+          <input type="text" id="noRekening" required placeholder="Nomor rekening atas nama sendiri">
+          <div class="field-hint">Dipakai untuk transfer gaji tutor setiap bulan.</div>
+        </div>
+
+        <div class="field">
+          <label for="daftarEmail">Email</label>
+          <input type="email" id="daftarEmail" required placeholder="nama@email.com" autocomplete="username">
+        </div>
+
+        <div class="field">
+          <label for="daftarPassword">Buat kata sandi</label>
+          <div class="password-wrap">
+            <input type="password" id="daftarPassword" required minlength="6" placeholder="Minimal 6 karakter" autocomplete="new-password">
+            <button type="button" class="toggle-pw" data-target="daftarPassword">Lihat</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="daftarPassword2">Ulangi kata sandi</label>
+          <input type="password" id="daftarPassword2" required minlength="6" placeholder="Ketik ulang kata sandi">
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="daftarBtn">Daftar</button>
+      </form>
+    </div>
+
+    <!-- ===== VIEW: SUKSES DAFTAR ===== -->
+    <div class="view success-view" id="view-sukses">
+      <div class="success-icon">&check;</div>
+      <h2>Pendaftaran berhasil!</h2>
+      <p>Akun Anda sedang menunggu persetujuan admin. Anda akan bisa masuk begitu disetujui.</p>
+      <button type="button" class="btn btn-primary" id="gotoLoginFromSuksesBtn">Kembali ke Halaman Masuk</button>
+    </div>
+
+  </div>
+
+  <script>
+    var alertBox = document.getElementById('alertBox');
+
+    function showError(msg) { alertBox.textContent = msg; alertBox.hidden = false; }
+    function hideError() { alertBox.hidden = true; }
+
+    function switchView(name) {
+      hideError();
+      document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
+      document.getElementById('view-' + name).classList.add('active');
+    }
+
+    document.getElementById('gotoDaftarBtn').addEventListener('click', function () { switchView('daftar'); });
+    document.getElementById('gotoLoginBtn').addEventListener('click', function () { switchView('login'); });
+    document.getElementById('gotoLoginFromSuksesBtn').addEventListener('click', function () { switchView('login'); });
+
+    document.querySelectorAll('.toggle-pw').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(btn.dataset.target);
+        var isPw = input.type === 'password';
+        input.type = isPw ? 'text' : 'password';
+        btn.textContent = isPw ? 'Sembunyikan' : 'Lihat';
+      });
+    });
+
+    document.querySelectorAll('.radio-opt').forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        document.querySelectorAll('.radio-opt').forEach(function (o) { o.classList.remove('checked'); });
+        opt.classList.add('checked');
+        opt.querySelector('input').checked = true;
+      });
+    });
+
+    function goToDashboard(role) {
+      // Placeholder — dashboard per role menyusul di Fase 1-4.
+      // Pakai SCRIPT_URL absolut (bukan path relatif "?page=...") supaya tidak salah
+      // resolve akibat rantai redirect Google Apps Script.
+      window.top.location.href = SCRIPT_URL + '?page=dashboard&role=' + role;
+    }
+
+    // ===== LOGIN =====
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideError();
+      var btn = document.getElementById('loginBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Memproses...';
+
+      try {
+        var email = document.getElementById('email').value.trim();
+        var password = document.getElementById('password').value;
+
+        var auth = await supaAuth('token?grant_type=password', { email: email, password: password });
+
+        var rows = await supaRest('users?id=eq.' + auth.user.id + '&select=*', auth.access_token);
+        var profile = rows && rows[0];
+        if (!profile) throw new Error('Profil pengguna tidak ditemukan. Hubungi admin.');
+
+        if (profile.status === 'pending_approval') {
+          throw new Error('Akun Anda masih menunggu persetujuan admin.');
+        }
+        if (profile.status === 'nonaktif') {
+          throw new Error('Akun Anda nonaktif. Hubungi admin untuk informasi lebih lanjut.');
+        }
+
+        try {
+          sessionStorage.removeItem('genio_session_hidden_notifs_' + auth.user.id);
+          localStorage.removeItem('genio_read_notifs_' + auth.user.id);
+        } catch (e) {}
+
+        genioSaveSession({
+          access_token: auth.access_token,
+          refresh_token: auth.refresh_token,
+          user_id: auth.user.id,
+          role: profile.role,
+          nama: profile.nama,
+          email: profile.email,
+          jenis_kelamin: profile.jenis_kelamin
+        });
+
+        goToDashboard(profile.role);
+      } catch (err) {
+        showError(err.message || 'Email atau kata sandi salah.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Masuk';
+      }
+    });
+
+    // ===== DAFTAR =====
+    document.getElementById('daftarForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideError();
+
+      var jkChecked = document.querySelector('input[name="jk"]:checked');
+      if (!jkChecked) { showError('Pilih jenis kelamin terlebih dahulu.'); return; }
+
+      var password = document.getElementById('daftarPassword').value;
+      var password2 = document.getElementById('daftarPassword2').value;
+      if (password !== password2) { showError('Kata sandi dan ulangi kata sandi tidak sama.'); return; }
+
+      var btn = document.getElementById('daftarBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Memproses...';
+
+      try {
+        var nama = document.getElementById('nama').value.trim();
+        var pendidikan = document.getElementById('pendidikan').value.trim();
+        var keahlianRaw = document.getElementById('keahlian').value.trim();
+        var keahlian = keahlianRaw.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+        var nowa = document.getElementById('nowa').value.trim();
+        var namaBank = document.getElementById('namaBank').value.trim();
+        var noRekening = document.getElementById('noRekening').value.trim();
+        var email = document.getElementById('daftarEmail').value.trim();
+
+        var signup = await supaAuth('signup', { email: email, password: password });
+
+        if (!signup.access_token || !signup.user) {
+          throw new Error('Pendaftaran memerlukan konfirmasi email. Hubungi admin bila tidak menerima email konfirmasi.');
+        }
+
+        var uid = signup.user.id;
+
+        await supaRest('users', signup.access_token, {
+          method: 'POST',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({
+            id: uid, nama: nama, email: email, role: 'tutor',
+            status: 'pending_approval', jenis_kelamin: jkChecked.value, login_method: 'password'
+          })
+        });
+
+        await supaRest('tutor_profile', signup.access_token, {
+          method: 'POST',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ user_id: uid, pendidikan_terakhir: pendidikan, no_wa: nowa, keahlian: keahlian, nama_bank: namaBank, no_rekening: noRekening })
+        });
+
+        switchView('sukses');
+      } catch (err) {
+        showError(err.message || 'Pendaftaran gagal, silakan coba lagi.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Daftar';
+      }
+    });
+  </script>
+</body>
+</html>

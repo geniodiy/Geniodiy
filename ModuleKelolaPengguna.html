@@ -1,0 +1,1057 @@
+<div class="module-panel" data-module="kelola-pengguna" hidden>
+<style>
+  @media (min-width:900px){
+    .module-panel[data-module="kelola-pengguna"][hidden]{ display:none !important; }
+    .module-panel[data-module="kelola-pengguna"]:not([hidden]){
+      width:94%; max-width:1500px; margin:0 auto;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+    .kp-hero-sec{
+      height: 58px !important;
+      min-height: 58px !important;
+      box-sizing: border-box !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 14px !important;
+    }
+    .kp-hero-main-col{
+      flex: none !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
+    .kp-hero-badges{
+      justify-content: flex-start !important;
+      gap: 6px !important;
+    }
+    .kp-hero-total-pill{
+      font-size: 8.5px !important;
+      padding: 2px 7px !important;
+    }
+    .kp-hero-sublabel{
+      display: none !important;
+    }
+    .kp-hero-counter{
+      margin-top: 0 !important;
+    }
+    .kp-hero-num-wrap{
+      display: flex !important;
+      align-items: baseline !important;
+      gap: 6px !important;
+      margin-top: 0 !important;
+    }
+    .kp-hero-num{
+      font-size: 18px !important;
+      line-height: 1.1 !important;
+    }
+    .kp-hero-unit{
+      font-size: 10.5px !important;
+    }
+    .kp-hero-stats-row{
+      flex: none !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+      border-left: 1px solid rgba(255,255,255,.14) !important;
+      padding-left: 16px !important;
+      display: flex !important;
+      gap: 8px !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+    }
+    .kp-hero-stat-card{
+      flex: none !important;
+      padding: 4px 8px !important;
+      border-radius: 8px !important;
+      gap: 6px !important;
+      min-width: 0 !important;
+    }
+    .kp-hero-stat-icon{
+      width: 22px !important;
+      height: 22px !important;
+    }
+    #kp-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+    #kp-list.kp-view-table{ display:block !important; width:100% !important; max-width:100% !important; min-width:0 !important; box-sizing:border-box !important; }
+    #kp-list > .kp-card{ margin-bottom:0 !important; }
+    #kp-list > .kp-full-width{ grid-column:1/-1; }
+
+    #kp-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:12px; }
+    #kp-toolbarRow .kp-dock-sec{ flex:none; width:220px; margin-bottom:0 !important; }
+    #kp-toolbarRow .kp-search-sec{ flex:1; margin-bottom:0 !important; }
+  }
+
+  .kp-dock{
+    position:relative; display:flex; align-items:center; height:38px;
+    background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px;
+    margin-bottom:12px; touch-action:none; -webkit-user-select:none; user-select:none;
+    box-sizing:border-box;
+  }
+  .kp-dock-glider{
+    position:absolute; top:3px; bottom:3px; border-radius:8px; background:#fff;
+    border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08);
+    transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1);
+    z-index:1; pointer-events:none;
+  }
+  .kp-dock-btn{
+    position:relative; z-index:2; flex:1; height:32px; display:flex; align-items:center; justify-content:center; gap:5px;
+    background:none; border:none; cursor:pointer; padding:0 10px; font-size:11.5px; font-family:var(--font);
+    color:var(--ink-soft); font-weight:700; transition:color .18s ease; white-space:nowrap;
+  }
+  .kp-dock-btn.kp-dock-active{ color:var(--ink); font-weight:800; }
+
+  #kp-modal, #kp-confirmModal{ align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease; }
+  #kp-modal.show, #kp-confirmModal.show{ opacity:1; }
+  #kp-modal .modal-sheet, #kp-confirmModal .modal-sheet{ border-radius:16px; width:100%; max-width:400px; margin:0 auto; max-height:88vh; overflow-y:auto; padding:16px 18px 18px; box-sizing:border-box; transform:scale(.88) translateY(10px); transition:transform .32s cubic-bezier(.34,1.56,.64,1); }
+  #kp-modal.show .modal-sheet, #kp-confirmModal.show .modal-sheet{ transform:scale(1) translateY(0); }
+
+  #kp-modal .modal-actions .btn, #kp-confirmModal .modal-actions .btn{
+    height: 36px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 9px !important;
+    padding: 0 16px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
+  }
+
+  .kp-group-title{ font-size:10px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
+  .kp-group-title:first-of-type{ margin-top:0; }
+  .kp-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .kp-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
+  .kp-row:last-child{ border-bottom:none; }
+  .kp-row label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:2px; }
+  .kp-row input, .kp-row select{
+    width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
+    background:none; color:var(--ink); outline:none;
+  }
+  .kp-opt-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .kp-opt{
+    flex:1; min-width:65px; text-align:center; padding:7px 4px; border-radius:8px;
+    border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;
+  }
+  .kp-opt input{ display:none; }
+
+  /* Hero Kelola Pengguna — matching Presensi, Gaji, & Operasional (gepeng/slender) */
+  .kp-hero-sec{
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .kp-hero-main-col{
+    display: flex;
+    flex-direction: column;
+  }
+  .kp-hero-badges{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .kp-hero-total-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .kp-hero-counter{
+    margin-top: 6px;
+  }
+  .kp-hero-sublabel{
+    display: block;
+    font-size: 10.5px;
+    opacity: .65;
+  }
+  .kp-hero-num-wrap{
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .kp-hero-num{
+    font-size: 21px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .kp-hero-unit{
+    font-size: 11.5px;
+    opacity: .6;
+    font-weight: 600;
+  }
+  .kp-hero-stats-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.14);
+    align-items: center;
+  }
+  .kp-hero-stat-card{
+    flex: 1;
+    background: rgba(255,255,255,.07);
+    border-radius: 10px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .kp-hero-stat-icon{
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  /* Table View */
+  #kp-list.kp-view-table{
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .kp-table-card{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+    margin-bottom: 12px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .kp-table-wrap{
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box !important;
+  }
+  .kp-table{
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: var(--font);
+    font-size: 11.5px;
+    box-sizing: border-box !important;
+  }
+  .kp-table th{
+    padding: 6px 8px;
+    background: rgba(0,0,0,.025);
+    border-bottom: 1px solid var(--border);
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    white-space: nowrap;
+  }
+  .kp-table td{
+    padding: 5px 8px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    color: var(--ink);
+    vertical-align: middle;
+    font-size: 11.5px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+  .kp-table tbody tr:last-child td{
+    border-bottom: none;
+  }
+  .kp-table tbody tr{
+    transition: background .12s ease;
+  }
+  .kp-table tbody tr:hover{
+    background: rgba(0,122,255,.03);
+  }
+
+  /* Status Pill in Table — matching Gaji style */
+  .kp-table-status-pill{
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0 7px;
+    font-family: var(--font);
+    font-size: 9.5px;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+  .kp-table-status-pill .kp-status-dot{
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex: none;
+    margin-right: 4px;
+  }
+
+  /* Table Icon Buttons — matching Presensi & Operasional .ps-table-icon-btn */
+  .kp-table-icon-btn{
+    width: 24px !important;
+    height: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    flex: none;
+    background: var(--surface) !important;
+    color: var(--ink-soft) !important;
+    border: 1.5px solid var(--border) !important;
+    box-sizing: border-box !important;
+    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .kp-table-icon-btn:hover{
+    background: #fff !important;
+    color: var(--ink) !important;
+    border-color: rgba(20, 22, 43, 0.22) !important;
+  }
+  .kp-table-icon-btn:active{
+    transform: scale(.9);
+  }
+
+  @keyframes kpPop{
+    0% { transform: scale(1); }
+    35% { transform: scale(1.18); }
+    70% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+  }
+  .kp-btn-pop{
+    animation: kpPop .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  #kp-viewToggleBtn:active{
+    transform: scale(.9);
+  }
+
+  .kp-sort-th{
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background .12s ease, color .12s ease;
+  }
+  .kp-sort-th:hover{
+    background: rgba(0,0,0,.045) !important;
+    color: var(--ink) !important;
+  }
+  .kp-sort-th:hover svg{
+    opacity: .75 !important;
+  }
+</style>
+
+  <!-- Hero -->
+  <div class="kp-hero-sec">
+    <div class="kp-hero-main-col">
+      <div class="kp-hero-badges">
+        <span class="kp-hero-total-pill">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block; flex:none;"></span>
+          KELOLA PENGGUNA
+        </span>
+      </div>
+      <div class="kp-hero-counter">
+        <div class="kp-hero-sublabel">Total Akun Staf Terdaftar</div>
+        <div class="kp-hero-num-wrap">
+          <span class="kp-hero-num" id="kp-heroTotal">0</span>
+          <span class="kp-hero-unit">Akun</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kp-hero-stats-row">
+      <div class="kp-hero-stat-card">
+        <span class="kp-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div style="font-size:9.5px; opacity:.65;">Aktif</div>
+          <div style="font-size:12.5px; font-weight:800; margin-top:1px;" id="kp-heroAktif">0 Akun</div>
+        </div>
+      </div>
+      <div class="kp-hero-stat-card">
+        <span class="kp-hero-stat-icon" style="background:rgba(142,142,147,.25); color:#c7c7cc;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+        </span>
+        <div style="min-width:0;">
+          <div style="font-size:9.5px; opacity:.65;">Nonaktif</div>
+          <div style="font-size:12.5px; font-weight:800; margin-top:1px;" id="kp-heroNonaktif">0 Akun</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="kp-desktopAnchor"></div>
+
+  <!-- Tab switcher -->
+  <div class="kp-dock kp-dock-sec" id="kp-dock">
+    <div class="kp-dock-glider" id="kp-dockGlider"></div>
+    <button class="kp-dock-btn kp-tab-btn kp-dock-active" data-tab="aktif">
+      <span>Aktif</span>
+      <span id="kp-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+    </button>
+    <button class="kp-dock-btn kp-tab-btn" data-tab="nonaktif">
+      <span>Nonaktif</span>
+      <span id="kp-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+    </button>
+  </div>
+
+  <!-- Search & Toggle -->
+  <div class="kp-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
+    <div style="flex:1; position:relative;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="kp-searchInput" placeholder="Cari nama atau email..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+    </div>
+    <button id="kp-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+    </button>
+  </div>
+
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+    <div id="kp-sectionLabel" style="font-size:11.5px; color:var(--ink-soft); font-weight:600;">Akun Aktif</div>
+    <span id="kp-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:700; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Akun</span>
+  </div>
+
+  <div id="kp-list">
+    <div class="empty-state">Memuat data pengguna...</div>
+  </div>
+
+  <!-- Modal Tambah/Edit -->
+  <div class="modal-overlay" id="kp-modal" hidden>
+    <div class="modal-sheet">
+      <h3 id="kp-modalTitle" style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Tambah Pengguna</h3>
+      <div id="kp-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
+      <input type="hidden" id="kp-editId">
+
+      <div class="kp-group-title">Data Diri</div>
+      <div class="kp-group" style="margin-bottom:4px;">
+        <div class="kp-row"><label for="kp-nama">Nama Lengkap</label><input type="text" id="kp-nama"></div>
+        <div class="kp-row"><label for="kp-email">Email</label><input type="email" id="kp-email"></div>
+      </div>
+
+      <div class="kp-group-title">Role</div>
+      <div class="kp-opt-row" id="kp-roleOpts" style="margin-bottom:4px;">
+        <label class="kp-opt" data-val="manajer"><input type="radio" name="kp-role" value="manajer">Manajer</label>
+        <label class="kp-opt" data-val="hrd"><input type="radio" name="kp-role" value="hrd">HRD</label>
+        <label class="kp-opt" data-val="kepala_unit"><input type="radio" name="kp-role" value="kepala_unit">Kepala Unit</label>
+        <label class="kp-opt" data-val="super_admin"><input type="radio" name="kp-role" value="super_admin">Super Admin</label>
+      </div>
+
+      <div id="kp-unitFieldWrap" hidden>
+        <div class="kp-group-title">Unit (wajib untuk Kepala Unit)</div>
+        <div class="kp-group" style="margin-bottom:4px;">
+          <div class="kp-row"><label for="kp-unitSelect">Pilih Unit</label>
+            <select id="kp-unitSelect"><option value="">Pilih unit...</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="kp-group-title">Status</div>
+      <div class="kp-opt-row" id="kp-statusOpts">
+        <label class="kp-opt" data-val="aktif"><input type="radio" name="kp-status" value="aktif">Aktif</label>
+        <label class="kp-opt" data-val="nonaktif"><input type="radio" name="kp-status" value="nonaktif">Nonaktif</label>
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="kp-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="kp-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Hapus -->
+  <div class="modal-overlay" id="kp-confirmModal" hidden>
+    <div class="modal-sheet" style="max-width:360px;">
+      <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </div>
+      <h3 style="text-align:center; font-size:13.5px; font-weight:700; margin:0 0 4px;">Hapus Akun Ini?</h3>
+      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;" id="kp-confirmDesc">Akun akan dihapus permanen.</p>
+      <div class="modal-actions" style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-outline" id="kp-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-primary" id="kp-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1; background:#ff3b30;">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['kelola-pengguna'] = function () { kpInit(); };
+
+  var defaultKpView = (window.matchMedia && window.matchMedia('(min-width:900px)').matches) ? 'table' : 'cards';
+  try {
+    var savedKpView = localStorage.getItem('genio_kp_view_mode');
+    if (savedKpView === 'table' || savedKpView === 'cards') defaultKpView = savedKpView;
+  } catch (e) {}
+
+  var kpState = {
+    tab: 'aktif',
+    userList: [],
+    unitOptions: [],
+    search: '',
+    sortField: 'nama',
+    sortDir: 'asc',
+    viewMode: defaultKpView,
+    initialized: false
+  };
+
+  var KP_ROLE_META = {
+    super_admin: { label: 'Super Admin', color: '#8b0000', bg: 'rgba(139,0,0,.08)' },
+    manajer: { label: 'Manajer', color: '#007aff', bg: 'rgba(0,122,255,.08)' },
+    hrd: { label: 'HRD', color: '#8e2fc9', bg: 'rgba(142,47,201,.08)' },
+    kepala_unit: { label: 'Kepala Unit', color: '#c06400', bg: 'rgba(192,100,0,.08)' }
+  };
+
+  function kpEscape(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+
+  function kpInit() {
+    if (!kpState.initialized) {
+      kpState.initialized = true;
+      initKpTabScrubbing();
+      setTimeout(kpUpdateDockGlider, 50);
+      window.addEventListener('resize', kpUpdateDockGlider);
+
+      document.getElementById('kp-searchInput').addEventListener('input', function (e) {
+        kpState.search = e.target.value.toLowerCase();
+        kpRenderList();
+      });
+      var viewToggleBtn = document.getElementById('kp-viewToggleBtn');
+      if (viewToggleBtn) {
+        viewToggleBtn.addEventListener('click', kpToggleViewMode);
+      }
+      document.getElementById('kp-cancelBtn').addEventListener('click', kpCloseModal);
+      document.getElementById('kp-saveBtn').addEventListener('click', kpSubmitEdit);
+      document.getElementById('kp-confirmCancelBtn').addEventListener('click', kpCloseConfirm);
+      document.getElementById('kp-confirmOkBtn').addEventListener('click', async function () {
+        var btn = this;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Menghapus...';
+        try { if (kpConfirmCallback) await kpConfirmCallback(); }
+        finally { btn.disabled = false; btn.textContent = 'Ya, Hapus'; kpCloseConfirm(); }
+      });
+
+      document.querySelectorAll('.kp-opt').forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          var group = opt.closest('.kp-opt-row');
+          group.querySelectorAll('.kp-opt').forEach(function (o) {
+            o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
+          });
+          opt.style.background = 'var(--blue-tint)'; opt.style.color = 'var(--blue)'; opt.style.borderColor = 'var(--blue)';
+          opt.querySelector('input').checked = true;
+          if (group.id === 'kp-roleOpts') kpUpdateUnitFieldVisibility(opt.dataset.val);
+        });
+      });
+
+      document.querySelectorAll('#kp-modal input, #kp-modal select').forEach(function (el) {
+        el.addEventListener('focus', function () {
+          setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+        });
+      });
+
+      kpApplyResponsiveLayout();
+      var kpLayoutResizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(kpLayoutResizeTimer);
+        kpLayoutResizeTimer = setTimeout(kpApplyResponsiveLayout, 150);
+      });
+    }
+    kpLoadAll();
+  }
+
+  function kpUpdateUnitFieldVisibility(role) {
+    document.getElementById('kp-unitFieldWrap').hidden = role !== 'kepala_unit';
+  }
+
+  function kpUpdateViewToggleUI() {
+    var btn = document.getElementById('kp-viewToggleBtn');
+    if (!btn) return;
+    var isTable = kpState.viewMode === 'table';
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color = 'var(--ink)';
+    btn.style.background = '#fff';
+    if (isTable) {
+      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Kartu');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
+    } else {
+      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
+      btn.setAttribute('aria-label', 'Tampilkan sebagai Tabel');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+    }
+  }
+
+  function kpToggleViewMode() {
+    var btn = document.getElementById('kp-viewToggleBtn');
+    if (btn) {
+      btn.classList.remove('kp-btn-pop');
+      void btn.offsetWidth;
+      btn.classList.add('kp-btn-pop');
+    }
+    kpState.viewMode = (kpState.viewMode === 'table') ? 'cards' : 'table';
+    try {
+      localStorage.setItem('genio_kp_view_mode', kpState.viewMode);
+    } catch (e) {}
+    kpRenderList();
+  }
+
+  var KP_MOBILE_ORDER = ['.kp-dock-sec', '.kp-search-sec'];
+  function kpApplyResponsiveLayout() {
+    var anchor = document.getElementById('kp-desktopAnchor');
+    if (!anchor) return;
+    var isDesktop = window.matchMedia('(min-width:900px)').matches;
+    var toolbarRow = document.getElementById('kp-toolbarRow');
+    if (isDesktop) {
+      if (!toolbarRow) {
+        toolbarRow = document.createElement('div');
+        toolbarRow.id = 'kp-toolbarRow';
+        anchor.parentNode.insertBefore(toolbarRow, anchor.nextSibling);
+      }
+      var dockEl = document.querySelector('.kp-dock-sec');
+      if (dockEl) toolbarRow.appendChild(dockEl);
+      var searchEl = document.querySelector('.kp-search-sec');
+      if (searchEl) toolbarRow.appendChild(searchEl);
+    } else if (toolbarRow) {
+      var cursor = anchor;
+      KP_MOBILE_ORDER.forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (el) { cursor.parentNode.insertBefore(el, cursor.nextSibling); cursor = el; }
+      });
+      toolbarRow.remove();
+    }
+  }
+
+  function kpSwitchTab(tab) {
+    kpState.tab = tab;
+    document.querySelectorAll('.kp-dock-btn').forEach(function (b) { b.classList.toggle('kp-dock-active', b.dataset.tab === tab); });
+    kpUpdateDockGlider();
+    kpRenderList();
+  }
+  function kpUpdateDockGlider() {
+    var activeBtn = document.querySelector('.kp-dock-btn.kp-dock-active');
+    var glider = document.getElementById('kp-dockGlider');
+    if (!activeBtn || !glider) return;
+    glider.style.left = activeBtn.offsetLeft + 'px';
+    glider.style.width = activeBtn.offsetWidth + 'px';
+  }
+  function initKpTabScrubbing() {
+    var dock = document.getElementById('kp-dock');
+    var glider = document.getElementById('kp-dockGlider');
+    if (!dock || !glider) return;
+    var TABS = ['aktif', 'nonaktif'];
+    var isPointerDown = false, isDragging = false, hasDragged = false, suppressClick = false;
+    var startX = 0, startY = 0, pointerId = null;
+    var cachedLeft = 0, cachedWidth = 0, cachedGliderWidth = 0, targetTab = kpState.tab;
+    var DRAG_THRESHOLD = 8;
+
+    dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    dock.addEventListener('click', function (e) { if (suppressClick) { e.stopPropagation(); e.preventDefault(); } }, true);
+    dock.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
+      pointerId = e.pointerId; startX = e.clientX; startY = e.clientY;
+      var rect = dock.getBoundingClientRect();
+      cachedLeft = rect.left; cachedWidth = rect.width;
+      cachedGliderWidth = glider.offsetWidth || (rect.width / TABS.length);
+      targetTab = kpState.tab;
+    });
+    dock.addEventListener('pointermove', function (e) {
+      if (!isPointerDown) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!hasDragged && Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+        isDragging = true; hasDragged = true; suppressClick = true;
+        try { dock.setPointerCapture(pointerId); } catch (_) {}
+      }
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        var relX = e.clientX - cachedLeft;
+        var clampedPx = Math.max(0, Math.min(cachedWidth - cachedGliderWidth, relX - cachedGliderWidth / 2));
+        glider.style.transition = 'none';
+        glider.style.left = clampedPx + 'px';
+        var ratio = Math.max(0, Math.min(0.999, relX / cachedWidth));
+        var newIdx = Math.min(TABS.length - 1, Math.max(0, Math.floor(ratio * TABS.length)));
+        targetTab = TABS[newIdx];
+        document.querySelectorAll('.kp-dock-btn').forEach(function (b) { b.classList.toggle('kp-dock-active', b.dataset.tab === targetTab); });
+      }
+    });
+    function endScrub() {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      glider.style.transition = '';
+      if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
+      if (hasDragged) { isDragging = false; kpSwitchTab(targetTab); setTimeout(function () { suppressClick = false; }, 80); }
+      else suppressClick = false;
+    }
+    dock.addEventListener('pointerup', endScrub);
+    dock.addEventListener('pointercancel', function () { endScrub(); });
+    document.querySelectorAll('.kp-tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { if (!hasDragged) kpSwitchTab(btn.dataset.tab); });
+    });
+  }
+
+  async function kpLoadAll() {
+    var listEl = document.getElementById('kp-list');
+    try {
+      var s = genioGetSession();
+      kpState.userList = await supaRest('users?role=neq.tutor&select=id,nama,email,role,status,unit_id,created_at,units(nama_unit)&order=nama.asc', s.access_token);
+
+      var aktifCount = kpState.userList.filter(function (u) { return u.status === 'aktif'; }).length;
+      document.getElementById('kp-heroTotal').textContent = kpState.userList.length;
+      document.getElementById('kp-heroAktif').textContent = aktifCount + ' Akun';
+      document.getElementById('kp-heroNonaktif').textContent = (kpState.userList.length - aktifCount) + ' Akun';
+      document.getElementById('kp-aktifCount').textContent = aktifCount;
+      document.getElementById('kp-nonaktifCount').textContent = kpState.userList.length - aktifCount;
+
+      kpRenderList();
+    } catch (err) {
+      listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + kpEscape(err.message) + '</div>';
+    }
+  }
+
+  function kpFormatTgl(iso) {
+    if (!iso) return '-';
+    var d = new Date(iso);
+    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function kpMatchesSearch(u) {
+    if (!kpState.search) return true;
+    var q = kpState.search;
+    return (u.nama || '').toLowerCase().indexOf(q) !== -1 || (u.email || '').toLowerCase().indexOf(q) !== -1;
+  }
+
+  function kpGetSortIcon(field) {
+    if (kpState.sortField === field) {
+      if (kpState.sortDir === 'asc') {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+      } else {
+        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
+      }
+    }
+    return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; opacity:.2; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
+  }
+
+  function kpSortRows(rows) {
+    var field = kpState.sortField || 'nama';
+    var dir = kpState.sortDir || 'asc';
+    var sorted = rows.slice();
+    sorted.sort(function (a, b) {
+      var valA = '';
+      var valB = '';
+      if (field === 'nama') {
+        valA = (a.nama || '').toLowerCase();
+        valB = (b.nama || '').toLowerCase();
+      } else if (field === 'email') {
+        valA = (a.email || '').toLowerCase();
+        valB = (b.email || '').toLowerCase();
+      } else if (field === 'role') {
+        var rA = KP_ROLE_META[a.role] ? KP_ROLE_META[a.role].label : (a.role || '');
+        var rB = KP_ROLE_META[b.role] ? KP_ROLE_META[b.role].label : (b.role || '');
+        valA = rA.toLowerCase();
+        valB = rB.toLowerCase();
+      } else if (field === 'unit') {
+        valA = (a.units && a.units.nama_unit || '').toLowerCase();
+        valB = (b.units && b.units.nama_unit || '').toLowerCase();
+      } else if (field === 'created_at') {
+        valA = a.created_at || '';
+        valB = b.created_at || '';
+      } else if (field === 'status') {
+        valA = (a.status || '').toLowerCase();
+        valB = (b.status || '').toLowerCase();
+      }
+      if (valA < valB) return dir === 'asc' ? -1 : 1;
+      if (valA > valB) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+    return sorted;
+  }
+
+  function kpHandleSort(field) {
+    if (kpState.sortField === field) {
+      kpState.sortDir = (kpState.sortDir === 'asc') ? 'desc' : 'asc';
+    } else {
+      kpState.sortField = field;
+      kpState.sortDir = (field === 'created_at') ? 'desc' : 'asc';
+    }
+    kpRenderList();
+  }
+
+  function kpRenderList() {
+    var listEl = document.getElementById('kp-list');
+    var rows = kpState.userList.filter(function (u) { return u.status === kpState.tab; }).filter(kpMatchesSearch);
+    rows = kpSortRows(rows);
+
+    document.getElementById('kp-sectionLabel').textContent = kpState.tab === 'aktif' ? 'Akun Aktif' : 'Akun Nonaktif';
+    document.getElementById('kp-resultCount').textContent = rows.length + ' Akun';
+    kpUpdateViewToggleUI();
+
+    if (!rows.length) {
+      listEl.classList.remove('kp-view-table');
+      listEl.innerHTML = '<div class="kp-card kp-full-width empty-state">Tidak ada akun yang cocok.</div>';
+      return;
+    }
+
+    if (kpState.viewMode === 'table') {
+      listEl.classList.add('kp-view-table');
+      listEl.innerHTML = kpRenderTable(rows);
+    } else {
+      listEl.classList.remove('kp-view-table');
+      listEl.innerHTML = rows.map(kpRenderCard).join('');
+    }
+    kpBindCardEvents();
+  }
+
+  function kpRenderTable(rows) {
+    var trs = rows.map(function (u, idx) {
+      var isAktif = u.status === 'aktif';
+      var roleMeta = KP_ROLE_META[u.role] || { label: u.role || '-' };
+      var roleText = roleMeta.label || u.role || '-';
+      var unitText = (u.units && u.units.nama_unit) ? kpEscape(u.units.nama_unit) : '-';
+      var dotColor = isAktif ? '#34c759' : '#8e8e93';
+      var statusLabel = isAktif ? 'Aktif' : 'Nonaktif';
+
+      var statusBadge = '<span class="kp-table-status-pill">' +
+        '<span class="kp-status-dot" style="background:' + dotColor + ';"></span>' +
+        '<span class="kp-status-label">' + statusLabel + '</span>' +
+      '</span>';
+
+      return '' +
+        '<tr>' +
+          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:600;">' + kpEscape(u.nama) + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + kpEscape(u.email || '-') + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + kpEscape(roleText) + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + unitText + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + kpFormatTgl(u.created_at) + '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + statusBadge + '</td>' +
+          '<td style="text-align:center; white-space:nowrap; width:65px;">' +
+            '<div style="display:inline-flex; align-items:center; gap:4px;">' +
+              '<button type="button" class="kp-table-edit-btn kp-table-icon-btn kp-edit-btn" data-id="' + u.id + '" title="Edit Pengguna" aria-label="Edit">' +
+                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+              '</button>' +
+              '<button type="button" class="kp-table-delete-btn kp-table-icon-btn kp-delete-btn" data-id="' + u.id + '" data-nama="' + kpEscape(u.nama) + '" title="Hapus Pengguna" aria-label="Hapus">' +
+                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+              '</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+    }).join('');
+
+    return '' +
+      '<div class="kp-table-card kp-full-width">' +
+        '<div class="kp-table-wrap">' +
+          '<table class="kp-table">' +
+            '<thead>' +
+              '<tr>' +
+                '<th style="width:38px; text-align:center;">No</th>' +
+                '<th class="kp-sort-th" data-sort="nama" title="Urutkan Nama (A - Z)">' +
+                  '<span style="display:inline-flex; align-items:center;">Nama Pengguna' + kpGetSortIcon('nama') + '</span>' +
+                '</th>' +
+                '<th class="kp-sort-th" data-sort="email" title="Urutkan Email">' +
+                  '<span style="display:inline-flex; align-items:center;">Email' + kpGetSortIcon('email') + '</span>' +
+                '</th>' +
+                '<th class="kp-sort-th" data-sort="role" title="Urutkan Role">' +
+                  '<span style="display:inline-flex; align-items:center;">Role' + kpGetSortIcon('role') + '</span>' +
+                '</th>' +
+                '<th class="kp-sort-th" data-sort="unit" title="Urutkan Unit">' +
+                  '<span style="display:inline-flex; align-items:center;">Unit / Cabang' + kpGetSortIcon('unit') + '</span>' +
+                '</th>' +
+                '<th class="kp-sort-th" data-sort="created_at" title="Urutkan Tanggal Bergabung">' +
+                  '<span style="display:inline-flex; align-items:center;">Bergabung' + kpGetSortIcon('created_at') + '</span>' +
+                '</th>' +
+                '<th class="kp-sort-th" data-sort="status" title="Urutkan Status" style="text-align:center;">' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:center; width:100%;">Status' + kpGetSortIcon('status') + '</span>' +
+                '</th>' +
+                '<th style="text-align:center; width:68px;">Aksi</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' +
+              trs +
+            '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function kpRenderCard(u) {
+    var initials = (u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+    var isAktif = u.status === 'aktif';
+    var statusBadge = isAktif
+      ? '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(52,199,89,.14); color:#28a745; font-size:9.5px; font-weight:800; padding:0 8px; height:22px; border-radius:999px; box-sizing:border-box; flex:none;"><span style="width:12px; height:12px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
+      : '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(142,142,147,.16); color:#8e8e93; font-size:9.5px; font-weight:800; padding:0 8px; height:22px; border-radius:999px; box-sizing:border-box; flex:none;"><span style="width:12px; height:12px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
+
+    var roleMeta = KP_ROLE_META[u.role] || { label: u.role, color: 'var(--ink-soft)' };
+
+    return '' +
+      '<div class="card kp-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
+        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
+          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
+            '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + kpEscape(initials) + '</div>' +
+            '<div style="min-width:0;">' +
+              '<h4 style="font-size:12.5px; font-weight:800; color:#1c1c1e; margin:0; line-height:1.3;">' + kpEscape(u.nama) + '</h4>' +
+              '<p style="font-size:10.5px; font-weight:800; margin:1px 0 0; color:' + roleMeta.color + ';">' + kpEscape(roleMeta.label) + '</p>' +
+              '<p style="font-size:10px; color:#8e8e93; font-weight:500; margin:1px 0 0;">' + kpEscape(u.email) + (u.units ? ' &bull; ' + kpEscape(u.units.nama_unit) : '') + '</p>' +
+            '</div>' +
+          '</div>' +
+          statusBadge +
+        '</div>' +
+        '<div style="display:flex; gap:8px; margin-top:10px;">' +
+          '<button class="kp-edit-btn" data-id="' + u.id + '" style="flex:1; height:30px; background:var(--ink); color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:700; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Edit</button>' +
+          '<button class="kp-delete-btn" data-id="' + u.id + '" data-nama="' + kpEscape(u.nama) + '" style="flex:1; height:30px; background:var(--surface); color:var(--ink); border:1.5px solid var(--border); border-radius:7px; padding:0 10px; font-size:11px; font-weight:700; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Hapus</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function kpBindCardEvents() {
+    document.querySelectorAll('.kp-edit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { kpOpenModal(btn.dataset.id); });
+    });
+    document.querySelectorAll('.kp-delete-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.getElementById('kp-confirmDesc').textContent = btn.dataset.nama + ' akan dihapus permanen dari sistem.';
+        kpOpenConfirm(function () { kpDelete(btn.dataset.id); });
+      });
+    });
+    document.querySelectorAll('.kp-sort-th').forEach(function (th) {
+      th.addEventListener('click', function () {
+        kpHandleSort(th.dataset.sort);
+      });
+    });
+  }
+
+  async function kpDelete(id) {
+    try {
+      var s = genioGetSession();
+      await supaRest('users?id=eq.' + id, s.access_token, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+      genioToast('Akun berhasil dihapus', 'success');
+      kpLoadAll();
+    } catch (err) { genioToast('Gagal menghapus: ' + err.message, 'error'); }
+  }
+
+  /* ===== Modal Edit ===== */
+  var kpModal = document.getElementById('kp-modal');
+  function kpSetOpt(groupId, val) {
+    document.querySelectorAll('#' + groupId + ' .kp-opt').forEach(function (o) {
+      var active = o.dataset.val === val;
+      o.style.background = active ? 'var(--blue-tint)' : '#fff';
+      o.style.color = active ? 'var(--blue)' : 'var(--ink-soft)';
+      o.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
+      o.querySelector('input').checked = active;
+    });
+  }
+
+  async function kpOpenModal(id) {
+    var u = kpState.userList.find(function (x) { return x.id === id; });
+    if (!u) return;
+    document.getElementById('kp-modalAlert').hidden = true;
+    document.getElementById('kp-modalTitle').textContent = 'Edit Pengguna';
+    document.getElementById('kp-editId').value = id;
+    document.getElementById('kp-nama').value = u.nama || '';
+    document.getElementById('kp-email').value = u.email || '';
+    kpSetOpt('kp-roleOpts', u.role);
+    kpSetOpt('kp-statusOpts', u.status);
+    kpUpdateUnitFieldVisibility(u.role);
+
+    if (!kpState.unitOptions.length) {
+      try {
+        var s = genioGetSession();
+        kpState.unitOptions = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+      } catch (e) {}
+    }
+    var unitSelect = document.getElementById('kp-unitSelect');
+    unitSelect.innerHTML = '<option value="">Pilih unit...</option>' + kpState.unitOptions.map(function (un) {
+      return '<option value="' + un.id + '">' + kpEscape(un.nama_unit) + '</option>';
+    }).join('');
+    unitSelect.value = u.unit_id || '';
+
+    kpModal.hidden = false;
+    requestAnimationFrame(function () { kpModal.classList.add('show'); });
+  }
+  function kpCloseModal() {
+    kpModal.classList.remove('show');
+    setTimeout(function () { kpModal.hidden = true; }, 280);
+  }
+
+  async function kpSubmitEdit() {
+    var alertEl = document.getElementById('kp-modalAlert');
+    var id = document.getElementById('kp-editId').value;
+    var nama = document.getElementById('kp-nama').value.trim();
+    var email = document.getElementById('kp-email').value.trim();
+    var roleEl = document.querySelector('input[name="kp-role"]:checked');
+    var statusEl = document.querySelector('input[name="kp-status"]:checked');
+    var role = roleEl ? roleEl.value : '';
+    var unitId = document.getElementById('kp-unitSelect').value;
+
+    if (!nama || !email) { alertEl.textContent = 'Nama dan email wajib diisi.'; alertEl.hidden = false; return; }
+    if (!role) { alertEl.textContent = 'Role wajib dipilih.'; alertEl.hidden = false; return; }
+    if (role === 'kepala_unit' && !unitId) { alertEl.textContent = 'Kepala Unit wajib pilih unit.'; alertEl.hidden = false; return; }
+    alertEl.hidden = true;
+
+    var btn = document.getElementById('kp-saveBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    try {
+      var s = genioGetSession();
+      await supaRest('users?id=eq.' + id, s.access_token, {
+        method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({
+          nama: nama, email: email, role: role,
+          unit_id: role === 'kepala_unit' ? unitId : null,
+          status: statusEl ? statusEl.value : 'aktif'
+        })
+      });
+      genioToast('Data pengguna berhasil diperbarui', 'success');
+      kpCloseModal();
+      kpLoadAll();
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menyimpan data.'; alertEl.hidden = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Simpan';
+    }
+  }
+
+  /* ===== Modal Konfirmasi ===== */
+  var kpConfirmModal = document.getElementById('kp-confirmModal');
+  var kpConfirmCallback = null;
+  function kpOpenConfirm(callback) {
+    kpConfirmCallback = callback;
+    kpConfirmModal.hidden = false;
+    requestAnimationFrame(function () { kpConfirmModal.classList.add('show'); });
+  }
+  function kpCloseConfirm() {
+    kpConfirmModal.classList.remove('show');
+    setTimeout(function () { kpConfirmModal.hidden = true; }, 280);
+  }
+</script>
