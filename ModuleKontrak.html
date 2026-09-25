@@ -26,7 +26,7 @@
     background: #fff;
     color: var(--ink);
     font-size: 9.5px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: .02em;
     padding: 2.5px 8px;
     border-radius: 999px;
@@ -36,7 +36,7 @@
     background: rgba(255,255,255,.1);
     color: #fff;
     font-size: 9.5px;
-    font-weight: 700;
+    font-weight: 500;
     padding: 2.5px 8px;
     border-radius: 999px;
     white-space: nowrap;
@@ -61,14 +61,14 @@
   }
   .ktr-hero-num{
     font-size: 20px;
-    font-weight: 800;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
   }
   .ktr-hero-unit{
     font-size: 11px;
     opacity: .65;
-    font-weight: 600;
+    font-weight: 500;
   }
   .ktr-hero-stats-row{
     display: flex;
@@ -110,7 +110,7 @@
     gap: 5px;
     cursor: pointer;
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 500;
     font-family: var(--font);
     flex: none;
     white-space: nowrap;
@@ -280,7 +280,7 @@
     .ktr-table th{
       padding: 6px 8px !important;
       font-size: 10.5px !important;
-      font-weight: 600 !important;
+      font-weight: 500 !important;
     }
     .ktr-table td{
       padding: 5px 8px !important;
@@ -358,7 +358,7 @@
     background: rgba(0,0,0,.025);
     border-bottom: 1px solid var(--border);
     font-size: 10.5px;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--ink-soft);
     letter-spacing: .02em;
     white-space: nowrap;
@@ -467,18 +467,18 @@
   .ktr-dock-btn{
     position:relative; z-index:2; flex:1; height:32px; display:flex; align-items:center; justify-content:center; gap:5px;
     background:none; border:none; cursor:pointer; padding:0 8px; font-size:11.5px; font-family:var(--font);
-    color:var(--ink-soft); font-weight:700; transition:color .18s ease; white-space:nowrap;
+    color:var(--ink-soft); font-weight:500; transition:color .18s ease; white-space:nowrap;
   }
-  .ktr-dock-btn.ktr-dock-active{ color:var(--ink); font-weight:800; }
+  .ktr-dock-btn.ktr-dock-active{ color:var(--ink); font-weight:600; }
 
   .ktr-status-badge{
-    display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:800;
+    display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600;
     padding:0 9px; height:24px; border-radius:999px; box-sizing:border-box; flex:none;
   }
   .ktr-detail-row{ display:flex; justify-content:space-between; align-items:baseline; font-size:10.5px; gap:8px; }
   .ktr-detail-row + .ktr-detail-row{ margin-top:5px; }
-  .ktr-detail-row span:first-child{ color:#8e8e93; font-weight:600; text-transform:uppercase; font-size:9.5px; letter-spacing:.02em; flex:none; }
-  .ktr-detail-row span:last-child{ font-weight:800; color:#1c1c1e; text-align:right; }
+  .ktr-detail-row span:first-child{ color:#8e8e93; font-weight:500; text-transform:uppercase; font-size:9.5px; letter-spacing:.02em; flex:none; }
+  .ktr-detail-row span:last-child{ font-weight:600; color:#1c1c1e; text-align:right; }
 
   #ktr-addBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
   #ktr-addBtn:active{ transform:scale(.85); }
@@ -502,22 +502,22 @@
   #ktr-modal .modal-actions .btn, #ktr-tutorModal .modal-actions .btn, #ktr-confirmModal .modal-actions .btn, #ktr-filterModal .modal-actions .btn, #ktr-pickerModal .modal-actions .btn, #ktr-selectPickerModal .modal-actions .btn, #ktr-datePickerModal .modal-actions .btn{
     height: 36px !important;
     font-size: 12px !important;
-    font-weight: 600 !important;
+    font-weight: 500 !important;
     border-radius: 9px !important;
     padding: 0 16px !important;
     box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
   }
-  .ktr-dp-day{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:var(--ink); border-radius:8px; cursor:pointer; background:none; border:none; font-family:var(--font); }
+  .ktr-dp-day{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:500; color:var(--ink); border-radius:8px; cursor:pointer; background:none; border:none; font-family:var(--font); }
   .ktr-dp-day:hover{ background:var(--surface); }
-  .ktr-dp-day.ktr-dp-selected{ background:var(--blue); color:#fff; font-weight:800; }
+  .ktr-dp-day.ktr-dp-selected{ background:var(--blue); color:#fff; font-weight:600; }
   .ktr-dp-day.ktr-dp-empty{ visibility:hidden; cursor:default; }
 
-  .ktr-group-title{ font-size:10px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
+  .ktr-group-title{ font-size:10px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
   .ktr-group-title:first-of-type{ margin-top:0; }
   .ktr-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
   .ktr-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
   .ktr-row:last-child{ border-bottom:none; }
-  .ktr-row label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:2px; }
+  .ktr-row label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:2px; }
   .ktr-row input, .ktr-row select{
     width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
     background:none; color:var(--ink); outline:none;
@@ -554,7 +554,7 @@
         </span>
         <div style="min-width:0;">
           <div style="font-size:9.5px; opacity:.65;">Kontrak Aktif</div>
-          <div style="font-size:11.5px; font-weight:800; margin-top:1px;" id="ktr-heroAktif">0 Siswa</div>
+          <div style="font-size:11.5px; font-weight:600; margin-top:1px;" id="ktr-heroAktif">0 Siswa</div>
         </div>
       </div>
       <div class="ktr-hero-stat-card">
@@ -563,7 +563,7 @@
         </span>
         <div style="min-width:0;">
           <div style="font-size:9.5px; opacity:.65;">Kontrak Nonaktif</div>
-          <div style="font-size:11.5px; font-weight:800; margin-top:1px;" id="ktr-heroNonaktif">0 Siswa</div>
+          <div style="font-size:11.5px; font-weight:600; margin-top:1px;" id="ktr-heroNonaktif">0 Siswa</div>
         </div>
       </div>
     </div>
@@ -577,11 +577,11 @@
     <div class="ktr-dock-glider" id="ktr-dockGlider"></div>
     <button class="ktr-dock-btn ktr-tab-btn ktr-dock-active" data-tab="aktif">
       <span>Kontrak Aktif</span>
-      <span id="ktr-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+      <span id="ktr-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
     <button class="ktr-dock-btn ktr-tab-btn" data-tab="nonaktif">
       <span>Kontrak Nonaktif</span>
-      <span id="ktr-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+      <span id="ktr-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
   </div>
 
@@ -593,7 +593,7 @@
     </div>
     <button id="ktr-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-      <span id="ktr-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:800; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
+      <span id="ktr-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
     </button>
     <button id="ktr-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
@@ -601,8 +601,8 @@
   </div>
 
   <div id="ktr-sectionLabelWrap" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-    <div id="ktr-sectionLabel" style="font-size:11.5px; color:var(--ink-soft); font-weight:600;">Kontrak Aktif</div>
-    <span id="ktr-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:700; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Kontrak</span>
+    <div id="ktr-sectionLabel" style="font-size:11.5px; color:var(--ink-soft); font-weight:500;">Kontrak Aktif</div>
+    <span id="ktr-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Kontrak</span>
   </div>
 
   <div id="ktr-list">
@@ -612,15 +612,15 @@
   <!-- Modal Tambah/Edit Kontrak Siswa -->
   <div class="modal-overlay" id="ktr-modal" hidden>
     <div class="modal-sheet">
-      <h3 id="ktr-modalTitle" style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Tambah Kontrak</h3>
+      <h3 id="ktr-modalTitle" style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Tambah Kontrak</h3>
       <div id="ktr-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
       <input type="hidden" id="ktr-id">
 
       <div id="ktr-statusFieldWrap" hidden>
         <div class="ktr-group-title">Status</div>
         <div style="display:flex; gap:6px; margin-bottom:4px;">
-          <button type="button" class="ktr-status-opt" data-val="aktif" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-size:11px; font-weight:700; cursor:pointer;">Aktif</button>
-          <button type="button" class="ktr-status-opt" data-val="selesai" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-size:11px; font-weight:700; cursor:pointer;">Nonaktif</button>
+          <button type="button" class="ktr-status-opt" data-val="aktif" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-size:11px; font-weight:500; cursor:pointer;">Aktif</button>
+          <button type="button" class="ktr-status-opt" data-val="selesai" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-size:11px; font-weight:500; cursor:pointer;">Nonaktif</button>
         </div>
         <input type="hidden" id="ktr-statusSelect" value="aktif">
       </div>
@@ -676,7 +676,7 @@
   <!-- Modal Tambah/Edit Tutor -->
   <div class="modal-overlay" id="ktr-tutorModal" hidden>
     <div class="modal-sheet">
-      <h3 id="ktr-tutorModalTitle" style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Tambah Tutor</h3>
+      <h3 id="ktr-tutorModalTitle" style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Tambah Tutor</h3>
       <div id="ktr-tutorModalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
       <input type="hidden" id="ktr-tutorId">
       <input type="hidden" id="ktr-tutorKontrakSiswaId">
@@ -713,12 +713,12 @@
   <!-- Modal Filter -->
   <div class="modal-overlay" id="ktr-filterModal" hidden>
     <div class="modal-sheet" style="max-height:88vh; overflow-y:auto;">
-      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Filter</h3>
+      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Filter</h3>
       <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar kontrak sesuai kebutuhan.</p>
 
       <div class="ktr-group-title">Jenis Paket</div>
       <div class="ktr-group" style="margin-bottom:4px;">
-        <button type="button" class="ktr-filter-row-btn" data-picker="jenis" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="ktr-filter-row-btn" data-picker="jenis" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="ktr-filterJenisSummary">Semua Jenis</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -726,7 +726,7 @@
 
       <div class="ktr-group-title">Tutor</div>
       <div class="ktr-group" style="margin-bottom:4px;">
-        <button type="button" class="ktr-filter-row-btn" data-picker="tutor" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="ktr-filter-row-btn" data-picker="tutor" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="ktr-filterTutorSummary">Semua Tutor</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -734,7 +734,7 @@
 
       <div class="ktr-group-title">Siswa</div>
       <div class="ktr-group" style="margin-bottom:4px;">
-        <button type="button" class="ktr-filter-row-btn" data-picker="siswa" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="ktr-filter-row-btn" data-picker="siswa" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="ktr-filterSiswaSummary">Semua Siswa</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -742,7 +742,7 @@
 
       <div class="ktr-group-title">Orang Tua</div>
       <div class="ktr-group">
-        <button type="button" class="ktr-filter-row-btn" data-picker="ortu" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="ktr-filter-row-btn" data-picker="ortu" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="ktr-filterOrtuSummary">Semua Orang Tua</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -758,7 +758,7 @@
   <!-- Popup Picker -->
   <div class="modal-overlay" id="ktr-pickerModal" hidden style="z-index:70;">
     <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="ktr-pickerTitle" style="font-size:13.5px; font-weight:700; margin:0 0 10px;">Pilih</h3>
+      <h3 id="ktr-pickerTitle" style="font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih</h3>
       <div id="ktr-pickerList" style="margin-bottom:6px;"></div>
       <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn btn-outline" id="ktr-pickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
@@ -770,22 +770,22 @@
   <!-- Popup Kalender (Tanggal Mulai / Selesai) -->
   <div class="modal-overlay" id="ktr-datePickerModal" hidden style="z-index:75;">
     <div class="modal-sheet" style="max-width:320px;">
-      <h3 id="ktr-datePickerTitle" style="text-align:center; font-size:13.5px; font-weight:700; margin:0 0 10px;">Pilih Tanggal</h3>
+      <h3 id="ktr-datePickerTitle" style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih Tanggal</h3>
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-        <button type="button" id="ktr-dpPrevYear" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; color:var(--ink); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&laquo;</button>
-        <button type="button" id="ktr-dpPrevMonth" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; color:var(--ink); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&lsaquo;</button>
-        <span id="ktr-dpMonthYear" style="font-size:12.5px; font-weight:800; color:var(--ink);">-</span>
-        <button type="button" id="ktr-dpNextMonth" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; color:var(--ink); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&rsaquo;</button>
-        <button type="button" id="ktr-dpNextYear" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; color:var(--ink); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&raquo;</button>
+        <button type="button" id="ktr-dpPrevYear" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&laquo;</button>
+        <button type="button" id="ktr-dpPrevMonth" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&lsaquo;</button>
+        <span id="ktr-dpMonthYear" style="font-size:12.5px; font-weight:600; color:var(--ink);">-</span>
+        <button type="button" id="ktr-dpNextMonth" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&rsaquo;</button>
+        <button type="button" id="ktr-dpNextYear" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&raquo;</button>
       </div>
       <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;">
-        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:3px 0;">Min</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:3px 0;">Sen</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:3px 0;">Sel</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:3px 0;">Rab</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:3px 0;">Kam</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:3px 0;">Jum</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:700; color:var(--ink-soft); padding:3px 0;">Sab</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Min</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Sen</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Sel</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Rab</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Kam</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Jum</span>
+        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Sab</span>
       </div>
       <div id="ktr-dpGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:10px;"></div>
       <div class="modal-actions" style="display:flex; gap:8px;">
@@ -799,7 +799,7 @@
   <!-- Popup Pilih (Siswa / Paket / Tutor) — dengan search bar -->
   <div class="modal-overlay" id="ktr-selectPickerModal" hidden style="z-index:75;">
     <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="ktr-selectPickerTitle" style="font-size:13.5px; font-weight:700; margin:0 0 8px;">Pilih</h3>
+      <h3 id="ktr-selectPickerTitle" style="font-size:13.5px; font-weight:500; margin:0 0 8px;">Pilih</h3>
       <div style="position:relative; margin-bottom:8px;">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="ktr-selectPickerSearchInput" placeholder="Cari..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
@@ -818,11 +818,11 @@
       <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
       </div>
-      <h3 style="text-align:center; font-size:13.5px; font-weight:700; margin:0 0 4px;" id="ktr-confirmTitle">Hapus Data Ini?</h3>
+      <h3 style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 4px;" id="ktr-confirmTitle">Hapus Data Ini?</h3>
       <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;" id="ktr-confirmDesc">Tindakan ini tidak bisa dibatalkan.</p>
       <div class="modal-actions" style="display:flex; gap:8px;">
         <button type="button" class="btn btn-outline" id="ktr-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="ktr-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1; background:#ff3b30;">Ya, Hapus</button>
+        <button type="button" class="btn btn-primary" id="ktr-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1; background:var(--red);">Ya, Hapus</button>
       </div>
     </div>
   </div>
@@ -1357,7 +1357,7 @@
       ? '<span class="ktr-status-badge" style="background:rgba(52,199,89,.14); color:#28a745; height:22px; font-size:9.5px; padding:0 8px;"><span style="width:11px; height:11px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>' + statusLabel + '</span>'
       : '<span class="ktr-status-badge" style="background:rgba(255,59,48,.12); color:#ff3b30; height:22px; font-size:9.5px; padding:0 8px;"><span style="width:11px; height:11px; border-radius:50%; background:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>' + statusLabel + '</span>';
 
-    var unitBadge = k.units ? '<span style="background:var(--blue); color:#fff; font-size:9px; font-weight:700; padding:1.5px 6px; border-radius:999px; white-space:nowrap;">' + ktrEscape(k.units.nama_unit) + '</span>' : '';
+    var unitBadge = k.units ? '<span style="background:var(--blue); color:#fff; font-size:9px; font-weight:500; padding:1.5px 6px; border-radius:999px; white-space:nowrap;">' + ktrEscape(k.units.nama_unit) + '</span>' : '';
     var sekolahLine = [siswa.kelas, siswa.sekolah].filter(Boolean).join(' &bull; ') || 'Kelas &amp; sekolah belum diisi';
 
     var isOpen = ktrState.openCard === k.id;
@@ -1369,10 +1369,10 @@
       return '<div style="background:var(--surface); border-radius:9px; padding:9px 11px; margin-top:' + (idx > 0 ? '8px' : '0') + '; border:1px solid var(--border);">' +
         '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">' +
           '<div style="min-width:0; flex:1;">' +
-            '<div style="font-size:11.5px; font-weight:800; color:#1c1c1e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + ktrEscape(kt.users && kt.users.nama || 'Tutor') + '">' + (idx + 1) + '. ' + ktrEscape(kt.users && kt.users.nama || 'Tutor') + '</div>' +
+            '<div style="font-size:11.5px; font-weight:600; color:#1c1c1e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + ktrEscape(kt.users && kt.users.nama || 'Tutor') + '">' + (idx + 1) + '. ' + ktrEscape(kt.users && kt.users.nama || 'Tutor') + '</div>' +
           '</div>' +
           '<div style="display:flex; align-items:center; gap:4px; flex:none;">' +
-            '<span style="background:var(--blue); color:#fff; font-size:9.5px; font-weight:700; padding:2px 7px; border-radius:999px; white-space:nowrap;">' + ktrEscape(kt.mapel || '-') + '</span>' +
+            '<span style="background:var(--blue); color:#fff; font-size:9.5px; font-weight:500; padding:2px 7px; border-radius:999px; white-space:nowrap;">' + ktrEscape(kt.mapel || '-') + '</span>' +
             '<button type="button" class="ktr-edit-tutor-btn" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Edit Tutor" aria-label="Edit Tutor" style="width:22px; height:22px; border-radius:5px; background:transparent; border:1px solid var(--border); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex:none; transition:all .15s ease;">' +
               '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
             '</button>' +
@@ -1393,17 +1393,17 @@
       '<div class="card ktr-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
         '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
           '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
-            '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + ktrEscape(initials) + '</div>' +
+            '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex:none;">' + ktrEscape(initials) + '</div>' +
             '<div style="min-width:0;">' +
               '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
-                '<h4 style="font-size:12.5px; font-weight:800; color:#1c1c1e; margin:0; line-height:1.3;">' + ktrEscape(siswa.nama || '-') + '</h4>' +
+                '<h4 style="font-size:12.5px; font-weight:600; color:#1c1c1e; margin:0; line-height:1.3;">' + ktrEscape(siswa.nama || '-') + '</h4>' +
                 unitBadge +
               '</div>' +
               '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:2px 0 0;">' + sekolahLine + '</p>' +
             '</div>' +
           '</div>' +
           '<div style="display:flex; align-items:center; gap:6px; flex:none;">' +
-            '<button class="ktr-edit-btn" data-id="' + k.id + '" style="background:#1c1c1e; color:#fff; border:none; border-radius:7px; padding:0 10px; height:26px; font-size:10.5px; font-weight:700; cursor:pointer; flex:none; font-family:var(--font);">Edit</button>' +
+            '<button class="ktr-edit-btn" data-id="' + k.id + '" style="background:var(--blue); color:#fff; border:none; border-radius:7px; padding:0 10px; height:26px; font-size:10.5px; font-weight:500; cursor:pointer; flex:none; font-family:var(--font);">Edit</button>' +
             statusBadge +
           '</div>' +
         '</div>' +
@@ -1415,14 +1415,14 @@
           '<div class="ktr-detail-row"><span>Biaya Satuan</span><span style="color:#28a745; font-size:12px;">' + ktrFormatRp(k.harga) + ' / Sesi</span></div>' +
         '</div>' +
 
-        '<button class="ktr-siswa-toggle" data-id="' + k.id + '" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,.04); border:none; border-radius:8px; padding:7px 10px; font-size:11px; font-weight:700; color:#3a3a3c; cursor:pointer; margin-top:8px; font-family:var(--font);">' +
+        '<button class="ktr-siswa-toggle" data-id="' + k.id + '" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,.04); border:none; border-radius:8px; padding:7px 10px; font-size:11px; font-weight:500; color:#3a3a3c; cursor:pointer; margin-top:8px; font-family:var(--font);">' +
           'Daftar Tutor' +
           '<svg class="ktr-toggle-icon" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
         '</button>' +
         '<div class="ktr-wrap" data-id="' + k.id + '" style="' + (isOpen ? 'max-height:2000px; opacity:1;' : '') + ' padding-top:' + (isOpen ? '8px' : '0') + ';">' +
           '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">' +
-            '<span style="font-size:10px; font-weight:700; color:#8e8e93; text-transform:uppercase; letter-spacing:.02em;">Daftar Tutor &amp; Mapel</span>' +
-            '<button class="ktr-add-tutor-btn" data-kontrak-id="' + k.id + '" style="background:var(--blue-tint); color:var(--blue); border:none; border-radius:7px; padding:0 10px; height:26px; font-size:10.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; font-family:var(--font);"><span style="width:13px; height:13px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>Tambah Tutor</button>' +
+            '<span style="font-size:10px; font-weight:500; color:#8e8e93; text-transform:uppercase; letter-spacing:.02em;">Daftar Tutor &amp; Mapel</span>' +
+            '<button class="ktr-add-tutor-btn" data-kontrak-id="' + k.id + '" style="background:var(--blue-tint); color:var(--blue); border:none; border-radius:7px; padding:0 10px; height:26px; font-size:10.5px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:4px; font-family:var(--font);"><span style="width:13px; height:13px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>Tambah Tutor</button>' +
           '</div>' +
           (tutorRows || '<p style="font-size:11.5px; color:#8e8e93; text-align:center; padding:8px 0;">Belum ada tutor yang ditugaskan.</p>') +
         '</div>' +

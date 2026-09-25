@@ -4,7 +4,7 @@
     padding:6px 0; font-size:11.5px;
   }
   .profile-detail-row span:first-child{color:var(--ink-soft); flex:none;}
-  .profile-detail-row span:last-child{color:var(--ink); font-weight:600; text-align:right;}
+  .profile-detail-row span:last-child{color:var(--ink); font-weight:500; text-align:right;}
 </style>
 
 <!-- Detail Profil — muncul sebagai panel tersendiri (drill-down mobile / sidebar+konten desktop) -->
@@ -12,17 +12,17 @@
   <div class="card" style="padding:16px 14px; text-align:center; margin-bottom:10px; border-radius:14px;">
     <div style="position:relative; width:64px; height:64px; margin:0 auto 10px;">
       <img id="prfDetailPhoto" style="display:none; width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--border);">
-      <div id="prfDetailPhotoFallback" style="width:64px; height:64px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;">-</div>
+      <div id="prfDetailPhotoFallback" style="width:64px; height:64px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:600;">-</div>
     </div>
-    <div style="font-size:15px; font-weight:800; color:var(--ink);" id="prfDetailNamaHero">-</div>
-    <span id="prfDetailRoleHero" style="display:inline-block; margin-top:4px; background:var(--surface); color:var(--ink-soft); font-size:9.5px; font-weight:700; letter-spacing:.02em; padding:2.5px 9px; border-radius:999px;">-</span>
+    <div style="font-size:15px; font-weight:600; color:var(--ink);" id="prfDetailNamaHero">-</div>
+    <span id="prfDetailRoleHero" style="display:inline-block; margin-top:4px; background:var(--surface); color:var(--ink-soft); font-size:9.5px; font-weight:500; letter-spacing:.02em; padding:2.5px 9px; border-radius:999px;">-</span>
   </div>
   <div class="card" style="padding:12px 14px; border-radius:12px;">
     <div class="profile-detail-row"><span>Nama Lengkap</span><span id="prfDetailNama">-</span></div>
     <div class="profile-detail-row"><span>Jenis Kelamin</span><span id="prfDetailGender">-</span></div>
     <div class="profile-detail-row"><span>Email</span><span id="prfDetailEmail">-</span></div>
     <div class="profile-detail-row"><span>Nomor WhatsApp</span><span id="prfDetailHp">-</span></div>
-    <button id="prfEditProfileBtn" style="width:100%; height:32px; margin-top:12px; background:var(--ink); color:#fff; border:none; border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11.5px; cursor:pointer;">Edit Profil</button>
+    <button id="prfEditProfileBtn" style="width:100%; height:32px; margin-top:12px; background:var(--blue); color:#fff; border:none; border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-weight:500; font-size:11.5px; cursor:pointer;">Edit Profil</button>
   </div>
 </div>
 

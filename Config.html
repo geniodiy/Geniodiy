@@ -43,7 +43,7 @@
     border:none;
     font-family:var(--font);
     font-size:13px;
-    font-weight:600;
+    font-weight:500;
     cursor:pointer;
     transition:transform .08s ease, opacity .15s ease, background .15s ease;
   }
@@ -88,7 +88,7 @@
     position:absolute; right:6px;
     background:none; border:none;
     font-family:var(--font);
-    font-size:12px; font-weight:600;
+    font-size:12px; font-weight:500;
     color:var(--blue);
     cursor:pointer;
     padding:8px 8px;
@@ -109,7 +109,7 @@
   .divider{display:flex; align-items:center; gap:12px; margin:20px 0; color:var(--ink-soft); font-size:12.5px;}
   .divider::before,.divider::after{content:''; flex:1; height:1px; background:var(--border);}
 
-  .link-accent{color:var(--red); font-weight:700; text-decoration:none;}
+  .link-accent{color:var(--red); font-weight:500; text-decoration:none;}
   .link-accent:active{opacity:.7;}
 
   .spinner{
@@ -127,7 +127,7 @@
     width:36px; height:36px; border-radius:10px; flex:none; overflow:hidden;
     background:var(--surface); border:1px solid var(--border);
     display:flex; align-items:center; justify-content:center;
-    font-weight:800; font-size:15px; color:#fff;
+    font-weight:600; font-size:15px; color:#fff;
   }
   .genio-brand-badge img{width:100%; height:100%; object-fit:cover; display:block;}
   .genio-brand-text{line-height:1.2; min-width:0;}
@@ -136,7 +136,7 @@
   .genio-brand-title .genio-text-red{color:var(--red);}
   .genio-brand-sub{font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
   .genio-periode-label{font-size:11.5px; font-weight:500; color:var(--ink-soft);}
-  .genio-periode-value{font-size:14.5px; font-weight:600; letter-spacing:-.01em; margin-top:1px;}
+  .genio-periode-value{font-size:14.5px; font-weight:500; letter-spacing:-.01em; margin-top:1px;}
   .genio-tool-btn{
     height:32px; padding:0 11px; border-radius:var(--radius-sm);
     border:1px solid var(--border); background:#fff; color:var(--ink);
@@ -150,7 +150,7 @@
   .genio-tool-icon{width:32px; padding:0; color:var(--ink-soft);}
   .badge{
     display:inline-flex; align-items:center;
-    font-size:12px; font-weight:700;
+    font-size:12px; font-weight:500;
     padding:4px 10px; border-radius:999px;
   }
   .badge-aktif{background:var(--green-soft); color:var(--green);}
@@ -165,7 +165,7 @@
     margin-bottom:14px;
   }
   .card-row{display:flex; align-items:center; justify-content:space-between; gap:12px;}
-  .card-title{font-size:15px; font-weight:700; margin:0 0 2px;}
+  .card-title{font-size:15px; font-weight:500; margin:0 0 2px;}
   .card-sub{font-size:12.5px; color:var(--ink-soft); margin:0;}
 
   .icon-btn{
@@ -203,7 +203,7 @@
     max-height:88vh; overflow-y:auto;
     box-shadow:0 16px 40px -10px rgba(20,22,43,.18);
   }
-  .modal-sheet h3{font-size:18px; margin:0 0 18px; font-weight:800;}
+  .modal-sheet h3{font-size:18px; margin:0 0 18px; font-weight:600;}
   .modal-actions{display:flex; gap:10px; margin-top:6px;}
   .modal-actions .btn{width:auto; flex:1;}
   @media (max-width: 600px){
@@ -216,7 +216,7 @@
     position:fixed; left:50%; top:18px; transform:translateX(-50%) translateY(-24px) scale(.92);
     background:var(--ink); color:#fff;
     padding:10px 18px 10px 10px; border-radius:999px;
-    font-size:13px; font-weight:600; z-index:9999;
+    font-size:13px; font-weight:500; z-index:9999;
     display:flex; align-items:center; gap:10px; max-width:88%;
     opacity:0; pointer-events:none;
     box-shadow:0 12px 28px -8px rgba(0,0,0,.35);
@@ -237,9 +237,7 @@
   /* ===== Global Popup Pemilih Periode (Bulan & Tahun) ===== */
   .genio-myp-overlay{
     position: fixed; inset: 0;
-    background: rgba(20, 22, 43, 0.45);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(20, 22, 43, 0.38);
     z-index: 9990;
     display: flex; align-items: center; justify-content: center;
     padding: 16px;
@@ -252,16 +250,17 @@
   }
   .genio-myp-card{
     background: #fff;
-    width: 100%; max-width: 324px;
-    border-radius: 20px;
-    padding: 18px 18px 16px;
-    box-shadow: 0 24px 50px -12px rgba(20, 22, 43, 0.28), 0 0 0 1px rgba(0,0,0,0.06);
-    transform: scale(0.9) translateY(8px);
-    transition: transform .26s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 100%; max-width: 320px;
+    border-radius: 18px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 56px -18px rgba(20, 22, 43, 0.32);
+    transform: translateY(8px);
+    transition: transform .28s cubic-bezier(.16,1,.3,1);
     box-sizing: border-box;
   }
   .genio-myp-overlay.show .genio-myp-card{
-    transform: scale(1) translateY(0);
+    transform: none;
   }
   .genio-myp-grid{
     display: grid;
@@ -271,33 +270,31 @@
   }
   .genio-myp-month-btn{
     position: relative;
-    height: 48px;
-    border-radius: 12px;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
+    height: 46px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-family: var(--font);
-    transition: all .16s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: background .15s ease, border-color .15s ease;
     padding: 2px 4px;
     box-sizing: border-box;
     outline: none;
   }
   .genio-myp-month-btn:hover{
-    background: #fff;
-    border-color: var(--ink-soft);
-    transform: translateY(-1px);
-    box-shadow: none;
+    background: var(--surface);
+    border-color: #C9CCE0;
   }
   .genio-myp-month-btn:active{
-    transform: scale(0.95);
+    transform: scale(0.97);
   }
   .genio-myp-month-btn.active{
-    background: var(--ink-soft) !important;
-    border-color: var(--ink-soft) !important;
+    background: var(--blue) !important;
+    border-color: var(--blue) !important;
     color: #fff !important;
     box-shadow: none !important;
   }
@@ -305,8 +302,8 @@
     color: rgba(255,255,255,0.85) !important;
   }
   .genio-myp-month-btn .genio-myp-main{
-    font-size: 13px;
-    font-weight: 800;
+    font-size: 12.5px;
+    font-weight: 500;
     color: var(--ink);
     line-height: 1.2;
   }
@@ -315,7 +312,7 @@
   }
   .genio-myp-month-btn .genio-myp-sub{
     font-size: 9.5px;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--ink-soft);
     line-height: 1.1;
     margin-top: 2px;
@@ -326,11 +323,84 @@
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--ink-soft);
+    background: var(--blue);
   }
   .genio-myp-month-btn.active .genio-myp-dot-now{
     background: #fff;
   }
+
+  /* ================================================================
+     Genio UI layer: popup, form popup, dan tombol mengikuti gaya Login.
+     Pakai !important karena tiap modul punya gaya inline/ID sendiri.
+     Radius: tombol & input 10px, popup 18px.
+     ================================================================ */
+  h1,h2,h3,h4,h5,h6{font-weight:500;}
+  b,strong{font-weight:500;}
+  button, input, select, textarea{font-family:var(--font);}
+
+  .modal-overlay{background:rgba(20,22,43,.38) !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important;}
+  .modal-overlay .modal-sheet{
+    border-radius:18px !important;
+    border:1px solid var(--border) !important;
+    box-shadow:0 24px 56px -18px rgba(20,22,43,.32) !important;
+    font-family:var(--font);
+  }
+  .modal-overlay .modal-sheet:not([style*="padding:0"]){padding:22px !important;}
+  .modal-sheet h3{font-size:15px !important; font-weight:500 !important; letter-spacing:-.01em; color:var(--ink) !important; margin:0 0 6px !important;}
+  .modal-sheet > p{font-size:12.5px !important; line-height:1.5 !important; color:var(--ink-soft) !important;}
+  .modal-sheet .alert{font-size:12px !important; border-radius:10px !important; padding:10px 12px !important;}
+  .modal-actions{gap:8px !important; margin-top:18px !important;}
+  .modal-sheet .btn, .modal-actions .btn{
+    height:36px !important; padding:0 16px !important; border-radius:10px !important;
+    font-size:12.5px !important; font-weight:500 !important; box-shadow:none !important;
+    display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:6px;
+  }
+  .modal-sheet .btn-outline{background:#fff !important; border:1px solid var(--border) !important; color:var(--ink) !important;}
+  .modal-sheet .btn-outline:hover{background:var(--surface) !important; border-color:#C9CCE0 !important;}
+  .modal-sheet .btn-primary{background:var(--blue) !important; color:#fff !important; border:1px solid var(--blue) !important;}
+  .modal-sheet .btn-primary:hover{background:var(--blue-dark) !important;}
+
+  /* Form di popup: label di atas, kotak input seperti Login */
+  .modal-sheet .dt-group-title,.modal-sheet .jdw-group-title,.modal-sheet .kp-group-title,.modal-sheet .ktr-group-title,.modal-sheet .ops-group-title,.modal-sheet .os-group-title,.modal-sheet .pkt-group-title,.modal-sheet .ps-wakil-group-title,.modal-sheet .tg-group-title{
+    font-size:12.5px !important; font-weight:500 !important; color:var(--ink) !important;
+    text-transform:none !important; letter-spacing:0 !important; margin:16px 0 8px !important;
+  }
+  .modal-sheet .dt-group,.modal-sheet .jdw-group,.modal-sheet .kp-group,.modal-sheet .ktr-group,.modal-sheet .ops-group,.modal-sheet .os-group,.modal-sheet .pkt-group,.modal-sheet .ps-wakil-group,.modal-sheet .tg-group{
+    background:none !important; border:none !important; border-radius:0 !important;
+    overflow:visible !important; margin-bottom:4px !important;
+  }
+  .modal-sheet .dt-row,.modal-sheet .jdw-row,.modal-sheet .kp-row,.modal-sheet .ktr-row,.modal-sheet .ops-row,.modal-sheet .os-row,.modal-sheet .pkt-row,.modal-sheet .ps-wakil-row,.modal-sheet .tg-row{padding:0 0 12px !important; border-bottom:none !important;}
+  .modal-sheet .dt-row label,.modal-sheet .jdw-row label,.modal-sheet .kp-row label,.modal-sheet .ktr-row label,.modal-sheet .ops-row label,.modal-sheet .os-row label,.modal-sheet .pkt-row label,.modal-sheet .ps-wakil-row label,.modal-sheet .tg-row label{
+    display:block; font-size:12px !important; font-weight:400 !important; color:var(--ink-soft) !important; margin-bottom:6px !important;
+  }
+  .modal-sheet .dt-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .jdw-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .kp-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .ktr-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .ops-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .os-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .pkt-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .ps-wakil-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .tg-row input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),.modal-sheet .dt-row select,.modal-sheet .jdw-row select,.modal-sheet .kp-row select,.modal-sheet .ktr-row select,.modal-sheet .ops-row select,.modal-sheet .os-row select,.modal-sheet .pkt-row select,.modal-sheet .ps-wakil-row select,.modal-sheet .tg-row select,.modal-sheet .dt-row textarea,.modal-sheet .jdw-row textarea,.modal-sheet .kp-row textarea,.modal-sheet .ktr-row textarea,.modal-sheet .ops-row textarea,.modal-sheet .os-row textarea,.modal-sheet .pkt-row textarea,.modal-sheet .ps-wakil-row textarea,.modal-sheet .tg-row textarea,.modal-sheet .dt-row button[style*="width:100%"],.modal-sheet .jdw-row button[style*="width:100%"],.modal-sheet .kp-row button[style*="width:100%"],.modal-sheet .ktr-row button[style*="width:100%"],.modal-sheet .ops-row button[style*="width:100%"],.modal-sheet .os-row button[style*="width:100%"],.modal-sheet .pkt-row button[style*="width:100%"],.modal-sheet .ps-wakil-row button[style*="width:100%"],.modal-sheet .tg-row button[style*="width:100%"]{
+    width:100% !important; box-sizing:border-box !important;
+    background:var(--surface) !important; border:1px solid var(--border) !important; border-radius:10px !important;
+    padding:9px 12px !important; min-height:38px;
+    font-size:13px !important; font-weight:400 !important; color:var(--ink) !important;
+    transition:border-color .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .modal-sheet .dt-row input[type="file"],.modal-sheet .jdw-row input[type="file"],.modal-sheet .kp-row input[type="file"],.modal-sheet .ktr-row input[type="file"],.modal-sheet .ops-row input[type="file"],.modal-sheet .os-row input[type="file"],.modal-sheet .pkt-row input[type="file"],.modal-sheet .ps-wakil-row input[type="file"],.modal-sheet .tg-row input[type="file"]{padding:7px 10px !important; font-size:12px !important;}
+  .modal-sheet .dt-row input:focus,.modal-sheet .jdw-row input:focus,.modal-sheet .kp-row input:focus,.modal-sheet .ktr-row input:focus,.modal-sheet .ops-row input:focus,.modal-sheet .os-row input:focus,.modal-sheet .pkt-row input:focus,.modal-sheet .ps-wakil-row input:focus,.modal-sheet .tg-row input:focus,.modal-sheet .dt-row select:focus,.modal-sheet .jdw-row select:focus,.modal-sheet .kp-row select:focus,.modal-sheet .ktr-row select:focus,.modal-sheet .ops-row select:focus,.modal-sheet .os-row select:focus,.modal-sheet .pkt-row select:focus,.modal-sheet .ps-wakil-row select:focus,.modal-sheet .tg-row select:focus,.modal-sheet .dt-row textarea:focus,.modal-sheet .jdw-row textarea:focus,.modal-sheet .kp-row textarea:focus,.modal-sheet .ktr-row textarea:focus,.modal-sheet .ops-row textarea:focus,.modal-sheet .os-row textarea:focus,.modal-sheet .pkt-row textarea:focus,.modal-sheet .ps-wakil-row textarea:focus,.modal-sheet .tg-row textarea:focus,.modal-sheet .dt-row button[style*="width:100%"]:focus-visible,.modal-sheet .jdw-row button[style*="width:100%"]:focus-visible,.modal-sheet .kp-row button[style*="width:100%"]:focus-visible,.modal-sheet .ktr-row button[style*="width:100%"]:focus-visible,.modal-sheet .ops-row button[style*="width:100%"]:focus-visible,.modal-sheet .os-row button[style*="width:100%"]:focus-visible,.modal-sheet .pkt-row button[style*="width:100%"]:focus-visible,.modal-sheet .ps-wakil-row button[style*="width:100%"]:focus-visible,.modal-sheet .tg-row button[style*="width:100%"]:focus-visible{
+    outline:none !important; border-color:var(--blue) !important; background:#fff !important; box-shadow:0 0 0 3px rgba(28,26,175,.12) !important;
+  }
+  .modal-sheet .dt-row button[style*="width:100%"]:disabled,.modal-sheet .jdw-row button[style*="width:100%"]:disabled,.modal-sheet .kp-row button[style*="width:100%"]:disabled,.modal-sheet .ktr-row button[style*="width:100%"]:disabled,.modal-sheet .ops-row button[style*="width:100%"]:disabled,.modal-sheet .os-row button[style*="width:100%"]:disabled,.modal-sheet .pkt-row button[style*="width:100%"]:disabled,.modal-sheet .ps-wakil-row button[style*="width:100%"]:disabled,.modal-sheet .tg-row button[style*="width:100%"]:disabled{opacity:.55; cursor:default;}
+  .modal-sheet .dt-row [style*="border-left"],.modal-sheet .jdw-row [style*="border-left"],.modal-sheet .kp-row [style*="border-left"],.modal-sheet .ktr-row [style*="border-left"],.modal-sheet .ops-row [style*="border-left"],.modal-sheet .os-row [style*="border-left"],.modal-sheet .pkt-row [style*="border-left"],.modal-sheet .ps-wakil-row [style*="border-left"],.modal-sheet .tg-row [style*="border-left"]{border-left:none !important; padding-left:0 !important;}
+
+  .modal-sheet .dt-group > button[style*="width:100%"],.modal-sheet .jdw-group > button[style*="width:100%"],.modal-sheet .kp-group > button[style*="width:100%"],.modal-sheet .ktr-group > button[style*="width:100%"],.modal-sheet .ops-group > button[style*="width:100%"],.modal-sheet .os-group > button[style*="width:100%"],.modal-sheet .pkt-group > button[style*="width:100%"],.modal-sheet .ps-wakil-group > button[style*="width:100%"],.modal-sheet .tg-group > button[style*="width:100%"]{
+    background:var(--surface) !important; border:1px solid var(--border) !important; border-radius:10px !important;
+    padding:9px 12px !important; min-height:38px; font-size:13px !important; font-weight:400 !important; color:var(--ink) !important;
+  }
+  .modal-sheet .dt-group > button[style*="width:100%"]:focus-visible,.modal-sheet .jdw-group > button[style*="width:100%"]:focus-visible,.modal-sheet .kp-group > button[style*="width:100%"]:focus-visible,.modal-sheet .ktr-group > button[style*="width:100%"]:focus-visible,.modal-sheet .ops-group > button[style*="width:100%"]:focus-visible,.modal-sheet .os-group > button[style*="width:100%"]:focus-visible,.modal-sheet .pkt-group > button[style*="width:100%"]:focus-visible,.modal-sheet .ps-wakil-group > button[style*="width:100%"]:focus-visible,.modal-sheet .tg-group > button[style*="width:100%"]:focus-visible{outline:none !important; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12) !important;}
+  .modal-sheet .dt-group > button[style*="width:100%"] + button[style*="width:100%"],.modal-sheet .jdw-group > button[style*="width:100%"] + button[style*="width:100%"],.modal-sheet .kp-group > button[style*="width:100%"] + button[style*="width:100%"],.modal-sheet .ktr-group > button[style*="width:100%"] + button[style*="width:100%"],.modal-sheet .ops-group > button[style*="width:100%"] + button[style*="width:100%"],.modal-sheet .os-group > button[style*="width:100%"] + button[style*="width:100%"],.modal-sheet .pkt-group > button[style*="width:100%"] + button[style*="width:100%"],.modal-sheet .ps-wakil-group > button[style*="width:100%"] + button[style*="width:100%"],.modal-sheet .tg-group > button[style*="width:100%"] + button[style*="width:100%"]{margin-top:8px;}
+  .modal-sheet input[type="file"]::file-selector-button{
+    border:1px solid var(--border); background:#fff; color:var(--ink); border-radius:8px;
+    padding:5px 10px; margin-right:10px; font-family:var(--font); font-size:12px; font-weight:500; cursor:pointer;
+  }
+
+  /* Tombol umum di modul */
+  .module-panel button{font-family:var(--font);}
+  .module-panel button:focus-visible{outline:2px solid rgba(28,26,175,.35); outline-offset:1px;}
 </style>
 
 <script>
@@ -572,27 +642,27 @@
       '<div class="genio-myp-card" role="dialog" aria-modal="true">' +
         '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">' +
           '<div>' +
-            '<div id="genioMypTitle" style="font-size:15px; font-weight:800; color:var(--ink);">Pilih Periode</div>' +
-            '<div style="font-size:11px; color:var(--ink-soft); margin-top:1px;">Pilih bulan dan tahun data</div>' +
+            '<div id="genioMypTitle" style="font-size:15px; font-weight:500; color:var(--ink);">Pilih Periode</div>' +
+            '<div style="font-size:12px; color:var(--ink-soft); margin-top:2px;">Pilih bulan dan tahun data</div>' +
           '</div>' +
-          '<button type="button" id="genioMypCloseBtn" aria-label="Tutup" style="width:30px; height:30px; border-radius:50%; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft);">' +
+          '<button type="button" id="genioMypCloseBtn" aria-label="Tutup" style="width:30px; height:30px; border-radius:9px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft);">' +
             '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
           '</button>' +
         '</div>' +
 
-        '<div style="display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:4px 6px; margin:12px 0 14px;">' +
-          '<button type="button" id="genioMypPrevYear" aria-label="Tahun Sebelumnya" style="width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); color:var(--ink); font-size:17px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,.05);">&lsaquo;</button>' +
-          '<span id="genioMypYearLabel" style="font-size:15px; font-weight:800; color:var(--ink); letter-spacing:.02em; font-family:var(--font);">-</span>' +
-          '<button type="button" id="genioMypNextYear" aria-label="Tahun Berikutnya" style="width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); color:var(--ink); font-size:17px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,.05);">&rsaquo;</button>' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:3px; margin:16px 0 14px;">' +
+          '<button type="button" id="genioMypPrevYear" aria-label="Tahun Sebelumnya" style="width:32px; height:32px; border-radius:7px; background:#fff; border:1px solid var(--border); color:var(--ink); font-size:17px; font-weight:400; cursor:pointer; display:flex; align-items:center; justify-content:center;">&lsaquo;</button>' +
+          '<span id="genioMypYearLabel" style="font-size:14px; font-weight:500; color:var(--ink); font-family:var(--font);">-</span>' +
+          '<button type="button" id="genioMypNextYear" aria-label="Tahun Berikutnya" style="width:32px; height:32px; border-radius:7px; background:#fff; border:1px solid var(--border); color:var(--ink); font-size:17px; font-weight:400; cursor:pointer; display:flex; align-items:center; justify-content:center;">&rsaquo;</button>' +
         '</div>' +
 
         '<div id="genioMypMonthsGrid" class="genio-myp-grid"></div>' +
 
-        '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:10px; border-top:1px solid var(--border);">' +
-          '<button type="button" id="genioMypCurrentBtn" style="background:var(--surface); border:1px solid var(--border); border-radius:10px; font-size:11.5px; font-weight:700; color:var(--ink); padding:8px 14px; cursor:pointer; font-family:var(--font);">' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:12px; border-top:1px solid var(--border);">' +
+          '<button type="button" id="genioMypCurrentBtn" style="background:#fff; border:1px solid var(--border); border-radius:10px; font-size:12px; font-weight:500; color:var(--blue); height:32px; padding:0 14px; cursor:pointer; font-family:var(--font);">' +
             'Bulan Ini' +
           '</button>' +
-          '<button type="button" id="genioMypCancelBtn" style="background:none; border:none; font-size:11.5px; font-weight:600; color:var(--ink-soft); padding:8px 10px; cursor:pointer; font-family:var(--font);">' +
+          '<button type="button" id="genioMypCancelBtn" style="background:none; border:none; font-size:12px; font-weight:400; color:var(--ink-soft); height:32px; padding:0 10px; cursor:pointer; font-family:var(--font);">' +
             'Batal' +
           '</button>' +
         '</div>' +

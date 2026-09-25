@@ -109,7 +109,7 @@
     background: #fff;
     color: var(--ink);
     font-size: 9px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: .02em;
     padding: 2.5px 8px;
     border-radius: 999px;
@@ -128,13 +128,13 @@
   }
   .pkt-hero-val{
     font-size: 21px;
-    font-weight: 800;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
   }
   .pkt-hero-unit{
     font-size: 11.5px;
     opacity: .6;
-    font-weight: 600;
+    font-weight: 500;
   }
   .pkt-hero-add-btn{
     background: #fff;
@@ -149,7 +149,7 @@
     gap: 5px;
     cursor: pointer;
     font-size: 11.5px;
-    font-weight: 700;
+    font-weight: 500;
     font-family: var(--font);
     flex: none;
     white-space: nowrap;
@@ -185,17 +185,17 @@
   }
   .pkt-hero-stat-val{
     font-size: 11.5px;
-    font-weight: 800;
+    font-weight: 600;
     margin-top: 1px;
   }
 
   .pkt-status-badge{
     display:inline-flex; align-items:center; gap:4px;
-    font-size:9.5px; font-weight:700; padding:0 8px; height:22px;
+    font-size:9.5px; font-weight:500; padding:0 8px; height:22px;
     border-radius:999px; box-sizing:border-box; flex:none;
   }
   .pkt-dim-badge{
-    font-size:9px; font-weight:700; padding:2px 7px; border-radius:999px; white-space:nowrap;
+    font-size:9px; font-weight:500; padding:2px 7px; border-radius:999px; white-space:nowrap;
   }
 
   #pkt-addBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
@@ -210,7 +210,7 @@
   }
   #pkt-modal.show .modal-sheet, #pkt-filterModal.show .modal-sheet, #pkt-pickerModal.show .modal-sheet{ transform:scale(1) translateY(0); }
   #pkt-modal .modal-sheet h3, #pkt-filterModal .modal-sheet h3, #pkt-pickerModal .modal-sheet h3{
-    font-size:13.5px; font-weight:800; margin:0 0 4px;
+    font-size:13.5px; font-weight:600; margin:0 0 4px;
   }
   #pkt-modal .modal-actions, #pkt-filterModal .modal-actions, #pkt-pickerModal .modal-actions{
     margin-top:14px; gap:8px;
@@ -218,18 +218,18 @@
   #pkt-modal .modal-actions .btn, #pkt-filterModal .modal-actions .btn, #pkt-pickerModal .modal-actions .btn{
     height: 36px !important;
     font-size: 12px !important;
-    font-weight: 600 !important;
+    font-weight: 500 !important;
     border-radius: 9px !important;
     padding: 0 16px !important;
     box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
   }
 
-  .pkt-group-title{ font-size:10px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; margin:10px 4px 4px; }
+  .pkt-group-title{ font-size:10px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; margin:10px 4px 4px; }
   .pkt-group-title:first-of-type{ margin-top:0; }
   .pkt-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
   .pkt-row{ padding:8px 12px; border-bottom:1px solid var(--border); }
   .pkt-row:last-child{ border-bottom:none; }
-  .pkt-row label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:2px; }
+  .pkt-row label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:2px; }
   .pkt-row input, .pkt-row select{
     width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
     background:none; color:var(--ink); outline:none;
@@ -237,7 +237,7 @@
   .pkt-opt-row{ display:flex; gap:6px; flex-wrap:wrap; }
   .pkt-opt{
     flex:1; min-width:65px; text-align:center; padding:6px 4px; border-radius:8px;
-    border:1.2px solid var(--border); font-size:11px; font-weight:600; color:var(--ink-soft); cursor:pointer;
+    border:1.2px solid var(--border); font-size:11px; font-weight:500; color:var(--ink-soft); cursor:pointer;
   }
   .pkt-opt input{ display:none; }
 
@@ -248,7 +248,7 @@
   .pkt-res-count{
     display:inline-flex; align-items:center; height:24px; padding:0 9px;
     border-radius:999px; background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.05);
-    font-size:10.5px; font-weight:700; color:var(--ink-soft);
+    font-size:10.5px; font-weight:500; color:var(--ink-soft);
   }
 </style>
 
@@ -308,12 +308,12 @@
     </div>
     <button id="pkt-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-      <span id="pkt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:800; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 2px;">0</span>
+      <span id="pkt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 2px;">0</span>
     </button>
   </div>
 
   <div class="pkt-sub-bar">
-    <div id="pkt-sectionLabel" style="font-size:11px; color:var(--ink-soft); font-weight:600;">Semua Paket</div>
+    <div id="pkt-sectionLabel" style="font-size:11px; color:var(--ink-soft); font-weight:500;">Semua Paket</div>
     <span id="pkt-resultCount" class="pkt-res-count">0 Paket</span>
   </div>
 
@@ -372,7 +372,7 @@
 
       <div class="pkt-group-title">Kode Paket (Otomatis)</div>
       <div class="pkt-group" style="padding:12px 14px; background:var(--surface);">
-        <div style="font-size:15px; font-weight:800; color:var(--ink); letter-spacing:.02em;" id="pkt-kodePreview">-</div>
+        <div style="font-size:15px; font-weight:600; color:var(--ink); letter-spacing:.02em;" id="pkt-kodePreview">-</div>
       </div>
 
       <div class="modal-actions">
@@ -390,7 +390,7 @@
 
       <div class="pkt-group-title">Jenjang</div>
       <div class="pkt-group" style="margin-bottom:4px;">
-        <button type="button" class="pkt-filter-row-btn" data-picker="jenjang" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="pkt-filter-row-btn" data-picker="jenjang" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="pkt-filterJenjangSummary">Semua Jenjang</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -398,7 +398,7 @@
 
       <div class="pkt-group-title">Jenis</div>
       <div class="pkt-group" style="margin-bottom:4px;">
-        <button type="button" class="pkt-filter-row-btn" data-picker="jenis" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="pkt-filter-row-btn" data-picker="jenis" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="pkt-filterJenisSummary">Semua Jenis</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -406,7 +406,7 @@
 
       <div class="pkt-group-title">Pelaksanaan</div>
       <div class="pkt-group" style="margin-bottom:4px;">
-        <button type="button" class="pkt-filter-row-btn" data-picker="pelaksanaan" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="pkt-filter-row-btn" data-picker="pelaksanaan" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="pkt-filterPelaksanaanSummary">Semua Pelaksanaan</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -414,7 +414,7 @@
 
       <div class="pkt-group-title">Mode Belajar</div>
       <div class="pkt-group">
-        <button type="button" class="pkt-filter-row-btn" data-picker="mode" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="pkt-filter-row-btn" data-picker="mode" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="pkt-filterModeSummary">Semua Mode</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -611,17 +611,17 @@
       '<div class="card pkt-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
         '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
           '<div style="min-width:0; flex:1;">' +
-            '<div style="font-size:9.5px; font-weight:800; color:var(--ink-soft); letter-spacing:.02em; font-family:monospace;">' + pktEscape(p.kode_paket || '-') + '</div>' +
-            '<h4 style="font-size:13px; font-weight:700; color:#1c1c1e; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + pktEscape(p.nama_paket || 'Tanpa Nama') + '</h4>' +
+            '<div style="font-size:9.5px; font-weight:600; color:var(--ink-soft); letter-spacing:.02em; font-family:monospace;">' + pktEscape(p.kode_paket || '-') + '</div>' +
+            '<h4 style="font-size:13px; font-weight:500; color:#1c1c1e; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + pktEscape(p.nama_paket || 'Tanpa Nama') + '</h4>' +
           '</div>' +
           statusBadge +
         '</div>' +
         '<div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:8px;">' + dims + '</div>' +
         '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:10px; padding:8px 12px; margin-top:10px; display:flex; align-items:center; justify-content:space-between;">' +
-          '<span style="font-size:10px; color:#8e8e93; font-weight:700; text-transform:uppercase; letter-spacing:.02em;">Harga per Sesi</span>' +
-          '<span style="font-size:13px; font-weight:800; color:#28a745;">' + pktFormatRp(p.harga_default) + '</span>' +
+          '<span style="font-size:10px; color:#8e8e93; font-weight:500; text-transform:uppercase; letter-spacing:.02em;">Harga per Sesi</span>' +
+          '<span style="font-size:13px; font-weight:600; color:#28a745;">' + pktFormatRp(p.harga_default) + '</span>' +
         '</div>' +
-        '<button class="pkt-edit-btn" data-id="' + p.id + '" style="width:100%; height:28px; margin-top:10px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; cursor:pointer;">Edit Paket</button>' +
+        '<button class="pkt-edit-btn" data-id="' + p.id + '" style="width:100%; height:28px; margin-top:10px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:500; cursor:pointer;">Edit Paket</button>' +
       '</div>';
   }
 

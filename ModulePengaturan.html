@@ -90,7 +90,7 @@
     background: #fff;
     color: var(--ink);
     font-size: 9px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: .02em;
     padding: 2.5px 8px;
     border-radius: 999px;
@@ -102,7 +102,7 @@
   }
   .pgt-hero-title{
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 600;
     margin-top: 1px;
   }
   .pgt-hero-desc{
@@ -142,7 +142,7 @@
   }
   .pgt-hero-stat-val{
     font-size: 11.5px;
-    font-weight: 800;
+    font-weight: 600;
     margin-top: 1px;
   }
 </style>
@@ -291,14 +291,14 @@
     var isOpen = pgtOpenKey === key;
 
     var editBtn = pgtCanEdit
-      ? '<button class="pgt-toggle-btn" data-key="' + key + '" style="width:100%; height:28px; margin-top:10px; background:var(--ink); color:#fff; border:none; border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; cursor:pointer;">' +
+      ? '<button class="pgt-toggle-btn" data-key="' + key + '" style="width:100%; height:28px; margin-top:10px; background:var(--blue); color:#fff; border:none; border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:500; cursor:pointer;">' +
           (isOpen ? 'Tutup' : 'Edit') +
         '</button>'
       : '';
 
     var presetsHtml = meta.presets.map(function (p) {
       var active = p === val;
-      return '<button class="pgt-preset-btn" data-key="' + key + '" data-val="' + p + '" data-color="' + meta.color + '" style="flex:1; padding:6px 4px; border-radius:8px; border:1.2px solid ' + (active ? meta.color : 'var(--border)') + '; background:' + (active ? meta.color : '#fff') + '; color:' + (active ? '#fff' : 'var(--ink)') + '; font-size:11px; font-weight:700; cursor:pointer;">' + meta.format(p) + '</button>';
+      return '<button class="pgt-preset-btn" data-key="' + key + '" data-val="' + p + '" data-color="' + meta.color + '" style="flex:1; padding:6px 4px; border-radius:8px; border:1.2px solid ' + (active ? meta.color : 'var(--border)') + '; background:' + (active ? meta.color : '#fff') + '; color:' + (active ? '#fff' : 'var(--ink)') + '; font-size:11px; font-weight:500; cursor:pointer;">' + meta.format(p) + '</button>';
     }).join('');
 
     // Edit section SELALU dirender ke DOM (bukan cuma pas isOpen) supaya animasi slide
@@ -306,16 +306,16 @@
     var editSection =
       '<div class="pgt-edit-wrap" data-key="' + key + '" style="max-height:' + (isOpen ? '600px' : '0') + '; opacity:' + (isOpen ? '1' : '0') + '; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;">' +
         '<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border);">' +
-          '<div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:6px;">Pilih Preset</div>' +
+          '<div style="font-size:9.5px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:6px;">Pilih Preset</div>' +
           '<div style="display:flex; gap:5px; margin-bottom:10px;">' + presetsHtml + '</div>' +
           '<div class="field" style="margin-bottom:10px;">' +
-            '<label style="display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:3px;">Nilai Custom (' + meta.unit + ')</label>' +
+            '<label style="display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:3px;">Nilai Custom (' + meta.unit + ')</label>' +
             '<input type="number" class="pgt-custom-input" data-key="' + key + '" step="any" value="' + val + '" style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 10px; font-size:11.5px; background:var(--surface); color:var(--ink); box-sizing:border-box; outline:none;">' +
           '</div>' +
           '<div id="pgt-alert-' + key + '" class="alert alert-error" hidden style="margin-bottom:10px;"></div>' +
           '<div style="display:flex; justify-content:flex-end; gap:6px;">' +
-            '<button type="button" class="pgt-cancel-btn" data-key="' + key + '" style="background:var(--surface); border:1px solid var(--border); border-radius:8px; height:28px; padding:0 12px; font-size:11.5px; font-weight:700; color:var(--ink-soft); cursor:pointer; font-family:var(--font);">Batal</button>' +
-            '<button type="button" class="pgt-save-btn" data-key="' + key + '" style="background:var(--ink); border:none; border-radius:8px; height:28px; padding:0 12px; font-size:11.5px; font-weight:700; color:#fff; cursor:pointer; font-family:var(--font);">Simpan</button>' +
+            '<button type="button" class="pgt-cancel-btn" data-key="' + key + '" style="background:var(--surface); border:1px solid var(--border); border-radius:8px; height:28px; padding:0 12px; font-size:11.5px; font-weight:500; color:var(--ink-soft); cursor:pointer; font-family:var(--font);">Batal</button>' +
+            '<button type="button" class="pgt-save-btn" data-key="' + key + '" style="background:var(--blue); border:none; border-radius:8px; height:28px; padding:0 12px; font-size:11.5px; font-weight:500; color:#fff; cursor:pointer; font-family:var(--font);">Simpan</button>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -324,7 +324,7 @@
 
     var updatedName = r.users && r.users.nama;
     var updatedLine = updatedName
-      ? '<span style="display:inline-flex; align-items:center; gap:5px; background:rgba(30,142,90,.12); color:var(--green); font-size:9.5px; font-weight:700; padding:2px 8px 2px 6px; border-radius:999px; margin-top:6px;">' +
+      ? '<span style="display:inline-flex; align-items:center; gap:5px; background:rgba(30,142,90,.12); color:var(--green); font-size:9.5px; font-weight:500; padding:2px 8px 2px 6px; border-radius:999px; margin-top:6px;">' +
           '<span style="width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block;"></span>' +
           'Terakhir diubah oleh ' + pgtEscape(updatedName) +
         '</span>'
@@ -338,8 +338,8 @@
           '</div>' +
           '<div style="min-width:0;">' +
             '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
-              '<p class="card-title" style="margin:0; font-size:13px; font-weight:700;">' + pgtEscape(meta.label) + '</p>' +
-              '<span style="background:' + meta.color + '1A; color:' + meta.color + '; font-size:9.5px; font-weight:800; padding:1.5px 7px; border-radius:999px;">' + pgtEscape(displayVal) + '</span>' +
+              '<p class="card-title" style="margin:0; font-size:13px; font-weight:500;">' + pgtEscape(meta.label) + '</p>' +
+              '<span style="background:' + meta.color + '1A; color:' + meta.color + '; font-size:9.5px; font-weight:600; padding:1.5px 7px; border-radius:999px;">' + pgtEscape(displayVal) + '</span>' +
             '</div>' +
           '</div>' +
         '</div>' +

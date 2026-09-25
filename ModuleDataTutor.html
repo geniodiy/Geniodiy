@@ -129,7 +129,7 @@
     background: rgba(0,0,0,.025);
     border-bottom: 1px solid var(--border);
     font-size: 10.5px;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--ink-soft);
     letter-spacing: .02em;
     white-space: nowrap;
@@ -219,12 +219,12 @@
   .dt-dock-btn{
     position:relative; z-index:2; flex:1; height:32px; display:flex; align-items:center; justify-content:center; gap:6px;
     background:none; border:none; cursor:pointer; padding:0 8px; font-size:11.5px; font-family:var(--font);
-    color:var(--ink-soft); font-weight:700; transition:color .18s ease; white-space:nowrap;
+    color:var(--ink-soft); font-weight:500; transition:color .18s ease; white-space:nowrap;
   }
-  .dt-dock-btn.dt-dock-active{ color:var(--ink); font-weight:800; }
+  .dt-dock-btn.dt-dock-active{ color:var(--ink); font-weight:600; }
 
-  .dt-gender-badge{ width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9.5px; font-weight:800; color:#fff; flex:none; }
-  .dt-mapel-badge{ background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+  .dt-gender-badge{ width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9.5px; font-weight:600; color:#fff; flex:none; }
+  .dt-mapel-badge{ background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:500; padding:2px 8px; border-radius:999px; white-space:nowrap; }
 
   .dt-wrap{ max-height:0; opacity:0; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease; }
   .dt-toggle-icon{ transition:transform .25s ease; }
@@ -244,18 +244,18 @@
   #dt-modal .modal-actions .btn, #dt-confirmModal .modal-actions .btn, #dt-filterModal .modal-actions .btn, #dt-pickerModal .modal-actions .btn, #dt-pendaftaranModal .modal-actions .btn{
     height: 36px !important;
     font-size: 12px !important;
-    font-weight: 600 !important;
+    font-weight: 500 !important;
     border-radius: 9px !important;
     padding: 0 16px !important;
     box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
   }
 
-  .dt-group-title{ font-size:10px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
+  .dt-group-title{ font-size:10px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
   .dt-group-title:first-of-type{ margin-top:0; }
   .dt-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
   .dt-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
   .dt-row:last-child{ border-bottom:none; }
-  .dt-row label{ display:block; font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:2px; }
+  .dt-row label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:2px; }
   .dt-row input, .dt-row select{
     width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
     background:none; color:var(--ink); outline:none;
@@ -263,7 +263,7 @@
   .dt-opt-row{ display:flex; gap:6px; }
   .dt-opt{
     flex:1; text-align:center; padding:7px 4px; border-radius:8px;
-    border:1px solid var(--border); font-size:10.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;
+    border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;
   }
   .dt-opt input{ display:none; }
 
@@ -293,7 +293,7 @@
     background: #fff;
     color: var(--ink);
     font-size: 9.5px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: .02em;
     padding: 3px 8px;
     border-radius: 999px;
@@ -302,7 +302,7 @@
     background: rgba(255,255,255,.1);
     color: #fff;
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 500;
     padding: 3px 8px;
     border-radius: 999px;
     white-space: nowrap;
@@ -320,13 +320,13 @@
   }
   .dt-hero-num{
     font-size: 21px;
-    font-weight: 800;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
   }
   .dt-hero-unit{
     font-size: 11.5px;
     opacity: .6;
-    font-weight: 600;
+    font-weight: 500;
   }
   .dt-hero-stats-row{
     display: flex;
@@ -350,7 +350,7 @@
   }
   .dt-hero-stat-val{
     font-size: 12px;
-    font-weight: 800;
+    font-weight: 600;
     margin-top: 1px;
   }
 </style>
@@ -398,13 +398,13 @@
       <div style="display:flex; align-items:center; gap:8px; min-width:0;">
         <span style="width:7px; height:7px; border-radius:50%; background:#ff9500; flex:none;"></span>
         <div style="min-width:0;">
-          <div style="font-size:12px; font-weight:800; color:#1c1c1e;">Pendaftaran Tutor Web</div>
+          <div style="font-size:12px; font-weight:600; color:#1c1c1e;">Pendaftaran Tutor Web</div>
           <div style="font-size:10px; color:#8e8e93; margin-top:1px;">Tinjau calon tutor baru yang mendaftar online</div>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px; flex:none;">
-        <span id="dt-pendingBadge" style="background:rgba(255,149,0,.14); color:#c06400; font-size:10px; font-weight:800; padding:0 8px; height:24px; box-sizing:border-box; border-radius:999px; white-space:nowrap; display:flex; align-items:center;">0 Calon Pendaftar</span>
-        <button type="button" id="dt-pendaftaranToggle" style="background:#1c1c1e; color:#fff; font-size:10.5px; font-weight:700; padding:0 12px; height:26px; box-sizing:border-box; border-radius:999px; border:none; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:var(--font); transition:transform .12s ease;">
+        <span id="dt-pendingBadge" style="background:rgba(255,149,0,.14); color:#c06400; font-size:10px; font-weight:600; padding:0 8px; height:24px; box-sizing:border-box; border-radius:999px; white-space:nowrap; display:flex; align-items:center;">0 Calon Pendaftar</span>
+        <button type="button" id="dt-pendaftaranToggle" style="background:var(--blue); color:#fff; font-size:10.5px; font-weight:500; padding:0 12px; height:26px; box-sizing:border-box; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:var(--font); transition:transform .12s ease;">
           Tinjau
           <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
@@ -417,7 +417,7 @@
     <div class="modal-sheet" style="max-width:480px;">
       <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px;">
         <div>
-          <h3 style="font-size:13.5px; font-weight:700; margin:0 0 2px;">Pendaftaran Tutor Web</h3>
+          <h3 style="font-size:13.5px; font-weight:500; margin:0 0 2px;">Pendaftaran Tutor Web</h3>
           <p id="dt-pendaftaranModalSub" style="font-size:11px; color:var(--ink-soft); margin:0;">0 calon pendaftar menunggu verifikasi</p>
         </div>
         <button type="button" id="dt-pendaftaranModalCloseIcon" aria-label="Tutup" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:2px; display:inline-flex; align-items:center; justify-content:center;">
@@ -438,11 +438,11 @@
     <div class="dt-dock-glider" id="dt-dockGlider"></div>
     <button class="dt-dock-btn dt-tab-btn dt-dock-active" data-tab="aktif">
       <span>Tutor Aktif</span>
-      <span id="dt-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+      <span id="dt-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
     <button class="dt-dock-btn dt-tab-btn" data-tab="nonaktif">
       <span>Tutor Nonaktif</span>
-      <span id="dt-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+      <span id="dt-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
   </div>
 
@@ -456,7 +456,7 @@
     </div>
     <button id="dt-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-      <span id="dt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:800; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
+      <span id="dt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
     </button>
     <button id="dt-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
@@ -470,7 +470,7 @@
   <!-- Modal Edit Tutor -->
   <div class="modal-overlay" id="dt-modal" hidden>
     <div class="modal-sheet">
-      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Edit Tutor</h3>
+      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Edit Tutor</h3>
       <div id="dt-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
       <input type="hidden" id="dt-editId">
 
@@ -515,12 +515,12 @@
   <!-- Modal Filter -->
   <div class="modal-overlay" id="dt-filterModal" hidden>
     <div class="modal-sheet">
-      <h3 style="font-size:13.5px; font-weight:700; margin:0 0 4px;">Filter</h3>
+      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Filter</h3>
       <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar tutor berdasarkan mapel atau jenis kelamin.</p>
 
       <div class="dt-group-title">Mapel</div>
       <div class="dt-group" style="margin-bottom:4px;">
-        <button type="button" class="dt-filter-row-btn" data-picker="mapel" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="dt-filter-row-btn" data-picker="mapel" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="dt-filterMapelSummary">Semua Mapel</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -528,7 +528,7 @@
 
       <div class="dt-group-title">Jenis Kelamin</div>
       <div class="dt-group">
-        <button type="button" class="dt-filter-row-btn" data-picker="gender" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer; font-family:var(--font);">
+        <button type="button" class="dt-filter-row-btn" data-picker="gender" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
           <span id="dt-filterGenderSummary">Semua</span>
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
@@ -544,7 +544,7 @@
   <!-- Popup Picker (dengan search bar) -->
   <div class="modal-overlay" id="dt-pickerModal" hidden style="z-index:70;">
     <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="dt-pickerTitle" style="font-size:13.5px; font-weight:700; margin:0 0 10px;">Pilih</h3>
+      <h3 id="dt-pickerTitle" style="font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih</h3>
       <div id="dt-pickerList" style="margin-bottom:6px;"></div>
       <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn btn-outline" id="dt-pickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
@@ -557,7 +557,7 @@
   <div class="modal-overlay" id="dt-confirmModal" hidden>
     <div class="modal-sheet" style="max-width:360px;">
       <div id="dt-confirmIconWrap" style="width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;"></div>
-      <h3 style="text-align:center; font-size:13.5px; font-weight:700; margin:0 0 4px;" id="dt-confirmTitle">Yakin?</h3>
+      <h3 style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 4px;" id="dt-confirmTitle">Yakin?</h3>
       <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;" id="dt-confirmDesc">-</p>
       <div class="modal-actions" style="display:flex; gap:8px;">
         <button type="button" class="btn btn-outline" id="dt-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
@@ -823,7 +823,7 @@
         '<div style="width:42px; height:42px; border-radius:50%; background:rgba(52,199,89,.12); color:#34c759; display:inline-flex; align-items:center; justify-content:center; margin:0 auto 10px;">' +
           '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
         '</div>' +
-        '<div style="font-size:13px; font-weight:700; color:var(--ink);">Semua Beres!</div>' +
+        '<div style="font-size:13px; font-weight:500; color:var(--ink);">Semua Beres!</div>' +
         '<p style="font-size:11px; color:var(--ink-soft); margin:4px 0 0;">Tidak ada calon pendaftar yang menunggu verifikasi.</p>' +
       '</div>';
       return;
@@ -846,9 +846,9 @@
           '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
             (u.foto_profil_url
               ? '<img src="' + u.foto_profil_url + '" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex:none;">'
-              : '<div style="width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>') +
+              : '<div style="width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>') +
             '<div style="min-width:0;">' +
-              '<div style="display:flex; align-items:center; gap:6px;"><span style="font-size:12.5px; font-weight:800; color:#1c1c1e;">' + dtEscape(u.nama) + '</span>' + dtGenderBadge(u.jenis_kelamin, 16) + '</div>' +
+              '<div style="display:flex; align-items:center; gap:6px;"><span style="font-size:12.5px; font-weight:600; color:#1c1c1e;">' + dtEscape(u.nama) + '</span>' + dtGenderBadge(u.jenis_kelamin, 16) + '</div>' +
               (u.email ? '<div style="font-size:10.5px; color:var(--ink-soft);">' + dtEscape(u.email) + '</div>' : '') +
             '</div>' +
           '</div>' +
@@ -856,18 +856,18 @@
         '</div>' +
         mapelPills +
         '<div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-top:8px;">' +
-          '<div style="font-size:10.5px; color:var(--ink-soft);">Pendidikan: <span style="font-weight:600; color:var(--ink);">' + dtEscape(tp.pendidikan_terakhir || '-') + '</span></div>' +
-          '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">WhatsApp: <span style="font-weight:600; color:var(--ink);">' + dtEscape(tp.no_wa || u.no_hp || '-') + '</span>' +
-            (waLink ? ' <a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="color:#25D366; text-decoration:none; font-weight:700; margin-left:4px;">(Chat WA)</a>' : '') +
+          '<div style="font-size:10.5px; color:var(--ink-soft);">Pendidikan: <span style="font-weight:500; color:var(--ink);">' + dtEscape(tp.pendidikan_terakhir || '-') + '</span></div>' +
+          '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">WhatsApp: <span style="font-weight:500; color:var(--ink);">' + dtEscape(tp.no_wa || u.no_hp || '-') + '</span>' +
+            (waLink ? ' <a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="color:#25D366; text-decoration:none; font-weight:500; margin-left:4px;">(Chat WA)</a>' : '') +
           '</div>' +
-          (tp.no_rekening ? '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">Rekening: <span style="font-weight:600; color:var(--ink);">' + dtEscape(tp.nama_bank || '') + ' • ' + dtEscape(tp.no_rekening) + '</span></div>' : '') +
+          (tp.no_rekening ? '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">Rekening: <span style="font-weight:500; color:var(--ink);">' + dtEscape(tp.nama_bank || '') + ' • ' + dtEscape(tp.no_rekening) + '</span></div>' : '') +
         '</div>' +
         '<div style="display:flex; gap:8px; margin-top:10px;">' +
-          '<button type="button" class="dt-reject-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" style="flex:1; height:32px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:8px; border:none; font-size:11.5px; font-weight:700; cursor:pointer; background:rgba(255,59,48,.12); color:#ff3b30; font-family:var(--font); transition:transform .1s ease;">' +
+          '<button type="button" class="dt-reject-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" style="flex:1; height:32px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:8px; border:none; font-size:11.5px; font-weight:500; cursor:pointer; background:rgba(255,59,48,.12); color:var(--red); font-family:var(--font); transition:transform .1s ease;">' +
             '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
             'Tolak' +
           '</button>' +
-          '<button type="button" class="dt-approve-btn" data-id="' + u.id + '" style="flex:1; height:32px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:8px; border:none; font-size:11.5px; font-weight:700; cursor:pointer; background:rgba(52,199,89,.14); color:#28a745; font-family:var(--font); transition:transform .1s ease;">' +
+          '<button type="button" class="dt-approve-btn" data-id="' + u.id + '" style="flex:1; height:32px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:8px; border:none; font-size:11.5px; font-weight:500; cursor:pointer; background:rgba(52,199,89,.14); color:#28a745; font-family:var(--font); transition:transform .1s ease;">' +
             '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
             'Terima' +
           '</button>' +
@@ -1034,15 +1034,15 @@
       var tp = u.tutor_profile || {};
       var isAktif = u.status === 'aktif';
       var statusBadge = isAktif
-        ? '<span style="display:inline-flex; align-items:center; background:rgba(52,199,89,.12); color:#28a745; height:18px; font-size:9px; font-weight:600; padding:0 6px; border-radius:999px;"><span style="width:5px; height:5px; border-radius:50%; background:#34c759; display:inline-block; flex:none; margin-right:3.5px;"></span>Aktif</span>'
-        : '<span style="display:inline-flex; align-items:center; background:rgba(255,59,48,.1); color:#ff3b30; height:18px; font-size:9px; font-weight:600; padding:0 6px; border-radius:999px;"><span style="width:5px; height:5px; border-radius:50%; background:#ff3b30; display:inline-block; flex:none; margin-right:3.5px;"></span>Nonaktif</span>';
+        ? '<span style="display:inline-flex; align-items:center; background:rgba(52,199,89,.12); color:#28a745; height:18px; font-size:9px; font-weight:500; padding:0 6px; border-radius:999px;"><span style="width:5px; height:5px; border-radius:50%; background:#34c759; display:inline-block; flex:none; margin-right:3.5px;"></span>Aktif</span>'
+        : '<span style="display:inline-flex; align-items:center; background:rgba(255,59,48,.1); color:#ff3b30; height:18px; font-size:9px; font-weight:500; padding:0 6px; border-radius:999px;"><span style="width:5px; height:5px; border-radius:50%; background:#ff3b30; display:inline-block; flex:none; margin-right:3.5px;"></span>Nonaktif</span>';
 
       var avatar = u.foto_profil_url
         ? '<img src="' + u.foto_profil_url + '" style="width:24px; height:24px; border-radius:50%; object-fit:cover; flex:none;">'
-        : '<div style="width:24px; height:24px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:9.5px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>';
+        : '<div style="width:24px; height:24px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:9.5px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>';
 
       var genderHtml = (u.jenis_kelamin === 'L' || u.jenis_kelamin === 'P')
-        ? '<span style="font-size:11.5px; font-weight:600; color:var(--ink);">' + u.jenis_kelamin + '</span>'
+        ? '<span style="font-size:11.5px; font-weight:500; color:var(--ink);">' + u.jenis_kelamin + '</span>'
         : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">-</span>';
 
       var waNumber = (tp.no_wa || u.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
@@ -1079,7 +1079,7 @@
             '<div style="display:flex; align-items:center; gap:7px;">' +
               avatar +
               '<div style="min-width:0;">' +
-                '<div style="font-weight:600; color:var(--ink); font-size:11.5px; line-height:1.25;">' + dtEscape(u.nama || '-') + '</div>' +
+                '<div style="font-weight:500; color:var(--ink); font-size:11.5px; line-height:1.25;">' + dtEscape(u.nama || '-') + '</div>' +
                 (u.email ? '<div style="color:var(--ink-soft); font-size:10px; margin-top:1px;">' + dtEscape(u.email) + '</div>' : '') +
               '</div>' +
             '</div>' +
@@ -1171,31 +1171,31 @@
           '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
             (u.foto_profil_url
               ? '<img src="' + u.foto_profil_url + '" style="width:32px; height:32px; border-radius:50%; object-fit:cover; flex:none;">'
-              : '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>') +
+              : '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>') +
             '<div style="min-width:0;">' +
-              '<div style="display:flex; align-items:center; gap:6px;"><h4 style="font-size:12.5px; font-weight:800; color:#1c1c1e; margin:0; line-height:1.3;">' + dtEscape(u.nama) + '</h4>' + dtGenderBadge(u.jenis_kelamin, 16) + '</div>' +
+              '<div style="display:flex; align-items:center; gap:6px;"><h4 style="font-size:12.5px; font-weight:600; color:#1c1c1e; margin:0; line-height:1.3;">' + dtEscape(u.nama) + '</h4>' + dtGenderBadge(u.jenis_kelamin, 16) + '</div>' +
               '<div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:3px;">' + dtMapelBadges(tp.keahlian) + '</div>' +
             '</div>' +
           '</div>' +
-          '<button class="dt-detail-toggle" data-id="' + u.id + '" style="background:#1c1c1e; color:#fff; border:none; border-radius:8px; height:26px; padding:0 10px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; flex:none; font-family:var(--font);">' +
+          '<button class="dt-detail-toggle" data-id="' + u.id + '" style="background:var(--blue); color:#fff; border:none; border-radius:8px; height:26px; padding:0 10px; font-size:11px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:4px; flex:none; font-family:var(--font);">' +
             (isOpen ? 'Tutup' : 'Detail') +
             '<svg class="dt-toggle-icon" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
           '</button>' +
         '</div>' +
 
-        '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="margin-top:8px; height:30px; background:rgba(52,199,89,.12); color:#1DB954; border-radius:8px; padding:0 10px; font-size:11px; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:6px; font-family:var(--font);">' +
+        '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="margin-top:8px; height:30px; background:rgba(52,199,89,.12); color:#1DB954; border-radius:8px; padding:0 10px; font-size:11px; font-weight:500; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:6px; font-family:var(--font);">' +
           '<span style="width:16px; height:16px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="9" height="9" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>' +
           'Hubungi WhatsApp' +
         '</a>' +
 
         '<div class="dt-wrap" data-id="' + u.id + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
           '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:9px; padding:8px 10px; margin-top:8px;">' +
-            '<div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px;"><span style="color:#8e8e93;">Pendidikan Terakhir:</span><span style="font-weight:700; color:var(--ink); text-align:right;">' + dtEscape(tp.pendidikan_terakhir || '-') + '</span></div>' +
-            '<div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px; margin-top:4px;"><span style="color:#8e8e93;">Nomor Rekening:</span><span style="font-weight:700; color:var(--ink); text-align:right;">' + (tp.no_rekening ? dtEscape(tp.nama_bank || '') + ' &bull; ' + dtEscape(tp.no_rekening) : '<span style="color:#8e8e93; font-weight:500;">Belum diisi</span>') + '</span></div>' +
+            '<div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px;"><span style="color:#8e8e93;">Pendidikan Terakhir:</span><span style="font-weight:500; color:var(--ink); text-align:right;">' + dtEscape(tp.pendidikan_terakhir || '-') + '</span></div>' +
+            '<div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px; margin-top:4px;"><span style="color:#8e8e93;">Nomor Rekening:</span><span style="font-weight:500; color:var(--ink); text-align:right;">' + (tp.no_rekening ? dtEscape(tp.nama_bank || '') + ' &bull; ' + dtEscape(tp.no_rekening) : '<span style="color:#8e8e93; font-weight:500;">Belum diisi</span>') + '</span></div>' +
           '</div>' +
           '<div style="display:flex; gap:8px; margin-top:8px;">' +
-            '<button class="dt-edit-btn" data-id="' + u.id + '" style="flex:1; height:30px; background:#1c1c1e; color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:700; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Edit</button>' +
-            '<button class="dt-delete-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" style="flex:1; height:30px; background:#ff3b30; color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:700; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Hapus</button>' +
+            '<button class="dt-edit-btn" data-id="' + u.id + '" style="flex:1; height:30px; background:var(--blue); color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:500; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Edit</button>' +
+            '<button class="dt-delete-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" style="flex:1; height:30px; background:var(--red); color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:500; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Hapus</button>' +
           '</div>' +
         '</div>' +
       '</div>';
