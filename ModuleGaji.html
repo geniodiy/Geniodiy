@@ -1,704 +1,324 @@
 <div class="module-panel" data-module="gaji">
 <style>
-  .gj-card{
-    border-radius: 14px;
-  }
-  .gj-periode-sec{
-    margin-bottom: 12px;
-    padding: 8px 14px;
-    border-radius: 12px;
-  }
+  /* Radius rule (sama dgn Login): interaktif = 10px, kartu = 16px, panel hero = 20px */
+  .module-panel[data-module="gaji"] .card{border:1px solid var(--border); border-radius:16px; padding:14px 16px;}
+  .gj-periode-sec, .gj-hero-sec, .gj-dock-sec, .gj-search-sec{margin-bottom:14px;}
+  #gj-sectionLabelWrap{margin-bottom:12px;}
+  #gj-desktopAnchor{display:none !important;}
+
+  /* ===== Hero: panel biru brand ===== */
   .gj-hero-sec{
-    background: var(--ink);
-    color: #fff;
-    border-radius: 14px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
+    position:relative; isolation:isolate; overflow:hidden;
+    background:var(--blue); color:#fff; border-radius:20px; padding:18px;
+    display:flex; flex-direction:column; gap:16px;
   }
-  .gj-dock-sec{
-    margin-bottom: 12px !important;
+  .gj-hero-sec::before{
+    content:''; position:absolute; z-index:-1; pointer-events:none;
+    width:460px; height:460px; right:-160px; bottom:-280px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 65%);
   }
-  .gj-search-sec{
-    margin-bottom: 12px;
-  }
-  #gj-sectionLabelWrap{
-    margin-bottom: 10px;
-  }
-  #gj-desktopAnchor{
-    display: none !important;
-  }
-  .gj-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .gj-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .gj-hero-total-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9.5px;
-    font-weight: 800;
-    letter-spacing: .02em;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
+  .gj-hero-main-col{display:flex; flex-direction:column; gap:6px; min-width:0;}
+  .gj-hero-badges{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .gj-hero-label{font-size:13px; font-weight:600; color:rgba(255,255,255,.78);}
   .gj-hero-tutor-pill{
-    background: rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 9.5px;
-    font-weight: 700;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
+    font-size:11.5px; font-weight:700; white-space:nowrap;
+    background:rgba(255,255,255,.14); color:#fff; padding:3px 9px; border-radius:999px;
   }
-  .gj-hero-counter{
-    margin-top: 4px;
-  }
-  .gj-hero-sublabel{
-    display: block;
-    font-size: 9.5px;
-    opacity: .65;
-  }
-  .gj-hero-num-wrap{
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    margin-top: 1px;
-  }
-  .gj-hero-num{
-    font-size: 20px;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.1;
-  }
-  .gj-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255,255,255,.14);
-  }
+  .gj-hero-num{font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.1; font-variant-numeric:tabular-nums;}
+
+  .gj-hero-stats-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
   .gj-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+    border-radius:14px; padding:12px 14px; min-width:0;
   }
-  .gj-hero-stat-icon{
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .gj-hero-actions{
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .gj-hero-cetak-btn{
-    width: 100%;
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.22);
-    color: #fff;
-    border-radius: 8px;
-    padding: 0 10px;
-    height: 28px;
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    white-space: nowrap;
-    transition: background .15s ease, border-color .15s ease, transform .1s ease;
-  }
-  .gj-hero-cetak-btn:hover{
-    background: rgba(255,255,255,.2);
-    border-color: rgba(255,255,255,.35);
-  }
-  .gj-hero-cetak-btn:active{
-    transform: scale(.97);
-  }
+  .gj-stat-head{display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:600; color:rgba(255,255,255,.78);}
+  .gj-stat-dot{width:8px; height:8px; border-radius:50%; flex:none;}
+  .gj-stat-num{font-size:18px; font-weight:700; letter-spacing:-.02em; margin-top:8px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .gj-stat-sub{font-size:11.5px; color:rgba(255,255,255,.72); margin-top:2px;}
 
-  .gj-hero-hapus-btn{
-    width: 100%;
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.22);
-    color: #fff;
-    border-radius: 8px;
-    padding: 0 10px;
-    height: 28px;
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    white-space: nowrap;
-    transition: background .15s ease, border-color .15s ease, transform .1s ease;
+  .gj-hero-actions{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .gj-hero-cetak-btn, .gj-hero-hapus-btn{
+    height:38px; padding:0 12px; border-radius:var(--radius-sm);
+    font-family:var(--font); font-size:13px; font-weight:600; white-space:nowrap; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    transition:background .15s ease, border-color .15s ease, transform .1s ease;
   }
-  .gj-hero-hapus-btn:hover{
-    background: rgba(255,255,255,.2);
-    border-color: rgba(255,255,255,.35);
-  }
-  .gj-hero-hapus-btn:active{
-    transform: scale(.97);
-  }
+  .gj-hero-cetak-btn{background:#fff; color:var(--blue); border:1px solid #fff;}
+  .gj-hero-cetak-btn:hover{background:var(--blue-tint);}
+  .gj-hero-hapus-btn{background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.24);}
+  .gj-hero-hapus-btn:hover{background:rgba(255,255,255,.18);}
+  .gj-hero-cetak-btn:active, .gj-hero-hapus-btn:active{transform:scale(.97);}
+  .gj-hero-cetak-btn:focus-visible, .gj-hero-hapus-btn:focus-visible{outline:2px solid #fff; outline-offset:2px;}
+  .gj-hero-cetak-btn i, .gj-hero-hapus-btn i{font-size:16px;}
 
-  @media (min-width:900px){
-    .module-panel[data-module="gaji"][hidden]{ display:none !important; }
-    .module-panel[data-module="gaji"]:not([hidden]){
-      width:94%; max-width:1500px; margin:0 auto;
-    }
-    .gj-periode-sec{
-      margin-bottom: 12px !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-    }
-    #gj-sectionLabelWrap{
-      margin-bottom: 8px !important;
-    }
-    .gj-hero-sec{
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-    }
-    .gj-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-    }
-    .gj-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .gj-hero-total-pill,
-    .gj-hero-periode-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .gj-hero-sublabel{
-      display: none !important;
-    }
-    .gj-hero-counter{
-      margin-top: 1px !important;
-    }
-    .gj-hero-num{
-      font-size: 18px !important;
-    }
-    .gj-hero-stats-row{
-      flex: 1 !important;
-      max-width: 580px;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 14px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-    }
-    .gj-hero-stat-card{
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-    }
-    .gj-hero-actions{
-      margin-top: 0 !important;
-      flex: none !important;
-      padding-left: 12px !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      display: flex !important;
-      flex-direction: row !important;
-      gap: 6px !important;
-      align-items: center !important;
-      min-width: auto !important;
-      justify-content: flex-end !important;
-    }
-    .gj-hero-cetak-btn,
-    .gj-hero-hapus-btn{
-      width: auto !important;
-      height: 26px !important;
-      padding: 0 9px !important;
-      font-size: 10px !important;
-      border-radius: 6px !important;
-      white-space: nowrap !important;
-    }
-
-    #gj-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:10px; }
-    #gj-toolbarRow .gj-dock-sec{ flex:none; width:auto; min-width:240px; margin-bottom:0 !important; }
-    #gj-toolbarRow .gj-search-sec{ flex:1; margin-bottom:0 !important; }
-
-    #gj-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
-    #gj-list > .gj-card{ margin-bottom:0 !important; }
-    #gj-list > .gj-full-width{ grid-column:1/-1; }
-  }
-
-  /* Tab switcher: style biasa, rounded konten (10px), geser kanan-kiri murni */
+  /* ===== Tab Belum / Lunas ===== */
   .gj-dock{
-    position:relative;
-    display:flex; align-items:center;
-    background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px;
-    margin-bottom:10px;
-    height:38px; box-sizing:border-box;
+    position:relative; display:flex; align-items:center;
+    background:var(--surface); border:1px solid var(--border); padding:4px; border-radius:12px;
+    height:46px; box-sizing:border-box;
     touch-action:none; -webkit-user-select:none; user-select:none;
   }
   .gj-dock-glider{
-    position:absolute; top:3px; bottom:3px;
+    position:absolute; top:4px; bottom:4px; z-index:1; pointer-events:none;
     border-radius:8px; background:#fff;
-    box-shadow:0 1px 3px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
-    transition:left .22s cubic-bezier(.2,0,0,1), width .22s cubic-bezier(.2,0,0,1);
-    z-index:1; pointer-events:none;
+    box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border);
+    transition:left .28s cubic-bezier(.16,1,.3,1), width .28s cubic-bezier(.16,1,.3,1);
   }
   .gj-dock-btn{
     position:relative; z-index:2; flex:1;
-    display:flex; align-items:center; justify-content:center; gap:6px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
     background:none; border:none; cursor:pointer;
-    height:32px; padding:0 12px; font-size:11.5px; font-family:var(--font);
-    color:var(--ink-soft); font-weight:600; white-space:nowrap;
-    transition:color .18s ease;
+    height:36px; padding:0 14px; font-size:13.5px; font-family:var(--font);
+    color:var(--ink-soft); font-weight:600; white-space:nowrap; transition:color .18s ease;
   }
-  .gj-dock-btn.gj-dock-active{ color:var(--ink); font-weight:700; }
+  .gj-dock-btn.gj-dock-active{color:var(--ink); font-weight:700;}
+  .gj-count{font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px; font-variant-numeric:tabular-nums;}
+  .gj-count-belum{background:var(--blue); color:#fff;}
+  .gj-count-lunas{background:var(--border); color:var(--ink-soft);}
 
+  /* ===== Cari & tampilan ===== */
+  .gj-search-sec{display:flex; gap:8px;}
+  .gj-search-box{
+    flex:1; display:flex; align-items:center; gap:8px;
+    height:42px; padding:0 12px; border-radius:var(--radius-sm);
+    background:#fff; border:1px solid var(--border);
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .gj-search-box:focus-within{border-color:var(--blue); box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .gj-search-box i{font-size:17px; color:var(--ink-soft);}
+  .gj-search-box input{border:none; outline:none; flex:1; min-width:0; font-size:14px; font-family:var(--font); background:none; color:var(--ink);}
+  .gj-search-box input::placeholder{color:#6E7289;}
+  #gj-viewToggleBtn{width:42px; height:42px; font-size:18px; color:var(--ink);}
+
+  .gj-meta-pill{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    height:30px; padding:0 11px; border-radius:999px; box-sizing:border-box; white-space:nowrap;
+    background:#fff; border:1px solid var(--border);
+    font-family:var(--font); font-size:12.5px; font-weight:600; color:var(--ink-soft);
+  }
+  button.gj-meta-pill{cursor:pointer; color:var(--ink);}
+  button.gj-meta-pill:hover{background:var(--surface);}
+  .gj-meta-pill i{font-size:14px; color:var(--blue);}
+  .gj-section-title{font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-.01em;}
+  .gj-section-sub{font-size:12.5px; color:var(--ink-soft); margin-top:1px;}
+
+  /* ===== Kartu tutor ===== */
   .gj-status-badge{
-    display:inline-flex; align-items:center; gap:5px;
-    font-size:10.5px; font-weight:800; padding:0 11px; height:26px;
-    border-radius:999px; box-sizing:border-box; flex:none;
+    display:inline-flex; align-items:center; gap:6px; flex:none;
+    font-size:12px; font-weight:700; padding:0 10px; height:26px;
+    border-radius:999px; box-sizing:border-box;
   }
-  .gj-detail-row{ display:flex; justify-content:space-between; align-items:baseline; font-size:11.5px; }
-  .gj-detail-row + .gj-detail-row{ margin-top:8px; }
-  .gj-detail-row span:first-child{ color:#8e8e93; font-weight:600; text-transform:uppercase; font-size:9.5px; letter-spacing:.02em; }
-  .gj-detail-row span:last-child{ font-weight:800; color:#1c1c1e; }
+  .gj-status-badge .gj-status-dot{width:7px; height:7px; border-radius:50%;}
+  .gj-badge-lunas{background:var(--green-soft); color:var(--green);}
+  .gj-badge-belum{background:#FFF4E0; color:#A15C00;}
+  .gj-detail{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border);}
+  .gj-detail-label{font-size:12px; font-weight:600; color:var(--ink-soft);}
+  .gj-detail-val{font-size:14px; font-weight:600; color:var(--ink); margin-top:2px; font-variant-numeric:tabular-nums;}
+  .gj-detail-val.gj-total{font-size:17px; font-weight:700; letter-spacing:-.015em;}
+  .gj-card-actions{display:flex; gap:8px; margin-top:14px;}
 
-  /* Table View */
-  #gj-list.gj-view-table{
-    display: block !important;
+  .gj-card .gj-slip-btn, .gj-card .gj-batal-lunas-btn, .gj-card .gj-transfer-btn{
+    height:38px; padding:0 14px; border-radius:var(--radius-sm);
+    font-family:var(--font); font-size:13px; font-weight:600; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    transition:background .15s ease, border-color .15s ease, color .15s ease, transform .1s ease;
   }
-  .gj-table-card{
-    background: #fff;
-    border: 1.5px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,.03);
-    margin-bottom: 16px;
-  }
-  .gj-table-wrap{
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .gj-table{
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-family: var(--font);
-    font-size: 11.5px;
-  }
+  .gj-card .gj-slip-btn i, .gj-card .gj-batal-lunas-btn i, .gj-card .gj-transfer-btn i{font-size:16px; pointer-events:none;}
+  .gj-card .gj-slip-btn{flex:1;}
+  .gj-card .gj-slip-btn[data-action="print"]{background:var(--blue); color:#fff; border:1px solid var(--blue);}
+  .gj-card .gj-slip-btn[data-action="print"]:hover{background:var(--blue-dark);}
+  .gj-card .gj-slip-btn[data-action="view"]{background:var(--blue-tint); color:var(--blue); border:1px solid rgba(28,26,175,.18);}
+  .gj-card .gj-slip-btn[data-action="view"]:hover{border-color:var(--blue);}
+  .gj-card .gj-batal-lunas-btn{background:#fff; color:var(--ink-soft); border:1px solid var(--border);}
+  .gj-card .gj-batal-lunas-btn:hover{background:var(--red-soft); border-color:rgba(212,7,15,.3); color:var(--red);}
+  .gj-card .gj-transfer-btn{width:100%; background:var(--blue); color:#fff; border:1px solid var(--blue);}
+  .gj-card .gj-transfer-btn:hover{background:var(--blue-dark);}
+  .gj-card .gj-slip-btn:active, .gj-card .gj-batal-lunas-btn:active, .gj-card .gj-transfer-btn:active{transform:scale(.98);}
+
+  /* ===== Tabel ===== */
+  #gj-list.gj-view-table{display:block !important;}
+  .gj-table-card{background:#fff; border:1px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:16px;}
+  .gj-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .gj-table{width:100%; border-collapse:collapse; text-align:left; font-family:var(--font); font-size:13px;}
   .gj-table th{
-    padding: 6px 8px;
-    background: rgba(0,0,0,.025);
-    border-bottom: 1.5px solid var(--border);
-    font-size: 10.5px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: .02em;
-    white-space: nowrap;
+    padding:10px 12px; background:var(--surface); border-bottom:1px solid var(--border);
+    font-size:12px; font-weight:600; color:var(--ink-soft); white-space:nowrap;
   }
-  .gj-table td{
-    padding: 5px 8px;
-    border-bottom: 1px solid rgba(0,0,0,.05);
-    color: var(--ink);
-    vertical-align: middle;
-    font-size: 11.5px;
-    line-height: 1.3;
-  }
-  .gj-table tbody tr:last-child td{
-    border-bottom: none;
-  }
-  .gj-table tbody tr{
-    transition: background .12s ease;
-  }
-  .gj-table tbody tr:hover{
-    background: rgba(0,122,255,.03);
-  }
-  .gj-sort-th{
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    transition: background .12s ease, color .12s ease;
-  }
-  .gj-sort-th:hover{
-    background: rgba(0,0,0,.045) !important;
-    color: var(--ink) !important;
-  }
-  .gj-sort-th:hover svg{
-    opacity: .75 !important;
-  }
-  @keyframes gjPop{
-    0% { transform: scale(1); }
-    35% { transform: scale(1.18); }
-    70% { transform: scale(0.92); }
-    100% { transform: scale(1); }
-  }
-  .gj-btn-pop{
-    animation: gjPop .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #gj-viewToggleBtn:active{
-    transform: scale(.9);
-  }
+  .gj-table td{padding:10px 12px; border-bottom:1px solid var(--border); color:var(--ink); vertical-align:middle; font-size:13px !important; line-height:1.35; font-variant-numeric:tabular-nums;}
+  .gj-table tbody tr:last-child td{border-bottom:none;}
+  .gj-table tbody tr{transition:background .12s ease;}
+  .gj-table tbody tr:hover{background:#FAFAFD;}
+  .gj-sort-th{cursor:pointer; user-select:none; -webkit-user-select:none; transition:color .12s ease;}
+  .gj-sort-th:hover{color:var(--ink) !important;}
+  .gj-sort-th:hover svg{opacity:.75 !important;}
+  @keyframes gjPop{0%{transform:scale(1);} 40%{transform:scale(1.1);} 100%{transform:scale(1);}}
+  @media (prefers-reduced-motion:no-preference){ .gj-btn-pop{animation:gjPop .3s cubic-bezier(.16,1,.3,1);} }
 
-  /* Status Pill & Action Buttons in Table — matching Presensi style */
   .gj-table-status-pill{
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    height: 20px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0 7px;
-    font-family: var(--font);
-    font-size: 9.5px;
-    font-weight: 500;
-    color: var(--ink);
-    white-space: nowrap;
-    line-height: 1;
-    box-sizing: border-box;
+    display:inline-flex; align-items:center; gap:6px; height:24px; padding:0 9px;
+    border-radius:999px; box-sizing:border-box; white-space:nowrap;
+    font-family:var(--font); font-size:12px; font-weight:600;
   }
-  .gj-table-status-pill .gj-status-dot{
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    flex: none;
-    margin-right: 4px;
-  }
-  .gj-table-status-pill .gj-status-label{
-    white-space: nowrap;
-  }
-
+  .gj-table-status-pill .gj-status-dot{width:6px; height:6px; border-radius:50%; flex:none;}
   .gj-table-icon-btn{
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--ink-soft);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-sizing: border-box;
-    transition: background .12s ease, border-color .12s ease, color .12s ease, transform .1s ease;
+    width:32px; height:32px; border-radius:8px; box-sizing:border-box;
+    border:1px solid var(--border); background:#fff; color:var(--ink-soft);
+    display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px;
+    transition:background .12s ease, border-color .12s ease, color .12s ease, transform .1s ease;
   }
-  .gj-table-icon-btn:hover{
-    background: #fff;
-    border-color: #c7c7cc;
-    color: var(--ink);
-  }
-  .gj-table-icon-btn:active{
-    transform: scale(.95);
-  }
-  .gj-table-icon-btn.gj-batal-lunas-btn:hover{
-    color: #ff3b30 !important;
-    border-color: rgba(255,59,48,.35) !important;
-    background: rgba(255,59,48,.08) !important;
-  }
-
+  .gj-table-icon-btn i{pointer-events:none;}
+  .gj-table-icon-btn:hover{background:var(--surface); border-color:#C9CCE0; color:var(--ink);}
+  .gj-table-icon-btn:active{transform:scale(.95);}
+  .gj-table-icon-btn.gj-batal-lunas-btn:hover{color:var(--red) !important; border-color:rgba(212,7,15,.3) !important; background:var(--red-soft) !important;}
   .gj-table .gj-transfer-btn{
-    height: 22px !important;
-    padding: 0 9px !important;
-    background: var(--surface) !important;
-    color: var(--ink) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 6px !important;
-    font-family: var(--font) !important;
-    font-size: 10.5px !important;
-    font-weight: 600 !important;
-    cursor: pointer;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 4px;
-    white-space: nowrap;
-    box-sizing: border-box;
-    transition: background .12s ease, border-color .12s ease, color .12s ease, transform .1s ease;
+    height:32px; padding:0 12px; border-radius:8px; box-sizing:border-box;
+    background:var(--blue); color:#fff; border:1px solid var(--blue);
+    font-family:var(--font); font-size:12.5px; font-weight:600; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap;
+    transition:background .12s ease, transform .1s ease;
   }
-  .gj-table .gj-transfer-btn:hover{
-    background: #e5e5ea !important;
-    border-color: #c7c7cc !important;
-    color: var(--ink) !important;
+  .gj-table .gj-transfer-btn i{font-size:15px; pointer-events:none;}
+  .gj-table .gj-transfer-btn:hover{background:var(--blue-dark);}
+  .gj-table .gj-transfer-btn:active{transform:scale(.97);}
+
+  /* ===== Modal preview & konfirmasi ===== */
+  #gj-previewModal, #gj-confirmModal{
+    align-items:center; justify-content:center; padding:16px; box-sizing:border-box;
+    opacity:0; transition:opacity .22s ease;
   }
-  .gj-table .gj-transfer-btn:active{
-    transform: scale(.95);
+  #gj-previewModal.show, #gj-confirmModal.show{opacity:1;}
+  #gj-previewModal .modal-sheet, #gj-confirmModal .modal-sheet{
+    border-radius:20px; width:100%; max-width:380px; margin:0 auto;
+    padding:22px !important; border:1px solid var(--border);
+    box-shadow:0 24px 56px -16px rgba(20,22,43,.35);
+    transform:translateY(8px); transition:transform .28s cubic-bezier(.16,1,.3,1);
+  }
+  #gj-previewModal .modal-sheet{max-width:560px !important; width:94% !important; padding:0 !important; overflow:hidden !important;}
+  #gj-previewModal.show .modal-sheet, #gj-confirmModal.show .modal-sheet{transform:none;}
+  #gj-previewModal .btn, #gj-confirmModal .btn{
+    font-size:13.5px !important; font-weight:600 !important; height:40px !important; padding:0 16px !important;
+    border-radius:var(--radius-sm) !important; display:inline-flex !important; align-items:center !important;
+    justify-content:center !important; gap:7px; font-family:var(--font) !important; box-shadow:none !important;
+  }
+  #gj-previewModal .modal-actions, #gj-confirmModal .modal-actions{gap:8px !important; margin-top:0 !important;}
+  @media (max-width:600px){
+    #gj-previewModal, #gj-confirmModal{padding:12px !important;}
+    #gj-previewModal .modal-sheet{width:100% !important;}
   }
 
-  .gj-card .gj-slip-btn{
-    height: 32px;
-    border-radius: 8px;
-    padding: 0 12px;
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    transition: opacity .15s ease;
-  }
-  .gj-card .gj-slip-btn:hover{
-    opacity: .9;
-  }
-  .gj-card .gj-slip-btn:active{
-    transform: scale(.98);
-  }
+  /* ===== Desktop ===== */
+  @media (min-width:900px){
+    .module-panel[data-module="gaji"][hidden]{display:none !important;}
+    .module-panel[data-module="gaji"]:not([hidden]){width:94%; max-width:1500px; margin:0 auto;}
 
-  .gj-card .gj-batal-lunas-btn{
-    height: 32px;
-    padding: 0 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--ink-soft);
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    transition: background .12s ease, color .12s ease, border-color .12s ease;
-  }
-  .gj-card .gj-batal-lunas-btn:hover{
-    background: rgba(255,59,48,.08);
-    border-color: rgba(255,59,48,.35);
-    color: #ff3b30;
-  }
-
-  .gj-card .gj-transfer-btn{
-    width: 100%;
-    height: 32px;
-    margin-top: 8px;
-    background: var(--surface);
-    color: var(--ink);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-family: var(--font);
-    font-size: 11.5px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: background .12s ease, border-color .12s ease;
-  }
-  .gj-card .gj-transfer-btn:hover{
-    background: #e5e5ea;
-    border-color: #c7c7cc;
-  }
-
-  /* Preview & Confirm Modal Slip Gaji — persis gaya Presensi */
-  #gj-previewModal,
-  #gj-confirmModal{
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    box-sizing: border-box;
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    opacity: 0; transition: opacity .24s ease;
-  }
-  #gj-previewModal.show,
-  #gj-confirmModal.show{ opacity: 1; }
-  #gj-previewModal .modal-sheet,
-  #gj-confirmModal .modal-sheet{
-    border-radius: 16px;
-    width: 100%;
-    max-width: 400px;
-    padding: 16px 18px 18px !important;
-    margin: 0 auto;
-    box-shadow: 0 14px 36px -8px rgba(20,22,43,.16);
-    transform: scale(.94) translateY(8px);
-    transition: transform .28s cubic-bezier(.16,1,.3,1);
-  }
-  #gj-previewModal .modal-sheet{
-    max-width: 500px !important;
-    width: 94% !important;
-    padding: 0 !important;
-    border-radius: 16px !important;
-    overflow: hidden !important;
-  }
-  #gj-previewModal.show .modal-sheet,
-  #gj-confirmModal.show .modal-sheet{
-    transform: scale(1) translateY(0);
-  }
-  #gj-previewModal .btn,
-  #gj-confirmModal .btn{
-    font-size: 11.5px !important;
-    font-weight: 600 !important;
-    height: 32px !important;
-    padding: 0 14px !important;
-    border-radius: 8px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-family: var(--font) !important;
-  }
-  #gj-previewModal .modal-actions,
-  #gj-confirmModal .modal-actions{
-    gap: 8px !important;
-    margin-top: 12px !important;
-  }
-  @media (max-width: 600px){
-    #gj-previewModal,
-    #gj-confirmModal{
-      padding: 12px !important;
+    .gj-hero-sec{
+      flex-direction:row; align-items:center; justify-content:space-between;
+      gap:20px; padding:20px 22px;
     }
-    #gj-previewModal .modal-sheet,
-    #gj-confirmModal .modal-sheet{
-      max-width: 100% !important;
-      width: 100% !important;
-      padding: 14px 16px 16px !important;
-      border-radius: 16px !important;
-    }
+    .gj-hero-main-col{flex:1; min-width:200px;}
+    .gj-hero-stats-row{flex:1.3; max-width:560px;}
+    .gj-hero-actions{flex:none; grid-template-columns:1fr; width:220px;}
+
+    #gj-toolbarRow{display:flex; gap:12px; align-items:center; margin-bottom:14px;}
+    #gj-toolbarRow .gj-dock-sec{flex:none; min-width:300px; margin-bottom:0 !important;}
+    #gj-toolbarRow .gj-search-sec{flex:1; margin-bottom:0 !important;}
+
+    #gj-list{display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start;}
+    #gj-list > .gj-card{margin-bottom:0 !important;}
+    #gj-list > .gj-full-width{grid-column:1/-1;}
+  }
+  @media (min-width:1280px){
+    #gj-list:not(.gj-view-table){grid-template-columns:1fr 1fr 1fr;}
   }
 </style>
 
-  <!-- Header periode (persis pola Home/Presensi) -->
-  <div class="card gj-card gj-periode-sec" style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 14px; border-radius:12px;">
-    <div id="gj-periodeLabelWrap" style="min-width:0; cursor:pointer;" title="Pilih Periode">
-      <div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Periode Gaji</div>
-      <div style="font-size:13px; font-weight:700; margin-top:1px;" id="gj-periodeLabel">-</div>
+  <!-- Periode gaji -->
+  <div class="card gj-card gj-periode-sec" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+    <div id="gj-periodeLabelWrap" style="min-width:0; cursor:pointer;" title="Pilih periode">
+      <div class="genio-periode-label">Periode gaji</div>
+      <div class="genio-periode-value" id="gj-periodeLabel">-</div>
     </div>
     <div style="display:flex; align-items:center; gap:8px; flex:none; position:relative;">
-      <button id="gj-refreshBtn" aria-label="Refresh data" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; color:var(--ink-soft);">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
+      <button id="gj-refreshBtn" aria-label="Refresh data" class="genio-tool-btn genio-tool-icon">
+        <i class="ph ph-arrow-clockwise" style="font-size:16px;" aria-hidden="true"></i>
       </button>
-      <button id="gj-pilihPeriodeBtn" type="button" style="height:32px; border:1px solid var(--border); border-radius:8px; padding:0 10px; font-family:var(--font); font-size:11.5px; font-weight:600; color:var(--ink); background:var(--surface); display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;">
-        Pilih Bulan
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      <button id="gj-pilihPeriodeBtn" type="button" class="genio-tool-btn">
+        <i class="ph ph-calendar-blank" style="font-size:16px; color:var(--ink-soft);" aria-hidden="true"></i>
+        Pilih bulan
       </button>
       <input type="month" id="gj-periodeInput" style="position:absolute; right:0; bottom:0; width:1px; height:1px; opacity:0; pointer-events:none; border:none;">
     </div>
   </div>
 
-  <!-- Hero -->
+  <!-- Ringkasan gaji: panel biru -->
   <div class="gj-hero-sec">
     <div class="gj-hero-main-col">
       <div class="gj-hero-badges">
-        <span class="gj-hero-total-pill">
-          <span style="width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block; flex:none;"></span>
-          REKAP GAJI TUTOR
-        </span>
+        <span class="gj-hero-label">Total anggaran gaji tutor</span>
         <span class="gj-hero-tutor-pill" id="gj-heroTutorBadge">-</span>
       </div>
-      <div class="gj-hero-counter">
-        <div class="gj-hero-sublabel">Total Anggaran Gaji Tutor</div>
-        <div class="gj-hero-num-wrap">
-          <span class="gj-hero-num" id="gj-heroTotal">Rp 0</span>
-        </div>
-      </div>
+      <span class="gj-hero-num" id="gj-heroTotal">Rp 0</span>
     </div>
 
     <div class="gj-hero-stats-row">
       <div class="gj-hero-stat-card">
-        <span class="gj-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div style="font-size:9px; opacity:.65;">Sudah Lunas</div>
-          <div style="font-size:12px; font-weight:800; margin-top:1px;" id="gj-heroLunas">Rp 0</div>
-          <div style="font-size:8.5px; opacity:.6; margin-top:1px;" id="gj-heroLunasCount">0 Tutor Terbayar</div>
-        </div>
+        <div class="gj-stat-head"><span class="gj-stat-dot" style="background:#6EE7B0;"></span>Sudah lunas</div>
+        <div class="gj-stat-num" id="gj-heroLunas">Rp 0</div>
+        <div class="gj-stat-sub" id="gj-heroLunasCount">0 Tutor Terbayar</div>
       </div>
       <div class="gj-hero-stat-card">
-        <span class="gj-hero-stat-icon" style="background:rgba(255,149,0,.2); color:#ffc069;">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div style="font-size:9px; opacity:.65;">Belum Dibayar</div>
-          <div style="font-size:12px; font-weight:800; margin-top:1px;" id="gj-heroBelum">Rp 0</div>
-          <div style="font-size:8.5px; opacity:.6; margin-top:1px;" id="gj-heroBelumCount">0 Tutor Menunggu</div>
-        </div>
+        <div class="gj-stat-head"><span class="gj-stat-dot" style="background:#FFC069;"></span>Belum dibayar</div>
+        <div class="gj-stat-num" id="gj-heroBelum">Rp 0</div>
+        <div class="gj-stat-sub" id="gj-heroBelumCount">0 Tutor Menunggu</div>
       </div>
     </div>
 
     <div class="gj-hero-actions">
       <button type="button" id="gj-cetakSemuaBtn" class="gj-hero-cetak-btn" title="Cetak semua slip gaji periode ini">
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        <span>Cetak Semua Slip Gaji</span>
+        <i class="ph ph-printer" aria-hidden="true"></i>
+        <span>Cetak semua slip</span>
       </button>
-      <button type="button" id="gj-hapusSemuaBtn" class="gj-hero-hapus-btn" title="Hapus/reset semua slip gaji periode ini jika ada data yang perlu dirubah">
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        <span>Hapus Semua Slip Gaji</span>
+      <button type="button" id="gj-hapusSemuaBtn" class="gj-hero-hapus-btn" title="Hapus semua slip gaji periode ini jika ada data yang perlu diubah">
+        <i class="ph ph-trash" aria-hidden="true"></i>
+        <span>Hapus semua slip</span>
       </button>
     </div>
   </div>
 
   <div id="gj-desktopAnchor"></div>
 
-  <!-- Tab switcher: dock + glider -->
+  <!-- Tab Belum / Lunas -->
   <div class="gj-dock gj-dock-sec" id="gj-dock">
     <div class="gj-dock-glider" id="gj-dockGlider"></div>
     <button class="gj-dock-btn gj-tab-btn gj-dock-active" data-tab="belum">
-      <span>Belum Dibayar</span>
-      <span id="gj-belumCount" style="background:var(--red); color:#fff; font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+      <span>Belum dibayar</span>
+      <span id="gj-belumCount" class="gj-count gj-count-belum">0</span>
     </button>
     <button class="gj-dock-btn gj-tab-btn" data-tab="lunas">
-      <span>Sudah Lunas</span>
-      <span id="gj-lunasCount" style="background:var(--border); color:var(--ink-soft); font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px;">0</span>
+      <span>Sudah lunas</span>
+      <span id="gj-lunasCount" class="gj-count gj-count-lunas">0</span>
     </button>
   </div>
 
-  <!-- Search & View Toggle -->
-  <div class="gj-search-sec" style="display:flex; gap:8px;">
-    <div style="flex:1; display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--border); border-radius:8px; height:32px; padding:0 10px; box-sizing:border-box;">
-      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="gj-searchInput" placeholder="Cari nama tutor, rekening, atau mapel..." style="border:none; outline:none; flex:1; font-size:11.5px; font-family:var(--font); background:none;">
-    </div>
-    <button id="gj-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+  <!-- Cari & ubah tampilan -->
+  <div class="gj-search-sec">
+    <label class="gj-search-box">
+      <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+      <input type="text" id="gj-searchInput" placeholder="Cari nama tutor, rekening, atau mapel" aria-label="Cari tutor">
+    </label>
+    <button id="gj-viewToggleBtn" type="button" class="genio-tool-btn genio-tool-icon" aria-label="Ubah tampilan" title="Tampilkan sebagai tabel">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
     </button>
   </div>
 
-  <!-- Section label -->
-  <div id="gj-sectionLabelWrap" style="display:flex; align-items:center; justify-content:space-between;">
-    <div id="gj-sectionLabel"></div>
+  <!-- Judul daftar -->
+  <div id="gj-sectionLabelWrap" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+    <div id="gj-sectionLabel" style="min-width:0;"></div>
     <div style="display:flex; align-items:center; gap:6px; flex:none;">
-      <span id="gj-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); font-size:10.5px; font-weight:600; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Tutor</span>
-      <button id="gj-sortBtn" style="display:inline-flex; align-items:center; justify-content:center; gap:5px; height:24px; background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:0 9px; cursor:pointer; font-family:var(--font); box-sizing:border-box;">
-        <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M6 12h12M9 18h6"/></svg>
-        <span id="gj-sortLabel" style="font-size:10.5px; font-weight:600; color:var(--ink);">Gaji Tertinggi</span>
+      <span id="gj-resultCount" class="gj-meta-pill">0 Tutor</span>
+      <button id="gj-sortBtn" class="gj-meta-pill">
+        <i class="ph ph-sort-descending" aria-hidden="true"></i>
+        <span id="gj-sortLabel">Gaji Tertinggi</span>
       </button>
     </div>
   </div>
@@ -1258,17 +878,15 @@
     document.getElementById('gj-resultCount').textContent = rows.length + ' Tutor';
 
     document.getElementById('gj-sectionLabel').innerHTML =
-      '<div style="font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">' + (gjState.tab === 'lunas' ? 'Sudah Lunas' : 'Belum Dibayar') + '</div>' +
-      '<div style="font-size:11.5px; color:var(--ink-soft); margin-top:1px;">Periode ' + document.getElementById('gj-periodeLabel').textContent + '</div>';
+      '<div class="gj-section-title">' + (gjState.tab === 'lunas' ? 'Sudah lunas' : 'Belum dibayar') + '</div>' +
+      '<div class="gj-section-sub">Periode ' + genioEscapeHtml(document.getElementById('gj-periodeLabel').textContent) + '</div>';
 
     if (!rows.length) {
       listEl.classList.remove('gj-view-table');
       listEl.innerHTML = '<div class="gj-card card gj-full-width" style="padding:48px 24px; text-align:center;">' +
-        '<div style="width:56px; height:56px; margin:0 auto 12px; border-radius:50%; background:rgba(0,122,255,.1); color:#007aff; display:flex; align-items:center; justify-content:center;">' +
-          '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
-        '</div>' +
-        '<h4 style="font-size:14px; font-weight:800; color:#1c1c1e; margin:0 0 4px;">Tidak Ada Data</h4>' +
-        '<p style="font-size:12px; color:#8e8e93; margin:0;">' + (gjState.tab === 'lunas' ? 'Belum ada gaji yang dibayarkan periode ini.' : 'Semua gaji periode ini sudah lunas.') + '</p>' +
+        '<div style="width:52px; height:52px; margin:0 auto 14px; border-radius:14px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:26px;"><i class="ph ph-wallet" aria-hidden="true"></i></div>' +
+        '<h4 style="font-size:16px; font-weight:700; color:var(--ink); margin:0 0 4px;">Tidak ada data</h4>' +
+        '<p style="font-size:13.5px; color:var(--ink-soft); margin:0;">' + (gjState.tab === 'lunas' ? 'Belum ada gaji yang dibayarkan periode ini.' : 'Semua gaji periode ini sudah lunas.') + '</p>' +
       '</div>';
       return;
     }
@@ -1301,10 +919,10 @@
       var mapelText = mapelList.length ? mapelList.join(', ') : '-';
 
       var isLunas = row.status === 'sudah_dibayar';
-      var dotColor = isLunas ? '#34c759' : '#ff9500';
-      var statusLabel = isLunas ? 'Lunas' : 'Belum Lunas';
+      var dotColor = isLunas ? 'var(--green)' : '#E08A00';
+      var statusLabel = isLunas ? 'Lunas' : 'Belum lunas';
 
-      var badge = '<span class="gj-table-status-pill">' +
+      var badge = '<span class="gj-table-status-pill ' + (isLunas ? 'gj-badge-lunas' : 'gj-badge-belum') + '">' +
         '<span class="gj-status-dot" style="background:' + dotColor + ';"></span>' +
         '<span class="gj-status-label">' + statusLabel + '</span>' +
       '</span>';
@@ -1313,21 +931,21 @@
       if (isLunas) {
         var isGenerated = !!row.pdf_url;
         var cetakOrViewBtn = isGenerated
-          ? '<button type="button" class="gj-table-icon-btn gj-slip-btn" data-action="view" data-id="' + row.id + '" title="Lihat Slip Gaji" style="color:var(--blue);">' +
-              '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+          ? '<button type="button" class="gj-table-icon-btn gj-slip-btn" data-action="view" data-id="' + row.id + '" title="Lihat slip gaji" aria-label="Lihat slip gaji" style="color:var(--blue);">' +
+              '<i class="ph ph-eye" aria-hidden="true"></i>' +
             '</button>'
-          : '<button type="button" class="gj-table-icon-btn gj-slip-btn" data-action="print" data-id="' + row.id + '" title="Cetak Slip Gaji">' +
-              '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>' +
+          : '<button type="button" class="gj-table-icon-btn gj-slip-btn" data-action="print" data-id="' + row.id + '" title="Cetak slip gaji" aria-label="Cetak slip gaji">' +
+              '<i class="ph ph-printer" aria-hidden="true"></i>' +
             '</button>';
 
-        var batalBtn = '<button type="button" class="gj-table-icon-btn gj-batal-lunas-btn" data-id="' + row.id + '" title="Batalkan status lunas (hapus file di Drive)" style="color:var(--ink-soft);">' +
-            '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>' +
+        var batalBtn = '<button type="button" class="gj-table-icon-btn gj-batal-lunas-btn" data-id="' + row.id + '" title="Batalkan status lunas (hapus file di Drive)" aria-label="Batalkan status lunas">' +
+            '<i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>' +
           '</button>';
 
-        actionBtn = '<div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">' + cetakOrViewBtn + batalBtn + '</div>';
+        actionBtn = '<div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">' + cetakOrViewBtn + batalBtn + '</div>';
       } else {
         actionBtn = '<button type="button" class="gj-transfer-btn" data-id="' + row.id + '" title="Tandai pembayaran gaji sudah ditransfer">' +
-          '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>' +
+          '<i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>' +
           '<span>Transfer</span>' +
         '</button>';
       }
@@ -1335,12 +953,12 @@
       return '' +
         '<tr>' +
           '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:600;">' + genioEscapeHtml(user.nama || '-') + '</td>' +
+          '<td style="white-space:nowrap; font-weight:600;">' + genioEscapeHtml(user.nama || '-') + '</td>' +
           '<td style="white-space:nowrap; color:var(--ink); font-size:11px; font-weight:400;">' + genioEscapeHtml(bankText) + '</td>' +
           '<td style="color:var(--ink); font-size:11px; font-weight:400;">' + genioEscapeHtml(mapelText) + '</td>' +
           '<td style="text-align:center; white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + row.total_pertemuan + ' Sesi</td>' +
           '<td style="text-align:center; white-space:nowrap; color:var(--ink); font-size:11px; font-weight:400;">' + genioEscapeHtml(jamText) + '</td>' +
-          '<td style="text-align:right; white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:600;">' + gjFormatRp(row.total_gaji) + '</td>' +
+          '<td style="text-align:right; white-space:nowrap; font-weight:700;">' + gjFormatRp(row.total_gaji) + '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + badge + '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + actionBtn + '</td>' +
         '</tr>';
@@ -1389,8 +1007,8 @@
     var jam = gjState.jamMap[row.tutor_id] || 0;
     var jamText = jam ? (Math.round(jam * 10) / 10) + ' Jam' : '-';
     var avatar = user.foto_profil_url
-      ? '<img src="' + genioEscapeHtml(user.foto_profil_url) + '" style="width:32px; height:32px; border-radius:50%; object-fit:cover; flex:none; border:1.5px solid #fff; box-shadow:0 0 0 1px var(--border);">'
-      : '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex:none;">' + genioEscapeHtml((user.nama || '?').charAt(0).toUpperCase()) + '</div>';
+      ? '<img src="' + genioEscapeHtml(user.foto_profil_url) + '" alt="" style="width:40px; height:40px; border-radius:50%; object-fit:cover; flex:none; border:1px solid var(--border);">'
+      : '<div style="width:40px; height:40px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; flex:none;">' + genioEscapeHtml((user.nama || '?').charAt(0).toUpperCase()) + '</div>';
 
     var namaBankCard = (profile.nama_bank || '').trim();
     var noRekCard = (profile.no_rekening || '').trim();
@@ -1398,55 +1016,43 @@
       ? (namaBankCard + ' - ' + noRekCard)
       : (namaBankCard || noRekCard);
     var rekeningText = bankStrCard
-      ? genioEscapeHtml(bankStrCard) + ' (a.n. ' + genioEscapeHtml(user.nama || '-') + ')'
+      ? genioEscapeHtml(bankStrCard)
       : 'Rekening belum diisi tutor';
 
     var isLunas = row.status === 'sudah_dibayar';
     var badge = isLunas
-      ? '<span class="gj-status-badge" style="background:rgba(52,199,89,.14); color:#28a745; height:22px;"><span style="width:12px; height:12px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Lunas</span>'
-      : '<span class="gj-status-badge" style="background:rgba(255,149,0,.14); color:#ff9500; height:22px;"><span style="width:12px; height:12px; border-radius:50%; background:#ff9500; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Belum Lunas</span>';
+      ? '<span class="gj-status-badge gj-badge-lunas"><span class="gj-status-dot" style="background:var(--green);"></span>Lunas</span>'
+      : '<span class="gj-status-badge gj-badge-belum"><span class="gj-status-dot" style="background:#E08A00;"></span>Belum lunas</span>';
 
     var isGenerated = !!row.pdf_url;
     var actionBtn = '';
     if (isLunas) {
       var cetakOrViewBtn = isGenerated
-        ? '<button type="button" class="gj-slip-btn" data-action="view" data-id="' + row.id + '" style="flex:1; height:32px; border-radius:8px; background:var(--blue-tint); color:var(--blue); font-size:11px; font-weight:700; border:1px solid rgba(0,122,255,.2); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">' +
-            '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
-            '<span>Lihat Slip</span>' +
-          '</button>'
-        : '<button type="button" class="gj-slip-btn" data-action="print" data-id="' + row.id + '" style="flex:1; height:32px; border-radius:8px; background:var(--ink); color:#fff; font-size:11px; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">' +
-            '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>' +
-            '<span>Cetak Slip</span>' +
-          '</button>';
+        ? '<button type="button" class="gj-slip-btn" data-action="view" data-id="' + row.id + '"><i class="ph ph-eye" aria-hidden="true"></i><span>Lihat slip</span></button>'
+        : '<button type="button" class="gj-slip-btn" data-action="print" data-id="' + row.id + '"><i class="ph ph-printer" aria-hidden="true"></i><span>Cetak slip</span></button>';
 
-      var batalBtn = '<button type="button" class="gj-batal-lunas-btn" data-id="' + row.id + '" title="Batalkan status lunas (hapus file di Drive)" style="height:32px; padding:0 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">' +
-          '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>' +
-          '<span>Batal Lunas</span>' +
-        '</button>';
+      var batalBtn = '<button type="button" class="gj-batal-lunas-btn" data-id="' + row.id + '" title="Batalkan status lunas (hapus file di Drive)"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i><span>Batal lunas</span></button>';
 
-      actionBtn = '<div style="display:flex; gap:8px; margin-top:8px;">' + cetakOrViewBtn + batalBtn + '</div>';
+      actionBtn = '<div class="gj-card-actions">' + cetakOrViewBtn + batalBtn + '</div>';
     } else {
-      actionBtn = '<button type="button" class="gj-transfer-btn" data-id="' + row.id + '" style="width:100%; height:32px; margin-top:8px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; font-family:var(--font); font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">' +
-        '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>' +
-        '<span>Transfer</span>' +
-      '</button>';
+      actionBtn = '<div class="gj-card-actions"><button type="button" class="gj-transfer-btn" data-id="' + row.id + '"><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i><span>Tandai sudah transfer</span></button></div>';
     }
 
     return '' +
-      '<div class="gj-card card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
+      '<div class="gj-card card" style="margin-bottom:12px;">' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">' +
+          '<div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">' +
             avatar +
             '<div style="min-width:0; flex:1;">' +
-              '<h4 style="font-size:12.5px; font-weight:700; color:#1c1c1e; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">' + genioEscapeHtml(user.nama || '-') + '</h4>' +
-              '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + rekeningText + '</p>' +
+              '<h4 style="font-size:15px; font-weight:700; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">' + genioEscapeHtml(user.nama || '-') + '</h4>' +
+              '<p style="font-size:12.5px; color:var(--ink-soft); margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + rekeningText + '</p>' +
             '</div>' +
           '</div>' +
           badge +
         '</div>' +
-        '<div style="background:rgba(0,0,0,.03); border:1px solid rgba(0,0,0,.04); border-radius:9px; padding:8px 10px; margin-top:8px;">' +
-          '<div class="gj-detail-row" style="font-size:10.5px; padding:3px 0;"><span>Total Sesi Mengajar:</span><span>' + row.total_pertemuan + ' Sesi (' + jamText + ')</span></div>' +
-          '<div class="gj-detail-row" style="font-size:10.5px; padding:3px 0;"><span>Total Gaji:</span><span style="color:#28a745; font-weight:800; font-size:11.5px;">' + gjFormatRp(row.total_gaji) + '</span></div>' +
+        '<div class="gj-detail">' +
+          '<div><div class="gj-detail-label">Sesi mengajar</div><div class="gj-detail-val">' + row.total_pertemuan + ' sesi' + (jam ? ' (' + jamText + ')' : '') + '</div></div>' +
+          '<div style="text-align:right;"><div class="gj-detail-label">Total gaji</div><div class="gj-detail-val gj-total">' + gjFormatRp(row.total_gaji) + '</div></div>' +
         '</div>' +
         actionBtn +
       '</div>';
@@ -1588,9 +1194,9 @@
         btn.style.opacity = '';
         if (isIconBtn) {
           btn.setAttribute('title', originalTitle || 'Cetak Slip Gaji');
-          btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>';
+          btn.innerHTML = '<i class="ph ph-printer" aria-hidden="true"></i>';
         } else {
-          btn.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span>Cetak Slip</span>';
+          btn.innerHTML = '<i class="ph ph-printer" aria-hidden="true"></i><span>Cetak slip</span>';
         }
       }
       genioToast('Gagal membuat slip gaji: ' + err.message, 'error');
@@ -1820,7 +1426,7 @@
     }
     if (okBtn) {
       okBtn.textContent = opts.okText || 'Ya, Lanjutkan';
-      okBtn.style.background = opts.isDanger ? '#ff3b30' : 'var(--ink)';
+      okBtn.style.background = opts.isDanger ? 'var(--red)' : 'var(--blue)';
       okBtn.style.color = '#fff';
     }
 

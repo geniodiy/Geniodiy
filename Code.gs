@@ -342,117 +342,133 @@ function buildSlipGajiHtml_(d) {
   var formatRp = function (n) {
     return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
   };
+  var esc = function (v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  var BLUE = '#1C1AAF', INK = '#14162B', SOFT = '#5B5F76', BORDER = '#E3E5F0', SURFACE = '#F5F6FB';
+  var td = 'padding:10px 12px; border-bottom:1px solid ' + BORDER + '; font-size:11.5px; color:' + INK + ';';
 
   var tableRowsHtml = '';
   if (d.rincianPresensi && d.rincianPresensi.length > 0) {
     tableRowsHtml = d.rincianPresensi.map(function (item, idx) {
       return '<tr>' +
-        '<td style="text-align:center; padding:9px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">' + (idx + 1) + '</td>' +
-        '<td style="padding:9px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">' + (item.tanggal || '-') + '</td>' +
-        '<td style="padding:9px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">' + (item.mapel || '-') + '</td>' +
-        '<td style="padding:9px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">' + (item.materi || 'Sesi Pembelajaran') + '</td>' +
-        '<td style="text-align:center; padding:9px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">' + (item.durasi || '1.5 Jam') + '</td>' +
-        '<td style="text-align:right; padding:9px 8px; border-bottom:1px solid #e5e5ea; font-size:11px; font-weight:700;">' + formatRp(item.nominal) + '</td>' +
+        '<td style="' + td + ' text-align:center; color:' + SOFT + ';">' + (idx + 1) + '</td>' +
+        '<td style="' + td + '">' + esc(item.tanggal || '-') + '</td>' +
+        '<td style="' + td + '">' + esc(item.mapel || '-') + '</td>' +
+        '<td style="' + td + '">' + esc(item.materi || 'Sesi pembelajaran') + '</td>' +
+        '<td style="' + td + ' text-align:center;">' + esc(item.durasi || '1.5 Jam') + '</td>' +
+        '<td style="' + td + ' text-align:right; font-weight:700;">' + formatRp(item.nominal) + '</td>' +
       '</tr>';
     }).join('');
   } else {
     tableRowsHtml = '<tr>' +
-      '<td style="text-align:center; padding:12px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">1</td>' +
-      '<td style="padding:12px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">Periode ' + (d.periodeLabel || d.periode) + '</td>' +
-      '<td style="padding:12px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">' + (d.mapel || 'Bimbingan Belajar') + '</td>' +
-      '<td style="padding:12px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">Akumulasi ' + (d.totalPertemuan || 0) + ' Sesi Mengajar</td>' +
-      '<td style="text-align:center; padding:12px 8px; border-bottom:1px solid #e5e5ea; font-size:11px;">' + (d.totalJam || '-') + '</td>' +
-      '<td style="text-align:right; padding:12px 8px; border-bottom:1px solid #e5e5ea; font-size:11px; font-weight:700;">' + formatRp(d.totalGaji) + '</td>' +
+      '<td style="' + td + ' text-align:center; color:' + SOFT + ';">1</td>' +
+      '<td style="' + td + '">Periode ' + esc(d.periodeLabel || d.periode) + '</td>' +
+      '<td style="' + td + '">' + esc(d.mapel || 'Bimbingan belajar') + '</td>' +
+      '<td style="' + td + '">Akumulasi ' + esc(d.totalPertemuan || 0) + ' sesi mengajar</td>' +
+      '<td style="' + td + ' text-align:center;">' + esc(d.totalJam || '-') + '</td>' +
+      '<td style="' + td + ' text-align:right; font-weight:700;">' + formatRp(d.totalGaji) + '</td>' +
     '</tr>';
   }
 
   var isLunas = d.status === 'sudah_dibayar';
-  var statusBadgeColor = isLunas ? '#28a745' : '#d97706';
-  var statusBadgeBg = isLunas ? '#e8f5e9' : '#fef3c7';
-  var statusLabel = isLunas ? 'LUNAS / SUDAH DIBAYAR' : 'MENUNGGU PEMBAYARAN';
+  var pillStyle = isLunas
+    ? 'background:#E9F7EF; color:#1E8E5A;'
+    : 'background:#FFF4E0; color:#A15C00;';
+  var statusLabel = isLunas ? 'Lunas' : 'Menunggu pembayaran';
+
+  var infoRow = function (label, value) {
+    return '<tr>' +
+      '<td style="padding:5px 0; font-size:11px; color:' + SOFT + '; width:118px; vertical-align:top;">' + label + '</td>' +
+      '<td style="padding:5px 0; font-size:12px; color:' + INK + '; font-weight:700; vertical-align:top;">' + value + '</td>' +
+    '</tr>';
+  };
+  var th = 'padding:9px 12px; background:' + SURFACE + '; border-bottom:1px solid ' + BORDER + '; font-size:10.5px; font-weight:700; color:' + SOFT + '; text-align:left;';
+  var tanggalCetak = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
 
   return '<!DOCTYPE html>' +
   '<html>' +
   '<head>' +
     '<meta charset="utf-8">' +
-    '<title>Slip Gaji - ' + (d.tutorNama || 'Tutor') + '</title>' +
+    '<title>Slip Gaji - ' + esc(d.tutorNama || 'Tutor') + '</title>' +
     '<style>' +
-      '@page { size: A4 portrait; margin: 18mm 15mm; }' +
-      'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #1c1c1e; margin: 0; padding: 20px; background: #fff; line-height: 1.4; }' +
-      '.slip-box { max-width: 740px; margin: 0 auto; border: 1px solid #e5e5ea; border-radius: 12px; padding: 28px; box-sizing: border-box; }' +
-      '.header-table { width: 100%; border-collapse: collapse; margin-bottom: 22px; border-bottom: 2.5px solid #1c1c1e; padding-bottom: 14px; }' +
-      '.logo-title { font-size: 24px; font-weight: 800; color: #1c1c1e; letter-spacing: -0.5px; }' +
-      '.logo-sub { font-size: 11px; color: #8e8e93; text-transform: uppercase; letter-spacing: 1.2px; margin-top: 3px; font-weight: 600; }' +
-      '.slip-title { font-size: 19px; font-weight: 800; color: #007aff; text-align: right; letter-spacing: 0.5px; }' +
-      '.slip-meta { font-size: 11.5px; color: #636366; text-align: right; margin-top: 4px; }' +
-      '.info-table { width: 100%; border-collapse: separate; border-spacing: 12px 0; margin-bottom: 22px; }' +
-      '.info-cell { width: 50%; vertical-align: top; padding: 12px 14px; background: #f8f9fa; border: 1px solid #ededf0; border-radius: 10px; }' +
-      '.info-row { font-size: 11.5px; margin-bottom: 6px; display: flex; align-items: baseline; }' +
-      '.info-label { color: #8e8e93; width: 110px; flex: none; font-size: 11px; }' +
-      '.info-val { font-weight: 700; color: #1c1c1e; flex: 1; }' +
-      '.content-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }' +
-      '.content-table th { background: #1c1c1e; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 8px; text-align: left; }' +
-      '.summary-box { float: right; width: 280px; margin-bottom: 24px; background: #f8f9fa; border: 1px solid #ededf0; border-radius: 10px; padding: 14px; box-sizing: border-box; }' +
-      '.sum-row { display: flex; justify-content: space-between; font-size: 11.5px; padding: 3px 0; color: #636366; }' +
-      '.sum-total { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; padding-top: 8px; margin-top: 6px; border-top: 1.5px solid #1c1c1e; color: #1c1c1e; }' +
-      '.footer-text { clear: both; margin-top: 36px; padding-top: 16px; border-top: 1px dashed #d1d1d6; font-size: 10.5px; color: #8e8e93; text-align: center; }' +
-      '.status-pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 10px; font-weight: 800; background: ' + statusBadgeBg + '; color: ' + statusBadgeColor + '; }' +
+      '@page { size: A4 portrait; margin: 16mm 14mm; }' +
+      'body { font-family: Helvetica, Arial, sans-serif; color: ' + INK + '; margin: 0; padding: 0; background: #fff; line-height: 1.4; }' +
+      'table { border-collapse: collapse; }' +
     '</style>' +
   '</head>' +
   '<body>' +
-    '<div class="slip-box">' +
-      '<table class="header-table">' +
+    '<div style="max-width:740px; margin:0 auto;">' +
+
+      '<table style="width:100%; background:' + BLUE + '; border-radius:14px;">' +
         '<tr>' +
-          '<td style="vertical-align:top;">' +
-            '<div class="logo-title">GENIO INSTITUTE</div>' +
-            '<div class="logo-sub">Sistem Manajemen Bimbel &amp; Privat</div>' +
+          '<td style="padding:22px 24px; vertical-align:middle;">' +
+            '<div style="font-size:28px; font-weight:800; color:#fff; letter-spacing:-1px; line-height:1;">genio<span style="color:#FF4B52;">.</span></div>' +
+            '<div style="font-size:11px; color:#C9CAF2; margin-top:6px;">Genio Institute, Yogyakarta</div>' +
           '</td>' +
-          '<td style="text-align:right; vertical-align:top;">' +
-            '<div class="slip-title">SLIP GAJI TUTOR</div>' +
-            '<div class="slip-meta">Periode: <strong>' + (d.periodeLabel || d.periode) + '</strong></div>' +
+          '<td style="padding:22px 24px; text-align:right; vertical-align:middle;">' +
+            '<div style="font-size:19px; font-weight:700; color:#fff;">Slip gaji tutor</div>' +
+            '<div style="font-size:11.5px; color:#C9CAF2; margin-top:4px;">Periode ' + esc(d.periodeLabel || d.periode) + '</div>' +
           '</td>' +
         '</tr>' +
       '</table>' +
 
-      '<table class="info-table">' +
+      '<table style="width:100%; margin-top:22px;">' +
         '<tr>' +
-          '<td class="info-cell">' +
-            '<div class="info-row"><span class="info-label">Nama Tutor</span><span class="info-val">: ' + (d.tutorNama || '-') + '</span></div>' +
-            '<div class="info-row"><span class="info-label">Rekening Bank</span><span class="info-val">: ' + (d.bankText || '-') + '</span></div>' +
-            '<div class="info-row"><span class="info-label">Mata Pelajaran</span><span class="info-val">: ' + (d.mapel || '-') + '</span></div>' +
+          '<td style="width:50%; vertical-align:top; padding-right:12px;">' +
+            '<table style="width:100%;">' +
+              infoRow('Nama tutor', esc(d.tutorNama || '-')) +
+              infoRow('Rekening bank', esc(d.bankText || '-')) +
+              infoRow('Mata pelajaran', esc(d.mapel || '-')) +
+            '</table>' +
           '</td>' +
-          '<td class="info-cell">' +
-            '<div class="info-row"><span class="info-label">Status Bayar</span><span class="info-val">: <span class="status-pill">' + statusLabel + '</span></span></div>' +
-            '<div class="info-row"><span class="info-label">Tanggal Bayar</span><span class="info-val">: ' + (d.tanggalDibayar || '-') + '</span></div>' +
-            '<div class="info-row"><span class="info-label">Total Pengajaran</span><span class="info-val">: ' + (d.totalPertemuan || 0) + ' Sesi (' + (d.totalJam || '-') + ')</span></div>' +
+          '<td style="width:50%; vertical-align:top; padding-left:12px; border-left:1px solid ' + BORDER + ';">' +
+            '<table style="width:100%;">' +
+              infoRow('Status', '<span style="display:inline-block; padding:2px 9px; border-radius:999px; font-size:10.5px; ' + pillStyle + '">' + statusLabel + '</span>') +
+              infoRow('Tanggal bayar', esc(d.tanggalDibayar || '-')) +
+              infoRow('Total pengajaran', esc(d.totalPertemuan || 0) + ' sesi (' + esc(d.totalJam || '-') + ')') +
+            '</table>' +
           '</td>' +
         '</tr>' +
       '</table>' +
 
-      '<table class="content-table">' +
+      '<div style="font-size:13px; font-weight:700; margin:26px 0 10px;">Rincian mengajar</div>' +
+      '<table style="width:100%; border:1px solid ' + BORDER + '; border-radius:12px;">' +
         '<thead>' +
           '<tr>' +
-            '<th style="width:36px; text-align:center;">No</th>' +
-            '<th>Periode / Pelaksanaan</th>' +
-            '<th>Mata Pelajaran</th>' +
-            '<th>Keterangan</th>' +
-            '<th style="text-align:center;">Durasi</th>' +
-            '<th style="text-align:right;">Nominal Gaji</th>' +
+            '<th style="' + th + ' width:34px; text-align:center;">No</th>' +
+            '<th style="' + th + '">Tanggal</th>' +
+            '<th style="' + th + '">Mata pelajaran</th>' +
+            '<th style="' + th + '">Keterangan</th>' +
+            '<th style="' + th + ' text-align:center;">Durasi</th>' +
+            '<th style="' + th + ' text-align:right;">Nominal</th>' +
           '</tr>' +
         '</thead>' +
-        '<tbody>' +
-          tableRowsHtml +
-        '</tbody>' +
+        '<tbody>' + tableRowsHtml + '</tbody>' +
       '</table>' +
 
-      '<div class="summary-box">' +
-        '<div class="sum-row"><span>Total Sesi:</span><strong>' + (d.totalPertemuan || 0) + ' Sesi</strong></div>' +
-        '<div class="sum-row"><span>Total Jam:</span><strong>' + (d.totalJam || '-') + '</strong></div>' +
-        '<div class="sum-total"><span>TOTAL GAJI:</span><span>' + formatRp(d.totalGaji) + '</span></div>' +
-      '</div>' +
+      '<table style="width:100%; margin-top:18px;">' +
+        '<tr>' +
+          '<td style="vertical-align:top; font-size:11px; color:' + SOFT + '; padding-right:20px;">' +
+            'Total sesi: <strong style="color:' + INK + ';">' + esc(d.totalPertemuan || 0) + ' sesi</strong><br>' +
+            'Total jam: <strong style="color:' + INK + ';">' + esc(d.totalJam || '-') + '</strong>' +
+          '</td>' +
+          '<td style="width:280px; vertical-align:top;">' +
+            '<table style="width:100%; background:' + BLUE + '; border-radius:12px;">' +
+              '<tr>' +
+                '<td style="padding:14px 18px; font-size:12px; color:#C9CAF2;">Total gaji</td>' +
+                '<td style="padding:14px 18px; font-size:19px; font-weight:800; color:#fff; text-align:right; white-space:nowrap;">' + formatRp(d.totalGaji) + '</td>' +
+              '</tr>' +
+            '</table>' +
+          '</td>' +
+        '</tr>' +
+      '</table>' +
 
-      '<div class="footer-text">' +
-        'Dokumen ini dicetak otomatis oleh Sistem Informasi Genio Institute pada ' + (new Date().toLocaleDateString('id-ID', { year:'numeric', month:'long', day:'numeric' })) + ' dan merupakan bukti penggajian yang sah.' +
+      '<div style="margin-top:36px; padding-top:14px; border-top:1px solid ' + BORDER + '; font-size:10.5px; color:' + SOFT + ';">' +
+        'Dokumen ini dibuat otomatis oleh sistem Genio Institute pada ' + tanggalCetak + ' dan merupakan bukti penggajian yang sah.' +
       '</div>' +
     '</div>' +
   '</body>' +

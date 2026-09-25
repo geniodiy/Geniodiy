@@ -20,39 +20,57 @@
   .home-jm-dot:hover{ transform:scale(1.35); }
 
   /* Card Styling khusus Home */
-  .module-panel[data-module="home"] .card{ padding:12px 14px; border-radius:12px; }
 
-  /* Hero Finansial Modern (White Theme Aesthetic) */
-  .home-hero-badge-pill{
-    display:inline-flex; align-items:center; gap:6px;
-    background:var(--surface); border:1px solid var(--border);
-    color:var(--ink-soft); font-size:9.5px; font-weight:800;
-    letter-spacing:.04em; padding:2.5px 8px; border-radius:999px;
-    text-transform:uppercase;
+  /* ===== Hero finansial: panel biru brand (sama dgn Login) ===== */
+  .home-sec-hero{
+    position:relative; isolation:isolate; overflow:hidden;
+    background:var(--blue); color:#fff; border-radius:20px;
   }
+  .home-sec-hero::before{
+    content:''; position:absolute; z-index:-1; pointer-events:none;
+    width:460px; height:460px; right:-160px; bottom:-280px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 65%);
+  }
+  .home-hero-label{font-size:13px; font-weight:600; color:rgba(255,255,255,.78);}
+  .home-hero-num{font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.1; font-variant-numeric:tabular-nums;}
+  .home-hero-delta{font-size:12px; color:rgba(255,255,255,.72); margin-top:4px;}
   .home-hero-cetak-btn{
-    background:var(--surface); border:1px solid var(--border);
-    color:var(--ink); border-radius:999px; padding:3px 9px;
-    font-family:var(--font); font-size:10px; font-weight:600;
-    cursor:pointer; display:inline-flex; align-items:center; gap:4px;
-    flex:none; white-space:nowrap; transition:all .16s ease;
-    box-shadow:0 1px 2px rgba(0,0,0,.03);
+    display:inline-flex; align-items:center; gap:6px; flex:none;
+    height:32px; padding:0 12px; border-radius:var(--radius-sm);
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.24); color:#fff;
+    font-family:var(--font); font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;
+    transition:background .15s ease, transform .1s ease;
   }
-  .home-hero-cetak-btn:hover{
-    background:var(--surface-hover); border-color:#d1d5db;
-    transform:translateY(-1px); box-shadow:0 2px 5px rgba(0,0,0,.06);
-  }
-  .home-hero-cetak-btn:active{ transform:scale(.96); }
+  .home-hero-cetak-btn i{font-size:15px;}
+  .home-hero-cetak-btn:hover{background:rgba(255,255,255,.2);}
+  .home-hero-cetak-btn:active{transform:scale(.97);}
+  .home-hero-cetak-btn:focus-visible{outline:2px solid #fff; outline-offset:2px;}
   .home-hero-subcard{
-    background:#fbfcfd; border:1px solid var(--border);
-    border-radius:12px; padding:9px 12px; display:flex;
-    flex-direction:column; justify-content:space-between;
-    transition:all .18s ease; box-shadow:0 1px 2px rgba(0,0,0,.02);
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+    border-radius:14px; padding:12px 14px; min-width:0;
   }
-  .home-hero-subcard:hover{
-    background:#ffffff; border-color:#d2d6dc;
-    box-shadow:0 4px 12px rgba(20,22,43,.04);
+  .home-sub-head{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px 8px;}
+  .home-sub-label{font-size:12.5px; font-weight:600; color:rgba(255,255,255,.78); white-space:nowrap;}
+  .home-sub-chip{
+    font-size:11px; font-weight:700; white-space:nowrap;
+    background:rgba(255,255,255,.14); color:#fff; padding:2px 8px; border-radius:999px;
   }
+  .home-sub-num{font-size:18px; font-weight:700; letter-spacing:-.02em; margin-top:8px; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .home-hero-subcard .home-hero-delta{font-size:11.5px; margin-top:2px;}
+
+  /* ===== Kartu & teks ===== */
+  .module-panel[data-module="home"] .card{border:1px solid var(--border); border-radius:16px; padding:14px 16px;}
+  .home-sec-title{font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-.01em; margin-bottom:12px;}
+  .home-stat-card{gap:10px;}
+  .home-stat-label{font-size:12.5px; font-weight:600; color:var(--ink-soft);}
+  .home-stat-num{font-size:24px; font-weight:700; letter-spacing:-.025em; font-variant-numeric:tabular-nums;}
+  .home-stat-unit{font-size:12.5px; font-weight:600; color:var(--ink-soft);}
+  .home-stat-sub{font-size:11.5px; color:var(--ink-soft); margin-top:2px;}
+
+  #trendRangeDock, #unitTabDock{background:var(--surface) !important; border-radius:10px !important; margin-bottom:10px !important;}
+  #trendRangeGlider, #unitTabGlider{border:none !important; box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border) !important;}
+  .home-trend-range, .home-unit-tab{font-size:12.5px !important; font-weight:600 !important;}
+  .home-trend-metric{border-width:1px !important;}
 
   /* ===== Mobile Layout Khusus (Gaya Presensi: Jarak Vertikal 14px Rapi) ===== */
   @media (max-width:899px){
@@ -89,15 +107,10 @@
 
     /* Hero Finansial Mobile (Cerah / Pure White Modern) */
     .home-sec-hero{
-      background: #ffffff !important;
-      color: var(--ink) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 16px !important;
-      padding: 14px 16px !important;
+      padding: 18px !important;
       display: flex !important;
       flex-direction: column !important;
-      gap: 12px !important;
-      box-shadow: 0 2px 10px -2px rgba(20, 22, 43, 0.05), 0 1px 3px rgba(20, 22, 43, 0.02) !important;
+      gap: 16px !important;
     }
     .home-hero-main-col{
       display: flex !important;
@@ -119,8 +132,7 @@
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
       gap: 8px !important;
-      padding-top: 10px !important;
-      border-top: 1px solid var(--border) !important;
+      padding-top: 0 !important;
     }
 
     /* Ketinggian konten mobile agar tidak terkunci ukuran desktop */
@@ -165,14 +177,12 @@
 
     /* Periode memanjang di paling atas (Identik Presensi) */
     .home-sec-periode{
-      margin-bottom: 12px !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
+      margin-bottom: 14px !important;
     }
 
     /* Baris 2: Header Toolbar (Sapaan | Presensi Pending) */
     .home-top-row{
-      display:flex !important; flex-direction:row !important; gap:12px !important; align-items:stretch !important; margin-bottom:12px !important;
+      display:flex !important; flex-direction:row !important; gap:14px !important; align-items:stretch !important; margin-bottom:14px !important;
     }
     .home-top-row > .card{
       margin-bottom:0 !important;
@@ -182,13 +192,9 @@
 
     /* Baris 3: KPI Finansial & Statistik (Gaya Presensi: Hero Horizontal | 2 Kartu Stats) */
     .home-kpi-row{
-      display:flex !important; flex-direction:row !important; gap:12px !important; align-items:stretch !important; margin-bottom:12px !important;
+      display:flex !important; flex-direction:row !important; gap:14px !important; align-items:stretch !important; margin-bottom:14px !important;
     }
     .home-sec-hero{
-      background: #ffffff !important;
-      color: var(--ink) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 16px !important;
       flex: 1.6;
       margin-bottom: 0 !important;
       display: flex !important;
@@ -196,9 +202,8 @@
       align-items: center !important;
       justify-content: space-between !important;
       gap: 16px !important;
-      padding: 12px 18px !important;
+      padding: 18px 20px !important;
       box-sizing: border-box !important;
-      box-shadow: 0 2px 12px -2px rgba(20, 22, 43, 0.05), 0 1px 3px rgba(20, 22, 43, 0.02) !important;
     }
     .home-hero-main-col{
       flex: 1.05 !important;
@@ -224,8 +229,7 @@
       margin-top: 0 !important;
       padding-top: 0 !important;
       border-top: none !important;
-      border-left: 1px solid var(--border) !important;
-      padding-left: 16px !important;
+      padding-left: 0 !important;
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
       gap: 10px !important;
@@ -267,21 +271,20 @@
     }
 
     /* Rapatkan padding kartu di desktop agar 1 layar memuat semua info */
-    .module-panel[data-module="home"] .card{ padding:14px 16px; border-radius:16px; }
   }
 </style>
 
   <!-- Periode Pemilih Memanjang di Paling Atas (Identik Presensi) -->
-  <div class="card home-sec-periode" style="display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; box-sizing:border-box; padding:8px 14px; border-radius:12px;">
+  <div class="card home-sec-periode" style="display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; box-sizing:border-box;">
     <div id="homePeriodeLabelWrap" style="min-width:0; cursor:pointer;" title="Pilih Periode">
-      <div style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Periode Data</div>
-      <div style="font-size:13px; font-weight:700; margin-top:1px;" id="homePeriodeLabel">-</div>
+      <div class="genio-periode-label">Periode data</div>
+      <div class="genio-periode-value" id="homePeriodeLabel">-</div>
     </div>
     <div style="display:flex; align-items:center; gap:8px; flex:none; position:relative;">
-      <button id="homeRefreshBtn" aria-label="Refresh data" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; color:var(--ink-soft);">
+      <button id="homeRefreshBtn" aria-label="Refresh data" class="genio-tool-btn genio-tool-icon">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
       </button>
-      <button id="homePeriodeFakeBtn" type="button" style="height:32px; border:1px solid var(--border); border-radius:8px; padding:0 10px; font-family:var(--font); font-size:11.5px; font-weight:600; color:var(--ink); background:var(--surface); display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;">
+      <button id="homePeriodeFakeBtn" type="button" class="genio-tool-btn">
         Pilih Bulan
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
       </button>
@@ -292,122 +295,100 @@
   <!-- Baris 2: Header Toolbar (Sapaan & Banner Presensi Pending) -->
   <div class="home-top-row" id="homeTopRow">
     <!-- Kartu sapaan -->
-    <div class="card home-sec-sapaan" style="display:flex; align-items:center; gap:10px; flex:1; min-width:0; padding:10px 14px; border-radius:12px;">
-      <div style="width:32px; height:32px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11.5px; flex:none;" id="homeAvatarInitials">--</div>
+    <div class="card home-sec-sapaan" style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">
+      <div style="width:40px; height:40px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex:none;" id="homeAvatarInitials">--</div>
       <div style="min-width:0;">
-        <div style="font-size:9px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;" id="homeRoleLabel">Manajer</div>
-        <div style="font-size:12.5px; font-weight:700; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeGreeting">Selamat datang</div>
-        <div style="font-size:10.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Semoga harimu produktif.</div>
+        <div style="font-size:12px; font-weight:600; color:var(--ink-soft);" id="homeRoleLabel">Manajer</div>
+        <div style="font-size:16px; font-weight:700; letter-spacing:-.015em; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeGreeting">Selamat datang</div>
       </div>
     </div>
 
     <!-- Banner Presensi Pending -->
-    <div class="card home-sec-presensi" id="homePresensiBanner" style="display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; flex:1; min-width:0; padding:10px 14px; border-radius:12px;">
+    <div class="card home-sec-presensi" id="homePresensiBanner" style="display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; flex:1; min-width:0;">
       <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-        <span style="width:30px; height:30px; border-radius:50%; background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;">
+        <span style="width:40px; height:40px; border-radius:12px; background:var(--red-soft); color:var(--red); display:flex; align-items:center; justify-content:center; flex:none;">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 2 20h20L12 3.5z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
         </span>
         <div style="min-width:0;">
-          <div style="font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homePresensiPendingText">0 Presensi Menunggu Approval</div>
-          <div style="font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tutor telah mengajar &bull; Klik verifikasi</div>
+          <div style="font-size:14.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homePresensiPendingText">0 Presensi Menunggu Approval</div>
+          <div style="font-size:12.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tutor sudah mengajar, perlu diverifikasi</div>
         </div>
       </div>
-      <span style="color:var(--ink-soft); font-size:16px; font-weight:700; flex:none;">&#8250;</span>
+      <i class="ph ph-caret-right" style="color:#A3A7BC; font-size:18px; flex:none;" aria-hidden="true"></i>
     </div>
   </div>
 
   <!-- Baris 3: Highlight Finansial & Statistik (Gaya Presensi) -->
   <div class="home-kpi-row" id="homeKpiRow">
-    <!-- Hero Finansial Modern (White Theme Aesthetic) -->
+    <!-- Hero finansial: panel biru brand (sama dgn Login) -->
     <div class="home-sec-hero">
       <div class="home-hero-main-col">
         <div class="home-hero-badges">
-          <span class="home-hero-badge-pill">
-            <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
-            Total Omset
-          </span>
-          <button id="homeCetakLaporanBtn" type="button" class="home-hero-cetak-btn" title="Cetak Laporan">
-            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></svg>
+          <span class="home-hero-label">Total omset</span>
+          <button id="homeCetakLaporanBtn" type="button" class="home-hero-cetak-btn" title="Cetak laporan">
+            <i class="ph ph-printer" aria-hidden="true"></i>
             <span>Cetak</span>
           </button>
         </div>
         <div class="home-hero-counter">
-          <div style="display:flex; align-items:baseline; gap:6px;">
-            <span style="font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1.15; color:var(--ink); letter-spacing:-0.02em;" id="homeOmset">Rp 0</span>
-          </div>
-          <div style="font-size:10px; color:var(--ink-soft); margin-top:2px;" id="homeOmsetDelta"></div>
+          <span class="home-hero-num" id="homeOmset">Rp 0</span>
+          <div class="home-hero-delta" id="homeOmsetDelta"></div>
         </div>
       </div>
 
       <div class="home-hero-stats-row">
-        <!-- Sub-card: Laba Bersih -->
         <div class="home-hero-subcard">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="width:20px; height:20px; border-radius:6px; background:rgba(52,199,89,.12); color:#28a745; display:flex; align-items:center; justify-content:center; flex:none;">
-                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
-              <span style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Laba Bersih</span>
-            </div>
-            <span id="homeMargin" style="font-size:8.5px; font-weight:800; background:rgba(52,199,89,.1); color:#1e7e34; padding:1.5px 6px; border-radius:999px; white-space:nowrap;">Margin -</span>
+          <div class="home-sub-head">
+            <span class="home-sub-label">Laba bersih</span>
+            <span id="homeMargin" class="home-sub-chip">Margin -</span>
           </div>
-          <div style="margin-top:6px;">
-            <div style="font-size:13px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;" id="homeLaba">Rp 0</div>
-            <div style="font-size:9px; color:var(--ink-soft); margin-top:2px;" id="homeLabaDelta"></div>
-          </div>
+          <div class="home-sub-num" id="homeLaba">Rp 0</div>
+          <div class="home-hero-delta" id="homeLabaDelta"></div>
         </div>
 
-        <!-- Sub-card: Pengeluaran -->
         <div class="home-hero-subcard">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="width:20px; height:20px; border-radius:6px; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;">
-                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-              </span>
-              <span style="font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Pengeluaran</span>
-            </div>
-            <span style="font-size:8.5px; font-weight:700; background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); padding:1px 5px; border-radius:999px; white-space:nowrap;">Beban Ops</span>
+          <div class="home-sub-head">
+            <span class="home-sub-label">Pengeluaran</span>
+            <span class="home-sub-chip">Beban ops</span>
           </div>
-          <div style="margin-top:6px;">
-            <div style="font-size:13px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;" id="homeOperasional">Rp 0</div>
-            <div style="font-size:9px; color:var(--ink-soft); margin-top:2px;" id="homeOperasionalDelta"></div>
-          </div>
+          <div class="home-sub-num" id="homeOperasional">Rp 0</div>
+          <div class="home-hero-delta" id="homeOperasionalDelta"></div>
         </div>
       </div>
     </div>
 
     <!-- Grid statistik 2 kartu (Siswa Aktif & Pertemuan) -->
     <div class="home-sec-stats" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-      <div class="card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; padding:8px 10px; border-radius:12px;">
+      <div class="card home-stat-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between;">
         <div style="display:flex; align-items:center; justify-content:space-between;">
-          <div style="width:24px; height:24px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7.5" r="3.2"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><path d="M16 4.8a3.2 3.2 0 0 1 0 6.2"/><path d="M20 20c0-2.8-1.8-5-4-5.8"/></svg>
+          <div style="width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; flex:none;">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7.5" r="3.2"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><path d="M16 4.8a3.2 3.2 0 0 1 0 6.2"/><path d="M20 20c0-2.8-1.8-5-4-5.8"/></svg>
           </div>
           <span id="homeSiswaPct"></span>
         </div>
         <div style="margin-top:3px;">
-          <div style="font-size:9.5px; color:var(--ink-soft); font-weight:600;">Total Siswa Aktif</div>
+          <div class="home-stat-label">Total siswa aktif</div>
           <div style="margin-top:1px;">
-            <span style="font-size:17px; font-weight:800;" id="homeSiswaAktif">0</span>
-            <span style="font-size:9.5px; color:var(--ink-soft); font-weight:600;">anak</span>
+            <span class="home-stat-num" id="homeSiswaAktif">0</span>
+            <span class="home-stat-unit">anak</span>
           </div>
-          <div style="font-size:9px; margin-top:1px;" id="homeSiswaSub">&nbsp;</div>
+          <div class="home-stat-sub" id="homeSiswaSub">&nbsp;</div>
         </div>
       </div>
-      <div class="card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; padding:8px 10px; border-radius:12px;">
+      <div class="card home-stat-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between;">
         <div style="display:flex; align-items:center; justify-content:space-between;">
-          <div style="width:24px; height:24px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5l3.2 2"/></svg>
+          <div style="width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; flex:none;">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5l3.2 2"/></svg>
           </div>
           <span id="homePertemuanPct"></span>
         </div>
         <div style="margin-top:3px;">
-          <div style="font-size:9.5px; color:var(--ink-soft); font-weight:600;">Banyak Pertemuan</div>
+          <div class="home-stat-label">Banyak pertemuan</div>
           <div style="margin-top:1px;">
-            <span style="font-size:17px; font-weight:800;" id="homePertemuan">0</span>
-            <span style="font-size:9.5px; color:var(--ink-soft); font-weight:600;">sesi</span>
+            <span class="home-stat-num" id="homePertemuan">0</span>
+            <span class="home-stat-unit">sesi</span>
           </div>
-          <div style="font-size:9px; margin-top:1px;" id="homePertemuanSub">&nbsp;</div>
+          <div class="home-stat-sub" id="homePertemuanSub">&nbsp;</div>
         </div>
       </div>
     </div>
@@ -419,7 +400,7 @@
     <!-- Kolom 1: Trend Progress Cabang -->
     <div class="home-sec-trend">
       <div class="card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
-        <div style="font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:8px;">Trend Progress Cabang</div>
+        <div class="home-sec-title">Trend progress cabang</div>
 
         <div id="trendRangeDock" style="position:relative; display:flex; margin-bottom:8px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; touch-action:none; -webkit-user-select:none; user-select:none; height:38px; box-sizing:border-box; align-items:center;">
           <div id="trendRangeGlider" style="position:absolute; top:3px; bottom:3px; left:3px; width:calc(33.33% - 4px); background:#fff; border-radius:8px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;"></div>
@@ -463,7 +444,7 @@
     <!-- Kolom 2: Penyebaran Data 5 Unit -->
     <div class="home-sec-unit">
       <div class="card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
-        <div style="font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:8px;">Penyebaran Data 5 Unit</div>
+        <div class="home-sec-title">Penyebaran data 5 unit</div>
 
         <div id="unitTabDock" style="position:relative; display:flex; margin-bottom:8px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; touch-action:none; -webkit-user-select:none; user-select:none; height:38px; box-sizing:border-box; align-items:center;">
           <div id="unitTabGlider" style="position:absolute; top:3px; bottom:3px; left:3px; width:calc(20% - 3.8px); background:#fff; border-radius:8px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;"></div>
@@ -475,8 +456,8 @@
         </div>
 
         <div style="display:flex; align-items:center; justify-content:space-between; padding:0 3px 6px;">
-          <span style="font-size:9px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Unit / Kepala Unit</span>
-          <span id="homeUnitColRight" style="font-size:9px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;">Siswa &amp; Perubahan</span>
+          <span style="font-size:11.5px; font-weight:600; color:var(--ink-soft);">Unit / kepala unit</span>
+          <span id="homeUnitColRight" style="font-size:11.5px; font-weight:600; color:var(--ink-soft);">Siswa &amp; Perubahan</span>
         </div>
 
         <div id="homeUnitTable" class="home-scrollable">
@@ -490,10 +471,10 @@
       <div class="card home-sec-jadwal" id="homeSecJadwalTutor" style="display:flex; flex-direction:column; height:100%; box-sizing:border-box; margin-bottom:0; position:relative;">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex:none;">
           <div style="display:flex; align-items:center; gap:6px;">
-            <div style="font-size:13px; font-weight:800; color:var(--ink);">Jadwal Tutor</div>
+            <div class="home-sec-title" style="margin:0;">Jadwal tutor</div>
             <span id="homeJmTotalBadge" style="background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px;">-</span>
           </div>
-          <a href="javascript:void(0)" id="homeLihatSemuaJadwal" style="font-size:10.5px; font-weight:700; color:var(--red); text-decoration:none;">Lihat Semua &#8250;</a>
+          <a href="javascript:void(0)" id="homeLihatSemuaJadwal" style="font-size:13px; font-weight:700; color:var(--blue); text-decoration:none;">Lihat semua</a>
         </div>
 
         <!-- Matrix Timetable Grid identik dengan Jadwal Mingguan Kontrak -->
@@ -1068,12 +1049,12 @@
       var siswaAktifCount = Object.keys(siswaAktifSet).length;
 
       homeRevealValue(document.getElementById('homeOmset'), homeFormatRupiah(omset));
-      document.getElementById('homeOmsetDelta').innerHTML = homeDeltaBadge(omset, omsetPrev, false);
+      document.getElementById('homeOmsetDelta').innerHTML = homeDeltaBadge(omset, omsetPrev, true);
       homeRevealValue(document.getElementById('homeLaba'), homeFormatRupiah(laba));
       document.getElementById('homeMargin').textContent = omset > 0 ? ('Margin ' + marginPct.toFixed(1) + '%') : 'Margin -';
-      document.getElementById('homeLabaDelta').innerHTML = homeDeltaBadge(laba, labaPrev, false);
+      document.getElementById('homeLabaDelta').innerHTML = homeDeltaBadge(laba, labaPrev, true);
       homeRevealValue(document.getElementById('homeOperasional'), homeFormatRupiah(pengeluaran));
-      document.getElementById('homeOperasionalDelta').innerHTML = homeDeltaBadge(pengeluaran, pengeluaranPrev, false);
+      document.getElementById('homeOperasionalDelta').innerHTML = homeDeltaBadge(pengeluaran, pengeluaranPrev, true);
 
       homeRevealValue(document.getElementById('homeSiswaAktif'), String(siswaAktifCount));
       document.getElementById('homeSiswaPct').innerHTML = homePercentPill(siswaAktifCount, 0);

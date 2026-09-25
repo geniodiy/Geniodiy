@@ -4,615 +4,273 @@
   <base target="_top">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
   <script>var SCRIPT_URL = '<?!= scriptUrl ?>';</script>
   <?!= include('Config'); ?>
   <style>
+    /* Radius rule (sama dgn Login): interaktif = 10px, panel/kartu = 16-20px */
     body{background:var(--bg-page, #f0f2f5);}
 
-    .content{padding:16px 16px 118px;}
+    .content{padding:16px 16px calc(112px + env(safe-area-inset-bottom));}
 
-    /* ===== Bottom nav: iOS glass dock dengan glider pil putih meluncur ===== */
+    /* ===== Header ===== */
+    #genioScrollSentinel{position:absolute; top:8px; left:0; width:1px; height:1px; pointer-events:none;}
+    #genioSharedHeader{
+      position:sticky; top:0; z-index:60;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      height:60px; padding:0 16px;
+      background:rgba(255,255,255,.94);
+      -webkit-backdrop-filter:saturate(180%) blur(16px);
+      backdrop-filter:saturate(180%) blur(16px);
+      border-bottom:1px solid transparent;
+      transition:border-color .2s ease, box-shadow .2s ease;
+    }
+    #genioSharedHeader.scrolled{
+      border-bottom-color:var(--border);
+      box-shadow:0 8px 24px -18px rgba(20,22,43,.35);
+    }
+
+    .genio-brand-wrap{
+      display:flex; align-items:baseline; gap:10px; min-width:0;
+      cursor:pointer; user-select:none; -webkit-user-select:none;
+      background:none; border:none; padding:6px 0; font-family:var(--font); color:var(--ink);
+    }
+    .genio-brand-wrap:focus-visible{outline:2px solid var(--blue); outline-offset:4px; border-radius:6px;}
+    .genio-mark{font-size:22px; font-weight:800; letter-spacing:-.035em; line-height:1;}
+    .genio-mark .dot{color:var(--red);}
+    .genio-brand-sub{font-size:12.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
+
+    .genio-header-nav-center{display:none;}
+    .genio-header-actions{display:flex; align-items:center; gap:8px; flex:none;}
+    .genio-header-icon-btn{
+      position:relative; width:40px; height:40px; padding:0;
+      border-radius:var(--radius-sm); border:1px solid var(--border); background:#fff;
+      display:inline-flex; align-items:center; justify-content:center;
+      color:var(--ink); cursor:pointer; flex:none; font-size:19px;
+      transition:background .15s ease, border-color .15s ease, color .15s ease, transform .1s ease;
+    }
+    .genio-header-icon-btn:hover{background:var(--surface); border-color:#C9CCE0;}
+    .genio-header-icon-btn:active{transform:scale(.96);}
+    .genio-header-icon-btn:focus-visible{outline:3px solid rgba(28,26,175,.25); outline-offset:1px;}
+    .genio-header-logout-btn{color:var(--ink-soft);}
+    .genio-header-logout-btn:hover{color:var(--red); border-color:rgba(212,7,15,.3); background:var(--red-soft);}
+
+    #genioNotifPanel{
+      position:absolute; display:none; top:48px; right:0; z-index:90;
+      width:340px; max-width:88vw; padding:16px;
+      background:#fff; border:1px solid var(--border); border-radius:16px;
+      box-shadow:0 24px 48px -16px rgba(20,22,43,.25);
+    }
+
+    /* ===== Bottom bar (mobile) ===== */
     .dock-wrap{
-      position:fixed; left:20px; right:20px; bottom:20px;
-      max-width:370px; margin:0 auto; z-index:40;
+      position:fixed; z-index:40;
+      left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom));
+      max-width:440px; margin:0 auto;
     }
     .ios-glass-dock{
       position:relative;
-      background:rgba(254,254,255,.62);
-      backdrop-filter:blur(36px) saturate(190%);
-      -webkit-backdrop-filter:blur(36px) saturate(190%);
-      border:1px solid rgba(255,255,255,.8);
-      border-radius:999px;
-      box-shadow:
-        0 20px 45px -10px rgba(28,28,30,.14),
-        0 2px 6px rgba(28,28,30,.04),
-        inset 0 1.5px 1.5px 0 rgba(255,255,255,1);
-      padding:8px;
-      display:flex; align-items:center; justify-content:space-between;
+      display:flex; align-items:stretch; justify-content:space-between;
+      padding:6px; border-radius:20px;
+      background:#fff; border:1px solid var(--border);
+      box-shadow:0 18px 40px -18px rgba(20,22,43,.35), 0 2px 6px rgba(20,22,43,.04);
       touch-action:none; -webkit-user-select:none; user-select:none;
-      transition:box-shadow .22s ease;
-      transform-origin:center bottom;
-      will-change:transform, box-shadow;
+      transition:transform .18s cubic-bezier(.16,1,.3,1);
     }
-    @keyframes appleDockGrow {
-      0% { transform: scale(1); }
-      60% { transform: scale(1.048); }
-      100% { transform: scale(1.04); }
-    }
-    .ios-glass-dock.dock-pressed{
-      animation: appleDockGrow .25s cubic-bezier(.34,1.56,.64,1) forwards;
-      box-shadow:
-        0 28px 60px -10px rgba(28,28,30,.22),
-        0 8px 18px rgba(28,28,30,.08),
-        inset 0 1.5px 1.5px 0 rgba(255,255,255,1);
-    }
-    @keyframes appleDockPop {
-      0% { transform: scale(1.04); }
-      40% { transform: scale(0.978); }
-      80% { transform: scale(1.008); }
-      100% { transform: scale(1); }
-    }
-    .ios-glass-dock.dock-pop {
-      animation: appleDockPop .32s cubic-bezier(.34,1.56,.64,1) forwards;
-    }
+    .ios-glass-dock.dock-pressed{transform:scale(.985);}
     .dock-glider{
-      position:absolute; top:5px; bottom:5px;
-      border-radius:999px; background:#fff;
-      border:.5px solid rgba(0,0,0,.06);
-      box-shadow:
-        0 6px 18px rgba(0,0,0,.12),
-        0 2px 5px rgba(0,0,0,.05),
-        inset 0 1px 1.5px #fff;
-      transition:left .36s cubic-bezier(.34,1.56,.64,1),
-                 width .36s cubic-bezier(.34,1.56,.64,1),
-                 transform .2s cubic-bezier(.34,1.56,.64,1);
-      z-index:1; pointer-events:none; will-change:left,width,transform;
+      position:absolute; top:6px; bottom:6px; z-index:1; pointer-events:none;
+      border-radius:14px; background:var(--blue-tint);
+      transition:left .32s cubic-bezier(.16,1,.3,1), width .32s cubic-bezier(.16,1,.3,1);
     }
     .dock-btn{
-      position:relative; z-index:10; flex:1; overflow:hidden;
-      background:none; border:none; cursor:pointer;
-      padding:14px 0; display:flex; align-items:center; justify-content:center;
+      position:relative; z-index:2; flex:1; min-width:0;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+      padding:8px 0 7px; background:none; border:none; border-radius:14px; cursor:pointer;
       color:var(--ink-soft); font-family:var(--font);
-      transition:transform .2s cubic-bezier(.34,1.56,.64,1), color .18s ease;
-      transform-origin:center center; user-select:none;
+      transition:color .18s ease, transform .15s ease;
     }
-    .dock-btn.dock-active{color:var(--ink);}
-    .dock-btn:active{transform:scale(.86);}
-    .dock-btn svg{width:23px; height:23px; display:block; flex:none;}
-    .dock-btn .hidden, .dock-btn svg.hidden, .dock-btn [hidden]{display:none !important;}
-    /* Label teks di sebelah kanan ikon — HANYA muncul di layar desktop, disembunyikan di mobile */
-    .dock-label{
-      font-size:11px; font-weight:500; white-space:nowrap;
-      max-width:0; opacity:0; overflow:hidden; margin-left:0; flex:none;
-      transition:max-width .28s ease, opacity .2s ease, margin-left .28s ease;
-    }
-    @media (min-width:768px){
-      .dock-wrap{ max-width:460px; bottom:26px; }
-      .ios-glass-dock{ padding:10px; }
-      .dock-btn{ padding:16px 0; }
-      .dock-btn svg{ width:23px; height:23px; }
-      .dock-btn.dock-active{flex:1.7;}
-      .dock-label{ font-size:11.5px; font-weight:500; }
-      .dock-btn.dock-active .dock-label{max-width:84px; opacity:1; margin-left:8px;}
-      .dock-badge{ font-size:10px; min-width:18px; height:18px; line-height:14px; }
-    }
-    @keyframes appleTabIconPop{
-      0%{transform:scale(.8) translateY(2px);}
-      50%{transform:scale(1.22) translateY(-2px);}
-      100%{transform:scale(1) translateY(0);}
-    }
-    .tab-icon-pop{animation:appleTabIconPop .38s cubic-bezier(.34,1.56,.64,1) forwards;}
+    .dock-btn:active{transform:scale(.94);}
+    .dock-btn:focus-visible{outline:2px solid var(--blue); outline-offset:-2px;}
+    .dock-btn.dock-active{color:var(--blue);}
+    .dock-btn i{font-size:23px; line-height:1; display:block;}
+    .dock-btn .hidden, .dock-btn [hidden]{display:none !important;}
+    .dock-icon{position:relative; display:flex; align-items:center; justify-content:center;}
+    .dock-label{font-size:11px; font-weight:600; white-space:nowrap; line-height:1.1;}
+    .dock-btn.dock-active .dock-label{font-weight:700;}
+
     .dock-badge{
-      position:absolute; top:-4px; right:-8px;
-      min-width:16px; height:16px; padding:0 3px;
+      position:absolute; top:-5px; right:-9px;
+      min-width:17px; height:17px; padding:0 4px;
       background:var(--red); color:#fff; border-radius:999px; border:2px solid #fff;
-      font-size:9px; font-weight:800; line-height:12px; text-align:center;
+      font-size:9.5px; font-weight:800; line-height:13px; text-align:center;
+    }
+    .genio-header-icon-btn .dock-badge{top:-6px; right:-6px;}
+
+    @keyframes genioTabIconPop{
+      0%{transform:scale(.82);}
+      60%{transform:scale(1.08);}
+      100%{transform:scale(1);}
+    }
+    @media (prefers-reduced-motion:no-preference){
+      .tab-icon-pop{animation:genioTabIconPop .34s cubic-bezier(.16,1,.3,1) both;}
+    }
+    @media (prefers-reduced-motion:reduce){
+      .dock-glider, .ios-glass-dock, .dock-btn{transition:none;}
     }
 
-    /* ===== List "Lainnya" gaya grouped iOS ===== */
+    /* ===== Menu "Lainnya" ===== */
     .menu-group{
-      background:#fff; border-radius:12px;
-      border:1px solid var(--border); overflow:hidden; margin-bottom:10px;
+      background:#fff; border-radius:16px;
+      border:1px solid var(--border); overflow:hidden; margin-bottom:14px;
     }
     .menu-row{
-      display:flex; align-items:center; gap:10px;
-      padding:9px 12px; border-bottom:1px solid var(--border);
-      cursor:pointer; background:#fff;
+      display:flex; align-items:center; gap:12px;
+      padding:11px 14px; border-bottom:1px solid var(--border);
+      cursor:pointer; background:#fff; transition:background .12s ease;
     }
     .menu-row:last-child{border-bottom:none;}
+    .menu-row:hover{background:#FAFAFD;}
     .menu-row:active{background:var(--surface);}
     .menu-row .mr-badge{
-      width:28px; height:28px; border-radius:8px; flex:none;
+      width:32px; height:32px; border-radius:var(--radius-sm); flex:none;
       display:flex; align-items:center; justify-content:center;
-      background:var(--surface); color:var(--ink-soft);
+      background:var(--blue-tint); color:var(--blue);
     }
-    .menu-row .mr-badge svg{width:15px; height:15px; display:block;}
-    .menu-row .mr-label{flex:1; font-size:12.5px; font-weight:600; color:var(--ink);}
-    .menu-row .mr-info{
-      font-size:10.5px; font-weight:700; color:var(--ink-soft); white-space:nowrap;
-    }
+    .menu-row .mr-badge svg{width:17px; height:17px; display:block;}
+    .menu-row .mr-label{flex:1; font-size:14px; font-weight:600; color:var(--ink);}
+    .menu-row .mr-info{font-size:12px; font-weight:600; color:var(--ink-soft); white-space:nowrap; font-variant-numeric:tabular-nums;}
     .menu-row .mr-soon{
-      font-size:9.5px; font-weight:700; color:var(--red);
-      background:var(--red-soft); padding:2px 7px; border-radius:999px; white-space:nowrap;
+      font-size:11px; font-weight:700; color:var(--ink-soft);
+      background:var(--surface); border:1px solid var(--border);
+      padding:2px 8px; border-radius:999px; white-space:nowrap;
     }
-    .menu-row .mr-chevron{color:var(--ink-soft); font-size:12px;}
-    .menu-group-label{
-      font-size:10px; font-weight:700; color:var(--ink-soft);
-      margin:2px 4px 6px;
-    }
+    .menu-row .mr-chevron{color:#A3A7BC; font-size:16px; line-height:1;}
+    .menu-group-label{font-size:13px; font-weight:700; color:var(--ink); margin:4px 4px 8px;}
 
-    /* ===== Layout desktop untuk halaman "Lainnya" ===== */
     @media (min-width:900px){
-      .module-panel[data-module="lainnya"]{
-        width:94%; max-width:1500px; margin:0 auto;
-      }
-      #lainnyaMenuContainer{
-        column-count:3; column-gap:16px;
-      }
-      .menu-section-block{ break-inside:avoid; -webkit-column-break-inside:avoid; }
+      .module-panel[data-module="lainnya"]{width:94%; max-width:1500px; margin:0 auto;}
+      #lainnyaMenuContainer{column-count:3; column-gap:16px;}
+      .menu-section-block{break-inside:avoid; -webkit-column-break-inside:avoid;}
 
-      /* Mode split-view: Lainnya jadi sidebar kiri, modul yang dipilih tampil di kanan */
       #content.lainnya-split-view{
-        display:grid; grid-template-columns:280px minmax(0, 1fr); gap:16px;
+        display:grid; grid-template-columns:300px minmax(0, 1fr); gap:16px;
         width:94%; max-width:1500px; margin:0 auto; align-items:start;
         box-sizing:border-box;
       }
       #content.lainnya-split-view .module-panel[data-module="lainnya"]{
         grid-column:1; width:100%; max-width:none; margin:0;
-        position:sticky; top:88px; max-height:calc(100vh - 104px); overflow-y:auto;
+        position:sticky; top:84px; max-height:calc(100vh - 100px); overflow-y:auto;
         min-width:0; box-sizing:border-box;
       }
-      #content.lainnya-split-view #lainnyaMenuContainer{ column-count:1 !important; }
+      #content.lainnya-split-view #lainnyaMenuContainer{column-count:1 !important;}
       #content.lainnya-split-view .module-panel:not([data-module="lainnya"]):not([hidden]){
         grid-column:2; width:100% !important; max-width:100% !important; min-width:0 !important; margin:0 !important;
         box-sizing:border-box;
       }
     }
     @media (min-width:900px) and (max-width:1150px){
-      #lainnyaMenuContainer{ column-count:2; column-gap:14px; }
+      #lainnyaMenuContainer{column-count:2; column-gap:14px;}
     }
 
-    /* ===== Placeholder modul yang belum dibangun ===== */
+    /* ===== Placeholder modul ===== */
     .soon-panel{text-align:center; padding:60px 20px; color:var(--ink-soft);}
-
-    /* ===== Header Floating & iOS Glass Blur Style ===== */
-    #genioSharedHeader {
-      position: sticky;
-      top: 12px;
-      z-index: 60;
-      margin: 12px 14px 0;
-      width: auto;
-      min-height: 66px;
-      border-radius: 999px;
-      background: rgba(254, 254, 255, 0.62);
-      backdrop-filter: blur(36px) saturate(190%);
-      -webkit-backdrop-filter: blur(36px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow:
-        0 16px 36px -8px rgba(20, 22, 43, 0.10),
-        0 2px 6px rgba(20, 22, 43, 0.03),
-        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.9);
-      padding: 10px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, background .25s ease;
-      box-sizing: border-box;
-      transform-origin: center center;
-    }
-    #genioSharedHeader.scrolled {
-      background: rgba(254, 254, 255, 0.78);
-      box-shadow:
-        0 18px 38px -8px rgba(20, 22, 43, 0.12),
-        0 3px 8px rgba(20, 22, 43, 0.05),
-        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.9);
-    }
-    /* Animasi zoom in / zoom out untuk header saat interaksi dock */
-    @keyframes genioHeaderGrow {
-      0% { transform: scale(1); }
-      60% { transform: scale(1.025); }
-      100% { transform: scale(1.02); }
-    }
-    #genioSharedHeader.header-pressed {
-      animation: genioHeaderGrow .25s cubic-bezier(.34,1.56,.64,1) forwards;
-      box-shadow:
-        0 20px 42px -10px rgba(20, 22, 43, 0.13),
-        0 4px 12px rgba(20, 22, 43, 0.05),
-        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1);
-    }
-    @keyframes genioHeaderPop {
-      0% { transform: scale(1.02); }
-      40% { transform: scale(0.99); }
-      80% { transform: scale(1.005); }
-      100% { transform: scale(1); }
-    }
-    #genioSharedHeader.header-pop {
-      animation: genioHeaderPop .32s cubic-bezier(.34,1.56,.64,1) forwards;
-    }
-
-    /* Brand Logo dengan font khusus Poppins */
-    .genio-brand-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      transition: transform .15s ease;
-    }
-    .genio-brand-wrap:active {
-      transform: scale(.97);
-    }
-    .genio-brand-badge {
-      width: 44px;
-      height: 44px;
-      border-radius: 13px;
-      background: var(--surface);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Poppins', sans-serif !important;
-      font-weight: 800;
-      font-size: 19px;
-      flex: none;
-      box-shadow: none !important;
-      overflow: hidden;
-      padding: 0;
-      border: 1px solid var(--border);
-    }
-    .genio-brand-badge img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      border-radius: 12px;
-    }
-    .genio-brand-text {
-      line-height: 1.22;
-      min-width: 0;
-      font-family: 'Poppins', sans-serif !important;
-    }
-    .genio-brand-title {
-      font-family: 'Poppins', sans-serif !important;
-      font-size: 15.5px;
-      font-weight: 800;
-      white-space: nowrap;
-      letter-spacing: -0.015em;
-    }
-    .genio-brand-title .genio-text-blue {
-      color: var(--blue);
-      font-family: 'Poppins', sans-serif !important;
-    }
-    .genio-brand-title .genio-text-red {
-      color: var(--red);
-      font-family: 'Poppins', sans-serif !important;
-    }
-    .genio-brand-sub {
-      font-family: 'Poppins', sans-serif !important;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--ink);
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-    }
-
-    .genio-header-nav-center {
-      display: none;
-    }
-    .genio-header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: none;
-    }
-    .genio-header-icon-btn {
-      position: relative;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: #fff;
-      border: 1.5px solid var(--border);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--ink);
-      flex: none;
-      transition: all .16s ease;
-      outline: none;
-      padding: 0;
-      box-sizing: border-box;
-      box-shadow: none !important;
-    }
-    .genio-header-icon-btn svg {
-      width: 20px;
-      height: 20px;
-    }
-    .genio-header-icon-btn:hover {
-      background: var(--surface);
-      border-color: rgba(20, 22, 43, 0.22);
-      color: var(--ink);
-      transform: translateY(-1px);
-      box-shadow: none !important;
-    }
-    .genio-header-icon-btn:active {
-      transform: scale(.93);
-      background: var(--surface);
-    }
-    .genio-header-logout-btn {
-      color: var(--ink-soft);
-    }
-    .genio-header-logout-btn:hover {
-      background: rgba(255, 59, 48, 0.08) !important;
-      border-color: rgba(255, 59, 48, 0.28) !important;
-      color: var(--red) !important;
-      box-shadow: none !important;
-    }
-
-    /* Desktop Responsive: Header berbentuk floating pill elegan (persempit & terpusat secara proporsional) */
-    @media (min-width: 900px) {
-      #genioSharedHeader {
-        top: 12px;
-        margin: 12px auto 0;
-        width: 88%;
-        max-width: 840px;
-        padding: 6px 14px 6px 16px;
-        gap: 12px;
-        min-height: 52px;
-        height: 52px;
-        background: rgba(255, 255, 255, 0.84);
-        backdrop-filter: blur(28px) saturate(180%);
-        -webkit-backdrop-filter: blur(28px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.9);
-        box-shadow:
-          0 12px 30px -8px rgba(20, 22, 43, 0.08),
-          0 2px 6px rgba(20, 22, 43, 0.03),
-          inset 0 1px 1.5px 0 #ffffff;
-      }
-      #genioSharedHeader.scrolled {
-        background: rgba(255, 255, 255, 0.94) !important;
-        box-shadow:
-          0 14px 34px -8px rgba(20, 22, 43, 0.11),
-          0 3px 8px rgba(20, 22, 43, 0.04),
-          inset 0 1px 1.5px 0 #ffffff !important;
-      }
-      .content {
-        padding: 18px 0 48px !important;
-      }
-      .genio-brand-wrap {
-        gap: 8px !important;
-      }
-      .genio-brand-badge {
-        width: 34px !important;
-        height: 34px !important;
-        border-radius: 9px !important;
-        font-size: 15px !important;
-      }
-      .genio-brand-title {
-        font-size: 13.5px !important;
-      }
-      .genio-brand-sub {
-        font-size: 9.5px !important;
-      }
-      .genio-header-actions {
-        gap: 8px !important;
-      }
-      .genio-header-icon-btn {
-        width: 34px !important;
-        height: 34px !important;
-      }
-      .genio-header-icon-btn svg {
-        width: 16px !important;
-        height: 16px !important;
-      }
-      .genio-header-nav-center {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 1;
-        min-width: 0;
-      }
-      .dock-wrap {
-        display: none !important;
-      }
-
-      /* Dock di dalam Header Desktop: TANPA BACKGROUND PILL (transparan, menyatu dgn header) */
-      #genioHeaderNavCenter .ios-glass-dock {
-        position: relative;
-        background: transparent !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 999px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 370px;
-        max-width: 390px;
-        height: 38px;
-        box-sizing: border-box;
-        transform: none !important;
-        animation: none !important;
-      }
-      /* Glider pil putih meluncur di belakang tab aktif */
-      #genioHeaderNavCenter .dock-glider {
-        position: absolute;
-        top: 2px;
-        bottom: 2px;
-        border-radius: 999px;
-        background: #ffffff;
-        border: 0.5px solid rgba(0, 0, 0, 0.07);
-        box-shadow: 0 3px 10px rgba(20, 22, 43, 0.07), 0 1px 3px rgba(20, 22, 43, 0.03), inset 0 1px 1px #ffffff;
-        transition: left .36s cubic-bezier(.34,1.56,.64,1),
-                    width .36s cubic-bezier(.34,1.56,.64,1),
-                    transform .2s cubic-bezier(.34,1.56,.64,1);
-        z-index: 1;
-        pointer-events: none;
-        will-change: left, width, transform;
-      }
-      /* Tombol-tombol tab di header desktop */
-      #genioHeaderNavCenter .dock-btn {
-        position: relative;
-        z-index: 10;
-        flex: 1;
-        height: 34px;
-        padding: 0 10px;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--ink-soft);
-        font-family: var(--font);
-        background: none;
-        border: none;
-        cursor: pointer;
-        user-select: none;
-        transition: flex .28s cubic-bezier(.34,1.56,.64,1), transform .2s cubic-bezier(.34,1.56,.64,1), color .18s ease;
-        transform-origin: center center;
-      }
-      #genioHeaderNavCenter .dock-btn:hover {
-        color: var(--ink);
-      }
-      #genioHeaderNavCenter .dock-btn.dock-active {
-        color: var(--ink);
-        flex: 1.6;
-      }
-      #genioHeaderNavCenter .dock-btn svg {
-        width: 17px;
-        height: 17px;
-        display: block;
-        flex: none;
-      }
-      #genioHeaderNavCenter .dock-btn .hidden,
-      #genioHeaderNavCenter .dock-btn svg.hidden,
-      #genioHeaderNavCenter .dock-btn [hidden] {
-        display: none !important;
-      }
-      /* Teks label HANYA muncul saat tombol aktif/dipilih — bersih dan tidak bold */
-      #genioHeaderNavCenter .dock-label {
-        font-size: 11.5px;
-        font-weight: 500;
-        white-space: nowrap;
-        max-width: 0;
-        opacity: 0;
-        overflow: hidden;
-        margin-left: 0;
-        flex: none;
-        transition: max-width .28s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, margin-left .28s ease;
-      }
-      #genioHeaderNavCenter .dock-btn.dock-active .dock-label {
-        max-width: 72px;
-        opacity: 1;
-        margin-left: 6px;
-      }
-      #genioHeaderNavCenter .dock-badge {
-        top: -2px;
-        right: -4px;
-        min-width: 14px;
-        height: 14px;
-        padding: 0 2.5px;
-        font-size: 8px;
-        font-weight: 800;
-        line-height: 10px;
-        border-radius: 999px;
-        border: 2px solid #fff;
-      }
-    }
     .soon-panel .icn{font-size:34px; margin-bottom:14px;}
-    .soon-panel h3{font-size:16px; color:var(--ink); margin:0 0 6px;}
-    .soon-panel p{font-size:13.5px; margin:0;}
+    .soon-panel h3{font-size:17px; font-weight:700; color:var(--ink); margin:0 0 6px; letter-spacing:-.01em;}
+    .soon-panel p{font-size:14px; margin:0;}
 
-    /* ===== Modal Konfirmasi Logout Pop-up ===== */
-    #genioLogoutModal {
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 1000;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      background: rgba(20, 22, 43, 0.45);
-      opacity: 0;
-      transition: opacity .25s ease;
+    /* ===== Desktop: header penuh + tab di tengah ===== */
+    @media (min-width:900px){
+      #genioSharedHeader{height:64px; padding:0 max(3%, calc((100% - 1500px) / 2));}
+      .content{padding:20px 0 48px !important;}
+      .genio-mark{font-size:24px;}
+      .dock-wrap{display:none !important;}
+
+      .genio-header-nav-center{display:flex; align-items:center; justify-content:center; flex:1; min-width:0;}
+      #genioHeaderNavCenter .ios-glass-dock{
+        background:var(--surface); border:1px solid var(--border); box-shadow:none;
+        border-radius:12px; padding:4px; gap:2px; transform:none !important;
+      }
+      #genioHeaderNavCenter .dock-glider{
+        top:4px; bottom:4px; border-radius:8px; background:#fff;
+        box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border);
+      }
+      #genioHeaderNavCenter .dock-btn{
+        flex:none; flex-direction:row; gap:8px;
+        height:36px; padding:0 16px; border-radius:8px;
+      }
+      #genioHeaderNavCenter .dock-btn:hover{color:var(--ink);}
+      #genioHeaderNavCenter .dock-btn.dock-active{color:var(--blue);}
+      #genioHeaderNavCenter .dock-btn i{font-size:18px;}
+      #genioHeaderNavCenter .dock-label{font-size:13.5px; font-weight:600;}
+      #genioHeaderNavCenter .dock-badge{top:-7px; right:-9px;}
     }
-    #genioLogoutModal.show {
-      opacity: 1;
+
+    /* ===== Modal Konfirmasi Keluar ===== */
+    #genioLogoutModal{
+      align-items:center; justify-content:center; padding:20px; z-index:1000;
+      background:rgba(20,22,43,.45);
+      opacity:0; transition:opacity .22s ease;
     }
-    #genioLogoutModal .modal-sheet {
-      border-radius: 20px;
-      width: 100%;
-      max-width: 330px;
-      margin: 0 auto;
-      padding: 24px 20px 20px;
-      text-align: center;
-      transform: scale(.9) translateY(10px);
-      transition: transform .28s cubic-bezier(.34, 1.56, .64, 1);
-      box-shadow: 0 20px 48px -10px rgba(20, 22, 43, 0.22);
-      border: 1px solid var(--border);
+    #genioLogoutModal.show{opacity:1;}
+    #genioLogoutModal .modal-sheet{
+      width:100%; max-width:360px; margin:0 auto;
+      padding:24px; border-radius:20px; text-align:left;
+      border:1px solid var(--border);
+      box-shadow:0 24px 56px -16px rgba(20,22,43,.35);
+      transform:translateY(8px); transition:transform .28s cubic-bezier(.16,1,.3,1);
     }
-    #genioLogoutModal.show .modal-sheet {
-      transform: scale(1) translateY(0);
+    #genioLogoutModal.show .modal-sheet{transform:none;}
+    .logout-icon{
+      width:44px; height:44px; border-radius:12px; margin:0 0 16px;
+      background:var(--red-soft); color:var(--red);
+      display:flex; align-items:center; justify-content:center; font-size:22px;
     }
+    #genioLogoutModal h3{font-size:18px; font-weight:700; letter-spacing:-.015em; margin:0 0 6px;}
+    #genioLogoutModal p{font-size:14px; color:var(--ink-soft); margin:0 0 22px;}
+    .logout-actions{display:flex; gap:10px;}
+    .logout-actions .btn{flex:1; padding:12px 16px; font-size:14px;}
+    .btn-danger{background:var(--red); color:#fff;}
+    .btn-danger:hover{background:#B8060D;}
   </style>
 </head>
 <body>
 
-  <div id="genioSharedHeader">
-    <!-- Brand / Logo Asli dengan font Poppins khusus -->
-    <div class="genio-brand-wrap" id="genioHeaderBrand" title="Ke Beranda Utama">
-      <div class="genio-brand-badge">
-        <img src="https://drive.google.com/thumbnail?id=1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ&sz=w500" alt="Logo Genio" onerror="if(this.src.indexOf('lh3')===-1){this.src='https://lh3.googleusercontent.com/d/1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ';}else{this.style.display='none';this.parentElement.textContent='G';this.parentElement.style.background='var(--blue)';}">
-      </div>
-      <div class="genio-brand-text">
-        <div class="genio-brand-title">
-          <span class="genio-text-blue">Genio</span> <span class="genio-text-red">Institute</span>
-        </div>
-        <div class="genio-brand-sub">Yogyakarta</div>
-      </div>
-    </div>
+  <div id="genioScrollSentinel" aria-hidden="true"></div>
 
-    <!-- Center Navigation Slot (Desktop: Bottom Bar Moves Here) -->
+  <header id="genioSharedHeader">
+    <button type="button" class="genio-brand-wrap" id="genioHeaderBrand" title="Ke Beranda Utama" aria-label="Genio Institute, ke beranda">
+      <span class="genio-mark">genio<span class="dot">.</span></span>
+      <span class="genio-brand-sub">Yogyakarta</span>
+    </button>
+
     <div id="genioHeaderNavCenter" class="genio-header-nav-center"></div>
 
-    <!-- Actions (Notification & Logout) -->
     <div class="genio-header-actions">
       <div style="position:relative;">
         <button id="genioHeaderBellBtn" class="genio-header-icon-btn" aria-label="Notifikasi" title="Notifikasi">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-          </svg>
-          <span id="homeBellBadge" class="dock-badge" style="top:-3px; right:-3px;" hidden>0</span>
+          <i class="ph ph-bell" aria-hidden="true"></i>
+          <span id="homeBellBadge" class="dock-badge" hidden>0</span>
         </button>
 
-        <div id="genioNotifPanel" style="position:absolute; display:none; top:48px; right:0; width:320px; max-width:85vw; background:rgba(255,255,255,.96); backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%); border:1.5px solid var(--border); border-radius:16px; box-shadow:0 16px 40px -8px rgba(20,22,43,.18); padding:16px; z-index:90;">
+        <div id="genioNotifPanel">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-            <div style="font-size:13px; font-weight:800; color:var(--ink);">Notifikasi</div>
-            <span id="genioNotifBadgeCount" style="font-size:10px; font-weight:700; color:var(--ink-soft); background:var(--surface); padding:2px 8px; border-radius:999px;">Terbaru</span>
+            <div style="font-size:15px; font-weight:700; color:var(--ink);">Notifikasi</div>
+            <span id="genioNotifBadgeCount" style="font-size:11.5px; font-weight:600; color:var(--ink-soft); background:var(--surface); border:1px solid var(--border); padding:2px 9px; border-radius:999px;">Terbaru</span>
           </div>
-          <div id="genioNotifList" style="max-height:320px; overflow-y:auto;"></div>
-          <div id="genioNotifFooter" style="display:flex; justify-content:flex-end; align-items:center; margin-top:8px; padding-top:4px;">
-            <button type="button" id="genioNotifClearBtn" style="background:none; border:none; padding:4px 2px; font-size:11.5px; font-weight:700; color:var(--red); cursor:pointer; font-family:var(--font); outline:none; transition:opacity .15s ease;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'" title="Sembunyikan notifikasi sesi ini">Hapus</button>
+          <div id="genioNotifList" style="max-height:340px; overflow-y:auto;"></div>
+          <div id="genioNotifFooter" style="display:flex; justify-content:flex-end; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);">
+            <button type="button" id="genioNotifClearBtn" style="background:none; border:none; padding:4px 2px; font-size:13px; font-weight:700; color:var(--blue); cursor:pointer; font-family:var(--font);" title="Sembunyikan notifikasi sesi ini">Tandai semua dibaca</button>
           </div>
         </div>
       </div>
 
-      <button id="genioHeaderLogoutBtn" class="genio-header-icon-btn genio-header-logout-btn" aria-label="Keluar" title="Keluar dari Sistem">
-        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" y1="12" x2="9" y2="12"/>
-        </svg>
+      <button id="genioHeaderLogoutBtn" class="genio-header-icon-btn genio-header-logout-btn" aria-label="Keluar" title="Keluar dari sistem">
+        <i class="ph ph-sign-out" aria-hidden="true"></i>
       </button>
     </div>
-  </div>
+  </header>
 
   <div class="content" id="content">
 
@@ -627,15 +285,15 @@
     <div class="module-panel" data-module="lainnya" hidden>
 
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; padding:0 2px;">
-        <div style="font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;" id="lainnyaHeaderTitle">Profil</div>
-        <button id="lainnyaRefreshBtn" aria-label="Refresh data" style="width:32px; height:32px; border-radius:50%; background:#fff; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft);">
+        <div style="font-size:17px; font-weight:700; color:var(--ink); letter-spacing:-.015em;" id="lainnyaHeaderTitle">Profil</div>
+        <button id="lainnyaRefreshBtn" aria-label="Refresh data" style="width:36px; height:36px; border-radius:10px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft);">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
         </button>
       </div>
 
-      <div class="card" style="padding:14px;">
+      <div class="card" style="padding:16px; border:1px solid var(--border); border-radius:16px;">
         <div style="display:flex; align-items:center; gap:12px;">
-          <div style="width:44px; height:44px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; flex:none; position:relative;">
+          <div style="width:44px; height:44px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; flex:none; position:relative;">
             <span id="lainnyaAvatar">--</span>
             <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:var(--green); border:2px solid #fff;"></span>
           </div>
@@ -647,7 +305,7 @@
             <div style="font-size:14.5px; font-weight:800; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lainnyaNama">-</div>
             <div style="font-size:11.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lainnyaSubtitle">-</div>
           </div>
-          <button id="lainnyaDetailToggle" style="background:var(--surface); border:none; border-radius:999px; padding:7px 12px; font-size:11.5px; font-weight:700; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:4px; flex:none;">
+          <button id="lainnyaDetailToggle" style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px 12px; font-size:13px; font-weight:700; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:4px; flex:none;">
             Detail
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
           </button>
@@ -656,7 +314,7 @@
 
       <div id="lainnyaMenuContainer"></div>
       <div class="menu-group">
-        <div class="menu-row" id="logoutRow"><span class="mr-badge" style="background:var(--red-soft);color:var(--red);">&larr;</span><span class="mr-label" style="color:var(--red);">Keluar</span></div>
+        <div class="menu-row" id="logoutRow"><span class="mr-badge" style="background:var(--red-soft);color:var(--red);"><i class="ph ph-sign-out" style="font-size:17px;" aria-hidden="true"></i></span><span class="mr-label" style="color:var(--red);">Keluar</span></div>
       </div>
     </div>
 
@@ -685,56 +343,56 @@
 
   </div>
 
-  <!-- ===== Bottom nav: glass dock + glider ===== -->
-  <nav class="dock-wrap">
+  <!-- ===== Bottom bar (mobile) / tab di header (desktop) ===== -->
+  <nav class="dock-wrap" aria-label="Navigasi utama">
     <div id="interactiveDock" class="ios-glass-dock">
-      <div id="dockGlider" class="dock-glider" style="width:calc(25% - 8px); left:4px;"></div>
+      <div id="dockGlider" class="dock-glider" style="width:calc(25% - 12px); left:6px;"></div>
 
       <button id="nav-home" data-tab="home" aria-label="Home" class="dock-btn dock-active">
-        <svg class="icon-outline hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 3.5l8 7V19.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-9z"/></svg>
-        <svg class="icon-filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.2L3.5 10.2a1 1 0 0 0-.3.74V19.5A1.5 1.5 0 0 0 4.7 21h14.6a1.5 1.5 0 0 0 1.5-1.5V10.94a1 1 0 0 0-.3-.74L12 3.2z"/></svg>
+        <span class="dock-icon">
+          <i class="ph ph-house icon-outline hidden" aria-hidden="true"></i>
+          <i class="ph-fill ph-house icon-filled" aria-hidden="true"></i>
+        </span>
         <span class="dock-label">Home</span>
       </button>
 
       <button id="nav-presensi" data-tab="presensi" aria-label="Presensi" class="dock-btn">
-        <span style="position:relative; display:flex; align-items:center; justify-content:center;">
-          <svg class="icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
-          <svg class="icon-filled hidden" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M8.5 12.2l2.3 2.3 4.7-4.7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="dock-icon">
+          <i class="ph ph-check-circle icon-outline" aria-hidden="true"></i>
+          <i class="ph-fill ph-check-circle icon-filled hidden" aria-hidden="true"></i>
           <span id="bnPresensiBadge" class="dock-badge" hidden>0</span>
         </span>
         <span class="dock-label">Presensi</span>
       </button>
 
       <button id="nav-gaji" data-tab="gaji" aria-label="Gaji" class="dock-btn">
-        <svg class="icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6.5 15h3.5"/></svg>
-        <svg class="icon-filled hidden" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5" fill="currentColor"/><path d="M2.5 9.5h19" stroke="#fff" stroke-width="1.8"/><circle cx="7" cy="14.5" r="1.3" fill="#fff"/></svg>
+        <span class="dock-icon">
+          <i class="ph ph-wallet icon-outline" aria-hidden="true"></i>
+          <i class="ph-fill ph-wallet icon-filled hidden" aria-hidden="true"></i>
+        </span>
         <span class="dock-label">Gaji</span>
       </button>
 
       <button id="nav-lainnya" data-tab="lainnya" aria-label="Lainnya" class="dock-btn">
-        <svg class="icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1.8"/><rect x="14" y="4" width="6" height="6" rx="1.8"/><rect x="4" y="14" width="6" height="6" rx="1.8"/><rect x="14" y="14" width="6" height="6" rx="1.8"/></svg>
-        <svg class="icon-filled hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="1.8"/><rect x="14" y="4" width="6" height="6" rx="1.8"/><rect x="4" y="14" width="6" height="6" rx="1.8"/><rect x="14" y="14" width="6" height="6" rx="1.8"/></svg>
-        <svg class="icon-back hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span class="dock-icon">
+          <i class="ph ph-squares-four icon-outline" aria-hidden="true"></i>
+          <i class="ph-fill ph-squares-four icon-filled hidden" aria-hidden="true"></i>
+          <i class="ph ph-arrow-left icon-back hidden" aria-hidden="true"></i>
+        </span>
         <span class="dock-label">Lainnya</span>
       </button>
     </div>
   </nav>
 
   <!-- ===== Modal Konfirmasi Keluar (Logout) ===== -->
-  <div class="modal-overlay" id="genioLogoutModal" hidden style="display:none;">
+  <div class="modal-overlay" id="genioLogoutModal" hidden style="display:none;" role="dialog" aria-modal="true" aria-labelledby="genioLogoutTitle">
     <div class="modal-sheet">
-      <div style="width:52px; height:52px; border-radius:50%; background:rgba(255,59,48,.12); color:var(--red); display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" y1="12" x2="9" y2="12"/>
-        </svg>
-      </div>
-      <h3 style="font-size:16px; font-weight:800; color:var(--ink); margin:0 0 8px; font-family:var(--font); text-align:center;">Keluar dari Sistem?</h3>
-      <p style="font-size:12.5px; color:var(--ink-soft); margin:0 0 20px; line-height:1.45; text-align:center;">Apakah Anda yakin ingin mengakhiri sesi dan keluar dari akun Anda?</p>
-      <div style="display:flex; gap:10px;">
-        <button type="button" id="genioLogoutCancelBtn" class="btn btn-outline" style="flex:1; height:42px; font-size:12.5px; font-weight:700; border-radius:12px; cursor:pointer;">Batal</button>
-        <button type="button" id="genioLogoutConfirmBtn" class="btn" style="flex:1; height:42px; font-size:12.5px; font-weight:700; border-radius:12px; cursor:pointer; background:var(--red); color:#fff; border:none;">Keluar</button>
+      <div class="logout-icon"><i class="ph ph-sign-out" aria-hidden="true"></i></div>
+      <h3 id="genioLogoutTitle">Keluar dari akun?</h3>
+      <p>Sesi Anda akan diakhiri. Anda perlu masuk lagi untuk membuka dashboard.</p>
+      <div class="logout-actions">
+        <button type="button" id="genioLogoutCancelBtn" class="btn btn-outline">Batal</button>
+        <button type="button" id="genioLogoutConfirmBtn" class="btn btn-danger">Keluar</button>
       </div>
     </div>
   </div>
@@ -1222,9 +880,11 @@
 
     (function () {
       var header = document.getElementById('genioSharedHeader');
-      window.addEventListener('scroll', function () {
-        header.classList.toggle('scrolled', window.scrollY > 8);
-      });
+      var sentinel = document.getElementById('genioScrollSentinel');
+      if (!header || !sentinel || !('IntersectionObserver' in window)) return;
+      new IntersectionObserver(function (entries) {
+        header.classList.toggle('scrolled', !entries[0].isIntersecting);
+      }).observe(sentinel);
     })();
 
     // ===== Drag / scrub geser bar (meniru fisik dock iOS asli) =====
