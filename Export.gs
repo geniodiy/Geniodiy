@@ -27,6 +27,7 @@ function previewImportFromDrive() {
 // Menimpa file proyek dengan file bernama sama dari folder Drive IMPORT_FOLDER_ID.
 // File proyek yang tidak ada di folder tetap dibiarkan. Backup otomatis dibuat sebelum import.
 function importProjectFilesFromDrive() {
+  assertWriteScope_();
   var plan = buildImportPlan_(IMPORT_FOLDER_ID);
   logImportPlan_(plan);
   if (!plan.replaced.length && !plan.added.length) {
@@ -53,6 +54,17 @@ function importProjectFilesFromDrive() {
 
   Logger.log('Import selesai: ' + plan.replaced.length + ' ditimpa, ' + plan.added.length + ' ditambah. ' +
     'Muat ulang editor, lalu buat versi deployment baru supaya web app ikut berubah.');
+}
+
+// Token hanya berisi scope yang tertulis di manifest DAN sudah disetujui; cek di awal agar tidak membuat backup sia-sia.
+function assertWriteScope_() {
+  var res = UrlFetchApp.fetch('https://oauth2.googleapis.com/tokeninfo?access_token=' + ScriptApp.getOAuthToken(), { muteHttpExceptions: true });
+  var granted = res.getResponseCode() === 200 ? (JSON.parse(res.getContentText()).scope || '').split(' ') : [];
+  if (granted.indexOf(WRITE_SCOPE_) !== -1) return;
+  throw new Error('Izin tulis belum aktif. Scope sekarang: ' + (granted.join(', ') || '-') + '\n' +
+    '1) Buka appsscript.json di editor, ganti "script.projects.readonly" menjadi "' + WRITE_SCOPE_ + '", lalu simpan.\n' +
+    '2) Jalankan fungsi ini lagi dan setujui izin baru. Kalau jendela izin tidak muncul, cabut akses proyek ini di ' +
+    'https://myaccount.google.com/permissions lalu jalankan lagi.');
 }
 
 function getProjectFiles_() {
