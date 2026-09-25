@@ -6,180 +6,271 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <script>var SCRIPT_URL = '<?!= scriptUrl ?>';</script>
   <?!= include('Config'); ?>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <style>
-    .hero{
-      position:relative;
-      background:var(--blue);
-      color:#fff;
-      padding:52px 28px 60px;
-      overflow:hidden;
+    /* Radius rule: interaktif (input, tombol, pilihan) = --radius-sm, panel = 20px */
+    body{background:var(--white);}
+
+    .auth{min-height:100dvh; display:grid; grid-template-columns:1fr; align-content:start;}
+
+    /* ===== Brand panel ===== */
+    .brand{
+      position:relative; isolation:isolate; overflow:hidden;
+      background:var(--blue); color:#fff;
+      padding:24px 22px 28px;
+      border-radius:0 0 20px 20px;
     }
-    .hero::after{
-      content:'';
-      position:absolute; left:-10%; right:-10%; bottom:-1px; height:44px;
-      background:var(--white);
-      border-radius:50% 50% 0 0 / 100% 100% 0 0;
-      transform:scaleX(1.4);
+    .brand::before{
+      content:''; position:absolute; z-index:-1; pointer-events:none;
+      width:520px; height:520px; right:-180px; bottom:-300px; border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 65%);
+    }
+    .brand::after{
+      content:''; position:absolute; z-index:-1; pointer-events:none;
+      width:360px; height:360px; left:-160px; top:-200px; border-radius:50%;
+      background:radial-gradient(circle, rgba(19,18,136,.9), rgba(19,18,136,0) 70%);
     }
     .mark{
-      display:inline-flex; align-items:baseline; gap:2px;
-      font-size:26px; font-weight:800; letter-spacing:-.02em;
-      margin-bottom:22px;
+      display:inline-flex; align-items:baseline;
+      font-size:24px; font-weight:800; letter-spacing:-.035em; line-height:1;
     }
     .mark .dot{color:var(--red);}
-    .hero p{font-size:14px; margin:0; opacity:.82; max-width:29ch;}
+    .brand-copy{margin-top:22px;}
+    .brand-copy h1{
+      margin:0; font-size:22px; font-weight:700;
+      line-height:1.15; letter-spacing:-.025em; max-width:18ch;
+    }
+    .brand-copy p{display:none; margin:14px 0 0; font-size:15px; opacity:.78; max-width:38ch;}
+    .brand-foot{display:none; font-size:13px; opacity:.6;}
 
-    .sheet{position:relative; padding:8px 24px 40px; max-width:440px; margin:0 auto;}
-    .sheet form{margin-top:8px;}
+    /* ===== Form pane ===== */
+    .pane{display:flex; justify-content:center; padding:28px 20px 48px;}
+    .pane-inner{width:100%; max-width:400px;}
+
     .view{display:none;}
     .view.active{display:block;}
 
-    .view-title{font-size:20px; font-weight:800; margin:14px 0 22px; letter-spacing:-.01em;}
+    .view-title{font-size:26px; font-weight:700; letter-spacing:-.025em; line-height:1.15; margin:0 0 8px; outline:none;}
+    .view-sub{font-size:14.5px; color:var(--ink-soft); margin:0 0 28px; max-width:42ch;}
+
+    .pane .field input::placeholder{color:#6E7289; opacity:1;}
+    .pane .field input:focus-visible{box-shadow:0 0 0 3px rgba(28,26,175,.14);}
+    .pane .toggle-pw{border-radius:8px;}
+    .pane .toggle-pw:focus-visible{outline:2px solid var(--blue); outline-offset:1px;}
+
+    .pane .btn-primary{
+      margin-top:8px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 10px 24px -12px rgba(28,26,175,.7);
+    }
+    .pane .btn:focus-visible{outline:3px solid rgba(28,26,175,.3); outline-offset:2px;}
+
+    .switch{margin:28px 0 0; padding-top:22px; border-top:1px solid var(--border); font-size:14px; color:var(--ink-soft);}
+    .text-btn{
+      background:none; border:none; padding:0; cursor:pointer;
+      font-family:var(--font); font-size:inherit; font-weight:700; color:var(--blue);
+      text-decoration:underline; text-underline-offset:3px; text-decoration-color:rgba(28,26,175,.3);
+    }
+    .text-btn:hover{text-decoration-color:var(--blue);}
 
     .back-link{
       display:inline-flex; align-items:center; gap:6px;
       font-size:13.5px; font-weight:600; color:var(--ink-soft);
-      text-decoration:none; margin-top:18px;
-      background:none; border:none; padding:0; cursor:pointer; font-family:var(--font);
+      background:none; border:none; padding:6px 0; margin:0 0 20px; cursor:pointer; font-family:var(--font);
     }
+    .back-link:hover{color:var(--ink);}
+    .back-link i{font-size:16px;}
 
-    .signup-btn{margin-top:4px;}
+    /* ===== Daftar: grup field ===== */
+    .group + .group{border-top:1px solid var(--border); padding-top:22px; margin-top:6px;}
+    .group-title{font-size:14px; font-weight:700; color:var(--ink); margin:0 0 14px;}
+    .row-2{display:grid; grid-template-columns:1fr; column-gap:12px;}
 
-    .radio-row{display:flex; gap:10px;}
-    .radio-opt{
-      flex:1; text-align:center;
+    .radio-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+    .field .radio-opt{
+      position:relative; margin:0;
+      display:flex; align-items:center; justify-content:center;
       padding:12px; border-radius:var(--radius-sm);
       border:1.5px solid var(--border); background:var(--surface);
       font-size:14px; font-weight:600; color:var(--ink-soft);
       cursor:pointer; user-select:none;
     }
-    .radio-opt input{display:none;}
-    .radio-opt.checked{border-color:var(--blue); background:var(--blue-tint); color:var(--blue);}
+    .radio-opt input{position:absolute; opacity:0; width:1px; height:1px; pointer-events:none;}
+    .radio-opt:hover{border-color:#C9CCE0;}
+    .radio-opt:has(input:focus-visible){box-shadow:0 0 0 3px rgba(28,26,175,.14);}
+    .field .radio-opt.checked{border-color:var(--blue); background:var(--blue-tint); color:var(--blue);}
 
+    /* ===== Sukses ===== */
     .success-icon{
-      width:64px; height:64px; border-radius:50%;
+      width:56px; height:56px; border-radius:50%;
       background:var(--green-soft); color:var(--green);
       display:flex; align-items:center; justify-content:center;
-      margin:24px auto 20px; font-size:30px;
+      font-size:28px; margin:0 0 22px;
     }
-    .success-view{text-align:center;}
-    .success-view h2{font-size:19px; margin:0 0 10px;}
-    .success-view p{font-size:14px; color:var(--ink-soft); margin:0 0 28px;}
+
+    .pane .alert{margin-bottom:22px;}
+
+    @media (min-width:520px){
+      .row-2{grid-template-columns:1fr 1fr;}
+    }
+
+    @media (min-width:900px){
+      .auth{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); align-content:stretch;}
+      .brand{
+        position:sticky; top:12px; margin:12px;
+        height:calc(100dvh - 24px); min-height:560px;
+        border-radius:20px; padding:40px 44px;
+        display:flex; flex-direction:column; justify-content:space-between;
+      }
+      .mark{font-size:28px;}
+      .brand-copy{margin-top:0;}
+      .brand-copy h1{font-size:clamp(34px, 3.4vw, 48px); line-height:1.06; letter-spacing:-.035em; max-width:13ch;}
+      .brand-copy p{display:block;}
+      .brand-foot{display:block;}
+      .pane{align-items:center; padding:56px 48px;}
+    }
+
+    @media (prefers-reduced-motion:no-preference){
+      .brand .mark, .brand-copy{animation:rise .7s cubic-bezier(.16,1,.3,1) both;}
+      .brand-copy{animation-delay:.08s;}
+      .view.active{animation:rise .5s cubic-bezier(.16,1,.3,1) both;}
+      .radio-opt, .text-btn, .back-link{transition:border-color .15s ease, background .15s ease, color .15s ease, text-decoration-color .15s ease;}
+    }
+    @keyframes rise{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;}}
   </style>
 </head>
 <body>
 
-  <div class="hero">
-    <div class="mark"><span>genio</span><span class="dot">.</span></div>
-    <p>Sistem manajemen Genio Institute — presensi, kontrak, dan penggajian dalam satu tempat.</p>
-  </div>
+  <main class="auth">
 
-  <div class="sheet">
+    <aside class="brand">
+      <div class="mark"><span>genio</span><span class="dot">.</span></div>
+      <div class="brand-copy">
+        <h1>Kelola kelas dan tutor dari satu tempat.</h1>
+        <p>Presensi, kontrak, dan penggajian Genio Institute, tercatat rapi setiap bulan.</p>
+      </div>
+      <div class="brand-foot">&copy; Genio Institute</div>
+    </aside>
 
-    <div id="alertBox" class="alert alert-error" hidden></div>
+    <section class="pane">
+      <div class="pane-inner">
 
-    <!-- ===== VIEW: LOGIN ===== -->
-    <div class="view active" id="view-login">
-      <h2 class="view-title">Masuk ke akun Anda</h2>
+        <div id="alertBox" class="alert alert-error" role="alert" aria-live="assertive" hidden></div>
 
-      <form id="loginForm">
-        <div class="field">
-          <label for="email">Email</label>
-          <input type="email" id="email" required placeholder="nama@genio.id" autocomplete="username">
-        </div>
-        <div class="field">
-          <label for="password">Kata sandi</label>
-          <div class="password-wrap">
-            <input type="password" id="password" required placeholder="••••••" autocomplete="current-password">
-            <button type="button" class="toggle-pw" data-target="password">Lihat</button>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary" id="loginBtn">Masuk</button>
-      </form>
+        <!-- ===== VIEW: LOGIN ===== -->
+        <div class="view active" id="view-login">
+          <h2 class="view-title" tabindex="-1">Masuk ke akun Anda</h2>
+          <p class="view-sub">Gunakan email dan kata sandi yang terdaftar di Genio.</p>
 
-      <div class="divider">atau</div>
+          <form id="loginForm">
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" required placeholder="nama@genio.id" autocomplete="username">
+            </div>
+            <div class="field">
+              <label for="password">Kata sandi</label>
+              <div class="password-wrap">
+                <input type="password" id="password" required placeholder="Kata sandi Anda" autocomplete="current-password">
+                <button type="button" class="toggle-pw" data-target="password">Lihat</button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="loginBtn">Masuk</button>
+          </form>
 
-      <button type="button" class="btn btn-outline signup-btn" id="gotoDaftarBtn">Daftar sebagai Tutor</button>
-    </div>
-
-    <!-- ===== VIEW: DAFTAR ===== -->
-    <div class="view" id="view-daftar">
-      <button type="button" class="back-link" id="gotoLoginBtn">&larr; Kembali ke halaman masuk</button>
-      <h2 class="view-title">Daftar sebagai Tutor</h2>
-      <p style="font-size:13.5px; color:var(--ink-soft); margin:-14px 0 22px;">Lengkapi data di bawah. Akun akan aktif setelah disetujui admin.</p>
-
-      <form id="daftarForm">
-        <div class="field">
-          <label for="nama">Nama lengkap</label>
-          <input type="text" id="nama" required placeholder="Nama sesuai identitas">
+          <p class="switch">Tutor baru? <button type="button" class="text-btn" id="gotoDaftarBtn">Daftar sebagai tutor</button></p>
         </div>
 
-        <div class="field">
-          <label>Jenis kelamin</label>
-          <div class="radio-row">
-            <label class="radio-opt" data-val="L"><input type="radio" name="jk" value="L"> Laki-laki</label>
-            <label class="radio-opt" data-val="P"><input type="radio" name="jk" value="P"> Perempuan</label>
-          </div>
+        <!-- ===== VIEW: DAFTAR ===== -->
+        <div class="view" id="view-daftar">
+          <button type="button" class="back-link" id="gotoLoginBtn"><i class="ph ph-arrow-left" aria-hidden="true"></i> Kembali ke halaman masuk</button>
+          <h2 class="view-title" tabindex="-1">Daftar sebagai tutor</h2>
+          <p class="view-sub">Lengkapi data di bawah. Akun aktif setelah disetujui admin.</p>
+
+          <form id="daftarForm">
+            <div class="group">
+              <h3 class="group-title">Data diri</h3>
+
+              <div class="field">
+                <label for="nama">Nama lengkap</label>
+                <input type="text" id="nama" required placeholder="Nama sesuai identitas" autocomplete="name">
+              </div>
+
+              <div class="field">
+                <label id="jkLabel">Jenis kelamin</label>
+                <div class="radio-row" role="radiogroup" aria-labelledby="jkLabel">
+                  <label class="radio-opt" data-val="L"><input type="radio" name="jk" value="L"> Laki-laki</label>
+                  <label class="radio-opt" data-val="P"><input type="radio" name="jk" value="P"> Perempuan</label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="pendidikan">Pendidikan terakhir</label>
+                <input type="text" id="pendidikan" required placeholder="mis. S1 Pendidikan Matematika, UNY">
+              </div>
+
+              <div class="field">
+                <label for="keahlian">Keahlian / mapel yang dikuasai</label>
+                <input type="text" id="keahlian" required placeholder="mis. Matematika, Fisika">
+                <div class="field-hint">Pisahkan dengan koma jika lebih dari satu.</div>
+              </div>
+
+              <div class="field">
+                <label for="nowa">Nomor WhatsApp</label>
+                <input type="tel" id="nowa" required placeholder="08xxxxxxxxxx" autocomplete="tel">
+              </div>
+            </div>
+
+            <div class="group">
+              <h3 class="group-title">Rekening gaji</h3>
+              <div class="row-2">
+                <div class="field">
+                  <label for="namaBank">Nama bank</label>
+                  <input type="text" id="namaBank" required placeholder="mis. BCA, BNI">
+                </div>
+                <div class="field">
+                  <label for="noRekening">Nomor rekening</label>
+                  <input type="text" id="noRekening" required inputmode="numeric" placeholder="Atas nama sendiri">
+                </div>
+              </div>
+              <div class="field-hint" style="margin:-8px 0 16px;">Dipakai untuk transfer gaji tutor setiap bulan.</div>
+            </div>
+
+            <div class="group">
+              <h3 class="group-title">Akun</h3>
+
+              <div class="field">
+                <label for="daftarEmail">Email</label>
+                <input type="email" id="daftarEmail" required placeholder="nama@email.com" autocomplete="username">
+              </div>
+
+              <div class="field">
+                <label for="daftarPassword">Buat kata sandi</label>
+                <div class="password-wrap">
+                  <input type="password" id="daftarPassword" required minlength="6" placeholder="Minimal 6 karakter" autocomplete="new-password">
+                  <button type="button" class="toggle-pw" data-target="daftarPassword">Lihat</button>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="daftarPassword2">Ulangi kata sandi</label>
+                <input type="password" id="daftarPassword2" required minlength="6" placeholder="Ketik ulang kata sandi" autocomplete="new-password">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="daftarBtn">Daftar</button>
+          </form>
         </div>
 
-        <div class="field">
-          <label for="pendidikan">Pendidikan terakhir</label>
-          <input type="text" id="pendidikan" required placeholder="mis. S1 Pendidikan Matematika - UNY">
+        <!-- ===== VIEW: SUKSES DAFTAR ===== -->
+        <div class="view" id="view-sukses">
+          <div class="success-icon"><i class="ph ph-check" aria-hidden="true"></i></div>
+          <h2 class="view-title" tabindex="-1">Pendaftaran berhasil</h2>
+          <p class="view-sub">Akun Anda menunggu persetujuan admin. Anda bisa masuk begitu akun disetujui.</p>
+          <button type="button" class="btn btn-primary" id="gotoLoginFromSuksesBtn">Kembali ke halaman masuk</button>
         </div>
 
-        <div class="field">
-          <label for="keahlian">Keahlian / mapel yang dikuasai</label>
-          <input type="text" id="keahlian" required placeholder="mis. Matematika, Fisika">
-          <div class="field-hint">Pisahkan dengan koma jika lebih dari satu.</div>
-        </div>
-
-        <div class="field">
-          <label for="nowa">Nomor WhatsApp</label>
-          <input type="tel" id="nowa" required placeholder="08xxxxxxxxxx">
-        </div>
-
-        <div class="field">
-          <label for="namaBank">Nama Bank</label>
-          <input type="text" id="namaBank" required placeholder="mis. BCA, BNI, Mandiri">
-        </div>
-
-        <div class="field">
-          <label for="noRekening">Nomor Rekening</label>
-          <input type="text" id="noRekening" required placeholder="Nomor rekening atas nama sendiri">
-          <div class="field-hint">Dipakai untuk transfer gaji tutor setiap bulan.</div>
-        </div>
-
-        <div class="field">
-          <label for="daftarEmail">Email</label>
-          <input type="email" id="daftarEmail" required placeholder="nama@email.com" autocomplete="username">
-        </div>
-
-        <div class="field">
-          <label for="daftarPassword">Buat kata sandi</label>
-          <div class="password-wrap">
-            <input type="password" id="daftarPassword" required minlength="6" placeholder="Minimal 6 karakter" autocomplete="new-password">
-            <button type="button" class="toggle-pw" data-target="daftarPassword">Lihat</button>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="daftarPassword2">Ulangi kata sandi</label>
-          <input type="password" id="daftarPassword2" required minlength="6" placeholder="Ketik ulang kata sandi">
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="daftarBtn">Daftar</button>
-      </form>
-    </div>
-
-    <!-- ===== VIEW: SUKSES DAFTAR ===== -->
-    <div class="view success-view" id="view-sukses">
-      <div class="success-icon">&check;</div>
-      <h2>Pendaftaran berhasil!</h2>
-      <p>Akun Anda sedang menunggu persetujuan admin. Anda akan bisa masuk begitu disetujui.</p>
-      <button type="button" class="btn btn-primary" id="gotoLoginFromSuksesBtn">Kembali ke Halaman Masuk</button>
-    </div>
-
-  </div>
+      </div>
+    </section>
+  </main>
 
   <script>
     var alertBox = document.getElementById('alertBox');
@@ -190,7 +281,11 @@
     function switchView(name) {
       hideError();
       document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
-      document.getElementById('view-' + name).classList.add('active');
+      var view = document.getElementById('view-' + name);
+      view.classList.add('active');
+      window.scrollTo(0, 0);
+      var title = view.querySelector('.view-title');
+      if (title) title.focus({ preventScroll: true });
     }
 
     document.getElementById('gotoDaftarBtn').addEventListener('click', function () { switchView('daftar'); });
@@ -206,16 +301,15 @@
       });
     });
 
-    document.querySelectorAll('.radio-opt').forEach(function (opt) {
-      opt.addEventListener('click', function () {
-        document.querySelectorAll('.radio-opt').forEach(function (o) { o.classList.remove('checked'); });
-        opt.classList.add('checked');
-        opt.querySelector('input').checked = true;
+    document.querySelectorAll('.radio-opt input').forEach(function (input) {
+      input.addEventListener('change', function () {
+        document.querySelectorAll('.radio-opt').forEach(function (o) {
+          o.classList.toggle('checked', o.querySelector('input').checked);
+        });
       });
     });
 
     function goToDashboard(role) {
-      // Placeholder — dashboard per role menyusul di Fase 1-4.
       // Pakai SCRIPT_URL absolut (bukan path relatif "?page=...") supaya tidak salah
       // resolve akibat rantai redirect Google Apps Script.
       window.top.location.href = SCRIPT_URL + '?page=dashboard&role=' + role;
@@ -276,11 +370,11 @@
       hideError();
 
       var jkChecked = document.querySelector('input[name="jk"]:checked');
-      if (!jkChecked) { showError('Pilih jenis kelamin terlebih dahulu.'); return; }
+      if (!jkChecked) { showError('Pilih jenis kelamin terlebih dahulu.'); window.scrollTo(0, 0); return; }
 
       var password = document.getElementById('daftarPassword').value;
       var password2 = document.getElementById('daftarPassword2').value;
-      if (password !== password2) { showError('Kata sandi dan ulangi kata sandi tidak sama.'); return; }
+      if (password !== password2) { showError('Kata sandi dan ulangi kata sandi tidak sama.'); window.scrollTo(0, 0); return; }
 
       var btn = document.getElementById('daftarBtn');
       btn.disabled = true;
@@ -322,6 +416,7 @@
         switchView('sukses');
       } catch (err) {
         showError(err.message || 'Pendaftaran gagal, silakan coba lagi.');
+        window.scrollTo(0, 0);
       } finally {
         btn.disabled = false;
         btn.textContent = 'Daftar';
