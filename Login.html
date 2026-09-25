@@ -17,8 +17,8 @@
     .brand{
       position:relative; isolation:isolate; overflow:hidden;
       background:var(--blue); color:#fff;
-      padding:24px 22px 28px;
-      border-radius:0 0 20px 20px;
+      padding:20px 20px 22px;
+      border-radius:0 0 18px 18px;
     }
     .brand::before{
       content:''; position:absolute; z-index:-1; pointer-events:none;
@@ -30,28 +30,26 @@
       width:360px; height:360px; left:-160px; top:-200px; border-radius:50%;
       background:radial-gradient(circle, rgba(19,18,136,.9), rgba(19,18,136,0) 70%);
     }
-    .mark{
-      display:inline-flex; align-items:baseline;
-      font-size:24px; font-weight:800; letter-spacing:-.035em; line-height:1;
-    }
-    .mark .dot{color:var(--red);}
-    .brand-copy{margin-top:22px;}
+    .brand{display:none;}
+    .brand-top{display:none; align-items:center; gap:10px; font-size:13px; font-weight:600;}
+    .brand-badge-light{background:#fff; border-color:rgba(255,255,255,.4);}
     .brand-copy h1{
-      margin:0; font-size:22px; font-weight:700;
-      line-height:1.15; letter-spacing:-.025em; max-width:18ch;
+      margin:0; font-size:17px; font-weight:600;
+      line-height:1.3; letter-spacing:-.015em; max-width:22ch;
     }
-    .brand-copy p{display:none; margin:14px 0 0; font-size:15px; opacity:.78; max-width:38ch;}
-    .brand-foot{display:none; font-size:13px; opacity:.6;}
+    .brand-copy p{display:none; margin:12px 0 0; font-size:13px; opacity:.78; max-width:38ch;}
+    .brand-foot{display:none; font-size:11.5px; opacity:.6;}
+    .pane-brand{margin-bottom:28px;}
 
     /* ===== Form pane ===== */
-    .pane{display:flex; justify-content:center; padding:28px 20px 48px;}
-    .pane-inner{width:100%; max-width:400px;}
+    .pane{display:flex; justify-content:center; padding:40px 20px 48px;}
+    .pane-inner{width:100%; max-width:360px;}
 
     .view{display:none;}
     .view.active{display:block;}
 
-    .view-title{font-size:26px; font-weight:700; letter-spacing:-.025em; line-height:1.15; margin:0 0 8px; outline:none;}
-    .view-sub{font-size:14.5px; color:var(--ink-soft); margin:0 0 28px; max-width:42ch;}
+    .view-title{font-size:19px; font-weight:600; letter-spacing:-.015em; line-height:1.25; margin:0 0 6px; outline:none;}
+    .view-sub{font-size:12.5px; color:var(--ink-soft); margin:0 0 24px; max-width:42ch;}
 
     .pane .field input::placeholder{color:#6E7289; opacity:1;}
     .pane .field input:focus-visible{box-shadow:0 0 0 3px rgba(28,26,175,.14);}
@@ -64,34 +62,34 @@
     }
     .pane .btn:focus-visible{outline:3px solid rgba(28,26,175,.3); outline-offset:2px;}
 
-    .switch{margin:28px 0 0; padding-top:22px; border-top:1px solid var(--border); font-size:14px; color:var(--ink-soft);}
+    .switch{margin:24px 0 0; padding-top:20px; border-top:1px solid var(--border); font-size:12.5px; color:var(--ink-soft);}
     .text-btn{
       background:none; border:none; padding:0; cursor:pointer;
-      font-family:var(--font); font-size:inherit; font-weight:700; color:var(--blue);
+      font-family:var(--font); font-size:inherit; font-weight:600; color:var(--blue);
       text-decoration:underline; text-underline-offset:3px; text-decoration-color:rgba(28,26,175,.3);
     }
     .text-btn:hover{text-decoration-color:var(--blue);}
 
     .back-link{
       display:inline-flex; align-items:center; gap:6px;
-      font-size:13.5px; font-weight:600; color:var(--ink-soft);
-      background:none; border:none; padding:6px 0; margin:0 0 20px; cursor:pointer; font-family:var(--font);
+      font-size:12px; font-weight:500; color:var(--ink-soft);
+      background:none; border:none; padding:6px 0; margin:0 0 18px; cursor:pointer; font-family:var(--font);
     }
     .back-link:hover{color:var(--ink);}
     .back-link i{font-size:16px;}
 
     /* ===== Daftar: grup field ===== */
     .group + .group{border-top:1px solid var(--border); padding-top:22px; margin-top:6px;}
-    .group-title{font-size:14px; font-weight:700; color:var(--ink); margin:0 0 14px;}
+    .group-title{font-size:12.5px; font-weight:600; color:var(--ink); margin:0 0 12px;}
     .row-2{display:grid; grid-template-columns:1fr; column-gap:12px;}
 
     .radio-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
     .field .radio-opt{
       position:relative; margin:0;
       display:flex; align-items:center; justify-content:center;
-      padding:12px; border-radius:var(--radius-sm);
-      border:1.5px solid var(--border); background:var(--surface);
-      font-size:14px; font-weight:600; color:var(--ink-soft);
+      padding:10px; border-radius:var(--radius-sm);
+      border:1px solid var(--border); background:var(--surface);
+      font-size:13px; font-weight:500; color:var(--ink-soft);
       cursor:pointer; user-select:none;
     }
     .radio-opt input{position:absolute; opacity:0; width:1px; height:1px; pointer-events:none;}
@@ -101,10 +99,10 @@
 
     /* ===== Sukses ===== */
     .success-icon{
-      width:56px; height:56px; border-radius:50%;
+      width:48px; height:48px; border-radius:50%;
       background:var(--green-soft); color:var(--green);
       display:flex; align-items:center; justify-content:center;
-      font-size:28px; margin:0 0 22px;
+      font-size:22px; margin:0 0 18px;
     }
 
     .pane .alert{margin-bottom:22px;}
@@ -118,19 +116,19 @@
       .brand{
         position:sticky; top:12px; margin:12px;
         height:calc(100dvh - 24px); min-height:560px;
-        border-radius:20px; padding:40px 44px;
+        border-radius:20px; padding:36px 40px;
         display:flex; flex-direction:column; justify-content:space-between;
       }
-      .mark{font-size:28px;}
-      .brand-copy{margin-top:0;}
-      .brand-copy h1{font-size:clamp(34px, 3.4vw, 48px); line-height:1.06; letter-spacing:-.035em; max-width:13ch;}
+      .brand-top{display:flex;}
+      .brand{display:flex;}
+      .brand-copy h1{font-size:clamp(24px, 2.3vw, 32px); font-weight:600; line-height:1.2; letter-spacing:-.025em; max-width:18ch;}
       .brand-copy p{display:block;}
       .brand-foot{display:block;}
       .pane{align-items:center; padding:56px 48px;}
     }
 
     @media (prefers-reduced-motion:no-preference){
-      .brand .mark, .brand-copy{animation:rise .7s cubic-bezier(.16,1,.3,1) both;}
+      .brand-top, .brand-copy{animation:rise .7s cubic-bezier(.16,1,.3,1) both;}
       .brand-copy{animation-delay:.08s;}
       .view.active{animation:rise .5s cubic-bezier(.16,1,.3,1) both;}
       .radio-opt, .text-btn, .back-link{transition:border-color .15s ease, background .15s ease, color .15s ease, text-decoration-color .15s ease;}
@@ -143,7 +141,7 @@
   <main class="auth">
 
     <aside class="brand">
-      <div class="mark"><span>genio</span><span class="dot">.</span></div>
+      <div class="brand-top"><span class="genio-brand-badge brand-badge-light"><img src="https://drive.google.com/thumbnail?id=1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ&sz=w500" alt="Logo Genio" onerror="if(this.src.indexOf('lh3')===-1){this.src='https://lh3.googleusercontent.com/d/1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ';}else{var p=this.parentElement;p.textContent='G';p.style.background='var(--blue)';}"></span><span class="brand-top-name">Genio Institute</span></div>
       <div class="brand-copy">
         <h1>Kelola kelas dan tutor dari satu tempat.</h1>
         <p>Presensi, kontrak, dan penggajian Genio Institute, tercatat rapi setiap bulan.</p>
@@ -153,6 +151,14 @@
 
     <section class="pane">
       <div class="pane-inner">
+
+        <div class="genio-brand pane-brand">
+          <span class="genio-brand-badge"><img src="https://drive.google.com/thumbnail?id=1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ&sz=w500" alt="Logo Genio" onerror="if(this.src.indexOf('lh3')===-1){this.src='https://lh3.googleusercontent.com/d/1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ';}else{var p=this.parentElement;p.textContent='G';p.style.background='var(--blue)';}"></span>
+          <div class="genio-brand-text">
+            <div class="genio-brand-title"><span class="genio-text-blue">Genio</span> <span class="genio-text-red">Institute</span></div>
+            <div class="genio-brand-sub">Yogyakarta</div>
+          </div>
+        </div>
 
         <div id="alertBox" class="alert alert-error" role="alert" aria-live="assertive" hidden></div>
 

@@ -338,6 +338,29 @@ function deleteDriveFilesByIds(fileIdsOrUrls) {
 }
 
 
+var GENIO_LOGO_FILE_ID = '1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ';
+
+// Logo di-embed sebagai data URI karena konverter HTML->PDF tidak memuat gambar eksternal.
+function getGenioLogoDataUri_() {
+  var cache = CacheService.getScriptCache();
+  var hit = cache.get('genio_logo_uri');
+  if (hit) return hit;
+  var blob = null;
+  try {
+    blob = DriveApp.getFileById(GENIO_LOGO_FILE_ID).getThumbnail();
+  } catch (e) {
+    try {
+      blob = UrlFetchApp.fetch('https://drive.google.com/thumbnail?id=' + GENIO_LOGO_FILE_ID + '&sz=w160').getBlob();
+    } catch (e2) {
+      return '';
+    }
+  }
+  if (!blob) return '';
+  var uri = 'data:' + (blob.getContentType() || 'image/png') + ';base64,' + Utilities.base64Encode(blob.getBytes());
+  if (uri.length < 95000) cache.put('genio_logo_uri', uri, 21600);
+  return uri;
+}
+
 function buildSlipGajiHtml_(d) {
   var formatRp = function (n) {
     return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
@@ -388,6 +411,7 @@ function buildSlipGajiHtml_(d) {
   };
   var th = 'padding:9px 12px; background:' + SURFACE + '; border-bottom:1px solid ' + BORDER + '; font-size:10.5px; font-weight:700; color:' + SOFT + '; text-align:left;';
   var tanggalCetak = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+  var logoUri = getGenioLogoDataUri_();
 
   return '<!DOCTYPE html>' +
   '<html>' +
@@ -396,7 +420,7 @@ function buildSlipGajiHtml_(d) {
     '<title>Slip Gaji - ' + esc(d.tutorNama || 'Tutor') + '</title>' +
     '<style>' +
       '@page { size: A4 portrait; margin: 16mm 14mm; }' +
-      'body { font-family: Helvetica, Arial, sans-serif; color: ' + INK + '; margin: 0; padding: 0; background: #fff; line-height: 1.4; }' +
+      'body { font-family: Poppins, Helvetica, Arial, sans-serif; color: ' + INK + '; margin: 0; padding: 0; background: #fff; line-height: 1.4; }' +
       'table { border-collapse: collapse; }' +
     '</style>' +
   '</head>' +
@@ -405,9 +429,14 @@ function buildSlipGajiHtml_(d) {
 
       '<table style="width:100%; background:' + BLUE + '; border-radius:14px;">' +
         '<tr>' +
-          '<td style="padding:22px 24px; vertical-align:middle;">' +
-            '<div style="font-size:28px; font-weight:800; color:#fff; letter-spacing:-1px; line-height:1;">genio<span style="color:#FF4B52;">.</span></div>' +
-            '<div style="font-size:11px; color:#C9CAF2; margin-top:6px;">Genio Institute, Yogyakarta</div>' +
+          '<td style="padding:20px 24px; vertical-align:middle;">' +
+            '<table><tr>' +
+              (logoUri ? '<td style="vertical-align:middle; padding-right:12px;"><div style="width:40px; height:40px; border-radius:10px; background:#fff; overflow:hidden;"><img src="' + logoUri + '" style="width:40px; height:40px; display:block;"></div></td>' : '') +
+              '<td style="vertical-align:middle;">' +
+                '<div style="font-size:17px; font-weight:800; color:#fff; line-height:1.15;">Genio Institute</div>' +
+                '<div style="font-size:10.5px; color:#C9CAF2; margin-top:2px;">Yogyakarta</div>' +
+              '</td>' +
+            '</tr></table>' +
           '</td>' +
           '<td style="padding:22px 24px; text-align:right; vertical-align:middle;">' +
             '<div style="font-size:19px; font-weight:700; color:#fff;">Slip gaji tutor</div>' +
