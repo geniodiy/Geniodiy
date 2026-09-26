@@ -365,7 +365,12 @@
   #ps-previewModal #ps-previewSub{font-size:10.5px !important;}
   #ps-previewModal .pv-close{width:28px; height:28px; border-radius:8px; background:var(--surface); border:none; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;}
   #ps-previewModal .pv-close:hover{background:#EBEDF5; color:var(--ink);}
-  #ps-previewModal .pv-media{background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+  #ps-previewModal .pv-media{background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); flex-direction:column; min-height:120px;}
+  #ps-previewModal .pv-media > *{flex:none;}
+  #ps-previewModal .pv-media > [hidden]{display:none !important;}
+  #ps-previewModal .pv-media > #ps-previewImg{max-height:65vh;}
+  #ps-previewModal .pv-ext{width:100%;}
+  #ps-previewModal .pv-text{align-self:stretch;}
   #ps-previewModal .pv-ext{text-align:center; padding:22px 18px; max-width:100%; box-sizing:border-box;}
   #ps-previewModal .pv-ext-ico{width:36px; height:36px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; margin:0 auto 10px;}
   #ps-previewModal .pv-ext-url{word-break:break-all; font-size:10.5px; color:var(--ink-soft); margin:0 auto 12px; max-width:340px; max-height:48px; overflow:hidden;}
@@ -3421,7 +3426,7 @@
     if (textCard) { textCard.hidden = true; textCard.style.display = 'none'; }
 
     if (img) { img.style.display = 'none'; img.onload = null; img.onerror = null; img.src = ''; }
-    if (iframe) { iframe.style.display = 'none'; iframe.src = ''; }
+    if (iframe) { iframe.onload = null; iframe.style.display = 'none'; iframe.src = 'about:blank'; }
     if (extCard) extCard.hidden = true;
     if (spinner) spinner.style.display = 'flex';
 
@@ -3541,7 +3546,7 @@
     if (mediaBox) mediaBox.style.borderBottom = 'none';
 
     if (img) { img.style.display = 'none'; img.onload = null; img.onerror = null; img.src = ''; }
-    if (iframe) { iframe.style.display = 'none'; iframe.src = ''; }
+    if (iframe) { iframe.onload = null; iframe.style.display = 'none'; iframe.src = 'about:blank'; }
     if (extCard) extCard.hidden = true;
     if (spinner) spinner.style.display = 'none';
 
@@ -3576,7 +3581,8 @@
       }
       if (img) { img.onload = null; img.onerror = null; img.src = ''; }
       if (iframe) {
-        iframe.src = '';
+        iframe.onload = null;
+        iframe.src = 'about:blank';
         iframe.style.display = 'none';
       }
       if (link) link.style.display = '';
