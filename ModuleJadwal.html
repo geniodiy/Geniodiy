@@ -108,11 +108,11 @@
   /* ===== Tabel ===== */
   .jdw-table-card{background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; margin-bottom:12px;}
   .jdw-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
-  .jdw-table{width:100%; min-width:820px; border-collapse:separate; border-spacing:0; text-align:left; font-size:11px;}
-  .jdw-table th{padding:11px 12px; font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap; user-select:none; background:#fff; border-bottom:1px solid var(--border);}
+  .jdw-table{width:100%; border-collapse:separate; border-spacing:0; text-align:left; font-size:11px;}
+  .jdw-table th{padding:10px 10px; font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap; user-select:none; background:#fff; border-bottom:1px solid var(--border);}
   .jdw-table th.jdw-sort-th{cursor:pointer;}
   .jdw-table th.jdw-sort-th:hover{color:var(--ink);}
-  .jdw-table td{padding:8px 12px; font-size:11px; line-height:1.35; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle;}
+  .jdw-table td{padding:7px 10px; font-size:11px; line-height:1.35; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle;}
   .jdw-table tbody tr:last-child td{border-bottom:none;}
   .jdw-table tbody tr:hover td{background:#F8F9FD;}
   .jdw-table .jdw-no{width:34px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
@@ -212,6 +212,19 @@
   .jdw-table th.jdw-stk{z-index:2;}
   .jdw-table .jdw-stk-no{left:0; width:40px; min-width:40px; max-width:40px; box-sizing:border-box; padding-left:8px !important; padding-right:8px !important;}
   .jdw-table .jdw-stk-tutor{left:40px; box-shadow:1px 0 0 var(--border);}
+  /* Kolom selebar isinya saja; sisa ruang untuk kolom siswa (teks panjang dipotong) */
+  .jdw-table th:not(.jdw-col-siswa), .jdw-table td:not(.jdw-col-siswa){width:1%; white-space:nowrap;}
+  .jdw-table .jdw-col-siswa{width:100%; max-width:0; min-width:130px;}
+  .jdw-table .jdw-col-siswa .jdw-siswa-line, .jdw-table .jdw-col-siswa .jdw-sub{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  /* Mode ringkas: hanya aktif bila tabel tidak muat di layar (lihat jdwFitTable) */
+  .jdw-table.jdw-tight th, .jdw-table.jdw-tight td{padding-left:7px; padding-right:7px;}
+  .jdw-table.jdw-tight .jdw-col-siswa{min-width:115px;}
+  .jdw-table.jdw-tight td.jdw-wrap, .jdw-table.jdw-tight td.jdw-stk-tutor, .jdw-table.jdw-tight td.jdw-col-jam, .jdw-table.jdw-tight td.jdw-col-jam .jdw-time{white-space:normal;}
+  .jdw-table.jdw-tight td.jdw-wrap{min-width:60px; line-height:1.3;}
+  .jdw-table.jdw-tight td.jdw-stk-tutor .jdw-who b{white-space:normal; line-height:1.3; min-width:66px;}
+  .jdw-table.jdw-tight td.jdw-col-jam{min-width:40px;}
+  .jdw-table td.jdw-col-jam .jdw-time span{white-space:nowrap;}
+  .jdw-table .jdw-col-siswa .jdw-siswa-line, .jdw-table .jdw-col-siswa .jdw-sub{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .jdw-table tbody tr:hover td.jdw-stk{background:#F8F9FD;}
 
   /* ===== Animasi ===== */
@@ -1220,6 +1233,7 @@
     if (jdwState.viewMode === 'table') {
       listEl.classList.remove('jdw-cards-view');
       listEl.innerHTML = jdwRenderTable(rows);
+      jdwFitTable();
       jdwBindSortEvents();
     } else {
       listEl.classList.add('jdw-cards-view');
@@ -1244,18 +1258,31 @@
       '<button type="button" class="jdw-table-icon-btn jdw-del-btn" data-id="' + r.id + '" title="Hapus jadwal" aria-label="Hapus jadwal"><i class="ph ph-trash" aria-hidden="true"></i></button>';
   }
 
+  // Aktifkan mode ringkas hanya bila tabel lebih lebar dari layar
+  function jdwFitTable() {
+    var wrap = document.querySelector('#jdw-list .jdw-table-wrap');
+    var table = wrap && wrap.querySelector('.jdw-table');
+    if (!table) return;
+    table.classList.remove('jdw-tight');
+    if (wrap.scrollWidth > wrap.clientWidth + 1) table.classList.add('jdw-tight');
+  }
+  (function () {
+    var t;
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(jdwFitTable, 150); });
+  })();
+
   function jdwRenderTable(rows) {
     var trs = rows.map(function (r, idx) {
       var sekolahLine = [r.siswaKelas, r.siswaSekolah].filter(Boolean).join(' · ');
       return '<tr class="jdw-table-row" data-schedule-id="' + r.id + '">' +
         '<td class="jdw-no jdw-stk jdw-stk-no">' + (idx + 1) + '</td>' +
         '<td class="jdw-stk jdw-stk-tutor"><div class="jdw-who"><span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + jdwEscape(jdwInitials(r.tutorNama)) + '</span><b>' + jdwEscape(r.tutorNama) + '</b></div></td>' +
-        '<td>' + jdwEscape(r.mapel) + '</td>' +
-        '<td><b style="font-weight:600;">' + jdwEscape(r.siswaNama) + '</b>' + (r.unitNama ? '<span class="jdw-unit">' + jdwEscape(r.unitNama) + '</span>' : '') +
+        '<td class="jdw-wrap">' + jdwEscape(r.mapel) + '</td>' +
+        '<td class="jdw-col-siswa" title="' + jdwEscape([r.siswaNama, r.unitNama, sekolahLine].filter(Boolean).join(' · ')) + '"><span class="jdw-siswa-line"><b style="font-weight:600;">' + jdwEscape(r.siswaNama) + '</b>' + (r.unitNama ? '<span class="jdw-unit">' + jdwEscape(r.unitNama) + '</span>' : '') + '</span>' +
           (sekolahLine ? '<div class="jdw-sub">' + jdwEscape(sekolahLine) + '</div>' : '') + '</td>' +
-        '<td style="white-space:nowrap;">' + jdwEscape(r.paketNama) + '</td>' +
+        '<td class="jdw-wrap">' + jdwEscape(r.paketNama) + '</td>' +
         '<td>' + jdwDayChip(r.hari) + '</td>' +
-        '<td><span class="jdw-time">' + jdwEscape(jdwTimeText(r)) + '</span></td>' +
+        '<td class="jdw-col-jam"><span class="jdw-time">' + jdwEscape(jdwTimeText(r)).split(' - ').map(function (t, i, arr) { return '<span>' + t + (i < arr.length - 1 ? ' -' : '') + '</span>'; }).join(' ') + '</span></td>' +
         '<td class="jdw-act">' + jdwActionButtons(r) + '</td>' +
       '</tr>';
     }).join('');
@@ -1263,7 +1290,7 @@
     return '<div class="jdw-table-card"><div class="jdw-table-wrap"><table class="jdw-table">' +
       '<thead><tr>' +
         '<th class="jdw-no jdw-stk jdw-stk-no">No</th>' +
-        jdwSortTh('tutor', 'Tutor', 'jdw-stk jdw-stk-tutor') + jdwSortTh('mapel', 'Mapel') + jdwSortTh('siswa', 'Siswa') + jdwSortTh('paket', 'Paket') +
+        jdwSortTh('tutor', 'Tutor', 'jdw-stk jdw-stk-tutor') + jdwSortTh('mapel', 'Mapel') + jdwSortTh('siswa', 'Siswa', 'jdw-col-siswa') + jdwSortTh('paket', 'Paket') +
         jdwSortTh('hari', 'Hari') +
         '<th>Jam</th>' +
         '<th style="text-align:right;">Aksi</th>' +
