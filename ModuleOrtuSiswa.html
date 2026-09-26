@@ -99,7 +99,25 @@
   .oc-status i{width:6px; height:6px; border-radius:50%;}
   .oc-status.is-on{background:#E9F7EF; color:#1E8E5A;} .oc-status.is-on i{background:#1E8E5A;}
   .oc-status.is-off{background:var(--surface); color:var(--ink-soft);} .oc-status.is-off i{background:#A9ADC0;}
-  .oc-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .oc-chips{display:flex; flex-wrap:nowrap; gap:6px; margin-top:10px; overflow:hidden; min-width:0;}
+  .oc-chips .oc-chip{flex:none;} .oc-chips .oc-chip.is-shrink{flex:0 1 auto; min-width:0;}
+  .oc-chips .oc-chip.is-shrink span{overflow:hidden; text-overflow:ellipsis; min-width:0;}
+  .oc-chip.is-muted{color:var(--ink-soft);}
+  .oc-kids-toggle{width:100%; display:flex; align-items:center; gap:8px; margin-top:10px; padding:8px 10px; border-radius:9px; border:1px solid var(--border); background:#fff; font-family:var(--font); cursor:pointer; text-align:left; transition:background .15s ease;}
+  .oc-kids-toggle:hover{background:#FAFBFD;}
+  .oc-kids-toggle > i{font-size:14px; color:var(--ink-soft); flex:none;}
+  .oc-kids-names{flex:1; min-width:0; font-size:11.5px; font-weight:500; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .oc-kids-names s{text-decoration:none; color:var(--ink-soft);}
+  .oc-kids-toggle em{font-style:normal; flex:none; font-size:10px; font-weight:600; color:var(--blue); background:var(--blue-tint); border-radius:999px; padding:1px 7px;}
+  .oc-kids-toggle svg{flex:none; color:var(--ink-soft); transition:transform .25s ease;}
+  .oc-kids-toggle[aria-expanded="true"] svg{transform:rotate(180deg);}
+  .oc-kids-detail{overflow:hidden; max-height:0; opacity:0; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;}
+  .oc-kids-detail.is-open{opacity:1;}
+  .oc-kids-detail .oc-kid{grid-template-columns:minmax(0,1fr) auto; padding:7px 2px;}
+  .oc-kids-detail .oc-kid:first-child{margin-top:4px;}
+  .os-g{font-size:9.5px; font-weight:700; margin-left:5px; letter-spacing:.02em;}
+  .os-g.is-l{color:#3B4BD8;} .os-g.is-p{color:#C2366A;}
+  @media (prefers-reduced-motion: reduce){ .oc-kids-detail, .oc-kids-toggle svg{transition:none;} }
   .oc-chip{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:var(--ink); background:var(--surface); border-radius:8px; padding:4px 8px; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;}
   .oc-chip i{font-size:12px; color:var(--ink-soft); flex:none;}
   .oc-kids{margin-top:10px; border-top:1px dashed var(--border); padding-top:4px;}
@@ -131,7 +149,7 @@
   /* ===== Tabel: satu siswa satu baris ===== */
   .os-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden;}
   .os-table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
-  .os-table{border-collapse:separate; border-spacing:0; width:100%; min-width:900px; font-size:11px;}
+  .os-table{border-collapse:separate; border-spacing:0; width:100%; min-width:760px; font-size:11px;}
   .os-table th{font-size:10.5px; font-weight:500; color:var(--ink-soft); text-align:left; padding:11px 12px; border-bottom:1px solid var(--border); background:#fff; white-space:nowrap;}
   .os-table th.os-sort-th{cursor:pointer; user-select:none;}
   .os-table th.os-sort-th:hover{color:var(--ink);}
@@ -393,9 +411,9 @@
         </div>
         <div class="gx-row"><label for="os-editSiswaSekolah">Sekolah</label><input type="text" id="os-editSiswaSekolah" placeholder="mis. SMP N 1 Yogyakarta"></div>
         <div class="gx-row"><label>Jenis kelamin</label>
-          <div class="gx-seg">
-            <label class="os-gender-opt" data-val="L"><input type="radio" name="os-editSiswaGender" value="L">Laki-laki</label>
-            <label class="os-gender-opt" data-val="P"><input type="radio" name="os-editSiswaGender" value="P">Perempuan</label>
+          <div class="gx-gender">
+            <label class="os-gender-opt" data-val="L"><input type="radio" name="os-editSiswaGender" value="L"><b>L</b>Laki-laki</label>
+            <label class="os-gender-opt" data-val="P"><input type="radio" name="os-editSiswaGender" value="P"><b>P</b>Perempuan</label>
           </div>
         </div>
       </div>
@@ -460,9 +478,9 @@
             </select>
           </div>
           <div class="gx-row"><label>Jenis kelamin</label>
-            <div class="gx-seg">
-              <label class="os-gender-opt" data-val="L"><input type="radio" name="os-siswaGender" value="L">Laki-laki</label>
-              <label class="os-gender-opt" data-val="P"><input type="radio" name="os-siswaGender" value="P">Perempuan</label>
+            <div class="gx-gender">
+              <label class="os-gender-opt" data-val="L"><input type="radio" name="os-siswaGender" value="L"><b>L</b>Laki-laki</label>
+              <label class="os-gender-opt" data-val="P"><input type="radio" name="os-siswaGender" value="P"><b>P</b>Perempuan</label>
             </div>
           </div>
         </div>
@@ -484,7 +502,7 @@
     tab: 'aktif',
     ortuList: [],
     search: '',
-    openCard: null,
+    openCards: {},
     initialized: false,
     ortuMode: 'baru',
     filterUnit: '',
@@ -800,6 +818,11 @@
     if (!j) return '<span class="os-jb is-other">-</span>';
     return '<span class="os-jb' + (j === 'Lainnya' ? ' is-other' : '') + '">' + osEscape(j) + '</span>';
   }
+  function osGenderTag(g) {
+    if (g === 'L') return '<span class="os-g is-l" title="Laki-laki">[L]</span>';
+    if (g === 'P') return '<span class="os-g is-p" title="Perempuan">[P]</span>';
+    return '';
+  }
   function osInitials(nama) {
     return (nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
   }
@@ -811,19 +834,29 @@
     else if (o.anak.length === 1) meta = 'Wali dari 1 siswa · ' + (o.anak[0].status === 'aktif' ? 'aktif' : 'nonaktif');
     else meta = 'Wali dari ' + o.anak.length + ' siswa · ' + o.aktifCount + ' aktif';
 
-    var chips = '';
-    if (o.unitNama) chips += '<span class="oc-chip"><i class="ph ph-buildings" aria-hidden="true"></i>' + osEscape(o.unitNama) + '</span>';
-    if (o.alamat) chips += '<span class="oc-chip"><i class="ph ph-map-pin" aria-hidden="true"></i>' + osEscape(o.alamat) + '</span>';
+    var chips = '<span class="oc-chip"><i class="ph ph-buildings" aria-hidden="true"></i>' + osEscape(o.unitNama || 'Unit belum diatur') + '</span>' +
+      '<span class="oc-chip is-shrink' + (o.alamat ? '' : ' is-muted') + '"><i class="ph ph-map-pin" aria-hidden="true"></i><span>' + osEscape(o.alamat || 'Alamat belum diisi') + '</span></span>';
 
+    var isOpen = !!osState.openCards[o.id];
+    var names = o.anak.map(function (a) {
+      var first = osEscape((a.nama || '').trim().split(/\s+/)[0] || '-');
+      return a.status === 'aktif' ? first : '<s>' + first + '</s>';
+    }).join(', ');
     var kids = o.anak.map(function (a) {
       var sub = [a.kelas ? 'Kelas ' + a.kelas : '', a.sekolah].filter(Boolean).join(' · ') || 'Kelas dan sekolah belum diisi';
       var off = a.status !== 'aktif';
       return '<div class="oc-kid' + (off ? ' is-off' : '') + '">' +
-        '<span class="oc-ki' + (a.jenis_kelamin === 'P' ? ' is-p' : '') + '">' + osEscape(osInitials(a.nama)) + '</span>' +
-        '<div style="min-width:0;"><div class="oc-kn">' + osEscape(a.nama) + '</div><div class="oc-ks">' + osEscape(sub) + '</div></div>' +
+        '<div style="min-width:0;"><div class="oc-kn">' + osEscape(a.nama) + osGenderTag(a.jenis_kelamin) + '</div><div class="oc-ks">' + osEscape(sub) + '</div></div>' +
         '<div class="oc-kr">' + (off ? '<span class="oc-off">Nonaktif</span>' : '') + osJenjangBadge(a.jenjang) + '</div>' +
       '</div>';
     }).join('');
+    var kidsBlock = o.anak.length
+      ? '<button type="button" class="oc-kids-toggle" data-id="' + o.id + '" aria-expanded="' + isOpen + '">' +
+          '<i class="ph ph-student" aria-hidden="true"></i><span class="oc-kids-names">' + names + '</span><em>' + o.anak.length + ' anak</em>' +
+          '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</button>' +
+        '<div class="oc-kids-detail' + (isOpen ? ' is-open' : '') + '" data-id="' + o.id + '"' + (isOpen ? ' style="max-height:none"' : '') + '>' + kids + '</div>'
+      : '<div class="oc-kids-toggle" style="cursor:default;"><i class="ph ph-student" aria-hidden="true"></i><span class="oc-kids-names" style="color:var(--ink-soft); font-weight:400;">Belum ada siswa terdaftar</span></div>';
 
     return '<div class="os-card">' +
       '<div class="oc-head">' +
@@ -831,8 +864,8 @@
         '<div class="oc-who"><h4>' + osEscape(o.nama) + '</h4><p>' + meta + '</p></div>' +
         '<span class="oc-status ' + (isAktif ? 'is-on' : 'is-off') + '"><i></i>' + (isAktif ? 'Aktif' : 'Nonaktif') + '</span>' +
       '</div>' +
-      (chips ? '<div class="oc-chips">' + chips + '</div>' : '') +
-      (kids ? '<div class="oc-kids">' + kids + '</div>' : '<p class="oc-empty">Belum ada siswa terdaftar.</p>') +
+      '<div class="oc-chips">' + chips + '</div>' +
+      kidsBlock +
       '<div class="oc-foot">' +
         '<div class="oc-wa"><span>WhatsApp</span><b>' + osEscape(o.no_hp || '-') + '</b></div>' +
         (o.no_hp ? '<a class="os-icon is-wa" href="' + osWaLink(o.no_hp) + '" target="_blank" rel="noopener noreferrer" aria-label="Hubungi lewat WhatsApp" title="Hubungi lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' : '') +
@@ -849,9 +882,7 @@
       { key: null, label: 'WhatsApp' },
       { key: 'kelas', label: 'Kelas', style: 'text-align:center;' },
       { key: 'sekolah', label: 'Sekolah' },
-      { key: 'jenjang', label: 'Jenjang' },
       { key: 'unit', label: 'Unit' },
-      { key: null, label: 'Status' },
       { key: null, label: 'Aksi', style: 'text-align:right;' }
     ];
     var head = cols.map(function (c) {
@@ -870,25 +901,42 @@
       var on = r.status === 'aktif';
       return '<tr>' +
         '<td class="os-no">' + (i + 1) + '</td>' +
-        '<td class="os-stk os-nm">' + osEscape(r.nama) + '</td>' +
+        '<td class="os-stk os-nm">' + osEscape(r.nama) + osGenderTag(r.jenis_kelamin) + '</td>' +
         '<td>' + osEscape(r.ortu.nama || '-') + '</td>' +
         '<td class="os-num">' + osEscape(r.ortu.no_hp || '-') + '</td>' +
         '<td class="os-c os-num">' + osEscape(r.kelas || '-') + '</td>' +
         '<td' + (r.sekolah ? '' : ' class="os-soft"') + '>' + osEscape(r.sekolah || '-') + '</td>' +
-        '<td>' + osJenjangBadge(r.jenjang) + '</td>' +
         '<td>' + osEscape(r.unitNama || '-') + '</td>' +
-        '<td><span class="oc-status ' + (on ? 'is-on' : 'is-off') + '"><i></i>' + (on ? 'Aktif' : 'Nonaktif') + '</span></td>' +
         '<td class="os-act">' +
           (r.ortu.no_hp ? '<a class="os-icon is-wa" href="' + osWaLink(r.ortu.no_hp) + '" target="_blank" rel="noopener noreferrer" aria-label="Hubungi orang tua lewat WhatsApp" title="Hubungi orang tua"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' : '') +
           '<button type="button" class="os-icon os-table-edit-btn" data-siswa-id="' + r.id + '" data-ortu-id="' + r.ortu.id + '" aria-label="Edit siswa" title="Edit siswa"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button>' +
         '</td>' +
       '</tr>';
-    }).join('') : '<tr><td colspan="10" class="os-table-empty">Tidak ada siswa yang cocok.</td></tr>';
+    }).join('') : '<tr><td colspan="8" class="os-table-empty">Tidak ada siswa yang cocok.</td></tr>';
 
     return '<div class="os-table-card"><div class="os-table-wrap"><table class="os-table"><thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody></table></div></div>';
   }
 
   function osBindCardEvents() {
+    document.querySelectorAll('#os-list .oc-kids-toggle[data-id]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.dataset.id;
+        var wrap = document.querySelector('#os-list .oc-kids-detail[data-id="' + id + '"]');
+        if (!wrap) return;
+        var open = !osState.openCards[id];
+        osState.openCards[id] = open;
+        btn.setAttribute('aria-expanded', open);
+        wrap.style.maxHeight = wrap.scrollHeight + 'px';
+        if (open) {
+          wrap.classList.add('is-open');
+          clearTimeout(wrap._t); wrap._t = setTimeout(function () { wrap.style.maxHeight = 'none'; }, 340);
+        } else {
+          void wrap.offsetHeight;
+          wrap.style.maxHeight = '0px';
+          wrap.classList.remove('is-open');
+        }
+      });
+    });
     document.querySelectorAll('#os-list .os-edit-btn').forEach(function (btn) {
       btn.addEventListener('click', function () { osOpenEditModal(btn.dataset.id); });
     });
@@ -995,7 +1043,7 @@
       var sub = [a.kelas ? 'Kelas ' + a.kelas : '', a.jenjang].filter(Boolean).join(' · ');
       return '<div class="os-kid-row">' +
         '<span class="oc-ki' + (a.jenis_kelamin === 'P' ? ' is-p' : '') + '">' + osEscape(osInitials(a.nama)) + '</span>' +
-        '<div style="min-width:0;"><b>' + osEscape(a.nama) + '</b><span class="s"><i' + (aAktif ? '' : ' class="is-off"') + '></i>' + (aAktif ? 'Aktif' : 'Nonaktif') + (sub ? ' · ' + osEscape(sub) : '') + '</span></div>' +
+        '<div style="min-width:0;"><b>' + osEscape(a.nama) + osGenderTag(a.jenis_kelamin) + '</b><span class="s"><i' + (aAktif ? '' : ' class="is-off"') + '></i>' + (aAktif ? 'Aktif' : 'Nonaktif') + (sub ? ' · ' + osEscape(sub) : '') + '</span></div>' +
         '<button type="button" class="os-edit-siswa-btn" data-siswa-id="' + a.id + '">Edit</button>' +
       '</div>';
     }).join('');
