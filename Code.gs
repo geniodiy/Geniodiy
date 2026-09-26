@@ -420,7 +420,7 @@ function buildSlipGajiHtml_(d) {
     '<title>Slip Gaji - ' + esc(d.tutorNama || 'Tutor') + '</title>' +
     '<style>' +
       '@page { size: A4 portrait; margin: 16mm 14mm; }' +
-      'body { font-family: Poppins, Helvetica, Arial, sans-serif; color: ' + INK + '; margin: 0; padding: 0; background: #fff; line-height: 1.4; }' +
+      'body { font-family: "Plus Jakarta Sans", Helvetica, Arial, sans-serif; color: ' + INK + '; margin: 0; padding: 0; background: #fff; line-height: 1.4; }' +
       'table { border-collapse: collapse; }' +
     '</style>' +
   '</head>' +
@@ -433,7 +433,7 @@ function buildSlipGajiHtml_(d) {
             '<table><tr>' +
               (logoUri ? '<td style="vertical-align:middle; padding-right:12px;"><div style="width:40px; height:40px; border-radius:10px; background:#fff; overflow:hidden;"><img src="' + logoUri + '" style="width:40px; height:40px; display:block;"></div></td>' : '') +
               '<td style="vertical-align:middle;">' +
-                '<div style="font-size:17px; font-weight:800; color:#fff; line-height:1.15;">Genio Institute</div>' +
+                '<div style="font-family:Poppins, Helvetica, Arial, sans-serif; font-size:17px; font-weight:800; color:#fff; line-height:1.15;">Genio Institute</div>' +
                 '<div style="font-size:10.5px; color:#C9CAF2; margin-top:2px;">Yogyakarta</div>' +
               '</td>' +
             '</tr></table>' +

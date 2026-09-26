@@ -13,7 +13,7 @@
 
   /* Widget Jadwal Tutor Mingguan (Identik Kontrak) */
   .home-jm-grid{ display:grid; grid-template-columns:26px repeat(8,1fr); grid-auto-rows:minmax(24px, auto); gap:3px; align-items:stretch; min-width:280px; }
-  .home-jm-head{ font-size:8.5px; font-weight:500; color:var(--ink-soft); text-align:center; padding-bottom:2px; }
+  .home-jm-head{ font-size:9px; font-weight:500; color:var(--ink-soft); text-align:center; padding-bottom:2px; }
   .home-jm-hour{ font-size:9px; color:var(--ink-soft); text-align:right; padding-right:3px; align-self:center; }
   .home-jm-cell{ background:var(--surface); border-radius:6px; min-height:24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; align-content:center; gap:2px; padding:2px; }
   .home-jm-dot{ width:9px; height:9px; border-radius:50%; cursor:pointer; flex:none; border:none; padding:0; transition:transform .15s ease; }
@@ -31,17 +31,17 @@
     width:460px; height:460px; right:-160px; bottom:-280px; border-radius:50%;
     background:radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 65%);
   }
-  .home-hero-label{font-size:12px; font-weight:500; color:rgba(255,255,255,.78);}
-  .home-hero-num{font-size:23px; font-weight:500; letter-spacing:-.02em; line-height:1.1; font-variant-numeric:tabular-nums;}
-  .home-hero-delta{font-size:11px; color:rgba(255,255,255,.72); margin-top:3px;}
+  .home-hero-label{font-size:11px; font-weight:500; color:rgba(255,255,255,.78);}
+  .home-hero-num{font-size:20.5px; font-weight:500; letter-spacing:-.02em; line-height:1.1; font-variant-numeric:tabular-nums;}
+  .home-hero-delta{font-size:10px; color:rgba(255,255,255,.72); margin-top:3px;}
   .home-hero-cetak-btn{
     display:inline-flex; align-items:center; gap:6px; flex:none;
     height:28px; padding:0 10px; border-radius:8px;
     background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.24); color:#fff;
-    font-family:var(--font); font-size:11.5px; font-weight:500; cursor:pointer; white-space:nowrap;
+    font-family:var(--font); font-size:10.5px; font-weight:500; cursor:pointer; white-space:nowrap;
     transition:background .15s ease, transform .1s ease;
   }
-  .home-hero-cetak-btn i{font-size:13px;}
+  .home-hero-cetak-btn i{font-size:12px;}
   .home-hero-cetak-btn:hover{background:rgba(255,255,255,.2);}
   .home-hero-cetak-btn:active{transform:scale(.97);}
   .home-hero-cetak-btn:focus-visible{outline:2px solid #fff; outline-offset:2px;}
@@ -50,13 +50,13 @@
     border-radius:12px; padding:10px 12px; min-width:0;
   }
   .home-sub-head{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px 8px;}
-  .home-sub-label{font-size:11px; font-weight:500; color:rgba(255,255,255,.78); white-space:nowrap;}
+  .home-sub-label{font-size:10px; font-weight:500; color:rgba(255,255,255,.78); white-space:nowrap;}
   .home-sub-chip{
-    font-size:9.5px; font-weight:500; white-space:nowrap;
+    font-size:9px; font-weight:500; white-space:nowrap;
     background:rgba(255,255,255,.14); color:#fff; padding:1px 7px; border-radius:999px;
   }
-  .home-sub-num{font-size:14.5px; font-weight:500; letter-spacing:-.01em; margin-top:6px; font-variant-numeric:tabular-nums; white-space:nowrap;}
-  .home-hero-subcard .home-hero-delta{font-size:10.5px; margin-top:2px;}
+  .home-sub-num{font-size:13.5px; font-weight:500; letter-spacing:-.01em; margin-top:6px; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .home-hero-subcard .home-hero-delta{font-size:10px; margin-top:2px;}
 
 
   /* ===== Desktop: highlight gepeng, isi berjajar kiri-kanan ===== */
@@ -66,14 +66,14 @@
     .home-sec-hero .home-hero-badges, .home-sec-hero .home-hero-counter{display:contents !important;}
     .home-hero-label{white-space:nowrap;}
     .home-hero-label{order:1;}
-    .home-hero-num{order:2; font-size:20px;}
+    .home-hero-num{order:2; font-size:18px;}
     .home-hero-counter .home-hero-delta{order:3; margin-top:0;}
     .home-hero-cetak-btn{order:4; margin-left:6px; align-self:center;}
     .home-sec-hero .home-hero-stats-row{flex:1 !important; gap:8px !important;}
     .home-hero-subcard{display:flex; align-items:baseline; gap:10px; padding:9px 12px;}
     .home-sub-head{flex-wrap:nowrap; flex:none;}
     .home-sub-chip{display:none;}
-    .home-sub-num{margin-top:0; font-size:13.5px;}
+    .home-sub-num{margin-top:0; font-size:12.5px;}
     .home-hero-subcard .home-hero-delta{margin-top:0; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
     .home-kpi-row{align-items:stretch !important;}
     .home-sec-stats > .card{padding:10px 14px !important;}
@@ -84,22 +84,22 @@
     .home-stat-card > div:first-child > span{grid-column:3; grid-row:1; justify-self:end;}
     .home-stat-card .home-stat-label{grid-column:2; grid-row:1; white-space:nowrap;}
     .home-stat-card > div:last-child > div:nth-child(2){grid-column:2; grid-row:2; margin:0 !important; white-space:nowrap; overflow:hidden;}
-    .home-stat-card .home-stat-num{font-size:17px;}
+    .home-stat-card .home-stat-num{font-size:15.5px;}
     .home-stat-card .home-stat-sub{grid-column:3; grid-row:2; margin:0; justify-self:end; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
   }
 
   /* ===== Kartu & teks ===== */
   .module-panel[data-module="home"] .card{border:1px solid var(--border); border-radius:14px; padding:14px 16px; box-shadow:none;}
-  .home-sec-title{font-size:13px; font-weight:500; color:var(--ink); margin-bottom:12px;}
+  .home-sec-title{font-size:12px; font-weight:500; color:var(--ink); margin-bottom:12px;}
   .home-stat-card{gap:10px;}
-  .home-stat-label{font-size:11.5px; font-weight:500; color:var(--ink-soft);}
-  .home-stat-num{font-size:19px; font-weight:500; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
-  .home-stat-unit{font-size:11.5px; font-weight:500; color:var(--ink-soft);}
-  .home-stat-sub{font-size:10.5px; color:var(--ink-soft); margin-top:2px;}
+  .home-stat-label{font-size:10.5px; font-weight:500; color:var(--ink-soft);}
+  .home-stat-num{font-size:17px; font-weight:500; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
+  .home-stat-unit{font-size:10.5px; font-weight:500; color:var(--ink-soft);}
+  .home-stat-sub{font-size:10px; color:var(--ink-soft); margin-top:2px;}
 
   #trendRangeDock, #unitTabDock{background:var(--surface) !important; border-radius:10px !important; margin-bottom:10px !important;}
   #trendRangeGlider, #unitTabGlider{border:none !important; box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border) !important;}
-  .home-trend-range, .home-unit-tab{font-size:11.5px !important; font-weight:500 !important;}
+  .home-trend-range, .home-unit-tab{font-size:10.5px !important; font-weight:500 !important;}
   .home-trend-metric{border-width:1px !important;}
 
   /* ===== Mobile Layout Khusus (Gaya Presensi: Jarak Vertikal 14px Rapi) ===== */
@@ -326,10 +326,10 @@
   <div class="home-top-row" id="homeTopRow">
     <!-- Kartu sapaan -->
     <div class="card home-sec-sapaan" style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">
-      <div style="width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:500; font-size:12px; flex:none;" id="homeAvatarInitials">--</div>
+      <div style="width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:500; font-size:11px; flex:none;" id="homeAvatarInitials">--</div>
       <div style="min-width:0;">
-        <div style="font-size:11px; font-weight:500; color:var(--ink-soft);" id="homeRoleLabel">Manajer</div>
-        <div style="font-size:13.5px; font-weight:500; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeGreeting">Selamat datang</div>
+        <div style="font-size:10px; font-weight:500; color:var(--ink-soft);" id="homeRoleLabel">Manajer</div>
+        <div style="font-size:12.5px; font-weight:500; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeGreeting">Selamat datang</div>
       </div>
     </div>
 
@@ -340,11 +340,11 @@
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 2 20h20L12 3.5z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
         </span>
         <div style="min-width:0;">
-          <div style="font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homePresensiPendingText">0 Presensi Menunggu Approval</div>
-          <div style="font-size:11.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tutor sudah mengajar, perlu diverifikasi</div>
+          <div style="font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homePresensiPendingText">0 Presensi Menunggu Approval</div>
+          <div style="font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tutor sudah mengajar, perlu diverifikasi</div>
         </div>
       </div>
-      <i class="ph ph-caret-right" style="color:#A3A7BC; font-size:18px; flex:none;" aria-hidden="true"></i>
+      <i class="ph ph-caret-right" style="color:#A3A7BC; font-size:16px; flex:none;" aria-hidden="true"></i>
     </div>
   </div>
 
@@ -434,27 +434,27 @@
 
         <div id="trendRangeDock" style="position:relative; display:flex; margin-bottom:8px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; touch-action:none; -webkit-user-select:none; user-select:none; height:38px; box-sizing:border-box; align-items:center;">
           <div id="trendRangeGlider" style="position:absolute; top:3px; bottom:3px; left:3px; width:calc(33.33% - 4px); background:#fff; border-radius:8px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;"></div>
-          <button class="home-trend-range" data-range="3" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:11px; font-weight:500; cursor:pointer; color:var(--ink); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">3 Bulan</button>
-          <button class="home-trend-range" data-range="6" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:11px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">6 Bulan</button>
-          <button class="home-trend-range" data-range="12" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:11px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">12 Bulan</button>
+          <button class="home-trend-range" data-range="3" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">3 Bulan</button>
+          <button class="home-trend-range" data-range="6" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">6 Bulan</button>
+          <button class="home-trend-range" data-range="12" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">12 Bulan</button>
         </div>
 
         <div id="trendMetricCardsRow" style="display:flex; gap:5px; margin-bottom:8px;">
           <button class="home-trend-metric" data-metric="omset" style="flex:1; padding:6px 5px; border-radius:10px; border:1px solid var(--blue); background:var(--blue-tint); text-align:left; cursor:pointer; min-width:0;">
             <div style="font-size:9px; color:var(--blue); font-weight:500;">OMSET</div>
-            <div style="font-size:11px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendOmsetVal">-</div>
+            <div style="font-size:10px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendOmsetVal">-</div>
           </button>
           <button class="home-trend-metric" data-metric="laba" style="flex:1; padding:6px 5px; border-radius:10px; border:1px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
             <div style="font-size:9px; color:var(--ink-soft); font-weight:500;">LABA</div>
-            <div style="font-size:11px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendLabaVal">-</div>
+            <div style="font-size:10px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendLabaVal">-</div>
           </button>
           <button class="home-trend-metric" data-metric="sesi" style="flex:1; padding:6px 5px; border-radius:10px; border:1px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
             <div style="font-size:9px; color:var(--ink-soft); font-weight:500;">SESI</div>
-            <div style="font-size:11px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendSesiVal">-</div>
+            <div style="font-size:10px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendSesiVal">-</div>
           </button>
           <button class="home-trend-metric" data-metric="semua" style="flex:1; padding:6px 5px; border-radius:10px; border:1px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
             <div style="font-size:9px; color:var(--ink-soft); font-weight:500;">SEMUA</div>
-            <div style="font-size:10px; font-weight:500; margin-top:2px; display:flex; gap:3px;">
+            <div style="font-size:9.5px; font-weight:500; margin-top:2px; display:flex; gap:3px;">
               <span style="width:6px; height:6px; border-radius:50%; background:#1C1AAF; display:inline-block;"></span>
               <span style="width:6px; height:6px; border-radius:50%; background:#1E8E5A; display:inline-block;"></span>
               <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
@@ -464,10 +464,10 @@
 
         <div id="homeTrendChartWrap" style="position:relative; flex:1; min-height:120px;">
           <svg id="homeTrendSvg" viewBox="0 0 340 140" style="width:100%; height:100%; display:block; position:absolute; inset:0;"></svg>
-          <div id="homeTrendTooltip" style="position:absolute; display:none; background:var(--ink); color:#fff; font-size:10px; font-weight:500; padding:4px 8px; border-radius:8px; white-space:nowrap; pointer-events:none; z-index:5; transform:translate(-50%,-115%);"></div>
+          <div id="homeTrendTooltip" style="position:absolute; display:none; background:var(--ink); color:#fff; font-size:9.5px; font-weight:500; padding:4px 8px; border-radius:8px; white-space:nowrap; pointer-events:none; z-index:5; transform:translate(-50%,-115%);"></div>
         </div>
-        <div id="homeTrendLegend" style="display:none; justify-content:center; gap:12px; margin-top:4px; font-size:9.5px; font-weight:500; color:var(--ink-soft);"></div>
-        <div id="homeTrendFooter" style="font-size:9.5px; color:var(--ink-soft); text-align:center; margin-top:6px;"></div>
+        <div id="homeTrendLegend" style="display:none; justify-content:center; gap:12px; margin-top:4px; font-size:9px; font-weight:500; color:var(--ink-soft);"></div>
+        <div id="homeTrendFooter" style="font-size:9px; color:var(--ink-soft); text-align:center; margin-top:6px;"></div>
       </div>
     </div>
 
@@ -478,20 +478,20 @@
 
         <div id="unitTabDock" style="position:relative; display:flex; margin-bottom:8px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; touch-action:none; -webkit-user-select:none; user-select:none; height:38px; box-sizing:border-box; align-items:center;">
           <div id="unitTabGlider" style="position:absolute; top:3px; bottom:3px; left:3px; width:calc(20% - 3.8px); background:#fff; border-radius:8px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;"></div>
-          <button class="home-unit-tab" data-metric="siswa" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Siswa</button>
-          <button class="home-unit-tab" data-metric="omset" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Omset</button>
-          <button class="home-unit-tab" data-metric="laba" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Laba</button>
-          <button class="home-unit-tab" data-metric="pengeluaran" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Pengeluaran</button>
-          <button class="home-unit-tab" data-metric="tutor" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Tutor</button>
+          <button class="home-unit-tab" data-metric="siswa" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Siswa</button>
+          <button class="home-unit-tab" data-metric="omset" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Omset</button>
+          <button class="home-unit-tab" data-metric="laba" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Laba</button>
+          <button class="home-unit-tab" data-metric="pengeluaran" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Pengeluaran</button>
+          <button class="home-unit-tab" data-metric="tutor" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Tutor</button>
         </div>
 
         <div style="display:flex; align-items:center; justify-content:space-between; padding:0 3px 6px;">
-          <span style="font-size:10.5px; font-weight:500; color:var(--ink-soft);">Unit / kepala unit</span>
-          <span id="homeUnitColRight" style="font-size:10.5px; font-weight:500; color:var(--ink-soft);">Siswa &amp; Perubahan</span>
+          <span style="font-size:10px; font-weight:500; color:var(--ink-soft);">Unit / kepala unit</span>
+          <span id="homeUnitColRight" style="font-size:10px; font-weight:500; color:var(--ink-soft);">Siswa &amp; Perubahan</span>
         </div>
 
         <div id="homeUnitTable" class="home-scrollable">
-          <div style="padding:16px; text-align:center; color:var(--ink-soft); font-size:11.5px;">Memuat data unit...</div>
+          <div style="padding:16px; text-align:center; color:var(--ink-soft); font-size:10.5px;">Memuat data unit...</div>
         </div>
       </div>
     </div>
@@ -502,9 +502,9 @@
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex:none;">
           <div style="display:flex; align-items:center; gap:6px;">
             <div class="home-sec-title" style="margin:0;">Jadwal tutor</div>
-            <span id="homeJmTotalBadge" style="background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:600; padding:1px 6px; border-radius:999px;">-</span>
+            <span id="homeJmTotalBadge" style="background:var(--blue-tint); color:var(--blue); font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">-</span>
           </div>
-          <a href="javascript:void(0)" id="homeLihatSemuaJadwal" style="font-size:12px; font-weight:500; color:var(--blue); text-decoration:none;">Lihat semua</a>
+          <a href="javascript:void(0)" id="homeLihatSemuaJadwal" style="font-size:11px; font-weight:500; color:var(--blue); text-decoration:none;">Lihat semua</a>
         </div>
 
         <!-- Matrix Timetable Grid identik dengan Jadwal Mingguan Kontrak -->
@@ -516,22 +516,22 @@
         <!-- Popover Detail Preview Modal persis seperti di Kontrak -->
         <div id="home-jmPreviewModal" style="position:absolute; display:none; flex-direction:column; background:#fff; border-radius:16px; box-shadow:0 8px 24px rgba(20,22,43,.18); padding:10px 12px; max-width:250px; z-index:20; gap:8px; border:1px solid var(--border);">
           <div style="display:flex; align-items:center; gap:10px;">
-            <div id="home-jmPreviewAvatar" style="width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; color:#fff; flex:none;">-</div>
+            <div id="home-jmPreviewAvatar" style="width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:11px; color:#fff; flex:none;">-</div>
             <div style="min-width:0; flex:1;">
-              <div id="home-jmPreviewTutor" style="font-size:12px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
-              <div id="home-jmPreviewSiswa" style="font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
-              <div id="home-jmPreviewJadwal" style="font-size:10.5px; color:var(--ink-soft); font-family:monospace; margin-top:1px;">-</div>
+              <div id="home-jmPreviewTutor" style="font-size:11px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+              <div id="home-jmPreviewSiswa" style="font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+              <div id="home-jmPreviewJadwal" style="font-size:10px; color:var(--ink-soft); font-family:monospace; margin-top:1px;">-</div>
             </div>
             <button type="button" id="home-jmPreviewGotoBtn" aria-label="Lihat detail kontrak" style="width:28px; height:28px; border-radius:10px; background:#fff; border:1px solid var(--border); color:var(--ink); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#1c1c1e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
           </div>
           <div style="display:flex; flex-wrap:nowrap; gap:6px; width:100%;">
-            <a id="home-jmChatTutorBtn" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:0; background:rgba(52,199,89,.12); color:#1DB954; border-radius:999px; padding:5px 10px 5px 5px; font-size:10.5px; font-weight:500; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; overflow:hidden;">
+            <a id="home-jmChatTutorBtn" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:0; background:rgba(52,199,89,.12); color:#1DB954; border-radius:999px; padding:5px 10px 5px 5px; font-size:10px; font-weight:500; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; overflow:hidden;">
               <span style="width:18px; height:18px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="10" height="10" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>
               Chat Tutor
             </a>
-            <a id="home-jmChatOrtuBtn" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:0; background:rgba(52,199,89,.12); color:#1DB954; border-radius:999px; padding:5px 10px 5px 5px; font-size:10.5px; font-weight:500; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; overflow:hidden;">
+            <a id="home-jmChatOrtuBtn" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:0; background:rgba(52,199,89,.12); color:#1DB954; border-radius:999px; padding:5px 10px 5px 5px; font-size:10px; font-weight:500; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; overflow:hidden;">
               <span style="width:18px; height:18px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="10" height="10" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>
               Chat Ortu
             </a>
@@ -635,7 +635,7 @@
     var bg = isUp ? 'var(--green-soft)' : 'var(--red-soft)';
     var arrow = isUp ? '&#8593;' : '&#8595;';
     var sign = isUp ? '+' : '';
-    return '<span style="display:inline-flex; align-items:center; gap:2px; background:' + bg + '; color:' + color + '; font-size:10px; font-weight:600; padding:3px 8px; border-radius:999px; white-space:nowrap;">' + sign + pct.toFixed(1) + '% ' + arrow + '</span>';
+    return '<span style="display:inline-flex; align-items:center; gap:2px; background:' + bg + '; color:' + color + '; font-size:9.5px; font-weight:600; padding:3px 8px; border-radius:999px; white-space:nowrap;">' + sign + pct.toFixed(1) + '% ' + arrow + '</span>';
   }
   function homeSum(rows, field) {
     return rows.reduce(function (acc, r) { return acc + (parseFloat(r[field]) || 0); }, 0);
@@ -899,7 +899,7 @@
       renderJadwalTutorMatrix();
     } catch (err) {
       if (gridEl) {
-        gridEl.innerHTML = '<div style="padding:16px; text-align:center; color:var(--red); font-size:11.5px;">Gagal memuat jadwal tutor: ' + homeEsc(err.message) + '</div>';
+        gridEl.innerHTML = '<div style="padding:16px; text-align:center; color:var(--red); font-size:10.5px;">Gagal memuat jadwal tutor: ' + homeEsc(err.message) + '</div>';
       }
       if (legendEl) legendEl.innerHTML = '';
     }
@@ -957,7 +957,7 @@
       var tutorMap = {};
       homeJmSessions.forEach(function (s) { tutorMap[s.tutorId] = s.tutorNama; });
       legendEl.innerHTML = Object.keys(tutorMap).map(function (id) {
-        return '<span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:' + homeJmColorForTutor(id) + '; display:inline-block; flex:none;"></span><span style="font-size:10px; color:var(--ink-soft); white-space:nowrap;">' + homeEsc(tutorMap[id]) + '</span></span>';
+        return '<span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:' + homeJmColorForTutor(id) + '; display:inline-block; flex:none;"></span><span style="font-size:9.5px; color:var(--ink-soft); white-space:nowrap;">' + homeEsc(tutorMap[id]) + '</span></span>';
       }).join('');
     }
   }
@@ -1205,7 +1205,7 @@
 
       revealUnitTable();
     } catch (err) {
-      container.innerHTML = '<div style="padding:16px; text-align:center; color:var(--red); font-size:12px;">Gagal memuat data unit: ' + homeEsc(err.message) + '</div>';
+      container.innerHTML = '<div style="padding:16px; text-align:center; color:var(--red); font-size:11px;">Gagal memuat data unit: ' + homeEsc(err.message) + '</div>';
     }
   }
 
@@ -1243,7 +1243,7 @@
     var fg = isUp ? 'var(--green)' : 'var(--red)';
     var arrow = isUp ? '&#8593;' : '&#8595;';
     var sign = isUp ? '+' : '';
-    return '<span style="display:inline-block; background:' + bg + '; color:' + fg + '; font-weight:500; font-size:10px; padding:2px 8px; border-radius:999px; white-space:nowrap;">' + sign + pct.toFixed(1) + '% ' + arrow + '</span>';
+    return '<span style="display:inline-block; background:' + bg + '; color:' + fg + '; font-weight:500; font-size:9.5px; padding:2px 8px; border-radius:999px; white-space:nowrap;">' + sign + pct.toFixed(1) + '% ' + arrow + '</span>';
   }
 
   function homeTotalPill(current, previous, hasHistory, diffLabel) {
@@ -1254,7 +1254,7 @@
     var fg = isUp ? 'var(--green)' : 'var(--red)';
     var sign = isUp ? '+' : '';
     var text = sign + pct.toFixed(1) + '% vs Bulan Lalu' + (diffLabel ? ' (' + diffLabel + ')' : '');
-    return '<span style="display:inline-block; background:' + bg + '; color:' + fg + '; font-weight:500; font-size:10px; padding:3px 10px; border-radius:999px; white-space:nowrap;">' + text + '</span>';
+    return '<span style="display:inline-block; background:' + bg + '; color:' + fg + '; font-weight:500; font-size:9.5px; padding:3px 10px; border-radius:999px; white-space:nowrap;">' + text + '</span>';
   }
 
   function homeScramble(text) {
@@ -1282,19 +1282,19 @@
       var display = isMoney ? homeFormatRupiahSmart(val) : (val + unitLabel);
       if (scramble) display = homeScramble(display);
       var subLine = metric === 'pengeluaran'
-        ? ('<span style="color:var(--red); font-size:9.5px;">Gaji ' + homeFormatRupiahSmart(u.gaji) + ' &middot; Ops ' + homeFormatRupiahSmart(u.ops) + '</span>')
+        ? ('<span style="color:var(--red); font-size:9px;">Gaji ' + homeFormatRupiahSmart(u.gaji) + ' &middot; Ops ' + homeFormatRupiahSmart(u.ops) + '</span>')
         : ('<span style="color:var(--blue);">' + homeEsc(u.kepala) + '</span>');
       return '' +
         '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--surface); border-radius:10px; padding:6px 9px; margin-bottom:4px;">' +
           '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
-            '<div style="width:26px; height:26px; border-radius:8px; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:9.5px; flex:none;">U' + (idx + 1) + '</div>' +
+            '<div style="width:26px; height:26px; border-radius:8px; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:9px; flex:none;">U' + (idx + 1) + '</div>' +
             '<div style="min-width:0;">' +
-              '<div style="font-size:11.5px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Unit ' + (idx + 1) + ' &ndash; ' + homeEsc(u.nama_unit) + '</div>' +
-              '<div style="font-size:9.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + subLine + '</div>' +
+              '<div style="font-size:10.5px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Unit ' + (idx + 1) + ' &ndash; ' + homeEsc(u.nama_unit) + '</div>' +
+              '<div style="font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + subLine + '</div>' +
             '</div>' +
           '</div>' +
           '<div style="text-align:right; flex:none;">' +
-            '<div style="font-size:11px; font-weight:500; color:var(--ink); font-variant-numeric:tabular-nums; margin-bottom:2px;">' + display + '</div>' +
+            '<div style="font-size:10px; font-weight:500; color:var(--ink); font-variant-numeric:tabular-nums; margin-bottom:2px;">' + display + '</div>' +
             homePillDelta(val, prevVal, hasHistory) +
           '</div>' +
         '</div>';
@@ -1312,7 +1312,7 @@
       '<div style="background:var(--blue); border-radius:10px; padding:10px 12px; margin-top:4px;">' +
         '<div style="font-size:9px; font-weight:500; color:rgba(255,255,255,.75); text-transform:uppercase; letter-spacing:.02em; margin-bottom:4px;">' + UNIT_TOTAL_LABELS[metric] + '</div>' +
         '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">' +
-          '<div style="font-size:15px; font-weight:600; color:#fff; font-variant-numeric:tabular-nums;">' + totalDisplay + '</div>' +
+          '<div style="font-size:14px; font-weight:600; color:#fff; font-variant-numeric:tabular-nums;">' + totalDisplay + '</div>' +
           homeTotalPill(total, totalPrev, hasHistory, diffLabel) +
         '</div>' +
       '</div>';
