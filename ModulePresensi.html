@@ -268,6 +268,159 @@
   #ps-list.ps-view-table{
     display: block !important;
   }
+
+
+  /* ===== Status: pill tabel, menu pilihan, popup ubah status & tolak ===== */
+  .ps-table-status-btn{--st:#C27400; --sb:#FFF4E0; background:var(--sb) !important; border:1px solid transparent !important; color:var(--st) !important; font-weight:600 !important;}
+  .ps-table-status-btn[data-status="diterima"]{--st:#1E8E5A; --sb:#E9F7EF;}
+  .ps-table-status-btn[data-status="visit"]{--st:#2B59D9; --sb:#EAF0FF;}
+  .ps-table-status-btn[data-status="ditolak"]{--st:#D4070F; --sb:#FDEAEA;}
+  .ps-table-status-btn .ps-status-dot{background:var(--st) !important;}
+  .ps-table-status-btn .ps-status-arrow{opacity:.7 !important;}
+  .ps-table-status-btn:hover, .ps-table-status-btn.active{border-color:var(--st) !important; background:var(--sb) !important; box-shadow:none !important;}
+  .ps-status-dropdown-menu{border-radius:12px !important; padding:5px !important; min-width:176px !important; box-shadow:0 12px 32px -8px rgba(20,22,43,.18), 0 2px 6px rgba(20,22,43,.05) !important;}
+  .psd-head{font-size:9.5px; color:var(--ink-soft); padding:5px 8px 4px;}
+  .ps-status-dropdown-item{height:34px !important; padding:0 8px !important; border-radius:8px !important; justify-content:flex-start !important; gap:9px !important; font-size:11px !important;}
+  .ps-status-dropdown-item .psd-label{flex:1;}
+  .ps-status-dropdown-item.is-current{background:var(--surface);}
+  .psd-ico{width:22px; height:22px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; flex:none;}
+  .psd-diterima{background:#E9F7EF; color:#1E8E5A;}
+  .psd-visit{background:#EAF0FF; color:#2B59D9;}
+  .psd-ditolak{background:#FDEAEA; color:#D4070F;}
+  .ps-status-dropdown-item[data-status="ditolak"] .psd-label{color:#D4070F;}
+  .psd-check{color:var(--blue); font-size:13px;}
+  #ps-editStatusModal .pse-sheet, #ps-tolakModal .modal-sheet{max-width:380px !important;}
+  #ps-editStatusModal h3, #ps-tolakModal h3{font-size:13.5px !important; font-weight:600 !important;}
+  .pse-sub{font-size:10.5px !important; color:var(--ink-soft) !important; margin:2px 0 12px !important;}
+  .pse-note{display:flex; gap:7px; align-items:flex-start; background:var(--blue-tint); color:#2B2A8C; border-radius:9px; padding:8px 10px; font-size:10.5px; line-height:1.45; margin:8px 0 12px;}
+  .pse-note i{font-size:13px; margin-top:1px; flex:none;}
+  .pse-note b{font-weight:600;}
+  .pse-label{display:flex !important; align-items:center; gap:6px; font-size:10.5px !important; font-weight:500 !important; color:var(--ink-soft) !important; margin:0 0 6px !important;}
+  .pse-req{font-style:normal; font-size:9px; font-weight:600; border-radius:999px; padding:1px 6px; background:var(--red-soft); color:var(--red);}
+  .pse-opts{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  #ps-editStatusModal .ps-editstatus-opt{flex-direction:column !important; height:auto !important; padding:11px 6px !important; gap:6px !important; background:#fff; border:1px solid var(--border) !important; border-radius:10px !important; font-size:11px !important; font-weight:600 !important;}
+  #ps-editStatusModal .ps-editstatus-icon{width:26px; height:26px; border-radius:50%; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:13px; transition:background .15s ease, color .15s ease;}
+  .pse-textarea{width:100%; box-sizing:border-box; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:8px 11px; font-family:var(--font); font-size:11.5px; line-height:1.5; resize:vertical; color:var(--ink);}
+  .pse-textarea:focus{outline:none; border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #ps-editStatusModal .modal-actions .btn, #ps-tolakModal .modal-actions .btn{height:34px !important; font-size:11.5px !important;}
+  #ps-tolakConfirmBtn{background:var(--red) !important; border-color:var(--red) !important; color:#fff !important;}
+  #ps-tolakConfirmBtn:hover{filter:brightness(.94);}
+
+  /* ===== Animasi masuk ===== */
+  @keyframes psIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes psRowIn{from{opacity:0;} to{opacity:1;}}
+  @keyframes psPopIn{0%{transform:scale(.6);} 60%{transform:scale(1.12);} 100%{transform:scale(1);}}
+  #ps-list > .pc2-card.ps-in{animation:psIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #ps-list .ps-table tbody tr.ps-in td{animation:psRowIn .35s ease both; animation-delay:calc(var(--i) * 30ms);}
+  .pc2-card{transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .pc2-card:hover{transform:translateY(-1px);}
+  .pc2-btn{transition:background .15s ease, filter .15s ease, transform .1s ease;}
+  .pc2-btn:active, .pc2-lamp-btn:active, .pc2-icon-btn:active{transform:scale(.96);}
+  .pc2-lamp-btn, .pc2-icon-btn{transition:background .15s ease, transform .1s ease;}
+  #ps-editStatusModal .ps-editstatus-opt{transition:background .18s ease, border-color .18s ease, color .18s ease, transform .1s ease;}
+  #ps-editStatusModal .ps-editstatus-opt:active{transform:scale(.97);}
+  #ps-editStatusModal .ps-editstatus-opt.is-active .ps-editstatus-icon{animation:psPopIn .3s cubic-bezier(.34,1.56,.64,1);}
+  .ps-table-status-btn{transition:border-color .15s ease, transform .1s ease !important;}
+  @media (prefers-reduced-motion: reduce){
+    #ps-list > .pc2-card.ps-in, #ps-list .ps-table tbody tr.ps-in td, #ps-editStatusModal .ps-editstatus-icon{animation:none !important;}
+    .pc2-card:hover{transform:none;}
+  }
+  /* ===== Popup isi presensi untuk tutor ===== */
+  #ps-wakilModal .pw-sheet{max-width:440px !important; padding:0 !important; display:flex; flex-direction:column; max-height:88vh; overflow:hidden;}
+  #ps-wakilModal .pw-head{display:flex; align-items:center; gap:11px; padding:16px 18px 12px; border-bottom:1px solid var(--border);}
+  #ps-wakilModal .pw-head-ico{width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
+  #ps-wakilModal .pw-head h3{font-size:13.5px !important; font-weight:600 !important; margin:0 !important; line-height:1.3;}
+  #ps-wakilModal .pw-sub{font-size:10.5px !important; color:var(--ink-soft) !important; margin:2px 0 0 !important;}
+  #ps-wakilModal .pw-body{padding:12px 18px 6px; overflow-y:auto; flex:1;}
+  #ps-wakilModal .pw-note{display:flex; gap:7px; align-items:flex-start; background:var(--blue-tint); color:#2B2A8C; border-radius:9px; padding:8px 10px; font-size:10.5px; line-height:1.45;}
+  #ps-wakilModal .pw-note i{font-size:13px; margin-top:1px; flex:none;}
+  #ps-wakilModal .pw-note b{font-weight:600;}
+  #ps-wakilModal .ps-wakil-group-title{display:flex !important; align-items:center; gap:7px; font-size:11px !important; font-weight:600 !important; margin:16px 0 8px !important;}
+  #ps-wakilModal .pw-step{width:17px; height:17px; border-radius:50%; background:var(--ink); color:#fff; font-size:9.5px; font-weight:600; display:inline-flex; align-items:center; justify-content:center;}
+  #ps-wakilModal .ps-wakil-row{padding:0 0 10px !important;}
+  #ps-wakilModal .ps-wakil-row > label, #ps-wakilModal .pw-2col label{font-size:10.5px !important; margin-bottom:5px !important; display:flex !important; align-items:center; gap:6px;}
+  #ps-wakilModal .pw-req, #ps-wakilModal .pw-opt{font-style:normal; font-size:9px; font-weight:600; border-radius:999px; padding:1px 6px;}
+  #ps-wakilModal .pw-req{background:var(--red-soft); color:var(--red);}
+  #ps-wakilModal .pw-opt{background:var(--surface); color:var(--ink-soft); font-weight:500;}
+  #ps-wakilModal .ps-wakil-row input:not([type="hidden"]):not([type="file"]),
+  #ps-wakilModal .ps-wakil-row textarea,
+  #ps-wakilModal .ps-wakil-row button[style*="width:100%"]{font-size:11.5px !important; min-height:34px !important; padding:7px 11px !important; border-radius:9px !important;}
+  #ps-wakilModal .ps-wakil-row button[style*="width:100%"]{color:var(--ink) !important;}
+  #ps-wakilModal .ps-wakil-row button[style*="width:100%"] i, #ps-wakilModal .ps-wakil-row button[style*="width:100%"] svg{color:var(--ink-soft); font-size:13px; flex:none;}
+  #ps-wakilModal .ps-wakil-row textarea{min-height:68px !important; line-height:1.5; resize:vertical;}
+  #ps-wakilModal .pw-2col{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  #ps-wakilModal .pw-file{position:relative; display:flex !important; align-items:center; gap:10px; margin:0 !important; padding:9px 11px; border:1px dashed #C9CCDA; border-radius:10px; background:#fff; cursor:pointer; transition:border-color .15s ease, background .15s ease;}
+  #ps-wakilModal .pw-file:hover{border-color:var(--blue); background:#FAFAFF;}
+  #ps-wakilModal .pw-file:focus-within{border-color:var(--blue); box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #ps-wakilModal .pw-file input[type="file"]{position:absolute !important; inset:0; width:100% !important; height:100% !important; opacity:0; cursor:pointer; padding:0 !important; border:0 !important;}
+  #ps-wakilModal .pw-file-ico{width:30px; height:30px; border-radius:8px; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:15px; flex:none;}
+  #ps-wakilModal .pw-file-t{min-width:0; display:flex; flex-direction:column;}
+  #ps-wakilModal .pw-file-t b{font-size:11px; font-weight:600; color:var(--blue);}
+  #ps-wakilModal .pw-file-t small{font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  #ps-wakilModal .pw-foot{padding:12px 18px 14px !important; margin:0 !important; border-top:1px solid var(--border); background:#fff;}
+  #ps-wakilModal .pw-foot .btn{height:34px !important; font-size:11.5px !important;}
+  #ps-wakilModal .alert{margin:10px 0 0 !important;}
+  /* ===== Kartu presensi (grid) ===== */
+  .pc2-card{padding:14px 16px 14px; border-radius:14px !important; margin-bottom:12px; transition:box-shadow .15s ease, border-color .15s ease;}
+  .pc2-card:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12);}
+  .pc2-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .pc2-who{min-width:0; flex:1;}
+  .pc2-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .pc2-who p{font-size:10.5px; color:var(--ink-soft); margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .pc2-status{display:inline-flex; align-items:center; gap:5px; flex:none; font-size:10px; font-weight:600; color:var(--st); background:color-mix(in srgb, var(--st) 11%, #fff); padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .pc2-status i{width:6px; height:6px; border-radius:50%; background:var(--st);}
+  .pc2-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px;}
+  .pc2-chip{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:var(--ink); background:var(--surface); border-radius:8px; padding:4px 8px; white-space:nowrap;}
+  .pc2-chip i{font-size:12px; color:var(--ink-soft);}
+  .pc2-chip.is-late{background:#FFF4E0; color:#B86E00;} .pc2-chip.is-late i{color:#B86E00;}
+  .pc2-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .pc2-honor{min-width:0;}
+  .pc2-honor span{display:block; font-size:10px; color:var(--ink-soft);}
+  .pc2-honor b{display:block; font-size:13px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; margin-top:1px;}
+  .pc2-foot-r{display:flex; align-items:center; gap:6px; flex:none;}
+  .pc2-lamp-btn{display:inline-flex; align-items:center; gap:5px; height:28px; padding:0 9px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:10.5px; font-weight:500; cursor:pointer;}
+  .pc2-lamp-btn i{font-size:12px; color:var(--ink-soft);}
+  .pc2-lamp-btn em{font-style:normal; font-size:9.5px; font-weight:600; background:var(--blue-tint); color:var(--blue); border-radius:999px; padding:0 6px; line-height:16px;}
+  .pc2-lamp-btn:hover, .pc2-lamp-btn.is-open{background:var(--surface);}
+  .pc2-icon-btn{width:28px; height:28px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; padding:0;}
+  .pc2-icon-btn:hover{background:var(--surface); color:var(--ink);}
+  .pc2-lampiran{padding-top:10px;}
+  .pc2-laporan{background:var(--surface); border-radius:9px; padding:8px 10px; margin-bottom:6px;}
+  .pc2-laporan span{display:block; font-size:9.5px; color:var(--ink-soft); margin-bottom:2px;}
+  .pc2-laporan p{font-size:10.5px; color:var(--ink); line-height:1.5; margin:0;}
+  .pc2-lamp-item{padding:7px 10px; border-radius:9px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;}
+  .pc2-lamp-item > div{font-size:11px !important; color:var(--ink) !important; gap:9px !important;}
+  .pc2-lamp-item > div > svg{box-sizing:content-box; padding:6px; background:var(--surface); border-radius:7px; stroke:var(--ink-soft); flex:none;}
+  .pc2-lamp-item .ps-lampiran-action-btn{width:auto !important; min-width:0 !important; height:26px !important; padding:0 10px !important; border-radius:7px !important; background:#fff !important; font-size:10.5px !important; font-weight:600 !important; color:var(--blue) !important; border:1px solid var(--border) !important;}
+  .pc2-lamp-item .ps-lampiran-action-btn:hover{background:var(--blue-tint) !important; border-color:rgba(28,26,175,.25) !important;}
+  .pc2-lampiran{animation:pc2In .25s ease both;}
+  @keyframes pc2In{from{opacity:0; transform:translateY(-4px);}to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .pc2-lampiran{animation:none;} }
+  .pc2-actions{display:grid; grid-template-columns:1fr 1fr 1.3fr; gap:6px; margin-top:12px;}
+  .pc2-btn{height:34px !important; border-radius:9px !important; font-family:var(--font); font-size:11px !important; font-weight:600 !important; gap:5px !important; padding:0 6px !important;}
+  .pc2-btn i{font-size:13px;}
+  .pc2-btn.is-tolak{background:#fff; color:var(--red); border:1px solid rgba(212,7,15,.22) !important;}
+  .pc2-btn.is-tolak:hover{background:var(--red-soft);}
+  .pc2-btn.is-visit{background:#fff; color:var(--ink); border:1px solid var(--border) !important;}
+  .pc2-btn.is-visit:hover{background:var(--surface);}
+  .pc2-btn.is-setuju{background:var(--blue); color:#fff; border:1px solid var(--blue) !important;}
+  .pc2-btn.is-setuju:hover{filter:brightness(1.08);}
+
+  /* ===== Tabel presensi ===== */
+  .ps-table-card{border:1px solid var(--border) !important; border-radius:14px !important; box-shadow:none !important;}
+  .ps-table th{background:#fff !important; border-bottom:1px solid var(--border) !important; text-transform:none !important; letter-spacing:0 !important; font-size:10.5px !important; padding:11px 12px !important;}
+  .ps-table td{padding:10px 12px !important; font-size:11px !important; border-bottom:1px solid #EEF0F6 !important;}
+  .ps-table td span{font-size:11px !important;}
+  .ps-table tbody tr:hover{background:#F8F9FD !important;}
+  .ps-table .pt2-tutor{display:flex; align-items:center; gap:8px;}
+  .ps-table .pt2-av{width:24px; height:24px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; font-size:10px !important; font-weight:600; flex:none;}
+  .ps-table .pt2-mapel{display:inline-block; background:var(--surface); border-radius:6px; padding:2px 7px; font-size:10.5px !important;}
+  .ps-table .pt2-late{display:inline-flex; align-items:center; gap:4px; background:#FFF4E0; color:#B86E00; border-radius:999px; padding:2px 8px; font-size:10px !important; font-weight:600;}
+  .ps-table .pt2-ok{color:var(--muted, #8A8EA5); font-size:10.5px !important;}
+  .ps-table .pt2-time{display:block; font-size:10px !important; color:var(--ink-soft);}
+  .ps-table-status-btn{height:24px !important; width:104px !important; min-width:104px !important; max-width:104px !important; font-size:10px !important; padding:0 8px !important;}
+  .ps-table-status-btn .ps-status-dot{width:6px !important; height:6px !important;}
+
   .ps-table-card{
     background: #fff;
     border: 1.5px solid var(--border);
@@ -644,16 +797,16 @@
   <!-- Modal Tolak (Popup Alasan Penolakan) -->
   <div class="modal-overlay" id="ps-tolakModal" hidden style="z-index:75;">
     <div class="modal-sheet" style="max-width:360px;">
-      <h3>Tolak Presensi</h3>
-      <p style="font-size:10px; color:var(--ink-soft); margin:0 0 10px;">Jelaskan alasan penolakan supaya tutor tahu apa yang perlu diperbaiki.</p>
+      <h3>Tolak presensi</h3>
+      <p class="pse-sub">Jelaskan alasan penolakan supaya tutor tahu apa yang perlu diperbaiki.</p>
       <div id="ps-tolakAlert" class="alert alert-error" hidden></div>
       <div class="field">
-        <label for="ps-tolakCatatan" style="font-size:9.5px; font-weight:500; color:var(--ink-soft); margin-bottom:3px; display:block;">Catatan Penolakan</label>
-        <textarea id="ps-tolakCatatan" rows="3" placeholder="mis. Foto bukti kurang jelas, mohon unggah ulang." style="width:100%; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-family:var(--font); font-size:10.5px; resize:vertical; box-sizing:border-box;"></textarea>
+        <label for="ps-tolakCatatan" class="pse-label">Catatan penolakan <em class="pse-req">wajib</em></label>
+        <textarea id="ps-tolakCatatan" class="pse-textarea" rows="3" placeholder="mis. Foto bukti kurang jelas, mohon unggah ulang."></textarea>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-outline" id="ps-tolakCancelBtn">Batal</button>
-        <button type="button" class="btn btn-primary" id="ps-tolakConfirmBtn" style="background:var(--red);">Tolak Presensi</button>
+        <button type="button" class="btn btn-primary" id="ps-tolakConfirmBtn" style="background:var(--red); border-color:var(--red);">Tolak presensi</button>
       </div>
     </div>
   </div>
@@ -753,37 +906,37 @@
 
   <!-- Modal Edit Status Presensi (khusus Riwayat, Manajer) -->
   <div class="modal-overlay" id="ps-editStatusModal" hidden>
-    <div class="modal-sheet">
-      <h3>Ubah Status Presensi</h3>
-      <p style="font-size:10px; color:var(--ink-soft); margin:0 0 10px;">Nominal akan dihitung ulang memakai aturan Pengaturan yang berlaku <b>sekarang</b>, bukan aturan saat presensi aslinya terjadi.</p>
+    <div class="modal-sheet pse-sheet">
+      <h3>Ubah status presensi</h3>
+      <div class="pse-note"><i class="ph ph-info" aria-hidden="true"></i><span>Nominal dihitung ulang memakai aturan Pengaturan yang berlaku <b>sekarang</b>, bukan aturan saat presensi terjadi.</span></div>
       <div id="ps-editStatusAlert" class="alert alert-error" hidden></div>
 
       <div class="field">
-        <label style="font-size:9.5px; font-weight:500; color:var(--ink-soft); margin-bottom:4px; display:block;">Pilih Status Baru</label>
-        <div style="display:flex; gap:8px;">
-          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="diterima" style="background:var(--surface); color:var(--ink); border:1px solid transparent;">
-            <span class="ps-editstatus-icon" style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            Diterima
+        <label class="pse-label">Status baru</label>
+        <div class="pse-opts">
+          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="diterima">
+            <span class="ps-editstatus-icon"><i class="ph ph-check" aria-hidden="true"></i></span>
+            Disetujui
           </button>
-          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="visit" style="background:var(--surface); color:var(--ink); border:1px solid transparent;">
-            <span class="ps-editstatus-icon" style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            Visit
+          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="visit">
+            <span class="ps-editstatus-icon"><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+            Telah visit
           </button>
-          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="ditolak" style="background:var(--surface); color:var(--ink); border:1px solid transparent;">
-            <span class="ps-editstatus-icon" style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
-            Tolak
+          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="ditolak">
+            <span class="ps-editstatus-icon"><i class="ph ph-x" aria-hidden="true"></i></span>
+            Ditolak
           </button>
         </div>
       </div>
 
       <div class="field" id="ps-editStatusCatatanWrap" hidden>
-        <label for="ps-editStatusCatatan" style="font-size:9.5px; font-weight:500; color:var(--ink-soft); margin-bottom:3px; display:block;">Catatan Penolakan</label>
-        <textarea id="ps-editStatusCatatan" rows="3" placeholder="Alasan penolakan..." style="width:100%; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-family:var(--font); font-size:10.5px; resize:vertical; box-sizing:border-box;"></textarea>
+        <label for="ps-editStatusCatatan" class="pse-label">Catatan penolakan <em class="pse-req">wajib</em></label>
+        <textarea id="ps-editStatusCatatan" class="pse-textarea" rows="3" placeholder="Alasan penolakan..."></textarea>
       </div>
 
       <div class="modal-actions">
         <button type="button" class="btn btn-outline" id="ps-editStatusCancelBtn">Batal</button>
-        <button type="button" class="btn btn-primary" id="ps-editStatusSaveBtn">Simpan Perubahan</button>
+        <button type="button" class="btn btn-primary" id="ps-editStatusSaveBtn">Simpan perubahan</button>
       </div>
     </div>
   </div>
@@ -848,82 +1001,97 @@
 
   <!-- Modal Isi Presensi untuk Tutor (diwakilkan) -->
   <div class="modal-overlay" id="ps-wakilModal" hidden>
-    <div class="modal-sheet" style="max-height:86vh; overflow-y:auto;">
-      <h3>Isi Presensi untuk Tutor</h3>
-      <p style="font-size:10px; color:var(--ink-soft); margin:0 0 10px;">Untuk tutor yang kendala teknis mengisi presensi. Presensi ini otomatis berstatus <b>Diterima</b>, tanpa denda keterlambatan.</p>
-      <div id="ps-wakilAlert" class="alert alert-error" hidden></div>
-
-      <div class="ps-wakil-group-title">Tutor &amp; Jadwal</div>
-      <div class="ps-wakil-group">
-        <div class="ps-wakil-row">
-          <label for="ps-wakilTutorBtn">Pilih Tutor</label>
-          <button type="button" id="ps-wakilTutorBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:10.5px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ps-wakilTutorLabel">Memuat daftar tutor...</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-          </button>
-          <input type="hidden" id="ps-wakilTutor">
-        </div>
-        <div class="ps-wakil-row">
-          <label for="ps-wakilKontrakBtn">Pilih Kontrak / Jadwal</label>
-          <button type="button" id="ps-wakilKontrakBtn" disabled style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:10.5px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ps-wakilKontrakLabel">Pilih tutor dulu</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-          </button>
-          <input type="hidden" id="ps-wakilKontrak">
+    <div class="modal-sheet pw-sheet">
+      <div class="pw-head">
+        <span class="pw-head-ico"><i class="ph ph-user-plus" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Isi presensi untuk tutor</h3>
+          <p class="pw-sub">Untuk tutor yang kendala teknis mengisi presensi.</p>
         </div>
       </div>
 
-      <div class="ps-wakil-group-title">Waktu Pelaksanaan</div>
-      <div class="ps-wakil-group">
-        <div class="ps-wakil-row" style="display:flex; gap:12px;">
-          <div style="flex:1;">
-            <label for="ps-wakilTanggalBtn">Tanggal</label>
-            <button type="button" id="ps-wakilTanggalBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:10.5px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-              <span id="ps-wakilTanggalLabel">Pilih tanggal...</span>
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <div class="pw-body">
+        <div class="pw-note"><i class="ph ph-info" aria-hidden="true"></i><span>Presensi ini langsung berstatus <b>diterima</b> dan tidak kena denda keterlambatan.</span></div>
+        <div id="ps-wakilAlert" class="alert alert-error" hidden></div>
+
+        <div class="ps-wakil-group-title"><span class="pw-step">1</span>Tutor dan jadwal</div>
+        <div class="ps-wakil-group">
+          <div class="ps-wakil-row">
+            <label for="ps-wakilTutorBtn">Tutor</label>
+            <button type="button" id="ps-wakilTutorBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ps-wakilTutorLabel">Memuat daftar tutor...</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
             </button>
-            <input type="hidden" id="ps-wakilTanggal">
+            <input type="hidden" id="ps-wakilTutor">
           </div>
-          <div style="flex:1; border-left:1px solid var(--border); padding-left:12px;">
-            <label for="ps-wakilJamBtn">Jam Mulai</label>
-            <button type="button" id="ps-wakilJamBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:10.5px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-              <span id="ps-wakilJamLabel">Pilih jam...</span>
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+          <div class="ps-wakil-row">
+            <label for="ps-wakilKontrakBtn">Kontrak dan jadwal</label>
+            <button type="button" id="ps-wakilKontrakBtn" disabled style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ps-wakilKontrakLabel">Pilih tutor dulu</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
             </button>
-            <input type="hidden" id="ps-wakilJam">
+            <input type="hidden" id="ps-wakilKontrak">
           </div>
         </div>
+
+        <div class="ps-wakil-group-title"><span class="pw-step">2</span>Waktu pelaksanaan</div>
+        <div class="ps-wakil-group">
+          <div class="ps-wakil-row pw-2col">
+            <div>
+              <label for="ps-wakilTanggalBtn">Tanggal</label>
+              <button type="button" id="ps-wakilTanggalBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+                <span id="ps-wakilTanggalLabel">Pilih tanggal...</span>
+                <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+              </button>
+              <input type="hidden" id="ps-wakilTanggal">
+            </div>
+            <div>
+              <label for="ps-wakilJamBtn">Jam mulai</label>
+              <button type="button" id="ps-wakilJamBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+                <span id="ps-wakilJamLabel">Pilih jam...</span>
+                <i class="ph ph-clock" aria-hidden="true"></i>
+              </button>
+              <input type="hidden" id="ps-wakilJam">
+            </div>
+          </div>
+        </div>
+
+        <div class="ps-wakil-group-title"><span class="pw-step">3</span>Laporan pembelajaran</div>
+        <div class="ps-wakil-group">
+          <div class="ps-wakil-row">
+            <label for="ps-wakilMateri">Ringkasan sesi <em class="pw-req">wajib</em></label>
+            <textarea id="ps-wakilMateri" rows="3" placeholder="Ringkasan materi dan perkembangan siswa selama sesi ini."></textarea>
+          </div>
+        </div>
+
+        <div class="ps-wakil-group-title"><span class="pw-step">4</span>Lampiran</div>
+        <div class="ps-wakil-group">
+          <div class="ps-wakil-row">
+            <label for="ps-wakilFotoFile">Dokumentasi presensi <em class="pw-req">wajib</em></label>
+            <label class="pw-file" for="ps-wakilFotoFile">
+              <span class="pw-file-ico"><i class="ph ph-image" aria-hidden="true"></i></span>
+              <span class="pw-file-t"><b>Pilih foto</b><small id="ps-wakilFotoStatus">JPG atau PNG, foto saat sesi berlangsung</small></span>
+              <input type="file" id="ps-wakilFotoFile" accept="image/*" required>
+            </label>
+          </div>
+          <div class="ps-wakil-row">
+            <label for="ps-wakilLink">Tautan materi belajar <em class="pw-opt">opsional</em></label>
+            <input type="url" id="ps-wakilLink" placeholder="https://...">
+          </div>
+          <div class="ps-wakil-row">
+            <label for="ps-wakilCatatanFile">Catatan pembelajaran <em class="pw-opt">opsional</em></label>
+            <label class="pw-file" for="ps-wakilCatatanFile">
+              <span class="pw-file-ico"><i class="ph ph-file-text" aria-hidden="true"></i></span>
+              <span class="pw-file-t"><b>Pilih berkas</b><small id="ps-wakilCatatanStatus">Foto atau PDF catatan tutor</small></span>
+              <input type="file" id="ps-wakilCatatanFile" accept="image/*,.pdf">
+            </label>
+          </div>
+        </div>
       </div>
 
-      <div class="ps-wakil-group-title">Laporan Pembelajaran</div>
-      <div class="ps-wakil-group">
-        <div class="ps-wakil-row">
-          <label for="ps-wakilMateri">Ringkasan Sesi (wajib)</label>
-          <textarea id="ps-wakilMateri" rows="3" placeholder="Ringkasan materi/perkembangan siswa selama sesi ini."></textarea>
-        </div>
-      </div>
-
-      <div class="ps-wakil-group-title">Lampiran (Opsional)</div>
-      <div class="ps-wakil-group">
-        <div class="ps-wakil-row">
-          <label for="ps-wakilLink">Tautan Materi Belajar</label>
-          <input type="url" id="ps-wakilLink" placeholder="https://...">
-        </div>
-        <div class="ps-wakil-row">
-          <label for="ps-wakilFotoFile">Dokumentasi Presensi (wajib)</label>
-          <input type="file" id="ps-wakilFotoFile" accept="image/*" required>
-          <div id="ps-wakilFotoStatus" style="font-size:10px; color:var(--ink-soft); margin-top:4px;"></div>
-        </div>
-        <div class="ps-wakil-row">
-          <label for="ps-wakilCatatanFile">Catatan Pembelajaran</label>
-          <input type="file" id="ps-wakilCatatanFile" accept="image/*,.pdf">
-          <div id="ps-wakilCatatanStatus" style="font-size:10px; color:var(--ink-soft); margin-top:4px;"></div>
-        </div>
-      </div>
-
-      <div class="modal-actions">
+      <div class="modal-actions pw-foot">
         <button type="button" class="btn btn-outline" id="ps-wakilCancelBtn">Batal</button>
-        <button type="button" class="btn btn-primary" id="ps-wakilSaveBtn">Simpan Presensi</button>
+        <button type="button" class="btn btn-primary" id="ps-wakilSaveBtn">Simpan presensi</button>
       </div>
     </div>
   </div>
@@ -1076,7 +1244,7 @@
       psState.sortDir = (psState.sortDir === 'asc') ? 'desc' : 'asc';
       psState.sortAsc = (psState.sortDir === 'asc');
       document.getElementById('ps-sortLabel').textContent = psState.sortAsc ? 'Terlama' : 'Terbaru';
-      psRenderList();
+      psRenderList(true);
     };
 
     var viewToggleBtn = document.getElementById('ps-viewToggleBtn');
@@ -1341,7 +1509,7 @@
     } else {
       sectionLabel.innerHTML = '<div class="ps-section-title">Riwayat presensi</div><div class="ps-section-sub">Periode ' + psEscape(document.getElementById('ps-periodeLabel').textContent) + '</div>';
     }
-    psRenderList();
+    psRenderList(true);
   }
 
   function psEscape(str) {
@@ -1463,7 +1631,7 @@
       var diterimaPct = totalPresensi ? Math.round((diterimaCount / totalPresensi) * 100) : 0;
       var telatCount = periodeRows.filter(function (r) { return r.terlambat; }).length;
 
-      document.getElementById('ps-heroTotal').textContent = totalPresensi;
+      psCountUp(document.getElementById('ps-heroTotal'), totalPresensi);
       document.getElementById('ps-heroValidasi').textContent = diterimaPct + '%';
       document.getElementById('ps-heroValidasiCount').textContent = diterimaCount + ' dari ' + totalPresensi + ' presensi';
       document.getElementById('ps-heroTelat').textContent = telatCount + ' Presensi';
@@ -1481,7 +1649,7 @@
       document.getElementById('ps-approvalCount').textContent = psState.approvalRows.length;
       document.getElementById('ps-riwayatCount').textContent = periodeRows.length;
 
-      psRenderList();
+      psRenderList(true);
     } catch (err) {
       listEl.innerHTML = '<div class="ps-card ps-full-width" style="padding:40px 20px; text-align:center; color:#8e8e93; font-size:12px;">Gagal memuat presensi: ' + psEscape(err.message) + '</div>';
     }
@@ -1572,7 +1740,7 @@
     try {
       localStorage.setItem('genio_ps_view_mode', psState.viewMode);
     } catch (e) {}
-    psRenderList();
+    psRenderList(true);
   }
 
   function psGetSortIcon(field) {
@@ -1664,7 +1832,7 @@
     psState.sortAsc = (psState.sortDir === 'asc');
     var sortLabel = document.getElementById('ps-sortLabel');
     if (sortLabel) sortLabel.textContent = (psState.sortField === 'tanggal' && psState.sortAsc) ? 'Terlama' : 'Terbaru';
-    psRenderList();
+    psRenderList(true);
   }
 
   function psFindRow(id) {
@@ -1777,57 +1945,19 @@
     var isApproval = (psState.tab === 'approval');
     var itemsEl = document.getElementById('ps-statusDropdownItems');
 
-    var checkSvg = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--blue)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><polyline points="20 6 9 17 4 12"/></svg>';
-
-    var html = '';
-    if (isApproval) {
-      html =
-        '<button type="button" class="ps-status-dropdown-item" data-status="diterima">' +
-          '<div style="display:flex; align-items:center; gap:8px;">' +
-            '<span style="width:7px; height:7px; border-radius:50%; background:#34c759; flex:none;"></span>' +
-            '<span>Setujui</span>' +
-          '</div>' +
-        '</button>' +
-        '<button type="button" class="ps-status-dropdown-item" data-status="visit">' +
-          '<div style="display:flex; align-items:center; gap:8px;">' +
-            '<span style="width:7px; height:7px; border-radius:50%; background:#007aff; flex:none;"></span>' +
-            '<span>Visit</span>' +
-          '</div>' +
-        '</button>' +
-        '<button type="button" class="ps-status-dropdown-item" data-status="ditolak" style="color:var(--red);">' +
-          '<div style="display:flex; align-items:center; gap:8px;">' +
-            '<span style="width:7px; height:7px; border-radius:50%; background:#ff3b30; flex:none;"></span>' +
-            '<span>Tolak</span>' +
-          '</div>' +
+    var checkSvg = '<i class="ph ph-check psd-check" aria-hidden="true"></i>';
+    var opts = isApproval
+      ? [['diterima', 'Setujui', 'check'], ['visit', 'Visit', 'arrow-right'], ['ditolak', 'Tolak', 'x']]
+      : [['diterima', 'Disetujui', 'check'], ['visit', 'Telah visit', 'arrow-right'], ['ditolak', 'Ditolak', 'x']];
+    var html = '<div class="psd-head">' + (isApproval ? 'Verifikasi presensi' : 'Ubah status') + '</div>' +
+      opts.map(function (o) {
+        var cur = !isApproval && currentStatus === o[0];
+        return '<button type="button" class="ps-status-dropdown-item' + (cur ? ' is-current' : '') + '" data-status="' + o[0] + '">' +
+          '<span class="psd-ico psd-' + o[0] + '"><i class="ph ph-' + o[2] + '" aria-hidden="true"></i></span>' +
+          '<span class="psd-label">' + o[1] + '</span>' +
+          (cur ? checkSvg : '') +
         '</button>';
-    } else {
-      var isDiterima = (currentStatus === 'diterima');
-      var isVisit = (currentStatus === 'visit');
-      var isDitolak = (currentStatus === 'ditolak');
-
-      html =
-        '<button type="button" class="ps-status-dropdown-item" data-status="diterima">' +
-          '<div style="display:flex; align-items:center; gap:8px;">' +
-            '<span style="width:7px; height:7px; border-radius:50%; background:#34c759; flex:none;"></span>' +
-            '<span>Disetujui</span>' +
-          '</div>' +
-          (isDiterima ? checkSvg : '') +
-        '</button>' +
-        '<button type="button" class="ps-status-dropdown-item" data-status="visit">' +
-          '<div style="display:flex; align-items:center; gap:8px;">' +
-            '<span style="width:7px; height:7px; border-radius:50%; background:#007aff; flex:none;"></span>' +
-            '<span>Visit</span>' +
-          '</div>' +
-          (isVisit ? checkSvg : '') +
-        '</button>' +
-        '<button type="button" class="ps-status-dropdown-item" data-status="ditolak" style="' + (isDitolak ? 'color:var(--red);' : '') + '">' +
-          '<div style="display:flex; align-items:center; gap:8px;">' +
-            '<span style="width:7px; height:7px; border-radius:50%; background:#ff3b30; flex:none;"></span>' +
-            '<span>Ditolak</span>' +
-          '</div>' +
-          (isDitolak ? checkSvg : '') +
-        '</button>';
-    }
+      }).join('');
 
     itemsEl.innerHTML = html;
 
@@ -1845,14 +1975,14 @@
     menu.hidden = false;
 
     var rect = btn.getBoundingClientRect();
-    var menuWidth = 140;
+    var menuWidth = 176;
     var left = rect.left;
     if (left + menuWidth > window.innerWidth - 12) {
       left = window.innerWidth - menuWidth - 12;
     }
     if (left < 10) left = 10;
 
-    var menuHeight = 115;
+    var menuHeight = 150;
     var top = rect.bottom + 4;
     if (top + menuHeight > window.innerHeight - 10) {
       top = rect.top - menuHeight - 4;
@@ -1884,7 +2014,8 @@
     }
   }
 
-  function psRenderList() {
+  var PS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function psRenderList(animate) {
     var listEl = document.getElementById('ps-list');
     var rows = (psState.tab === 'approval' ? psState.approvalRows : psState.riwayatRows).filter(psMatchesSearch).filter(psMatchesFilters);
     rows = psSortRows(rows);
@@ -1911,6 +2042,35 @@
       listEl.innerHTML = rows.map(function (row) { return psRenderCard(row); }).join('');
     }
     psBindCardEvents();
+    if (animate && !PS_REDUCED_MOTION) psAnimateList(listEl);
+  }
+
+  // Kartu/baris muncul bergantian (fade + geser halus), hanya saat data baru dimuat atau tampilan diganti.
+  function psAnimateList(listEl) {
+    var items = listEl.classList.contains('ps-view-table')
+      ? listEl.querySelectorAll('.ps-table tbody tr')
+      : listEl.querySelectorAll(':scope > .pc2-card');
+    items.forEach(function (el, i) {
+      el.style.setProperty('--i', Math.min(i, 12));
+      el.classList.remove('ps-in');
+      void el.offsetWidth;
+      el.classList.add('ps-in');
+    });
+    clearTimeout(listEl._psAnimT);
+    listEl._psAnimT = setTimeout(function () {
+      items.forEach(function (el) { el.classList.remove('ps-in'); });
+    }, 1200);
+  }
+
+  function psCountUp(el, to) {
+    if (!el) return;
+    if (PS_REDUCED_MOTION || !to) { el.textContent = to; return; }
+    var t0 = performance.now(), dur = 650;
+    (function tick(t) {
+      var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(to * e);
+      if (k < 1) requestAnimationFrame(tick);
+    })(t0);
   }
 
   function psRenderTable(rows) {
@@ -1982,7 +2142,7 @@
           '</div>';
       } else {
         var dotColor = (row.status === 'diterima') ? '#34c759' : ((row.status === 'visit') ? '#007aff' : '#ff3b30');
-        var statusLabel = (row.status === 'diterima') ? 'Disetujui' : ((row.status === 'visit') ? 'Visit' : 'Ditolak');
+        var statusLabel = (row.status === 'diterima') ? 'Disetujui' : ((row.status === 'visit') ? 'Telah visit' : 'Ditolak');
 
         var sideBtnHtml = '';
         if (row.status === 'ditolak') {
@@ -2011,14 +2171,14 @@
       return '' +
         '<tr>' +
           '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10px; font-weight:400;">' + (idx + 1) + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink); font-size:10.5px; font-weight:400;">' + psEscape(psFormatTanggal(row.tanggal)) + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink); font-weight:500;">' + psEscape(psFormatTanggal(row.tanggal)) + '</td>' +
           '<td style="white-space:nowrap; color:var(--ink); font-size:10.5px; font-weight:400;">' + (row.jam ? row.jam.slice(0, 5) + ' WIB' : '-') + '</td>' +
-          '<td><span style="color:var(--ink); font-size:10.5px; font-weight:500; white-space:nowrap;">' + psEscape(tutorNama) + '</span></td>' +
+          '<td><span class="pt2-tutor"><span class="pt2-av">' + psEscape(tutorNama.charAt(0)) + '</span><span style="color:var(--ink); font-weight:600; white-space:nowrap;">' + psEscape(tutorNama) + '</span></span></td>' +
           '<td><span style="color:var(--ink); font-size:10.5px; font-weight:400; white-space:nowrap;">' + psEscape(siswaNama) + '</span></td>' +
-          '<td><span style="color:var(--ink); font-size:10.5px; font-weight:400; white-space:nowrap;">' + psEscape(mapel) + '</span></td>' +
-          '<td><span style="color:var(--ink); font-size:10.5px; font-weight:400; white-space:nowrap;">' + psEscape(unitNama) + '</span></td>' +
-          '<td style="text-align:right; white-space:nowrap;"><span style="color:var(--ink); font-size:10.5px; font-weight:500;">' + psFormatRp(honorVal) + '</span></td>' +
-          '<td style="text-align:center; white-space:nowrap; color:var(--ink); font-size:10.5px; font-weight:400;">' + (row.terlambat ? 'Ya' : 'Tidak') + '</td>' +
+          '<td><span class="pt2-mapel" style="white-space:nowrap;">' + psEscape(mapel) + '</span></td>' +
+          '<td><span style="color:var(--ink-soft); white-space:nowrap;">' + psEscape(unitNama) + '</span></td>' +
+          '<td style="text-align:right; white-space:nowrap;"><span style="color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums;">' + psFormatRp(honorVal) + '</span></td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + (row.terlambat ? '<span class="pt2-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat</span>' : '<span class="pt2-ok">Tepat waktu</span>') + '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + lampiranHtml + '</td>' +
           '<td style="text-align:center; white-space:nowrap; min-width:170px;">' + statusHtml + '</td>' +
         '</tr>';
@@ -2262,7 +2422,7 @@
     psState.filterTerlambat = document.getElementById('ps-filterTerlambat').checked;
     psUpdateFilterBadge();
     psCloseFilterModal();
-    psRenderList();
+    psRenderList(true);
   });
   document.getElementById('ps-filterResetBtn').addEventListener('click', function () {
     psState.filterUnit = ''; psState.filterTutor = []; psState.filterSiswa = []; psState.filterOrtu = [];
@@ -2271,14 +2431,14 @@
     psUpdateAllFilterSummaries();
     psUpdateFilterBadge();
     psCloseFilterModal();
-    psRenderList();
+    psRenderList(true);
   });
 
   var PS_STATUS_META = {
-    pending: { label: 'Menunggu', bg: 'rgba(255,149,0,.12)', color: '#ff9500', icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
-    diterima: { label: 'Disetujui', bg: 'rgba(52,199,89,.14)', color: '#28a745', icon: '<polyline points="20 6 9 17 4 12"/>' },
-    ditolak: { label: 'Ditolak', bg: 'rgba(255,59,48,.12)', color: '#ff3b30', icon: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' },
-    visit: { label: 'Telah Visit', bg: 'rgba(0,122,255,.12)', color: '#007aff', icon: '<path d="M5 12h14M12 5l7 7-7 7"/>' }
+    pending: { label: 'Menunggu', bg: '#FFF4E0', color: '#C27400', icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
+    diterima: { label: 'Disetujui', bg: '#E9F7EF', color: '#1E8E5A', icon: '<polyline points="20 6 9 17 4 12"/>' },
+    ditolak: { label: 'Ditolak', bg: '#FDEAEA', color: '#D4070F', icon: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' },
+    visit: { label: 'Telah visit', bg: '#EAF0FF', color: '#2B59D9', icon: '<path d="M5 12h14M12 5l7 7-7 7"/>' }
   };
 
   function psRenderCard(row) {
@@ -2335,13 +2495,13 @@
 
     var lampiranHtml = lampiranRows.map(function (item) {
       if (item.isPdf) {
-        return '<div style="padding:8px 10px; border-radius:8px; background:rgba(255,255,255,.9); border:1px solid rgba(0,0,0,.05); display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">' +
+        return '<div class="pc2-lamp-item">' +
           '<div style="display:flex; align-items:center; gap:6px; min-width:0; font-size:10px; color:#1c1c1e; font-weight:500;">' + item.icon + '<span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + item.label + '</span></div>' +
           '<button type="button" class="ps-download-pdf-btn ps-lampiran-action-btn" data-id="' + item.rowId + '" style="' + lampiranBtnStyle + '">' + item.btnLabel + '</button>' +
         '</div>';
       }
       var subtitle = (tutor.nama || 'Tutor') + ' • ' + psFormatTanggal(row.tanggal);
-      return '<div style="padding:8px 10px; border-radius:8px; background:rgba(255,255,255,.9); border:1px solid rgba(0,0,0,.05); display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">' +
+      return '<div class="pc2-lamp-item">' +
         '<div style="display:flex; align-items:center; gap:6px; min-width:0; font-size:10px; color:#1c1c1e; font-weight:500;">' + item.icon + '<span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + item.label + '</span></div>' +
         '<button type="button" class="ps-preview-lampiran-btn ps-lampiran-action-btn" data-url="' + psEscape(row[item.field]) + '" data-title="' + psEscape(item.label) + '" data-sub="' + psEscape(subtitle) + '" style="' + lampiranBtnStyle + '">' + item.btnLabel + '</button>' +
       '</div>';
@@ -2351,37 +2511,23 @@
       ? '<div style="background:rgba(255,59,48,.08); color:#ff3b30; border-radius:8px; padding:8px 10px; font-size:10px; margin-top:6px;"><b>Catatan Penolakan:</b> ' + psEscape(row.catatan_approval) + '</div>'
       : '';
 
+    var lampiranCount = lampiranRows.length + (row.materi_teks ? 1 : 0);
     var lampiranSection =
-      '<div style="margin-top:8px;">' +
-        '<button class="ps-lampiran-toggle" data-id="' + row.id + '" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:8px 11px; font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer; font-family:var(--font);">' +
-          'Lampiran &amp; Laporan Mengajar' +
-          '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#8e8e93" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .25s ease; transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
-        '</button>' +
-        '<div class="ps-lampiran-wrap" data-id="' + row.id + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
-          '<div style="padding-top:8px;">' +
-            (row.materi_teks
-              ? '<div style="padding:8px 10px; border-radius:8px; background:rgba(255,255,255,.9); border:1px solid rgba(0,0,0,.05); margin-bottom:6px;"><span style="font-size:9px; font-weight:500; color:#8e8e93; text-transform:uppercase; letter-spacing:.03em; display:block; margin-bottom:2px;">Laporan Presensi:</span><p style="font-size:10px; color:#1c1c1e; line-height:1.5; margin:0;">' + psEscape(row.materi_teks) + '</p></div>'
-              : '') +
-            lampiranHtml +
-            catatanApprovalHtml +
-          '</div>' +
+      '<div class="ps-lampiran-wrap" data-id="' + row.id + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
+        '<div class="pc2-lampiran">' +
+          (row.materi_teks
+            ? '<div class="pc2-laporan"><span>Laporan presensi</span><p>' + psEscape(row.materi_teks) + '</p></div>'
+            : '') +
+          lampiranHtml +
+          catatanApprovalHtml +
         '</div>' +
       '</div>';
 
     var actionButtons = row.status === 'pending'
-      ? '<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:8px;">' +
-          '<button class="ps-action-btn" data-action="tolak" data-id="' + row.id + '" style="background:#fff; color:var(--red); border:1px solid rgba(212,7,15,.25); height:32px; border-radius:9px; font-size:11px; font-weight:500; font-family:var(--font);">' +
-            '<span style="width:14px; height:14px; border-radius:50%; background:var(--red); display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>' +
-            'Tolak' +
-          '</button>' +
-          '<button class="ps-action-btn" data-action="visit" data-id="' + row.id + '" style="background:var(--blue-tint); color:var(--blue); border:1px solid rgba(28,26,175,.18); height:32px; border-radius:9px; font-size:11px; font-weight:500; font-family:var(--font);">' +
-            '<span style="width:14px; height:14px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>' +
-            'Visit' +
-          '</button>' +
-          '<button class="ps-action-btn" data-action="setujui" data-id="' + row.id + '" style="background:var(--blue); color:#fff; border:1px solid var(--blue); height:32px; border-radius:9px; font-size:11px; font-weight:500; font-family:var(--font);">' +
-            '<span style="width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,.22); display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>' +
-            'Setujui' +
-          '</button>' +
+      ? '<div class="pc2-actions">' +
+          '<button class="ps-action-btn pc2-btn is-tolak" data-action="tolak" data-id="' + row.id + '"><i class="ph ph-x" aria-hidden="true"></i>Tolak</button>' +
+          '<button class="ps-action-btn pc2-btn is-visit" data-action="visit" data-id="' + row.id + '"><i class="ph ph-arrow-right" aria-hidden="true"></i>Visit</button>' +
+          '<button class="ps-action-btn pc2-btn is-setuju" data-action="setujui" data-id="' + row.id + '"><i class="ph ph-check" aria-hidden="true"></i>Setujui</button>' +
         '</div>'
       : '';
 
@@ -2390,49 +2536,34 @@
       var canEdit = psState.role === 'manajer';
       var canDelete = row.status === 'ditolak' && (psState.role === 'manajer' || psState.role === 'kepala_unit');
       editDeleteBtns =
-        (canEdit
-          ? '<button class="ps-edit-status-btn" data-id="' + row.id + '" style="background:#fff; color:var(--ink); border:1px solid var(--border); border-radius:10px; padding:0 10px; height:22px; font-size:10px; font-weight:500; cursor:pointer; flex:none; font-family:var(--font);">Edit</button>'
-          : '') +
-        (canDelete
-          ? '<button class="ps-delete-btn" data-id="' + row.id + '" aria-label="Hapus presensi" style="width:22px; height:22px; border-radius:10px; background:var(--surface); color:var(--ink-soft); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
-          : '');
+        (canEdit ? '<button class="ps-edit-status-btn pc2-icon-btn" data-id="' + row.id + '" aria-label="Ubah status" title="Ubah status"><i class="ph ph-pencil-simple" aria-hidden="true" style="pointer-events:none;"></i></button>' : '') +
+        (canDelete ? '<button class="ps-delete-btn pc2-icon-btn" data-id="' + row.id + '" aria-label="Hapus presensi" title="Hapus presensi"><i class="ph ph-trash" aria-hidden="true" style="pointer-events:none;"></i></button>' : '');
     }
 
-    var terlambatPill = row.terlambat
-      ? '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(255,149,0,.14); color:#ff9500; font-size:9px; font-weight:500; padding:0 8px; border-radius:999px; height:22px; box-sizing:border-box; flex:none;">' +
-          '<span style="width:12px; height:12px; border-radius:50%; background:#ff9500; display:flex; align-items:center; justify-content:center; flex:none;">' +
-            '<svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>' +
-          '</span>' +
-          'Terlambat' +
-        '</span>'
-      : '';
+    var terlambatChip = row.terlambat ? '<span class="pc2-chip is-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat</span>' : '';
+    var metodeChip = row.metode_input === 'diwakilkan' ? '<span class="pc2-chip"><i class="ph ph-user-switch" aria-hidden="true"></i>Diwakilkan</span>' : '';
 
     return '' +
-      '<div class="ps-card" style="padding:14px 16px; margin-bottom:12px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; flex-wrap:wrap;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
-            avatar +
-            '<div style="min-width:0; flex:1;">' +
-              '<h4 style="font-size:12px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">' + psEscape(tutor.nama || '-') + '</h4>' +
-              '<p style="font-size:10px; color:var(--ink-soft); font-weight:400; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Siswa: ' + psEscape(siswaNama) + (waktu.durasiMenit ? ' &bull; ' + waktu.durasiMenit + ' Mnt' : '') + '</p>' +
-            '</div>' +
+      '<div class="ps-card pc2-card' + (row.status === 'pending' ? ' is-pending' : '') + '">' +
+        '<div class="pc2-head">' +
+          avatar +
+          '<div class="pc2-who">' +
+            '<h4>' + psEscape(tutor.nama || '-') + '</h4>' +
+            '<p>' + psEscape(siswaNama) + ' &middot; ' + psEscape(kt.mapel || '-') + '</p>' +
           '</div>' +
-          '<div style="display:flex; align-items:center; gap:5px; flex:none;">' +
-            editDeleteBtns +
-            terlambatPill +
-            '<span class="ps-status-badge" style="background:' + statusMeta.bg + '; color:' + statusMeta.color + '; height:22px; box-sizing:border-box;">' +
-              '<span style="width:12px; height:12px; border-radius:50%; background:' + statusMeta.color + '; display:flex; align-items:center; justify-content:center; flex:none;">' +
-                '<svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' + statusMeta.icon + '</svg>' +
-              '</span>' +
-              statusMeta.label +
-            '</span>' +
-          '</div>' +
+          '<span class="pc2-status" style="--st:' + statusMeta.color + '; background:' + statusMeta.bg + ';"><i></i>' + statusMeta.label + '</span>' +
         '</div>' +
-        '<div style="border-top:1px solid var(--border); padding-top:8px; margin-top:12px;">' +
-          '<div class="ps-detail-row"><span>Mata Pelajaran:</span><span>' + psEscape(kt.mapel || '-') + '</span></div>' +
-          '<div class="ps-detail-row"><span>Waktu:</span><span>' + waktu.text + '</span></div>' +
-          '<div class="ps-detail-row"><span>Tanggal:</span><span>' + psFormatTanggal(row.tanggal) + '</span></div>' +
-          '<div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; margin-top:4px; border-top:1px solid var(--border); font-size:10.5px;"><span style="color:var(--ink-soft);">' + honorLabel + '</span><span style="font-weight:700; color:var(--ink); font-size:12px; font-variant-numeric:tabular-nums;">' + psFormatRp(honorValue) + '</span></div>' +
+        '<div class="pc2-chips">' +
+          '<span class="pc2-chip"><i class="ph ph-calendar-blank" aria-hidden="true"></i>' + psFormatTanggal(row.tanggal) + '</span>' +
+          '<span class="pc2-chip"><i class="ph ph-clock" aria-hidden="true"></i>' + waktu.text + (waktu.durasiMenit ? ' &middot; ' + waktu.durasiMenit + ' mnt' : '') + '</span>' +
+          terlambatChip + metodeChip +
+        '</div>' +
+        '<div class="pc2-foot">' +
+          '<div class="pc2-honor"><span>' + (row.status === 'pending' ? 'Estimasi honor' : 'Honor tutor') + '</span><b>' + psFormatRp(honorValue) + '</b></div>' +
+          '<div class="pc2-foot-r">' +
+            '<button class="ps-lampiran-toggle pc2-lamp-btn' + (isOpen ? ' is-open' : '') + '" data-id="' + row.id + '"><i class="ph ph-paperclip" aria-hidden="true" style="pointer-events:none;"></i>Lampiran' + (lampiranCount ? ' <em>' + lampiranCount + '</em>' : '') + '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .25s ease; transform:rotate(' + (isOpen ? '180' : '0') + 'deg); pointer-events:none;"><polyline points="6 9 12 15 18 9"/></svg></button>' +
+            editDeleteBtns +
+          '</div>' +
         '</div>' +
         lampiranSection +
         actionButtons +
@@ -2557,7 +2688,7 @@
       alertEl.textContent = err.message || 'Gagal menolak presensi.'; alertEl.hidden = false;
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Tolak Presensi';
+      btn.textContent = 'Tolak presensi';
     }
   }
 
@@ -2607,15 +2738,16 @@
   var psEditStatusSelected = null;
 
   var PS_EDITSTATUS_COLORS = {
-    diterima: { solid: '#34c759', tintBg: 'rgba(52,199,89,.14)', tintColor: '#28a745' },
-    visit: { solid: '#007aff', tintBg: 'rgba(0,122,255,.12)', tintColor: '#007aff' },
-    ditolak: { solid: '#ff3b30', tintBg: 'rgba(255,59,48,.12)', tintColor: '#ff3b30' }
+    diterima: { solid: '#1E8E5A', tintBg: '#E9F7EF', tintColor: '#1E8E5A' },
+    visit: { solid: '#2B59D9', tintBg: '#EAF0FF', tintColor: '#2B59D9' },
+    ditolak: { solid: '#D4070F', tintBg: '#FDEAEA', tintColor: '#D4070F' }
   };
   function psResetEditStatusOptions() {
     document.querySelectorAll('.ps-editstatus-opt').forEach(function (b) {
-      b.style.background = 'var(--surface)'; b.style.color = 'var(--ink)'; b.style.borderColor = 'transparent';
+      b.style.background = '#fff'; b.style.color = 'var(--ink)'; b.style.borderColor = 'var(--border)';
       var icon = b.querySelector('.ps-editstatus-icon');
-      if (icon) icon.style.background = '#8e8e93';
+      if (icon) { icon.style.background = 'var(--surface)'; icon.style.color = 'var(--ink-soft)'; }
+      b.classList.remove('is-active');
     });
   }
 
@@ -2645,10 +2777,11 @@
         var active = b === btn;
         var c = PS_EDITSTATUS_COLORS[b.dataset.status];
         var icon = b.querySelector('.ps-editstatus-icon');
-        b.style.background = active ? c.tintBg : 'var(--surface)';
+        b.style.background = active ? c.tintBg : '#fff';
         b.style.color = active ? c.tintColor : 'var(--ink)';
-        b.style.borderColor = active ? c.tintColor : 'transparent';
-        if (icon) icon.style.background = active ? c.solid : '#8e8e93';
+        b.style.borderColor = active ? c.tintColor : 'var(--border)';
+        if (icon) { icon.style.background = active ? c.solid : 'var(--surface)'; icon.style.color = active ? '#fff' : 'var(--ink-soft)'; }
+        b.classList.toggle('is-active', active);
       });
       document.getElementById('ps-editStatusCatatanWrap').hidden = (psEditStatusSelected !== 'ditolak');
     });
@@ -2697,7 +2830,7 @@
       alertEl.textContent = err.message || 'Gagal mengubah status.'; alertEl.hidden = false;
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Simpan Perubahan';
+      btn.textContent = 'Simpan perubahan';
     }
   });
 
@@ -2773,8 +2906,8 @@
     document.getElementById('ps-wakilLink').value = '';
     document.getElementById('ps-wakilFotoFile').value = '';
     document.getElementById('ps-wakilCatatanFile').value = '';
-    document.getElementById('ps-wakilFotoStatus').textContent = '';
-    document.getElementById('ps-wakilCatatanStatus').textContent = '';
+    document.getElementById('ps-wakilFotoStatus').textContent = 'JPG atau PNG, foto saat sesi berlangsung';
+    document.getElementById('ps-wakilCatatanStatus').textContent = 'Foto atau PDF catatan tutor';
     document.getElementById('ps-wakilKontrak').value = '';
     document.getElementById('ps-wakilKontrakLabel').textContent = 'Pilih tutor dulu';
     document.getElementById('ps-wakilKontrakLabel').style.color = 'var(--ink-soft)';
@@ -2785,7 +2918,7 @@
     psWakilSelectedTutorId = ''; psWakilSelectedKontrakIdx = ''; psWakilKontrakList = [];
     var saveBtnReset = document.getElementById('ps-wakilSaveBtn');
     saveBtnReset.disabled = false;
-    saveBtnReset.textContent = 'Simpan Presensi';
+    saveBtnReset.textContent = 'Simpan presensi';
     psOpenWakilModal();
     if (!psWakilTutorsLoaded) psLoadWakilTutors();
   });
@@ -2796,11 +2929,11 @@
   // Tampilkan nama file + ukuran begitu dipilih, biar ada feedback sebelum upload beneran terjadi
   document.getElementById('ps-wakilFotoFile').addEventListener('change', function (e) {
     var f = e.target.files[0];
-    document.getElementById('ps-wakilFotoStatus').textContent = f ? f.name + ' (' + (f.size / 1024).toFixed(0) + ' KB) — akan diunggah saat disimpan' : '';
+    document.getElementById('ps-wakilFotoStatus').textContent = f ? f.name + ' (' + (f.size / 1024).toFixed(0) + ' KB), diunggah saat disimpan' : 'JPG atau PNG, foto saat sesi berlangsung';
   });
   document.getElementById('ps-wakilCatatanFile').addEventListener('change', function (e) {
     var f = e.target.files[0];
-    document.getElementById('ps-wakilCatatanStatus').textContent = f ? f.name + ' (' + (f.size / 1024).toFixed(0) + ' KB) — akan diunggah saat disimpan' : '';
+    document.getElementById('ps-wakilCatatanStatus').textContent = f ? f.name + ' (' + (f.size / 1024).toFixed(0) + ' KB), diunggah saat disimpan' : 'Foto atau PDF catatan tutor';
   });
 
   var PS_MAX_FILE_MB = 8;
