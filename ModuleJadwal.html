@@ -185,6 +185,35 @@
   #jdw-waModal .gx-info b span{color:inherit; font-size:inherit;}
   #jdw-durasiInfo b{font-weight:700;}
 
+  /* ===== Popup detail slot jadwal ===== */
+  .jdw-jm-cell.has-dots{cursor:pointer; transition:background .15s ease, box-shadow .15s ease;}
+  .jdw-jm-cell.has-dots:hover{background:#E6E8FA; box-shadow:inset 0 0 0 1px #C9CCF0;}
+  .jdw-jm-cell.has-dots:focus-visible{outline:2px solid var(--blue); outline-offset:1px;}
+  #jdw-slotList{display:grid; gap:10px; padding:12px 0 4px;}
+  .jdw-slot-item{border:1px solid var(--border); border-radius:12px; padding:11px 12px; background:#fff;}
+  .jdw-slot-top{display:flex; align-items:center; gap:9px; min-width:0;}
+  .jdw-slot-top .jdw-av{width:30px; height:30px; font-size:10.5px;}
+  .jdw-slot-who{min-width:0; flex:1;}
+  .jdw-slot-who b{display:block; font-size:12px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .jdw-slot-who span{display:block; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;}
+  .jdw-slot-siswa{display:flex; align-items:center; gap:7px; margin-top:9px; padding:7px 9px; border-radius:9px; background:var(--surface); font-size:11px; color:var(--ink); min-width:0;}
+  .jdw-slot-siswa i{font-size:13px; color:var(--ink-soft); flex:none;}
+  .jdw-slot-siswa span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;}
+  .jdw-slot-siswa b{font-weight:600;}
+  .jdw-slot-act{display:grid; grid-template-columns:1fr 1fr auto; gap:6px; margin-top:9px;}
+  .jdw-slot-act .jdw-pv-wa{height:30px;}
+  .jdw-slot-goto{width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; padding:0;}
+  .jdw-slot-goto:hover{background:var(--surface); color:var(--ink);}
+  #jdw-slotModal{align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;}
+  #jdw-slotModal.show{opacity:1;}
+
+  /* Kolom No dan Tutor tetap saat tabel digeser */
+  .jdw-table .jdw-stk{position:sticky; z-index:1; background:#fff;}
+  .jdw-table th.jdw-stk{z-index:2;}
+  .jdw-table .jdw-stk-no{left:0; width:40px; min-width:40px; max-width:40px; box-sizing:border-box; padding-left:8px !important; padding-right:8px !important;}
+  .jdw-table .jdw-stk-tutor{left:40px; box-shadow:1px 0 0 var(--border);}
+  .jdw-table tbody tr:hover td.jdw-stk{background:#F8F9FD;}
+
   /* ===== Animasi ===== */
   @keyframes jdwIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
   @keyframes jdwFade{from{opacity:0;} to{opacity:1;}}
@@ -229,7 +258,7 @@
   <div id="jdw-jadwalMingguanCard">
     <div class="jdw-jm-headrow">
       <div class="jdw-jm-title">Jadwal mingguan<small>Satu titik satu sesi, warna menandai tutor</small></div>
-      <div id="jdw-jmHeaderHint">Klik titik untuk detail</div>
+      <div id="jdw-jmHeaderHint">Ketuk kotak berisi titik untuk detail</div>
     </div>
     <div id="jdw-jmGrid"><div class="empty-state" style="padding:16px;">Memuat jadwal...</div></div>
     <div id="jdw-jmLegend"></div>
@@ -412,6 +441,21 @@
       <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="jdw-filterResetBtn">Reset</button>
         <button type="button" class="btn btn-primary" id="jdw-filterApplyBtn">Terapkan filter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup detail slot jadwal mingguan -->
+  <div class="modal-overlay" id="jdw-slotModal" hidden style="z-index:74;">
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-calendar-dots" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="jdw-slotTitle">Detail sesi</h3><p class="gx-sub" id="jdw-slotSub">-</p></div>
+        <button type="button" class="gx-close" id="jdw-slotCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="gx-body"><div id="jdw-slotList"></div></div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="jdw-slotCloseBtn">Tutup</button>
       </div>
     </div>
   </div>
@@ -863,19 +907,24 @@
           var idx = jdwState.scheduleRows.indexOf(s);
           return '<button type="button" class="jdw-jm-dot" data-idx="' + idx + '" style="background:' + color + '; --i:' + Math.min(dotN++, 60) + ';" title="' + jdwEscape(s.tutorNama + ' - ' + s.siswaNama) + '" aria-label="' + jdwEscape(s.tutorNama) + '"></button>';
         }).join('');
-        html += '<div class="jdw-jm-cell' + (isToday ? ' is-today' : '') + '">' + dots + '</div>';
+        html += matches.length
+          ? '<div class="jdw-jm-cell has-dots' + (isToday ? ' is-today' : '') + '" role="button" tabindex="0" data-hari="' + hari + '" data-jam="' + jam + '" aria-label="' + jdwEscape((JDW_HARI_MAP[hari] || hari) + ' ' + jam + ', ' + matches.length + ' sesi') + '">' + dots + '</div>'
+          : '<div class="jdw-jm-cell' + (isToday ? ' is-today' : '') + '"></div>';
       });
     });
     html += '</div>';
     gridEl.innerHTML = html;
     jdwReplay(gridEl);
 
-    // Dot click listeners for preview popover
-    document.querySelectorAll('.jdw-jm-dot').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var row = jdwState.scheduleRows[parseInt(btn.dataset.idx, 10)];
-        if (row) jdwOpenJmPreview(row, btn);
+    // Ketuk kotak (atau titik) untuk membuka detail semua sesi di slot itu
+    gridEl.querySelectorAll('.jdw-jm-cell.has-dots').forEach(function (cell) {
+      function openCell(e) {
+        if (e) e.stopPropagation();
+        jdwOpenSlotModal(cell.dataset.hari, cell.dataset.jam);
+      }
+      cell.addEventListener('click', openCell);
+      cell.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCell(e); }
       });
     });
 
@@ -888,6 +937,52 @@
       return '<span class="jdw-jm-leg"><i style="background:' + jdwColorForTutor(id) + ';"></i>' + jdwEscape(tutorMap[id]) + '</span>';
     }).join('');
   }
+
+  /* ===== Popup detail slot ===== */
+  var jdwSlotModal = document.getElementById('jdw-slotModal');
+  function jdwOpenSlotModal(hari, jam) {
+    var rows = jdwState.scheduleRows.filter(function (s) { return s.hari === hari && s.jamMulai === jam; });
+    if (!rows.length) return;
+    document.getElementById('jdw-slotTitle').textContent = (JDW_HARI_MAP[hari] || jdwCapitalize(hari)) + ', ' + jam;
+    document.getElementById('jdw-slotSub').textContent = rows.length + ' sesi di jam ini';
+    var listEl = document.getElementById('jdw-slotList');
+    listEl.innerHTML = rows.map(function (r) {
+      var tutorWa = jdwWaLink(r.tutorHp), ortuWa = jdwWaLink(r.ortuHp);
+      return '<div class="jdw-slot-item">' +
+        '<div class="jdw-slot-top">' +
+          '<span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + jdwEscape(jdwInitials(r.tutorNama)) + '</span>' +
+          '<div class="jdw-slot-who"><b>' + jdwEscape(r.tutorNama) + '</b><span>' + jdwEscape(r.mapel) + (r.durasiMenit ? ' · ' + r.durasiMenit + ' menit' : '') + '</span></div>' +
+          '<span class="jdw-time">' + jdwEscape(jdwTimeText(r)) + '</span>' +
+        '</div>' +
+        '<div class="jdw-slot-siswa"><i class="ph ph-student" aria-hidden="true"></i><span><b>' + jdwEscape(r.siswaNama) + '</b>' + (r.unitNama ? ' · ' + jdwEscape(r.unitNama) : '') + ' · ' + jdwEscape(r.paketNama) + '</span></div>' +
+        '<div class="jdw-slot-act">' +
+          '<a class="jdw-pv-wa" data-has="' + (tutorWa ? 1 : 0) + '" data-who="tutor" href="' + (tutorWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Chat tutor</a>' +
+          '<a class="jdw-pv-wa" data-has="' + (ortuWa ? 1 : 0) + '" data-who="orang tua" href="' + (ortuWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Chat ortu</a>' +
+          '<button type="button" class="jdw-slot-goto" data-id="' + r.id + '" title="Lihat di daftar" aria-label="Lihat di daftar"><i class="ph ph-arrow-down-right" aria-hidden="true"></i></button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    listEl.querySelectorAll('.jdw-pv-wa').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        if (a.dataset.has !== '1') { e.preventDefault(); genioToast('Nomor WhatsApp ' + a.dataset.who + ' belum tersedia', 'error'); }
+      });
+    });
+    listEl.querySelectorAll('.jdw-slot-goto').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        jdwCloseSlotModal();
+        setTimeout(function () { jdwScrollToSchedule(btn.dataset.id); }, 300);
+      });
+    });
+    jdwSlotModal.hidden = false;
+    requestAnimationFrame(function () { jdwSlotModal.classList.add('show'); });
+  }
+  function jdwCloseSlotModal() {
+    jdwSlotModal.classList.remove('show');
+    setTimeout(function () { jdwSlotModal.hidden = true; }, 280);
+  }
+  document.getElementById('jdw-slotCloseX').addEventListener('click', jdwCloseSlotModal);
+  document.getElementById('jdw-slotCloseBtn').addEventListener('click', jdwCloseSlotModal);
+  jdwSlotModal.addEventListener('click', function (e) { if (e.target === jdwSlotModal) jdwCloseSlotModal(); });
 
   /* Popover Preview Logic */
   var jdwJmPreviewModal = document.getElementById('jdw-jmPreviewModal');
@@ -1140,8 +1235,8 @@
     }
   }
 
-  function jdwSortTh(field, label, extra) {
-    return '<th class="jdw-sort-th" data-sort="' + field + '"' + (extra || '') + '><span style="display:inline-flex; align-items:center;">' + label + jdwGetSortIcon(field) + '</span></th>';
+  function jdwSortTh(field, label, extraClass) {
+    return '<th class="jdw-sort-th' + (extraClass ? ' ' + extraClass : '') + '" data-sort="' + field + '"><span style="display:inline-flex; align-items:center;">' + label + jdwGetSortIcon(field) + '</span></th>';
   }
 
   function jdwActionButtons(r) {
@@ -1153,8 +1248,8 @@
     var trs = rows.map(function (r, idx) {
       var sekolahLine = [r.siswaKelas, r.siswaSekolah].filter(Boolean).join(' · ');
       return '<tr class="jdw-table-row" data-schedule-id="' + r.id + '">' +
-        '<td class="jdw-no">' + (idx + 1) + '</td>' +
-        '<td><div class="jdw-who"><span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + jdwEscape(jdwInitials(r.tutorNama)) + '</span><b>' + jdwEscape(r.tutorNama) + '</b></div></td>' +
+        '<td class="jdw-no jdw-stk jdw-stk-no">' + (idx + 1) + '</td>' +
+        '<td class="jdw-stk jdw-stk-tutor"><div class="jdw-who"><span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + jdwEscape(jdwInitials(r.tutorNama)) + '</span><b>' + jdwEscape(r.tutorNama) + '</b></div></td>' +
         '<td>' + jdwEscape(r.mapel) + '</td>' +
         '<td><b style="font-weight:600;">' + jdwEscape(r.siswaNama) + '</b>' + (r.unitNama ? '<span class="jdw-unit">' + jdwEscape(r.unitNama) + '</span>' : '') +
           (sekolahLine ? '<div class="jdw-sub">' + jdwEscape(sekolahLine) + '</div>' : '') + '</td>' +
@@ -1167,8 +1262,8 @@
 
     return '<div class="jdw-table-card"><div class="jdw-table-wrap"><table class="jdw-table">' +
       '<thead><tr>' +
-        '<th class="jdw-no">No</th>' +
-        jdwSortTh('tutor', 'Tutor') + jdwSortTh('mapel', 'Mapel') + jdwSortTh('siswa', 'Siswa') + jdwSortTh('paket', 'Paket') +
+        '<th class="jdw-no jdw-stk jdw-stk-no">No</th>' +
+        jdwSortTh('tutor', 'Tutor', 'jdw-stk jdw-stk-tutor') + jdwSortTh('mapel', 'Mapel') + jdwSortTh('siswa', 'Siswa') + jdwSortTh('paket', 'Paket') +
         jdwSortTh('hari', 'Hari') +
         '<th>Jam</th>' +
         '<th style="text-align:right;">Aksi</th>' +
