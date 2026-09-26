@@ -21,63 +21,71 @@
 
   /* Card Styling khusus Home */
 
-  /* ===== Hero finansial: panel biru brand (sama dgn Login) ===== */
+
+
+  /* ===== Highlight omset: split + tren 6 bulan ===== */
   .home-sec-hero{
-    position:relative; isolation:isolate; overflow:hidden;
-    background:var(--blue); color:#fff; border-radius:18px;
+    position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box;
+    display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);
   }
-  .home-sec-hero::before{
-    content:''; position:absolute; z-index:-1; pointer-events:none;
-    width:460px; height:460px; right:-160px; bottom:-280px; border-radius:50%;
-    background:radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 65%);
+  .hb-main{position:relative; isolation:isolate; padding:16px 18px 12px; min-width:0;}
+  .hb-main::before{
+    content:''; position:absolute; z-index:-1; right:-60px; bottom:-150px; width:320px; height:320px; border-radius:50%;
+    border:1px solid rgba(255,255,255,.07); box-shadow:0 0 0 36px rgba(255,255,255,.022), 0 0 0 72px rgba(255,255,255,.016);
+    pointer-events:none;
   }
-  .home-hero-label{font-size:11px; font-weight:500; color:rgba(255,255,255,.78);}
-  .home-hero-num{font-size:20.5px; font-weight:700; letter-spacing:-.02em; line-height:1.1; font-variant-numeric:tabular-nums;}
-  .home-hero-delta{font-size:10px; color:rgba(255,255,255,.72); margin-top:3px;}
+  .hb-top{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .hb-label{font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .hb-num{font-size:28px; font-weight:800; letter-spacing:-.035em; line-height:1.1; margin:6px 0 6px; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .hb-delta{display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:999px; background:rgba(255,255,255,.1); font-size:10px; color:rgba(255,255,255,.78); white-space:nowrap;}
+  .hb-delta:empty{display:none;}
+  .hb-spark{display:block; width:100%; height:44px; margin-top:10px; overflow:visible;}
+  .hb-spark-labels{display:flex; justify-content:space-between; font-size:9px; color:rgba(255,255,255,.45); margin-top:3px;}
+  .hb-side{
+    background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1);
+    padding:14px 16px; display:flex; flex-direction:column; justify-content:center; gap:14px; min-width:0;
+  }
+  .hb-row{display:flex; align-items:center; gap:10px; min-width:0;}
+  .hb-ico{width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex:none;}
+  .hb-ico.is-laba{background:rgba(124,240,195,.14); color:#7CF0C3;}
+  .hb-ico.is-ops{background:rgba(255,156,148,.14); color:#FF9C94;}
+  .hb-row-text{min-width:0;}
+  .hb-row-l{font-size:10px; color:rgba(255,255,255,.62);}
+  .hb-row-n{font-size:14px; font-weight:700; letter-spacing:-.01em; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .hb-row-d{margin-left:auto; font-size:10px; color:rgba(255,255,255,.6); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; text-align:right;}
+  .hb-bar{height:4px; border-radius:99px; background:rgba(255,255,255,.1); overflow:hidden; margin-top:8px;}
+  .hb-bar i{display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg, #7CF0C3, #46D3A0); transition:width .6s cubic-bezier(.16,1,.3,1);}
+  .hb-margin{font-size:9.5px; color:rgba(255,255,255,.55); margin-top:4px;}
   .home-hero-cetak-btn{
     display:inline-flex; align-items:center; gap:6px; flex:none;
     height:28px; padding:0 10px; border-radius:8px;
-    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.24); color:#fff;
-    font-family:var(--font); font-size:10.5px; font-weight:500; cursor:pointer; white-space:nowrap;
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.24); color:#fff;
+    font-family:var(--font); font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;
     transition:background .15s ease, transform .1s ease;
   }
-  .home-hero-cetak-btn i{font-size:12px;}
-  .home-hero-cetak-btn:hover{background:rgba(255,255,255,.2);}
+  .home-hero-cetak-btn i{font-size:13px;}
+  .home-hero-cetak-btn:hover{background:rgba(255,255,255,.18);}
   .home-hero-cetak-btn:active{transform:scale(.97);}
   .home-hero-cetak-btn:focus-visible{outline:2px solid #fff; outline-offset:2px;}
-  .home-hero-subcard{
-    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
-    border-radius:12px; padding:10px 12px; min-width:0;
+  @media (max-width:899px){
+    .home-sec-hero{grid-template-columns:1fr; margin-bottom:0 !important;}
+    .hb-side{border-left:none; border-top:1px solid rgba(255,255,255,.1);}
+    .hb-num{font-size:26px;}
   }
-  .home-sub-head{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px 8px;}
-  .home-sub-label{font-size:10px; font-weight:500; color:rgba(255,255,255,.78); white-space:nowrap;}
-  .home-sub-chip{
-    font-size:9px; font-weight:500; white-space:nowrap;
-    background:rgba(255,255,255,.14); color:#fff; padding:1px 7px; border-radius:999px;
+  @media (min-width:1280px){
+    .home-sec-hero{flex:1.7 !important; margin-bottom:0 !important;}
+    .home-kpi-row .home-sec-stats{grid-template-columns:1fr !important; grid-template-rows:1fr 1fr !important; align-content:stretch;}
+    .home-kpi-row .home-sec-stats > .card{height:100%; box-sizing:border-box;}
   }
-  .home-sub-num{font-size:13.5px; font-weight:700; letter-spacing:-.01em; margin-top:6px; font-variant-numeric:tabular-nums; white-space:nowrap;}
-  .home-hero-subcard .home-hero-delta{font-size:10px; margin-top:2px;}
-
+  @media (min-width:900px) and (max-width:1279px){
+    .home-sec-hero{margin-bottom:0 !important;}
+  }
 
   /* ===== Desktop: highlight gepeng, isi berjajar kiri-kanan ===== */
   @media (min-width:900px){
-    .home-sec-hero{padding:12px 16px 12px 20px !important; gap:10px 16px !important; flex-wrap:wrap !important;}
-    .home-sec-hero .home-hero-main-col{flex:0 0 auto !important; min-width:0 !important; flex-direction:row !important; align-items:baseline !important; gap:10px !important;}
-    .home-sec-hero .home-hero-badges, .home-sec-hero .home-hero-counter{display:contents !important;}
-    .home-hero-label{white-space:nowrap;}
-    .home-hero-label{order:1;}
-    .home-hero-num{order:2; font-size:18px;}
-    .home-hero-counter .home-hero-delta{order:3; margin-top:0;}
-    .home-hero-cetak-btn{order:4; margin-left:6px; align-self:center;}
-    .home-sec-hero .home-hero-stats-row{flex:1 1 380px !important; min-width:0 !important; gap:8px !important; grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;}
-    .home-hero-subcard{display:flex; align-items:baseline; gap:10px; padding:9px 12px; min-width:0; overflow:hidden;}
-    .home-sub-head{flex-wrap:nowrap; flex:none;}
-    .home-sub-chip{display:none;}
-    .home-sub-num{margin-top:0; font-size:13px; flex:none;}
-    .home-hero-subcard .home-hero-delta{margin-top:0; flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
     .home-kpi-row{align-items:stretch !important;}
     .home-sec-stats > .card{padding:10px 14px !important;}
-    .home-sec-hero{flex:1.3 !important;}
     .home-stat-card{display:grid !important; grid-template-columns:auto auto minmax(0,1fr); column-gap:10px; row-gap:2px; align-items:center;}
     .home-stat-card > div:first-child, .home-stat-card > div:last-child{display:contents !important;}
     .home-stat-card > div:first-child > div:first-child{grid-column:1; grid-row:1 / span 2;}
@@ -141,35 +149,6 @@
       box-sizing: border-box !important;
     }
 
-    /* Hero Finansial Mobile (Cerah / Pure White Modern) */
-    .home-sec-hero{
-      padding: 16px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 14px !important;
-    }
-    .home-hero-main-col{
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 4px !important;
-    }
-    .home-hero-badges{
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 10px !important;
-    }
-    .home-hero-counter{
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 2px !important;
-    }
-    .home-hero-stats-row{
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 8px !important;
-      padding-top: 0 !important;
-    }
 
     /* Ketinggian konten mobile agar tidak terkunci ukuran desktop */
     #homeSecJadwalTutor,
@@ -229,47 +208,6 @@
     /* Baris 3: KPI Finansial & Statistik (Gaya Presensi: Hero Horizontal | 2 Kartu Stats) */
     .home-kpi-row{
       display:flex !important; flex-direction:row !important; gap:14px !important; align-items:stretch !important; margin-bottom:14px !important;
-    }
-    .home-sec-hero{
-      flex: 1.6;
-      margin-bottom: 0 !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 16px !important;
-      padding: 16px 18px !important;
-      box-sizing: border-box !important;
-    }
-    .home-hero-main-col{
-      flex: 1.05 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-      min-width: 175px !important;
-      gap: 6px !important;
-    }
-    .home-hero-badges{
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 8px !important;
-    }
-    .home-hero-counter{
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 2px !important;
-    }
-    .home-hero-stats-row{
-      flex: 1.4 !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      padding-left: 0 !important;
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 10px !important;
-      align-items: stretch !important;
     }
     .home-sec-stats{
       flex: 1; min-width:0; margin-bottom:0 !important;
@@ -356,39 +294,42 @@
 
   <!-- Baris 3: Highlight Finansial & Statistik (Gaya Presensi) -->
   <div class="home-kpi-row" id="homeKpiRow">
-    <!-- Hero finansial: panel biru brand (sama dgn Login) -->
+    <!-- Highlight omset: split + tren 6 bulan -->
     <div class="home-sec-hero">
-      <div class="home-hero-main-col">
-        <div class="home-hero-badges">
-          <span class="home-hero-label">Total omset</span>
+      <div class="hb-main">
+        <div class="hb-top">
+          <span class="hb-label">Total omset</span>
           <button id="homeCetakLaporanBtn" type="button" class="home-hero-cetak-btn" title="Cetak laporan">
             <i class="ph ph-printer" aria-hidden="true"></i>
             <span>Cetak</span>
           </button>
         </div>
-        <div class="home-hero-counter">
-          <span class="home-hero-num" id="homeOmset">Rp 0</span>
-          <div class="home-hero-delta" id="homeOmsetDelta"></div>
-        </div>
+        <div class="hb-num" id="homeOmset">Rp 0</div>
+        <span class="hb-delta" id="homeOmsetDelta"></span>
+        <svg class="hb-spark" id="homeHeroSpark" aria-label="Tren omset 6 bulan terakhir" role="img"></svg>
+        <div class="hb-spark-labels" id="homeHeroSparkLabels"></div>
       </div>
 
-      <div class="home-hero-stats-row">
-        <div class="home-hero-subcard">
-          <div class="home-sub-head">
-            <span class="home-sub-label">Laba bersih</span>
-            <span id="homeMargin" class="home-sub-chip">Margin -</span>
+      <div class="hb-side">
+        <div>
+          <div class="hb-row">
+            <span class="hb-ico is-laba"><i class="ph ph-coins" aria-hidden="true"></i></span>
+            <div class="hb-row-text">
+              <div class="hb-row-l">Laba bersih</div>
+              <div class="hb-row-n" id="homeLaba">Rp 0</div>
+            </div>
+            <span class="hb-row-d" id="homeLabaDelta"></span>
           </div>
-          <div class="home-sub-num" id="homeLaba">Rp 0</div>
-          <div class="home-hero-delta" id="homeLabaDelta"></div>
+          <div class="hb-bar"><i id="homeMarginBar"></i></div>
+          <div class="hb-margin" id="homeMargin">Margin -</div>
         </div>
-
-        <div class="home-hero-subcard">
-          <div class="home-sub-head">
-            <span class="home-sub-label">Pengeluaran</span>
-            <span class="home-sub-chip">Beban ops</span>
+        <div class="hb-row">
+          <span class="hb-ico is-ops"><i class="ph ph-receipt" aria-hidden="true"></i></span>
+          <div class="hb-row-text">
+            <div class="hb-row-l">Pengeluaran</div>
+            <div class="hb-row-n" id="homeOperasional">Rp 0</div>
           </div>
-          <div class="home-sub-num" id="homeOperasional">Rp 0</div>
-          <div class="home-hero-delta" id="homeOperasionalDelta"></div>
+          <span class="hb-row-d" id="homeOperasionalDelta"></span>
         </div>
       </div>
     </div>
@@ -725,6 +666,7 @@
       clearTimeout(homeColResizeTimer);
       homeColResizeTimer = setTimeout(function () {
         renderTrendChart();
+        homeRenderHeroSpark();
         homeMatchTrendRangeDockHeight();
       }, 150);
     });
@@ -1088,6 +1030,7 @@
       document.getElementById('homeOmsetDelta').innerHTML = homeDeltaBadge(omset, omsetPrev, true);
       homeRevealValue(document.getElementById('homeLaba'), homeFormatRupiah(laba));
       document.getElementById('homeMargin').textContent = omset > 0 ? ('Margin ' + marginPct.toFixed(1) + '%') : 'Margin -';
+      document.getElementById('homeMarginBar').style.width = Math.max(0, Math.min(100, marginPct)).toFixed(1) + '%';
       document.getElementById('homeLabaDelta').innerHTML = homeDeltaBadge(laba, labaPrev, true);
       homeRevealValue(document.getElementById('homeOperasional'), homeFormatRupiah(pengeluaran));
       document.getElementById('homeOperasionalDelta').innerHTML = homeDeltaBadge(pengeluaran, pengeluaranPrev, true);
@@ -1491,9 +1434,38 @@
         sesi: periods.map(function (p) { return sesiByMonth[p]; })
       };
       renderTrendChart();
+      homeRenderHeroSpark();
     } catch (err) {
       document.getElementById('homeTrendFooter').textContent = 'Gagal memuat tren: ' + err.message;
     }
+  }
+
+  var HOME_BULAN_PENDEK = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  function homeRenderHeroSpark() {
+    var svg = document.getElementById('homeHeroSpark');
+    var labels = document.getElementById('homeHeroSparkLabels');
+    if (!svg || !labels || !homeTrendCache || !homeTrendCache.omset) return;
+    var vals = homeTrendCache.omset.slice(-6);
+    var months = homeTrendCache.periods.slice(-6);
+    var w = svg.clientWidth || 300, h = 44, pad = 4;
+    var max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
+    var span = (max - min) || 1;
+    var pts = vals.map(function (v, i) {
+      var x = vals.length > 1 ? (i / (vals.length - 1)) * w : w / 2;
+      var y = (max === min) ? h / 2 : pad + (1 - (v - min) / span) * (h - pad * 2);
+      return [x, y];
+    });
+    var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+    var last = pts[pts.length - 1];
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    svg.innerHTML =
+      '<defs><linearGradient id="homeSparkFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7CF0C3" stop-opacity=".32"/><stop offset="1" stop-color="#7CF0C3" stop-opacity="0"/></linearGradient></defs>' +
+      '<path d="' + line + ' L' + w + ',' + h + ' L0,' + h + ' Z" fill="url(#homeSparkFill)"/>' +
+      '<path d="' + line + '" fill="none" stroke="#7CF0C3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3.5" fill="#7CF0C3"/>';
+    labels.innerHTML = months.map(function (p) {
+      return '<span>' + HOME_BULAN_PENDEK[parseInt(p.split('-')[1], 10) - 1] + '</span>';
+    }).join('');
   }
 
   function homeHideTrendTooltip() {

@@ -34,38 +34,44 @@
   #ps-sectionLabel{margin-bottom:12px;}
   #ps-desktopAnchor{display:none !important;}
 
-  /* ===== Highlight: panel biru brand + tombol Isi presensi ===== */
+  /* ===== Highlight presensi: angka utama + grafik mingguan ===== */
   .ps-hero-sec{
-    position:relative; isolation:isolate; overflow:hidden;
-    background:var(--blue); color:#fff; border-radius:18px; padding:16px;
-    display:flex; flex-direction:column; gap:14px; box-sizing:border-box;
+    position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box;
+    display:grid; grid-template-columns:minmax(0,1fr) auto;
+    background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);
   }
-  .ps-hero-sec::before{
-    content:''; position:absolute; z-index:-1; pointer-events:none;
-    width:460px; height:460px; right:-160px; bottom:-280px; border-radius:50%;
-    background:radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 65%);
+  .pc-main{position:relative; isolation:isolate; padding:16px 18px; min-width:0;}
+  .pc-main::before{
+    content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%;
+    background:radial-gradient(circle, rgba(124,160,255,.26), rgba(124,160,255,0) 65%); pointer-events:none;
   }
-  .ps-hero-main-col{display:flex; flex-direction:column; gap:6px; min-width:0;}
-  .ps-hero-badges{display:flex; align-items:center; justify-content:space-between; gap:10px;}
-  .ps-hero-label{font-size:11px; font-weight:500; color:rgba(255,255,255,.78);}
-  .ps-hero-periode-pill{
-    font-size:10px; font-weight:500; white-space:nowrap;
-    background:rgba(255,255,255,.14); color:#fff; padding:2px 8px; border-radius:999px;
+  .pc-top{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .ps-hero-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .ps-hero-label .pc-dot{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .ps-hero-periode-pill{font-size:10px; font-weight:500; white-space:nowrap; background:rgba(255,255,255,.12); color:#fff; padding:2px 8px; border-radius:999px;}
+  .pc-row{display:flex; align-items:flex-end; gap:18px; margin-top:8px;}
+  .ps-hero-num{font-size:34px; font-weight:800; letter-spacing:-.04em; line-height:1; font-variant-numeric:tabular-nums;}
+  .ps-hero-unit{font-size:12px; font-weight:500; color:rgba(255,255,255,.65); margin-left:6px;}
+  .pc-weeks{margin-left:auto; display:flex; align-items:flex-end; gap:6px; height:52px;}
+  @media (min-width:900px){
+    .pc-top{justify-content:flex-start;}
+    .pc-row{gap:32px;}
+    .pc-weeks{margin-left:0; gap:8px; height:56px;}
+    .pc-week i{width:20px;}
   }
-  .ps-hero-num-wrap{display:flex; align-items:baseline; gap:6px;}
-  .ps-hero-num{font-size:20.5px; font-weight:700; letter-spacing:-.02em; line-height:1.1; font-variant-numeric:tabular-nums;}
-  .ps-hero-unit{font-size:11px; color:rgba(255,255,255,.72);}
-
-  .ps-hero-stats-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-  .ps-hero-stat-card{
-    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
-    border-radius:12px; padding:10px 12px; min-width:0;
+  .pc-week{display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:4px; height:100%;}
+  .pc-week i{display:block; width:14px; min-height:3px; border-radius:4px 4px 2px 2px; background:linear-gradient(180deg, rgba(124,240,195,.95), rgba(124,240,195,.25));}
+  .pc-week.is-late i{background:linear-gradient(180deg, rgba(255,196,107,.95), rgba(255,196,107,.3));}
+  .pc-week span{font-size:8.5px; color:rgba(255,255,255,.45); line-height:1;}
+  .pc-legend{display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:12px; font-size:10.5px; color:rgba(255,255,255,.7);}
+  .pc-legend b{color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .pc-lg{display:inline-flex; align-items:center; gap:6px; white-space:nowrap;}
+  .pc-lg > i{width:7px; height:7px; border-radius:2px; display:inline-block;}
+  .pc-side{
+    background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1);
+    padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:8px; min-width:190px;
   }
-  .ps-stat-head{display:flex; align-items:center; gap:7px; font-size:10px; font-weight:500; color:rgba(255,255,255,.78); white-space:nowrap;}
-  .ps-stat-dot{width:7px; height:7px; border-radius:50%; flex:none;}
-  .ps-stat-num{font-size:13.5px; font-weight:700; letter-spacing:-.01em; margin-top:6px; font-variant-numeric:tabular-nums; white-space:nowrap;}
-  .ps-stat-sub{font-size:10px; color:rgba(255,255,255,.72); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-
+  .pc-side-l{font-size:10.5px; color:rgba(255,255,255,.62);}
   #ps-openWakilBtn{
     height:34px; padding:0 14px; border-radius:9px; width:100%;
     background:#fff; color:var(--blue); border:1px solid #fff;
@@ -77,6 +83,11 @@
   #ps-openWakilBtn:hover{background:var(--blue-tint);}
   #ps-openWakilBtn:active{transform:scale(.97);}
   #ps-openWakilBtn:focus-visible{outline:2px solid #fff; outline-offset:2px;}
+  @media (max-width:899px){
+    .ps-hero-sec{grid-template-columns:1fr;}
+    .pc-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0; padding:12px 18px 14px;}
+    .ps-hero-num{font-size:30px;}
+  }
 
   /* ===== Cari & meta ===== */
   .ps-search-sec{display:flex; gap:8px;}
@@ -115,14 +126,7 @@
     #ps-list > .ps-full-width{ grid-column:1/-1; }
 
     #ps-heroRow{ display:flex; margin-bottom:14px; }
-    #ps-heroRow .ps-hero-sec{
-      flex:1; margin-bottom:0 !important;
-      flex-direction:row; align-items:center; justify-content:space-between;
-      gap:18px; padding:16px 20px;
-    }
-    #ps-heroRow .ps-hero-main-col{flex:1; min-width:200px;}
-    #ps-heroRow .ps-hero-stats-row{flex:1.3; max-width:560px;}
-    #ps-heroRow .ps-hero-actions{flex:none; width:190px;}
+    #ps-heroRow .ps-hero-sec{flex:1; margin-bottom:0 !important;}
 
     #ps-toolbarRow{ display:flex; gap:12px; align-items:center; margin-bottom:14px; }
     #ps-toolbarRow .ps-dock-sec{ flex:none; width:auto; min-width:260px; margin-bottom:0 !important; }
@@ -133,23 +137,6 @@
   }
 
 
-  /* ===== Desktop: highlight gepeng, isi berjajar kiri-kanan ===== */
-  @media (min-width:900px){
-    #ps-heroRow .ps-hero-sec{padding:12px 16px 12px 20px !important; gap:10px 16px !important; flex-wrap:wrap !important;}
-    #ps-heroRow .ps-hero-main-col{flex-direction:row; align-items:baseline; gap:10px; flex:0 0 auto; min-width:0; white-space:nowrap;}
-    #ps-heroRow .ps-hero-badges, #ps-heroRow .ps-hero-num-wrap{display:contents;}
-    #ps-heroRow .ps-hero-label{order:1;}
-    #ps-heroRow .ps-hero-num{order:2; font-size:18px;}
-    #ps-heroRow .ps-hero-unit{order:3;}
-    #ps-heroRow .ps-hero-periode-pill{order:4;}
-    #ps-heroRow .ps-hero-stats-row{flex:1 1 380px; min-width:0; max-width:none; gap:8px; grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
-    #ps-heroRow .ps-hero-stat-card{display:flex; align-items:baseline; gap:10px; padding:9px 12px; min-width:0; overflow:hidden;}
-    #ps-heroRow .ps-stat-head{flex:none;}
-    #ps-heroRow .ps-stat-num{margin-top:0; font-size:13px; flex:none;}
-    #ps-heroRow .ps-stat-sub{margin-top:0; flex:1 1 auto; min-width:0;}
-    #ps-heroRow .ps-hero-actions{width:auto; margin-left:auto;}
-    #ps-heroRow #ps-openWakilBtn{width:auto; height:32px; padding:0 14px;}
-  }
 
   /* ===== Tab Approval / Riwayat ===== */
   .ps-dock{
@@ -555,33 +542,25 @@
 
   <div id="ps-desktopAnchor"></div>
 
-  <!-- Highlight presensi + tombol Isi presensi -->
+  <!-- Highlight presensi: angka utama + grafik mingguan -->
   <div class="ps-hero-sec">
-    <div class="ps-hero-main-col">
-      <div class="ps-hero-badges">
-        <span class="ps-hero-label">Total presensi</span>
+    <div class="pc-main">
+      <div class="pc-top">
+        <span class="ps-hero-label"><span class="pc-dot"></span>Total presensi</span>
         <span class="ps-hero-periode-pill" id="ps-heroPeriodeBadge">-</span>
       </div>
-      <div class="ps-hero-num-wrap">
-        <span class="ps-hero-num" id="ps-heroTotal">0</span>
-        <span class="ps-hero-unit">presensi</span>
+      <div class="pc-row">
+        <div><span class="ps-hero-num" id="ps-heroTotal">0</span><span class="ps-hero-unit">presensi</span></div>
+        <div class="pc-weeks" id="ps-heroWeeks" role="img" aria-label="Presensi per minggu"></div>
+      </div>
+      <div class="pc-legend">
+        <span class="pc-lg"><i style="background:#7CF0C3;"></i>Diterima <b id="ps-heroValidasi">0%</b> <span id="ps-heroValidasiCount">0 dari 0 presensi</span></span>
+        <span class="pc-lg"><i style="background:#FFC46B;"></i>Terlambat <b id="ps-heroTelat">0 Presensi</b></span>
+        <span class="pc-lg" id="ps-heroTelatDenda">Kena denda 0%</span>
       </div>
     </div>
-
-    <div class="ps-hero-stats-row">
-      <div class="ps-hero-stat-card">
-        <div class="ps-stat-head"><span class="ps-stat-dot" style="background:#6EE7B0;"></span>Diterima</div>
-        <div class="ps-stat-num" id="ps-heroValidasi">0%</div>
-        <div class="ps-stat-sub" id="ps-heroValidasiCount">0 dari 0 presensi</div>
-      </div>
-      <div class="ps-hero-stat-card">
-        <div class="ps-stat-head"><span class="ps-stat-dot" style="background:#FFC069;"></span>Terlambat</div>
-        <div class="ps-stat-num" id="ps-heroTelat">0 Presensi</div>
-        <div class="ps-stat-sub" id="ps-heroTelatDenda">Kena denda 0%</div>
-      </div>
-    </div>
-
-    <div class="ps-hero-actions">
+    <div class="pc-side ps-hero-actions">
+      <div class="pc-side-l">Tutor kendala teknis?</div>
       <button id="ps-openWakilBtn" type="button" title="Isi presensi untuk tutor yang kendala teknis">
         <i class="ph ph-plus" aria-hidden="true"></i>
         <span>Isi presensi</span>
@@ -1374,6 +1353,28 @@
   var PS_EMBED = 'id,tanggal,jam,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,status,catatan_approval,kontrak_tutor_id,nominal_dibayar,terlambat,unit_id,metode_input,pdf_url,' +
     'kontrak_tutor(mapel,fee_mengajar,uang_transport,tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url),kontrak_siswa(siswa(nama,orangtua(nama))))';
 
+  function psRenderHeroWeeks(rows, range) {
+    var el = document.getElementById('ps-heroWeeks');
+    if (!el) return;
+    var lastDay = parseInt(range.end.slice(-2), 10) || 30;
+    var weeks = Math.ceil(lastDay / 7);
+    var counts = [], late = [];
+    for (var i = 0; i < weeks; i++) { counts.push(0); late.push(0); }
+    rows.forEach(function (r) {
+      var w = Math.min(weeks - 1, Math.floor((parseInt(String(r.tanggal).slice(8, 10), 10) - 1) / 7));
+      if (isNaN(w)) return;
+      counts[w]++;
+      if (r.terlambat) late[w]++;
+    });
+    var max = Math.max.apply(null, counts) || 1;
+    el.innerHTML = counts.map(function (c, i) {
+      var pct = c ? Math.max(8, Math.round((c / max) * 100)) : 0;
+      var title = 'Minggu ' + (i + 1) + ': ' + c + ' presensi' + (late[i] ? ', ' + late[i] + ' terlambat' : '');
+      return '<div class="pc-week' + (late[i] ? ' is-late' : '') + '" title="' + title + '">' +
+        '<i style="height:calc((100% - 13px) * ' + (pct / 100) + ')"></i><span>M' + (i + 1) + '</span></div>';
+    }).join('');
+  }
+
   async function psLoadAll() {
     var listEl = document.getElementById('ps-list');
     try {
@@ -1411,6 +1412,7 @@
       document.getElementById('ps-heroValidasi').textContent = diterimaPct + '%';
       document.getElementById('ps-heroValidasiCount').textContent = diterimaCount + ' dari ' + totalPresensi + ' presensi';
       document.getElementById('ps-heroTelat').textContent = telatCount + ' Presensi';
+      psRenderHeroWeeks(periodeRows, range);
 
       try {
         var pengaturan = await supaRest('pengaturan?select=persen_denda_telat&limit=1', s.access_token);
