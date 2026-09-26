@@ -118,16 +118,23 @@
   .tgc-who{min-width:0; flex:1;}
   .tgc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
   .tgc-who p{font-size:10.5px; color:var(--ink-soft); margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .tgc-kids{margin-top:12px; padding:4px 11px; border-radius:10px; background:var(--surface);}
+  .tgc-kids-wrap{overflow:hidden; max-height:0; opacity:0; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;}
+  .tgc-kids-wrap.is-open{opacity:1;}
+  .tgc-kids{margin-top:10px; padding:4px 11px; border-radius:10px; background:var(--surface);}
+  .tgc-toggle{width:100%; display:flex; align-items:center; gap:10px; margin-top:12px; padding:9px 11px; border-radius:10px; border:1px solid var(--border); background:#fff; font-family:var(--font); cursor:pointer; text-align:left; transition:background .15s ease;}
+  .tgc-toggle:hover{background:#FAFBFD;}
+  .tgc-toggle .l{flex:1; min-width:0; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tgc-toggle .l em{font-style:normal; color:var(--ink); font-weight:500;}
+  .tgc-toggle b{flex:none; font-size:15px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .tgc-toggle svg{flex:none; color:var(--ink-soft); transition:transform .25s ease;}
+  .tgc-toggle[aria-expanded="true"] svg{transform:rotate(180deg);}
+  @media (prefers-reduced-motion: reduce){ .tgc-kids-wrap, .tgc-toggle svg{transition:none;} }
   .tgc-kid{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:7px 0;}
   .tgc-kid + .tgc-kid{border-top:1px solid #E7E9F2;}
   .tgc-kid b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .tgc-kid span{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .tgc-kid .r{text-align:right;}
   .tgc-kid .r b{font-variant-numeric:tabular-nums;}
-  .tgc-total{display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-top:12px;}
-  .tgc-total span{font-size:10.5px; color:var(--ink-soft);}
-  .tgc-total b{font-size:15px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;}
   .tgc-foot{display:flex; align-items:center; gap:6px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
   .tgc-foot .note{font-size:10px; color:var(--ink-soft); margin-right:auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .tgc-foot .tg-table-icon-btn{width:30px; height:30px; font-size:14px;}
@@ -233,11 +240,11 @@
       <div class="tg-dock-glider" id="tg-dockGlider"></div>
       <button type="button" class="tg-dock-btn tg-dock-active" data-tab="belum_lunas">
         <span>Belum lunas</span>
-        <span id="tg-tabCountBelum" style="background:#FFF4E0; color:#B86E00; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
+        <span id="tg-tabCountBelum" style="background:var(--red); color:#fff; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
       </button>
       <button type="button" class="tg-dock-btn" data-tab="lunas">
         <span>Sudah lunas</span>
-        <span id="tg-tabCountLunas" style="background:#E9F7EF; color:#1E8E5A; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
+        <span id="tg-tabCountLunas" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
       </button>
     </div>
     <div class="tg-search-sec" style="display:flex; gap:8px;">
@@ -373,6 +380,7 @@
   var TG_TABS = ['belum_lunas', 'lunas'];
 
   var tgState = {
+    openCards: {},
     periode: null,
     tab: 'belum_lunas', // 'belum_lunas' | 'lunas'
     search: '',
@@ -1156,6 +1164,8 @@
       return '<div class="tgc-kid"><div style="min-width:0;"><b>' + tgEscape(c.nama) + '</b><span>' + tgEscape(sub) + '</span></div>' +
         '<div class="r"><b>' + tgFormatRp(c.nominal) + '</b></div></div>';
     }).join('');
+    var isOpen = !!tgState.openCards[g.key];
+    var firstNames = g.children.map(function (c) { return (c.nama || '').trim().split(/\s+/)[0]; }).join(', ');
     var actionBtn = isLunas
       ? '<button type="button" class="tgc-btn is-ghost tg-batal-lunas-btn" data-key="' + tgEscape(g.key) + '">Batalkan</button>'
       : '<button type="button" class="tgc-btn is-primary tg-lunas-btn" data-key="' + tgEscape(g.key) + '">Tandai lunas</button>';
@@ -1166,8 +1176,12 @@
         '<div class="tgc-who"><h4>' + tgEscape(g.ortuNama) + '</h4><p>' + tgEscape(g.unitNama) + ' · ' + g.children.length + ' siswa</p></div>' +
         tgStatusPill(isLunas) +
       '</div>' +
-      '<div class="tgc-kids">' + kids + '</div>' +
-      '<div class="tgc-total"><span>Total ' + g.totalSesi + ' sesi</span><b>' + tgFormatRp(g.totalNominal) + '</b></div>' +
+      '<button type="button" class="tgc-toggle" data-key="' + tgEscape(g.key) + '" aria-expanded="' + isOpen + '">' +
+        '<span class="l">Total ' + g.totalSesi + ' sesi <em>(' + tgEscape(firstNames) + ')</em></span>' +
+        '<b>' + tgFormatRp(g.totalNominal) + '</b>' +
+        '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+      '</button>' +
+      '<div class="tgc-kids-wrap' + (isOpen ? ' is-open' : '') + '" data-key="' + tgEscape(g.key) + '"' + (isOpen ? ' style="max-height:none"' : '') + '><div class="tgc-kids">' + kids + '</div></div>' +
       '<div class="tgc-foot">' +
         '<span class="note">' + (isLunas ? 'Lunas ' + tgFormatTgl(g.tanggalLunas) : 'Menunggu pembayaran') + '</span>' +
         tgActionIcons(g, false) +
@@ -1731,6 +1745,25 @@
   // =========================================================
 
   function tgBindEvents() {
+    document.querySelectorAll('#tg-list .tgc-toggle').forEach(function (btn) {
+      btn.onclick = function () {
+        var key = btn.dataset.key;
+        var wrap = btn.parentNode.querySelector('.tgc-kids-wrap');
+        if (!wrap) return;
+        var open = !tgState.openCards[key];
+        tgState.openCards[key] = open;
+        btn.setAttribute('aria-expanded', open);
+        wrap.style.maxHeight = wrap.scrollHeight + 'px';
+        if (open) {
+          wrap.classList.add('is-open');
+          clearTimeout(wrap._t); wrap._t = setTimeout(function () { wrap.style.maxHeight = 'none'; }, 340);
+        } else {
+          void wrap.offsetHeight;
+          wrap.style.maxHeight = '0px';
+          wrap.classList.remove('is-open');
+        }
+      };
+    });
     // Table sorting
     document.querySelectorAll('.tg-sort-th').forEach(function (th) {
       th.onclick = function () { tgSortTable(th.dataset.sort); };
