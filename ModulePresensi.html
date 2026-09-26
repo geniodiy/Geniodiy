@@ -351,6 +351,8 @@
   #ps-filterModal .pf-toggle input:checked ~ .pf-switch{background:var(--blue);}
   #ps-filterModal .pf-toggle input:checked ~ .pf-switch::after{transform:translateX(13px);}
   #ps-filterModal .pf-toggle input:focus-visible ~ .pf-switch{box-shadow:0 0 0 3px rgba(28,26,175,.18);}
+  #ps-filterModal .pf-close{margin-left:auto; align-self:flex-start; width:28px; height:28px; border-radius:8px; border:none; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; flex:none; transition:background .15s ease, color .15s ease;}
+  #ps-filterModal .pf-close:hover{background:#EBEDF5; color:var(--ink);}
   #ps-filterModal .pw-foot{padding:12px 18px 14px !important; margin:0 !important; border-top:1px solid var(--border); background:#fff;}
   #ps-filterModal .pw-foot .btn{height:34px !important; font-size:11.5px !important;}
 
@@ -883,6 +885,7 @@
           <h3>Filter presensi</h3>
           <p class="pw-sub">Bisa dikombinasikan dengan pencarian di atas.</p>
         </div>
+        <button type="button" class="pf-close" id="ps-filterCloseX" aria-label="Tutup filter"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
 
       <div class="pw-body">
@@ -2322,6 +2325,8 @@
     modal.classList.remove('show');
     setTimeout(function () { modal.hidden = true; }, 280);
   }
+  document.getElementById('ps-filterCloseX').addEventListener('click', function () { psCloseFilterModal(); });
+
 
   var psUnitMap = {};
   async function psLoadFilterUnits() {
