@@ -918,9 +918,7 @@
         currentValue: tgState.periode,
         title: 'Periode Tagihan Siswa',
         onSelect: function (val) {
-          tgState.periode = val;
-          tgUpdatePeriodeLabel();
-          tgLoadAll();
+          genioSetPeriode(val);
         }
       });
     } else {
@@ -2389,7 +2387,15 @@
 
   // Register in Genio Module Handlers
   window.genioModuleHandlers = window.genioModuleHandlers || {};
-  window.genioModuleHandlers['tagihan'] = tgInit;
+  window.genioModuleHandlers['tagihan'] = function () {
+    tgState.periode = genioGetPeriode();
+    tgInit();
+  };
+  window.addEventListener('genio:periode', function (e) {
+    tgState.periode = e.detail.periode;
+    tgUpdatePeriodeLabel();
+    if (genioIsModuleVisible('tagihan')) tgLoadAll();
+  });
 
   // Auto-init if module is active upon load
   var currentModule = document.querySelector('.module-panel[data-module="tagihan"]');

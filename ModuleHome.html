@@ -565,7 +565,18 @@
 
 <script>
   window.genioModuleHandlers = window.genioModuleHandlers || {};
-  window.genioModuleHandlers['home'] = function () { loadHomeData(); };
+  window.genioModuleHandlers['home'] = function () {
+    var inp = document.getElementById('homePeriodeInput');
+    if (inp) inp.value = genioGetPeriode();
+    loadHomeData();
+  };
+  window.addEventListener('genio:periode', function (e) {
+    var inp = document.getElementById('homePeriodeInput');
+    if (inp) inp.value = e.detail.periode;
+    if (!genioIsModuleVisible('home')) return;
+    if (e.detail.refresh) { loadJadwalTutorMingguan(); loadGenioNews(); }
+    renderHomePeriode(e.detail.periode);
+  });
 
   var ROLE_LABELS = { super_admin: 'Super Admin', manajer: 'Manajer', hrd: 'HRD', kepala_unit: 'Kepala Unit', tutor: 'Tutor' };
   var MONTH_NAMES_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -703,8 +714,7 @@
           currentValue: input.value,
           title: 'Periode Data',
           onSelect: function (val) {
-            input.value = val;
-            renderHomePeriode(val);
+            genioSetPeriode(val);
           }
         });
       } else {

@@ -446,7 +446,17 @@
 
 <script>
   window.genioModuleHandlers = window.genioModuleHandlers || {};
-  window.genioModuleHandlers['gaji'] = function () { gjInit(); };
+  window.genioModuleHandlers['gaji'] = function () {
+    gjState.periode = genioGetPeriode();
+    gjInit();
+  };
+  window.addEventListener('genio:periode', function (e) {
+    gjState.periode = e.detail.periode;
+    var inp = document.getElementById('gj-periodeInput');
+    if (inp) inp.value = e.detail.periode;
+    if (typeof gjUpdatePeriodeLabel === 'function') gjUpdatePeriodeLabel();
+    if (genioIsModuleVisible('gaji')) gjLoadAll();
+  });
 
   var gjState = {
     tab: 'belum',
@@ -479,10 +489,7 @@
           currentValue: gjState.periode,
           title: 'Periode gaji',
           onSelect: function (val) {
-            gjState.periode = val;
-            document.getElementById('gj-periodeInput').value = val;
-            gjUpdatePeriodeLabel();
-            gjLoadAll();
+            genioSetPeriode(val);
           }
         });
       } else {

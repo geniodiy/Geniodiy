@@ -397,7 +397,7 @@
     </div>
 
     <div class="ops-hero-stats-row">
-      <div class="ops-hero-stat-card" style="gap:8px;">
+      <div class="ops-hero-stat-card" id="ops-periodeNavCard" style="gap:8px;">
         <button type="button" id="ops-prevMonthBtn" class="ops-hero-nav-btn" title="Bulan Sebelumnya">&lsaquo;</button>
         <span id="ops-monthLabel" style="font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; padding:0 4px;" title="Pilih Periode">-</span>
         <button type="button" id="ops-nextMonthBtn" class="ops-hero-nav-btn" title="Bulan Berikutnya">&rsaquo;</button>
@@ -597,7 +597,20 @@
 
 <script>
   window.genioModuleHandlers = window.genioModuleHandlers || {};
-  window.genioModuleHandlers['operasional'] = function () { opsInit(); };
+  function opsApplyPeriode(val) {
+    var parts = (val || '').split('-');
+    if (parts.length !== 2) return;
+    opsState.viewYear = parseInt(parts[0], 10);
+    opsState.viewMonth = parseInt(parts[1], 10) - 1;
+  }
+  window.genioModuleHandlers['operasional'] = function () {
+    opsApplyPeriode(genioGetPeriode());
+    opsInit();
+  };
+  window.addEventListener('genio:periode', function (e) {
+    opsApplyPeriode(e.detail.periode);
+    if (genioIsModuleVisible('operasional')) opsLoadAll();
+  });
 
   var OPS_BULAN_NAMA = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 

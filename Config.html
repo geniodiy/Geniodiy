@@ -152,8 +152,11 @@
   .genio-tool-btn i{font-size:14px; color:var(--ink-soft); pointer-events:none;}
   .genio-tool-btn svg{pointer-events:none;}
 
+  /* Periode sekarang dipilih dari header; kartu periode lama di tiap halaman disembunyikan (ID & hook tetap ada). */
+  .card.genio-periode-card, .tg-periode-sec, #ops-periodeNavCard{display:none !important;}
+
   /* Kartu periode bersama (Home, Presensi, Gaji): ukuran, gaya & animasi sama */
-  .card.genio-periode-card{display:flex !important; align-items:center; justify-content:space-between; gap:10px; width:100%; box-sizing:border-box;
+  .card.genio-periode-card{align-items:center; justify-content:space-between; gap:10px; width:100%; box-sizing:border-box;
     padding:12px 16px !important; border:1px solid var(--border) !important; border-radius:14px !important; box-shadow:none !important; background:#fff;}
   .genio-periode-card .genio-periode-hit{min-width:0; cursor:pointer; border-radius:8px; margin:-4px -6px; padding:4px 6px; transition:background .15s ease;}
   .genio-periode-card .genio-periode-hit:hover{background:var(--surface);}
@@ -525,6 +528,32 @@
     d.textContent = s == null ? '' : s;
     return d.innerHTML;
   }
+  // ===== Periode bersama (dipilih dari header, dipakai Home, Presensi, Gaji, Tagihan, Operasional) =====
+  var GENIO_BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  function genioCurrentPeriode() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  }
+  function genioGetPeriode() {
+    var v = null;
+    try { v = sessionStorage.getItem('genio_periode'); } catch (e) {}
+    return (v && /^\d{4}-\d{2}$/.test(v)) ? v : genioCurrentPeriode();
+  }
+  // refresh=true: muat ulang halaman aktif walau bulannya sama.
+  function genioSetPeriode(val, refresh) {
+    if (!val || !/^\d{4}-\d{2}$/.test(val)) return;
+    var changed = val !== genioGetPeriode();
+    try { sessionStorage.setItem('genio_periode', val); } catch (e) {}
+    if (typeof genioRenderHeaderPeriode === 'function') genioRenderHeaderPeriode();
+    if (changed || refresh) {
+      window.dispatchEvent(new CustomEvent('genio:periode', { detail: { periode: val, refresh: !!refresh } }));
+    }
+  }
+  function genioIsModuleVisible(name) {
+    var el = document.querySelector('.module-panel[data-module="' + name + '"]');
+    return !!(el && !el.hidden);
+  }
+
   // Putar ikon tombol refresh (ikon Phosphor <i> atau <svg>).
   function genioSpinRefresh(btn) {
     var icon = btn && (btn.querySelector('i') || btn.querySelector('svg'));

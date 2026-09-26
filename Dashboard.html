@@ -52,6 +52,45 @@
     .genio-header-logout-btn{color:var(--ink-soft);}
     .genio-header-logout-btn:hover{color:var(--red); border-color:rgba(212,7,15,.3); background:var(--red-soft);}
 
+    /* ===== Periode di header ===== */
+    .gh-per-wrap{position:relative;}
+    .gh-per-wrap[hidden], .gh-sep[hidden]{display:none !important;}
+    .gh-per{height:38px; display:inline-flex; align-items:center; gap:9px; padding:0 11px 0 5px; border-radius:11px; border:1px solid var(--border); background:#fff; cursor:pointer; font-family:var(--font); color:var(--ink); transition:background .15s ease, border-color .15s ease, transform .1s ease;}
+    .gh-per:hover{background:var(--surface); border-color:#C9CCE0;}
+    .gh-per:active{transform:scale(.97);}
+    .gh-per:focus-visible{outline:3px solid rgba(28,26,175,.25); outline-offset:1px;}
+    .gh-per-ic{width:28px; height:28px; border-radius:8px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; flex:none;}
+    .gh-per-t{display:flex; flex-direction:column; align-items:flex-start; line-height:1.1; min-width:0;}
+    .gh-per-m{font-size:12px; font-weight:600; color:var(--ink);}
+    .gh-per-y{font-size:9.5px; color:var(--ink-soft); margin-top:1px; font-variant-numeric:tabular-nums;}
+    .gh-per-cv{font-size:11px; color:var(--ink-soft); transition:transform .2s ease;}
+    .gh-per[aria-expanded="true"] .gh-per-cv{transform:rotate(180deg);}
+    .gh-per .gh-sm{display:none;}
+    .gh-sep{width:1px; height:22px; background:var(--border); margin:0 2px; flex:none;}
+    .gh-menu{position:absolute; top:46px; right:0; width:252px; background:#fff; border:1px solid var(--border); border-radius:14px; box-shadow:0 18px 40px -16px rgba(20,22,43,.25); padding:12px; z-index:95; font-family:var(--font);
+      opacity:0; visibility:hidden; transform:translateY(-6px) scale(.98); transform-origin:top right; transition:opacity .18s ease, transform .22s cubic-bezier(.16,1,.3,1), visibility 0s linear .22s;}
+    .gh-menu.show{opacity:1; visibility:visible; transform:none; transition:opacity .18s ease, transform .22s cubic-bezier(.16,1,.3,1), visibility 0s;}
+    .gh-menu-yr{display:flex; align-items:center; justify-content:space-between; font-size:12.5px; font-weight:600; margin-bottom:10px;}
+    .gh-menu-yr button{width:28px; height:28px; border-radius:8px; border:none; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px;}
+    .gh-menu-yr button:hover{background:#EBEDF5; color:var(--ink);}
+    .gh-menu-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:6px;}
+    .gh-menu-grid button{height:32px; border-radius:8px; border:none; background:none; font-family:var(--font); font-size:11.5px; color:var(--ink); cursor:pointer; transition:background .12s ease;}
+    .gh-menu-grid button:hover{background:var(--surface);}
+    .gh-menu-grid button.is-now{box-shadow:inset 0 0 0 1px var(--border);}
+    .gh-menu-grid button.is-on{background:var(--blue); color:#fff; font-weight:600; box-shadow:none;}
+    .gh-menu-ft{display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);}
+    .gh-menu-ft button{border:none; background:none; font-family:var(--font); font-size:11px; color:var(--ink-soft); display:inline-flex; align-items:center; gap:5px; cursor:pointer; padding:4px 2px;}
+    .gh-menu-ft button:hover{color:var(--ink);}
+    .gh-menu-ft button.is-link{color:var(--blue); font-weight:600;}
+    @media (max-width:600px){
+      .gh-per{height:34px; padding:0 9px 0 3px; gap:6px; border-radius:10px;}
+      .gh-per-ic{width:26px; height:26px; font-size:14px;}
+      .gh-per-cv, .gh-per .gh-lg, .gh-sep{display:none !important;}
+      .gh-per .gh-sm{display:inline;}
+      .gh-menu{right:-84px;}
+    }
+    @media (prefers-reduced-motion: reduce){ .gh-menu, .gh-menu.show{transition:none;} }
+
     #genioNotifPanel{
       position:absolute; display:none; top:44px; right:0; z-index:90;
       width:320px; max-width:88vw; padding:16px;
@@ -246,6 +285,29 @@
     <div id="genioHeaderNavCenter" class="genio-header-nav-center"></div>
 
     <div class="genio-header-actions">
+      <div class="gh-per-wrap" id="genioHeaderPeriodeWrap" hidden>
+        <button type="button" id="genioHeaderPeriodeBtn" class="gh-per" aria-haspopup="true" aria-expanded="false" aria-label="Pilih periode">
+          <span class="gh-per-ic"><i class="ph ph-calendar-blank" aria-hidden="true"></i></span>
+          <span class="gh-per-t">
+            <span class="gh-per-m genio-periode-value" id="genioHeaderPeriodeMonth"><span class="gh-lg">-</span><span class="gh-sm">-</span></span>
+            <span class="gh-per-y" id="genioHeaderPeriodeYear">-</span>
+          </span>
+          <i class="ph ph-caret-down gh-per-cv" aria-hidden="true"></i>
+        </button>
+        <div class="gh-menu" id="genioPeriodeMenu" role="dialog" aria-label="Pilih periode">
+          <div class="gh-menu-yr">
+            <button type="button" id="genioPeriodePrevYear" aria-label="Tahun sebelumnya"><i class="ph ph-caret-left" aria-hidden="true"></i></button>
+            <span id="genioPeriodeMenuYear">-</span>
+            <button type="button" id="genioPeriodeNextYear" aria-label="Tahun berikutnya"><i class="ph ph-caret-right" aria-hidden="true"></i></button>
+          </div>
+          <div class="gh-menu-grid" id="genioPeriodeMenuGrid"></div>
+          <div class="gh-menu-ft">
+            <button type="button" id="genioPeriodeRefresh"><i class="ph ph-arrow-clockwise" aria-hidden="true"></i>Muat ulang data</button>
+            <button type="button" id="genioPeriodeNow" class="is-link">Bulan ini</button>
+          </div>
+        </div>
+      </div>
+      <span class="gh-sep" id="genioHeaderPeriodeSep" hidden></span>
       <div style="position:relative;">
         <button id="genioHeaderBellBtn" class="genio-header-icon-btn" aria-label="Notifikasi" title="Notifikasi">
           <i class="ph ph-bell" aria-hidden="true"></i>
@@ -712,6 +774,7 @@
     // ===== Router modul =====
     function showModule(name) {
       currentActiveModule = name;
+      if (typeof genioSyncHeaderPeriode === 'function') genioSyncHeaderPeriode(name);
       var isSub = SUB_MODULES.indexOf(name) !== -1;
       var bottomTabKey = isSub ? 'lainnya' : name;
       currentBottomTab = bottomTabKey;
@@ -792,6 +855,83 @@
     });
 
     window.genioDashboardShowModule = showModule;
+
+    /* ===== Periode di header ===== */
+    var GENIO_PERIODE_MODULES = ['home', 'presensi', 'gaji', 'tagihan', 'operasional'];
+    var genioPeriodeViewYear = null;
+    window.genioRenderHeaderPeriode = function () {
+      var p = genioGetPeriode().split('-');
+      var y = p[0], m = parseInt(p[1], 10) - 1;
+      var mEl = document.getElementById('genioHeaderPeriodeMonth');
+      if (mEl) mEl.innerHTML = '<span class="gh-lg">' + GENIO_BULAN[m] + '</span><span class="gh-sm">' + GENIO_BULAN[m].slice(0, 3) + '</span>';
+      var yEl = document.getElementById('genioHeaderPeriodeYear');
+      if (yEl) yEl.textContent = y;
+      var btn = document.getElementById('genioHeaderPeriodeBtn');
+      if (btn) btn.setAttribute('aria-label', 'Periode ' + GENIO_BULAN[m] + ' ' + y + ', pilih periode');
+    };
+    window.genioSyncHeaderPeriode = function (name) {
+      var show = GENIO_PERIODE_MODULES.indexOf(name) !== -1;
+      var wrap = document.getElementById('genioHeaderPeriodeWrap');
+      var sep = document.getElementById('genioHeaderPeriodeSep');
+      if (wrap) wrap.hidden = !show;
+      if (sep) sep.hidden = !show;
+      if (!show) genioClosePeriodeMenu();
+    };
+    function genioRenderPeriodeMenu() {
+      var cur = genioGetPeriode().split('-');
+      var now = genioCurrentPeriode().split('-');
+      document.getElementById('genioPeriodeMenuYear').textContent = genioPeriodeViewYear;
+      document.getElementById('genioPeriodeMenuGrid').innerHTML = GENIO_BULAN.map(function (nm, i) {
+        var val = genioPeriodeViewYear + '-' + String(i + 1).padStart(2, '0');
+        var cls = (String(genioPeriodeViewYear) === cur[0] && i === parseInt(cur[1], 10) - 1) ? 'is-on'
+          : ((String(genioPeriodeViewYear) === now[0] && i === parseInt(now[1], 10) - 1) ? 'is-now' : '');
+        return '<button type="button" class="' + cls + '" data-val="' + val + '">' + nm.slice(0, 3) + '</button>';
+      }).join('');
+    }
+    function genioOpenPeriodeMenu() {
+      genioPeriodeViewYear = parseInt(genioGetPeriode().split('-')[0], 10);
+      genioRenderPeriodeMenu();
+      document.getElementById('genioPeriodeMenu').classList.add('show');
+      document.getElementById('genioHeaderPeriodeBtn').setAttribute('aria-expanded', 'true');
+      var notif = document.getElementById('genioNotifPanel');
+      if (notif && notif.style.display === 'block' && typeof genioCloseNotifPanel === 'function') genioCloseNotifPanel();
+    }
+    function genioClosePeriodeMenu() {
+      var menu = document.getElementById('genioPeriodeMenu');
+      if (menu) menu.classList.remove('show');
+      var btn = document.getElementById('genioHeaderPeriodeBtn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+    (function initHeaderPeriode() {
+      var btn = document.getElementById('genioHeaderPeriodeBtn');
+      var menu = document.getElementById('genioPeriodeMenu');
+      if (!btn || !menu) return;
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (menu.classList.contains('show')) genioClosePeriodeMenu(); else genioOpenPeriodeMenu();
+      });
+      menu.addEventListener('click', function (e) { e.stopPropagation(); });
+      document.getElementById('genioPeriodePrevYear').addEventListener('click', function () { genioPeriodeViewYear--; genioRenderPeriodeMenu(); });
+      document.getElementById('genioPeriodeNextYear').addEventListener('click', function () { genioPeriodeViewYear++; genioRenderPeriodeMenu(); });
+      document.getElementById('genioPeriodeMenuGrid').addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-val]');
+        if (!b) return;
+        genioSetPeriode(b.dataset.val);
+        genioClosePeriodeMenu();
+      });
+      document.getElementById('genioPeriodeNow').addEventListener('click', function () {
+        genioSetPeriode(genioCurrentPeriode());
+        genioClosePeriodeMenu();
+      });
+      document.getElementById('genioPeriodeRefresh').addEventListener('click', function () {
+        genioSpinRefresh(this);
+        genioSetPeriode(genioGetPeriode(), true);
+        setTimeout(genioClosePeriodeMenu, 350);
+      });
+      document.addEventListener('click', function () { if (menu.classList.contains('show')) genioClosePeriodeMenu(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu.classList.contains('show')) { genioClosePeriodeMenu(); btn.focus(); } });
+      genioRenderHeaderPeriode();
+    })();
 
     function genioConfirmLogout() {
       var modal = document.getElementById('genioLogoutModal');

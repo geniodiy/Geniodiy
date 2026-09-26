@@ -1250,8 +1250,16 @@
   };
 
   window.genioModuleHandlers['presensi'] = function () {
+    psState.periode = genioGetPeriode();
     psInit();
   };
+  window.addEventListener('genio:periode', function (e) {
+    psState.periode = e.detail.periode;
+    var inp = document.getElementById('ps-periodeInput');
+    if (inp) inp.value = e.detail.periode;
+    if (typeof psUpdatePeriodeLabel === 'function') psUpdatePeriodeLabel();
+    if (genioIsModuleVisible('presensi')) psLoadAll();
+  });
   window.genioModuleHandlers['presensi-goto'] = function (type) {
     var targetTab = type === 'approval' ? 'approval' : 'riwayat';
     setTimeout(function () { psSwitchTab(targetTab); }, 60);
@@ -1270,10 +1278,7 @@
           currentValue: psState.periode,
           title: 'Periode Presensi',
           onSelect: function (val) {
-            psState.periode = val;
-            document.getElementById('ps-periodeInput').value = val;
-            psUpdatePeriodeLabel();
-            psLoadAll();
+            genioSetPeriode(val);
           }
         });
       } else {
