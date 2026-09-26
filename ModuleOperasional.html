@@ -64,7 +64,8 @@
 
   /* ===== Elemen bersama ===== */
   .ops-ico{width:34px; height:34px; border-radius:10px; background:#FFF1EF; color:#E0574B; display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
-  .ops-unit-chip{display:inline-flex; align-items:center; background:var(--blue-tint); color:var(--blue); font-size:10px; font-weight:600; padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .ops-unit-chip{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:var(--ink); background:var(--surface); border-radius:8px; padding:3px 8px; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; flex:none;}
+  .ops-unit-chip i{font-size:12px; color:var(--ink-soft);}
   .ops-bukti{display:inline-flex; align-items:center; gap:5px; height:26px; padding:0 9px; border-radius:8px; font-family:var(--font); font-size:10.5px; font-weight:600; white-space:nowrap; flex:none; box-sizing:border-box;}
   .ops-bukti i{font-size:13px;}
   button.ops-bukti{background:#E9F7EF; color:#1E8E5A; border:1px solid rgba(30,142,90,.25); cursor:pointer; transition:background .15s ease, transform .1s ease;}
@@ -862,7 +863,7 @@
       return '<tr>' +
         '<td class="ops-no ops-stk ops-stk-no">' + (idx + 1) + '</td>' +
         '<td class="ops-stk ops-stk-ket"><span class="ops-ket" title="' + opsEscape(r.keterangan || '') + '">' + opsEscape(r.keterangan || 'Tanpa keterangan') + '</span></td>' +
-        '<td>' + (unit ? '<span class="ops-unit-chip">' + opsEscape(unit) + '</span>' : '<span class="ops-muted">-</span>') + '</td>' +
+        '<td style="white-space:nowrap; color:var(--ink);">' + opsEscape(unit || '-') + '</td>' +
         '<td style="white-space:nowrap;">' + opsFormatTglPendek(r.tanggal) + '</td>' +
         '<td class="ops-money">' + opsFormatRp(r.nominal) + '</td>' +
         '<td>' + bukti + '</td>' +
@@ -899,7 +900,7 @@
       '<div class="opc-head">' +
         '<span class="ops-ico"><i class="ph ph-receipt" aria-hidden="true"></i></span>' +
         '<div class="opc-who"><h4 title="' + opsEscape(r.keterangan || '') + '">' + opsEscape(r.keterangan || 'Tanpa keterangan') + '</h4>' +
-          '<p>' + (unit ? '<span class="ops-unit-chip">' + opsEscape(unit) + '</span>' : '') + '<span>' + opsFormatTglPendek(r.tanggal) + '</span></p></div>' +
+          '<p>' + (unit ? '<span class="ops-unit-chip"><i class="ph ph-buildings" aria-hidden="true"></i>' + opsEscape(unit) + '</span>' : '') + '<span>' + opsFormatTglPendek(r.tanggal) + '</span></p></div>' +
         '<div class="opc-money"><b>' + opsFormatRp(r.nominal) + '</b></div>' +
       '</div>' +
       '<div class="opc-foot">' +
