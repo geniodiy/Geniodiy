@@ -72,6 +72,18 @@
     padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:8px; min-width:190px;
   }
   .pc-side-l{font-size:10.5px; color:rgba(255,255,255,.62);}
+  .ps-hero-actions{min-width:250px; gap:12px;}
+  .pc-status{display:flex; align-items:center; gap:14px; min-width:0;}
+  .pc-ring{width:64px; height:64px; flex:none; overflow:visible;}
+  .pc-ring-track{fill:none; stroke:rgba(255,255,255,.1); stroke-width:7;}
+  .pc-ring-arc{fill:none; stroke-width:7; transform:rotate(-90deg); transform-origin:32px 32px; transition:stroke-dasharray .8s cubic-bezier(.16,1,.3,1);}
+  .pc-ring-n{fill:#fff; font-family:var(--font); font-size:13px; font-weight:800; font-variant-numeric:tabular-nums;}
+  .pc-ring-l{fill:rgba(255,255,255,.6); font-family:var(--font); font-size:7.5px;}
+  .pc-status-list{display:grid; gap:4px; font-size:10.5px; color:rgba(255,255,255,.75); flex:1; min-width:0;}
+  .pc-status-list div{display:flex; align-items:center; gap:6px; white-space:nowrap;}
+  .pc-status-list i{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
+  .pc-status-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  @media (prefers-reduced-motion: reduce){ .pc-ring-arc{transition:none;} }
   #ps-openWakilBtn{
     height:34px; padding:0 14px; border-radius:9px; width:100%;
     background:#fff; color:var(--blue); border:1px solid #fff;
@@ -560,7 +572,20 @@
       </div>
     </div>
     <div class="pc-side ps-hero-actions">
-      <div class="pc-side-l">Tutor kendala teknis?</div>
+      <div class="pc-status">
+        <svg class="pc-ring" id="ps-heroRing" viewBox="0 0 64 64" role="img" aria-label="Proporsi status presensi">
+          <circle class="pc-ring-track" r="26" cx="32" cy="32"></circle>
+          <g id="ps-heroRingArcs"></g>
+          <text x="32" y="31" text-anchor="middle" class="pc-ring-n" id="ps-heroRingPct">0%</text>
+          <text x="32" y="42" text-anchor="middle" class="pc-ring-l">diterima</text>
+        </svg>
+        <div class="pc-status-list">
+          <div><i style="background:#7CF0C3;"></i>Diterima <b id="ps-stDiterima">0</b></div>
+          <div><i style="background:#9DB4FF;"></i>Visit <b id="ps-stVisit">0</b></div>
+          <div><i style="background:#FF9C94;"></i>Ditolak <b id="ps-stDitolak">0</b></div>
+          <div><i style="background:#FFC46B;"></i>Menunggu <b id="ps-stPending">0</b></div>
+        </div>
+      </div>
       <button id="ps-openWakilBtn" type="button" title="Isi presensi untuk tutor yang kendala teknis">
         <i class="ph ph-plus" aria-hidden="true"></i>
         <span>Isi presensi</span>
@@ -1353,6 +1378,36 @@
   var PS_EMBED = 'id,tanggal,jam,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,status,catatan_approval,kontrak_tutor_id,nominal_dibayar,terlambat,unit_id,metode_input,pdf_url,' +
     'kontrak_tutor(mapel,fee_mengajar,uang_transport,tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url),kontrak_siswa(siswa(nama,orangtua(nama))))';
 
+  function psRenderHeroStatus(rows, pendingCount, diterimaPct) {
+    var count = function (st) { return rows.filter(function (r) { return r.status === st; }).length; };
+    var parts = [
+      { v: count('diterima'), c: '#7CF0C3', id: 'ps-stDiterima' },
+      { v: count('visit'), c: '#9DB4FF', id: 'ps-stVisit' },
+      { v: count('ditolak'), c: '#FF9C94', id: 'ps-stDitolak' },
+      { v: pendingCount, c: '#FFC46B', id: 'ps-stPending' }
+    ];
+    parts.forEach(function (p) { document.getElementById(p.id).textContent = p.v; });
+    document.getElementById('ps-heroRingPct').textContent = diterimaPct + '%';
+    var g = document.getElementById('ps-heroRingArcs');
+    if (!g) return;
+    var total = parts.reduce(function (a, p) { return a + p.v; }, 0);
+    var C = 2 * Math.PI * 26, off = 0, gap = total > 0 && parts.filter(function (p) { return p.v; }).length > 1 ? 1.5 : 0;
+    var html = '';
+    parts.forEach(function (p) {
+      if (!total || !p.v) return;
+      var len = p.v / total * C;
+      html += '<circle class="pc-ring-arc" r="26" cx="32" cy="32" stroke="' + p.c + '" stroke-dasharray="0 ' + C.toFixed(2) + '" data-len="' + Math.max(len - gap, .5).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '"></circle>';
+      off += len;
+    });
+    g.innerHTML = html;
+    var arcs = g.querySelectorAll('.pc-ring-arc');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        arcs.forEach(function (a) { a.setAttribute('stroke-dasharray', a.dataset.len + ' ' + C.toFixed(2)); });
+      });
+    });
+  }
+
   function psRenderHeroWeeks(rows, range) {
     var el = document.getElementById('ps-heroWeeks');
     if (!el) return;
@@ -1413,6 +1468,7 @@
       document.getElementById('ps-heroValidasiCount').textContent = diterimaCount + ' dari ' + totalPresensi + ' presensi';
       document.getElementById('ps-heroTelat').textContent = telatCount + ' Presensi';
       psRenderHeroWeeks(periodeRows, range);
+      psRenderHeroStatus(periodeRows, psState.approvalRows.length, diterimaPct);
 
       try {
         var pengaturan = await supaRest('pengaturan?select=persen_denda_telat&limit=1', s.access_token);
