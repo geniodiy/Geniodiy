@@ -155,6 +155,58 @@
   /* Periode sekarang dipilih dari header; kartu periode lama di tiap halaman disembunyikan (ID & hook tetap ada). */
   .card.genio-periode-card, .tg-periode-sec, #ops-periodeNavCard{display:none !important;}
 
+  /* ===== Popup form bersama (gaya "Isi presensi"): header ikon, langkah bernomor, footer tetap ===== */
+  .modal-sheet.gx-sheet{max-width:440px !important; width:100%; padding:0 !important; display:flex !important; flex-direction:column; max-height:88vh !important; overflow:hidden !important; border-radius:18px !important;}
+  .modal-overlay.show .modal-sheet.gx-sheet{transform:none !important; animation:gxSheetIn .3s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes gxSheetIn{from{transform:scale(.94) translateY(8px);} to{transform:scale(1) translateY(0);}}
+  .gx-sheet.gx-sm{max-width:380px !important;}
+  .gx-head{display:flex; align-items:center; gap:11px; padding:16px 18px 12px; border-bottom:1px solid var(--border); flex:none;}
+  .gx-head-ico{width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
+  .gx-head-ico.is-danger{background:var(--red-soft); color:var(--red);}
+  .gx-head h3{font-size:13.5px !important; font-weight:600 !important; margin:0 !important; line-height:1.3;}
+  .gx-sub{font-size:10.5px !important; color:var(--ink-soft) !important; margin:2px 0 0 !important; line-height:1.4;}
+  .gx-close{margin-left:auto; align-self:flex-start; width:28px; height:28px; border-radius:8px; border:none; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; flex:none; transition:background .15s ease, color .15s ease;}
+  .gx-close:hover{background:#EBEDF5; color:var(--ink);}
+  .gx-body{padding:4px 18px 8px; overflow-y:auto; flex:1;}
+  .gx-body > .alert{margin:12px 0 0 !important; font-size:10.5px !important;}
+  .gx-sheet .gx-step-title{display:flex !important; align-items:center; gap:7px; font-size:11px !important; font-weight:600 !important; color:var(--ink) !important; margin:14px 0 8px !important; text-transform:none !important; letter-spacing:0 !important;}
+  .gx-step{width:17px; height:17px; border-radius:50%; background:var(--ink); color:#fff; font-size:9.5px; font-weight:600; display:inline-flex; align-items:center; justify-content:center; flex:none;}
+  .gx-sheet .ktr-row{padding:0 0 10px !important;}
+  .gx-sheet .ktr-row > label{display:flex !important; align-items:center; gap:6px; font-size:10.5px !important; margin-bottom:5px !important;}
+  .gx-sheet .ktr-row input:not([type="hidden"]), .gx-sheet .ktr-row select, .gx-sheet .ktr-row button[style*="width:100%"]{font-size:11.5px !important; min-height:34px !important; padding:7px 11px !important; border-radius:9px !important; color:var(--ink) !important;}
+  .gx-sheet .ktr-row button[style*="width:100%"] svg{stroke:var(--ink-soft); flex:none;}
+  .gx-req, .gx-opt{font-style:normal; font-size:9px; font-weight:600; border-radius:999px; padding:1px 6px;}
+  .gx-req{background:var(--red-soft); color:var(--red);}
+  .gx-opt{background:var(--surface); color:var(--ink-soft); font-weight:500;}
+  .gx-2col{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .gx-2col > *{min-width:0; display:flex; flex-direction:column;}
+  .gx-2col > * > label{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .gx-2col .gx-field span, .gx-2col button > span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;}
+  .gx-note{display:flex; gap:7px; align-items:flex-start; background:var(--blue-tint); color:#2B2A8C; border-radius:9px; padding:8px 10px; font-size:10.5px; line-height:1.45; margin-top:12px;}
+  .gx-note i{font-size:13px; margin-top:1px; flex:none;}
+  .gx-seg{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .gx-seg button{height:34px; border-radius:9px; border:1px solid var(--border) !important; background:#fff !important; color:var(--ink) !important; font-family:var(--font); font-size:11px !important; font-weight:600 !important; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease, border-color .15s ease, color .15s ease; padding:0 !important;}
+  .gx-seg button i{width:8px; height:8px; border-radius:50%; background:#C9CCDA;}
+  .gx-seg button.is-on[data-val="aktif"]{background:#E9F7EF !important; color:#1E8E5A !important; border-color:#1E8E5A !important;}
+  .gx-seg button.is-on[data-val="aktif"] i{background:#1E8E5A;}
+  .gx-seg button.is-on[data-val="selesai"]{background:#FDEAEA !important; color:#D4070F !important; border-color:#D4070F !important;}
+  .gx-seg button.is-on[data-val="selesai"] i{background:#D4070F;}
+  .gx-field{display:flex !important; align-items:center; justify-content:space-between; gap:8px; width:100%; min-height:34px; padding:7px 11px !important; border-radius:9px !important; background:var(--surface) !important; border:1px solid var(--border) !important; font-family:var(--font); font-size:11.5px !important; font-weight:400 !important; color:var(--ink) !important; cursor:pointer; text-align:left; transition:border-color .15s ease;}
+  .gx-field:hover{border-color:#C9CCDA !important;}
+  .gx-field svg{stroke:var(--ink-soft); flex:none;}
+  .gx-search{position:relative; margin:12px 0 8px;}
+  .gx-search i{position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--ink-soft); font-size:14px; pointer-events:none;}
+  .gx-search input{width:100%; height:34px; box-sizing:border-box; border:1px solid var(--border); border-radius:9px; background:var(--surface); padding:0 12px 0 32px; font-family:var(--font); font-size:11.5px; color:var(--ink);}
+  .gx-search input:focus{outline:none; border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .gx-foot{display:flex !important; gap:8px !important; padding:12px 18px 14px !important; margin:0 !important; border-top:1px solid var(--border); background:#fff; flex:none;}
+  .gx-foot .btn{flex:1; height:34px !important; font-size:11.5px !important; border-radius:9px !important;}
+  .gx-foot .btn.is-danger{background:var(--red) !important; border-color:var(--red) !important; color:#fff !important;}
+  .gx-confirm{padding:22px 20px 6px; text-align:center;}
+  .gx-confirm .gx-head-ico{width:44px; height:44px; border-radius:50%; font-size:20px; margin:0 auto 12px;}
+  .gx-confirm h3{font-size:14px !important; font-weight:600 !important; margin:0 0 4px !important;}
+  .gx-confirm p{font-size:11px; color:var(--ink-soft); margin:0 0 6px; line-height:1.5;}
+  @media (prefers-reduced-motion: reduce){ .modal-overlay.show .modal-sheet.gx-sheet{animation:none;} }
+
   /* Kartu periode bersama (Home, Presensi, Gaji): ukuran, gaya & animasi sama */
   .card.genio-periode-card{align-items:center; justify-content:space-between; gap:10px; width:100%; box-sizing:border-box;
     padding:12px 16px !important; border:1px solid var(--border) !important; border-radius:14px !important; box-shadow:none !important; background:#fff;}

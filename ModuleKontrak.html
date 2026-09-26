@@ -501,172 +501,188 @@
 
   <!-- Modal Tambah/Edit Kontrak Siswa -->
   <div class="modal-overlay" id="ktr-modal" hidden>
-    <div class="modal-sheet">
-      <h3 id="ktr-modalTitle" style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Tambah Kontrak</h3>
-      <div id="ktr-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-      <input type="hidden" id="ktr-id">
-
-      <div id="ktr-statusFieldWrap" hidden>
-        <div class="ktr-group-title">Status</div>
-        <div style="display:flex; gap:6px; margin-bottom:4px;">
-          <button type="button" class="ktr-status-opt" data-val="aktif" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-size:11px; font-weight:500; cursor:pointer;">Aktif</button>
-          <button type="button" class="ktr-status-opt" data-val="selesai" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-size:11px; font-weight:500; cursor:pointer;">Nonaktif</button>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-file-text" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3 id="ktr-modalTitle">Tambah kontrak</h3>
+          <p class="gx-sub">Kontrak belajar siswa untuk satu paket.</p>
         </div>
-        <input type="hidden" id="ktr-statusSelect" value="aktif">
+        <button type="button" class="gx-close" id="ktr-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
+      <div class="gx-body">
+        <div id="ktr-modalAlert" class="alert alert-error" hidden></div>
+        <input type="hidden" id="ktr-id">
 
-      <div class="ktr-group-title">Siswa</div>
-      <div class="ktr-group" style="margin-bottom:4px;">
-        <div class="ktr-row"><label for="ktr-siswaPickerBtn">Pilih Siswa</label>
-          <button type="button" id="ktr-siswaPickerBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ktr-siswaPickerLabel">Pilih siswa...</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-          </button>
-          <input type="hidden" id="ktr-siswaSelectedId">
+        <div id="ktr-statusFieldWrap" hidden>
+          <div class="ktr-group-title gx-step-title"><span class="gx-step"><i class="ph ph-toggle-right" aria-hidden="true" style="font-size:10px;"></i></span>Status kontrak</div>
+          <div class="gx-seg">
+            <button type="button" class="ktr-status-opt" data-val="aktif"><i></i>Aktif</button>
+            <button type="button" class="ktr-status-opt" data-val="selesai"><i></i>Nonaktif</button>
+          </div>
+          <input type="hidden" id="ktr-statusSelect" value="aktif">
+        </div>
+
+        <div class="ktr-group-title gx-step-title"><span class="gx-step">1</span>Siswa</div>
+        <div class="ktr-group">
+          <div class="ktr-row"><label for="ktr-siswaPickerBtn">Siswa <em class="gx-req">wajib</em></label>
+            <button type="button" id="ktr-siswaPickerBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ktr-siswaPickerLabel">Pilih siswa...</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+            <input type="hidden" id="ktr-siswaSelectedId">
+          </div>
+        </div>
+
+        <div class="ktr-group-title gx-step-title"><span class="gx-step">2</span>Paket dan biaya</div>
+        <div class="ktr-group">
+          <div class="ktr-row"><label for="ktr-paketPickerBtn">Paket belajar <em class="gx-req">wajib</em></label>
+            <button type="button" id="ktr-paketPickerBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ktr-paketPickerLabel">Pilih paket...</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+            <input type="hidden" id="ktr-paketSelectedId">
+          </div>
+          <div class="ktr-row"><label for="ktr-harga">Biaya per sesi (Rp) <em class="gx-req">wajib</em></label><input type="number" id="ktr-harga" placeholder="Otomatis dari paket, bisa diubah"></div>
+        </div>
+
+        <div class="ktr-group-title gx-step-title"><span class="gx-step">3</span>Periode</div>
+        <div class="ktr-group">
+          <div class="gx-2col">
+          <div class="ktr-row"><label for="ktr-tglMulaiBtn">Mulai <em class="gx-req">wajib</em></label>
+            <button type="button" id="ktr-tglMulaiBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ktr-tglMulaiLabel">Pilih tanggal...</span>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+            <input type="hidden" id="ktr-tglMulai">
+          </div>
+          <div class="ktr-row"><label for="ktr-tglSelesaiBtn">Selesai <em class="gx-opt">opsional</em></label>
+            <button type="button" id="ktr-tglSelesaiBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ktr-tglSelesaiLabel">Tidak ditentukan</span>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+            <input type="hidden" id="ktr-tglSelesai">
+          </div>
+          </div>
         </div>
       </div>
-
-      <div class="ktr-group-title">Paket &amp; Biaya</div>
-      <div class="ktr-group" style="margin-bottom:4px;">
-        <div class="ktr-row"><label for="ktr-paketPickerBtn">Pilih Paket Belajar</label>
-          <button type="button" id="ktr-paketPickerBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ktr-paketPickerLabel">Pilih paket...</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-          </button>
-          <input type="hidden" id="ktr-paketSelectedId">
-        </div>
-        <div class="ktr-row"><label for="ktr-harga">Biaya Satuan per Sesi (Rp)</label><input type="number" id="ktr-harga" placeholder="Otomatis dari paket, bisa diubah"></div>
-      </div>
-
-      <div class="ktr-group-title">Periode</div>
-      <div class="ktr-group" style="margin-bottom:4px;">
-        <div class="ktr-row"><label for="ktr-tglMulaiBtn">Tanggal Mulai</label>
-          <button type="button" id="ktr-tglMulaiBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ktr-tglMulaiLabel">Pilih tanggal...</span>
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          </button>
-          <input type="hidden" id="ktr-tglMulai">
-        </div>
-        <div class="ktr-row"><label for="ktr-tglSelesaiBtn">Tanggal Selesai (Opsional)</label>
-          <button type="button" id="ktr-tglSelesaiBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ktr-tglSelesaiLabel">Tidak ditentukan</span>
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          </button>
-          <input type="hidden" id="ktr-tglSelesai">
-        </div>
-      </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="ktr-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="ktr-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="ktr-cancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ktr-saveBtn">Simpan kontrak</button>
       </div>
     </div>
   </div>
 
   <!-- Modal Tambah/Edit Tutor -->
   <div class="modal-overlay" id="ktr-tutorModal" hidden>
-    <div class="modal-sheet">
-      <h3 id="ktr-tutorModalTitle" style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Tambah Tutor</h3>
-      <div id="ktr-tutorModalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-      <input type="hidden" id="ktr-tutorId">
-      <input type="hidden" id="ktr-tutorKontrakSiswaId">
-
-      <div class="ktr-group-title">Data Tutor</div>
-      <div class="ktr-group" style="margin-bottom:4px;">
-        <div class="ktr-row"><label for="ktr-tutorPickerBtn">Pilih Tutor</label>
-          <button type="button" id="ktr-tutorPickerBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ktr-tutorPickerLabel">Pilih tutor...</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-          </button>
-          <input type="hidden" id="ktr-tutorSelectedId">
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-chalkboard-teacher" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3 id="ktr-tutorModalTitle">Tambah tutor</h3>
+          <p class="gx-sub">Tutor, mapel, dan honor per sesi untuk kontrak ini.</p>
         </div>
-        <div class="ktr-row"><label for="ktr-mapel">Mata Pelajaran</label><input type="text" id="ktr-mapel" placeholder="mis. Matematika Saintek"></div>
-        <div class="ktr-row"><label for="ktr-durasi">Durasi Sesi (Menit)</label><input type="number" id="ktr-durasi" placeholder="mis. 90"></div>
+        <button type="button" class="gx-close" id="ktr-tutorCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
+      <div class="gx-body">
+        <div id="ktr-tutorModalAlert" class="alert alert-error" hidden></div>
+        <input type="hidden" id="ktr-tutorId">
+        <input type="hidden" id="ktr-tutorKontrakSiswaId">
 
-      <div class="ktr-group-title">Honor per Sesi</div>
-      <div class="ktr-group">
-        <div class="ktr-row"><label for="ktr-fee">Fee Mengajar (Rp)</label><input type="number" id="ktr-fee" placeholder="mis. 120000"></div>
-        <div class="ktr-row"><label for="ktr-transport">Uang Transport (Rp)</label><input type="number" id="ktr-transport" placeholder="mis. 25000"></div>
+        <div class="ktr-group-title gx-step-title"><span class="gx-step">1</span>Tutor dan mapel</div>
+        <div class="ktr-group">
+          <div class="ktr-row"><label for="ktr-tutorPickerBtn">Tutor <em class="gx-req">wajib</em></label>
+            <button type="button" id="ktr-tutorPickerBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
+              <span id="ktr-tutorPickerLabel">Pilih tutor...</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+            <input type="hidden" id="ktr-tutorSelectedId">
+          </div>
+          <div class="gx-2col">
+            <div class="ktr-row"><label for="ktr-mapel">Mata pelajaran <em class="gx-req">wajib</em></label><input type="text" id="ktr-mapel" placeholder="mis. Matematika"></div>
+            <div class="ktr-row"><label for="ktr-durasi">Durasi (menit)</label><input type="number" id="ktr-durasi" placeholder="mis. 90"></div>
+          </div>
+        </div>
+
+        <div class="ktr-group-title gx-step-title"><span class="gx-step">2</span>Honor per sesi</div>
+        <div class="ktr-group">
+          <div class="gx-2col">
+            <div class="ktr-row"><label for="ktr-fee">Fee (Rp) <em class="gx-req">wajib</em></label><input type="number" id="ktr-fee" placeholder="mis. 120000"></div>
+            <div class="ktr-row"><label for="ktr-transport">Transport (Rp)</label><input type="number" id="ktr-transport" placeholder="mis. 25000"></div>
+          </div>
+        </div>
+        <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span>Denda keterlambatan dihitung dari fee mengajar sesuai persen di Pengaturan.</span></div>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="ktr-tutorCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="ktr-tutorSaveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="ktr-tutorCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ktr-tutorSaveBtn">Simpan tutor</button>
       </div>
     </div>
   </div>
 
-
-
-
   <!-- Modal Filter -->
   <div class="modal-overlay" id="ktr-filterModal" hidden>
-    <div class="modal-sheet" style="max-height:88vh; overflow-y:auto;">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Filter</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar kontrak sesuai kebutuhan.</p>
-
-      <div class="ktr-group-title">Jenis Paket</div>
-      <div class="ktr-group" style="margin-bottom:4px;">
-        <button type="button" class="ktr-filter-row-btn" data-picker="jenis" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ktr-filterJenisSummary">Semua Jenis</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-funnel-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Filter kontrak</h3>
+          <p class="gx-sub">Bisa dikombinasikan dengan pencarian di atas.</p>
+        </div>
+        <button type="button" class="gx-close" id="ktr-filterCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="ktr-group-title">Tutor</div>
-      <div class="ktr-group" style="margin-bottom:4px;">
-        <button type="button" class="ktr-filter-row-btn" data-picker="tutor" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ktr-filterTutorSummary">Semua Tutor</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+      <div class="gx-body">
+        <div class="ktr-group-title gx-step-title"><span class="gx-step">1</span>Paket</div>
+        <div class="ktr-group">
+          <div class="ktr-row"><label>Jenis paket</label>
+            <button type="button" class="ktr-filter-row-btn gx-field" data-picker="jenis"><span id="ktr-filterJenisSummary">Semua jenis</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+          </div>
+        </div>
+        <div class="ktr-group-title gx-step-title"><span class="gx-step">2</span>Orang</div>
+        <div class="ktr-group">
+          <div class="ktr-row"><label>Tutor</label>
+            <button type="button" class="ktr-filter-row-btn gx-field" data-picker="tutor"><span id="ktr-filterTutorSummary">Semua tutor</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+          </div>
+          <div class="ktr-row"><label>Siswa</label>
+            <button type="button" class="ktr-filter-row-btn gx-field" data-picker="siswa"><span id="ktr-filterSiswaSummary">Semua siswa</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+          </div>
+          <div class="ktr-row"><label>Orang tua</label>
+            <button type="button" class="ktr-filter-row-btn gx-field" data-picker="ortu"><span id="ktr-filterOrtuSummary">Semua orang tua</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+          </div>
+        </div>
       </div>
-
-      <div class="ktr-group-title">Siswa</div>
-      <div class="ktr-group" style="margin-bottom:4px;">
-        <button type="button" class="ktr-filter-row-btn" data-picker="siswa" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ktr-filterSiswaSummary">Semua Siswa</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="ktr-group-title">Orang Tua</div>
-      <div class="ktr-group">
-        <button type="button" class="ktr-filter-row-btn" data-picker="ortu" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ktr-filterOrtuSummary">Semua Orang Tua</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="ktr-filterResetBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Reset</button>
-        <button type="button" class="btn btn-primary" id="ktr-filterApplyBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Terapkan Filter</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="ktr-filterResetBtn">Reset</button>
+        <button type="button" class="btn btn-primary" id="ktr-filterApplyBtn">Terapkan filter</button>
       </div>
     </div>
   </div>
 
   <!-- Popup Picker -->
   <div class="modal-overlay" id="ktr-pickerModal" hidden style="z-index:70;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="ktr-pickerTitle" style="font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih</h3>
-      <div id="ktr-pickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
-        <button type="button" class="btn btn-outline" id="ktr-pickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="ktr-pickerDoneBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Selesai</button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-list-checks" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="ktr-pickerTitle">Pilih</h3><p class="gx-sub">Bisa pilih lebih dari satu.</p></div>
+      </div>
+      <div class="gx-body"><div id="ktr-pickerList" style="margin:10px 0 6px;"></div></div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="ktr-pickerCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ktr-pickerDoneBtn">Selesai</button>
       </div>
     </div>
   </div>
 
   <!-- Popup Kalender (Tanggal Mulai / Selesai) -->
   <div class="modal-overlay" id="ktr-datePickerModal" hidden style="z-index:75;">
-    <div class="modal-sheet" style="max-width:320px;">
-      <h3 id="ktr-datePickerTitle" style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih Tanggal</h3>
+    <div class="modal-sheet" style="max-width:320px; border-radius:18px;">
+      <h3 id="ktr-datePickerTitle" style="text-align:center; font-size:13.5px !important; font-weight:600 !important; margin:0 0 12px !important;">Pilih tanggal</h3>
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-        <button type="button" id="ktr-dpPrevYear" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&laquo;</button>
-        <button type="button" id="ktr-dpPrevMonth" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&lsaquo;</button>
+        <button type="button" id="ktr-dpPrevYear" style="background:var(--surface); border:none; width:28px; height:28px; border-radius:8px; cursor:pointer; color:var(--ink-soft); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&laquo;</button>
+        <button type="button" id="ktr-dpPrevMonth" style="background:var(--surface); border:none; width:28px; height:28px; border-radius:8px; cursor:pointer; color:var(--ink-soft); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&lsaquo;</button>
         <span id="ktr-dpMonthYear" style="font-size:12.5px; font-weight:600; color:var(--ink);">-</span>
-        <button type="button" id="ktr-dpNextMonth" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&rsaquo;</button>
-        <button type="button" id="ktr-dpNextYear" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&raquo;</button>
+        <button type="button" id="ktr-dpNextMonth" style="background:var(--surface); border:none; width:28px; height:28px; border-radius:8px; cursor:pointer; color:var(--ink-soft); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&rsaquo;</button>
+        <button type="button" id="ktr-dpNextYear" style="background:var(--surface); border:none; width:28px; height:28px; border-radius:8px; cursor:pointer; color:var(--ink-soft); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&raquo;</button>
       </div>
       <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;">
         <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Min</span>
@@ -679,8 +695,8 @@
       </div>
       <div id="ktr-dpGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:10px;"></div>
       <div class="modal-actions" style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-outline" id="ktr-dpClearBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Kosongkan</button>
-        <button type="button" class="btn btn-outline" id="ktr-dpCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
+        <button type="button" class="btn btn-outline" id="ktr-dpClearBtn" style="height:34px; font-size:11.5px; border-radius:9px; flex:1;">Kosongkan</button>
+        <button type="button" class="btn btn-outline" id="ktr-dpCancelBtn" style="height:34px; font-size:11.5px; border-radius:9px; flex:1;">Batal</button>
       </div>
     </div>
   </div>
@@ -688,15 +704,18 @@
 
   <!-- Popup Pilih (Siswa / Paket / Tutor) — dengan search bar -->
   <div class="modal-overlay" id="ktr-selectPickerModal" hidden style="z-index:75;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="ktr-selectPickerTitle" style="font-size:13.5px; font-weight:500; margin:0 0 8px;">Pilih</h3>
-      <div style="position:relative; margin-bottom:8px;">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="ktr-selectPickerSearchInput" placeholder="Cari..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="ktr-selectPickerTitle">Pilih</h3><p class="gx-sub">Ketik untuk mencari lebih cepat.</p></div>
+        <button type="button" class="gx-close" id="ktr-selectPickerCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-      <div id="ktr-selectPickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions" style="margin-top:10px;">
-        <button type="button" class="btn btn-outline" id="ktr-selectPickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Batal</button>
+      <div class="gx-body">
+        <div class="gx-search"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input type="text" id="ktr-selectPickerSearchInput" placeholder="Cari..."></div>
+        <div id="ktr-selectPickerList" style="margin-bottom:6px;"></div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="ktr-selectPickerCancelBtn">Batal</button>
       </div>
     </div>
   </div>
@@ -704,15 +723,15 @@
 
   <!-- Modal Konfirmasi Hapus (generik) -->
   <div class="modal-overlay" id="ktr-confirmModal" hidden>
-    <div class="modal-sheet" style="max-width:360px;">
-      <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-confirm">
+        <span class="gx-head-ico is-danger"><i class="ph ph-trash" aria-hidden="true"></i></span>
+        <h3 id="ktr-confirmTitle">Hapus data ini?</h3>
+        <p id="ktr-confirmDesc">Tindakan ini tidak bisa dibatalkan.</p>
       </div>
-      <h3 style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 4px;" id="ktr-confirmTitle">Hapus Data Ini?</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;" id="ktr-confirmDesc">Tindakan ini tidak bisa dibatalkan.</p>
-      <div class="modal-actions" style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-outline" id="ktr-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="ktr-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1; background:var(--red);">Ya, Hapus</button>
+      <div class="modal-actions gx-foot" style="border-top:none !important;">
+        <button type="button" class="btn btn-outline" id="ktr-confirmCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary is-danger" id="ktr-confirmOkBtn">Ya, hapus</button>
       </div>
     </div>
   </div>
@@ -802,6 +821,10 @@
       });
 
       document.getElementById('ktr-tutorCancelBtn').addEventListener('click', ktrCloseTutorModal);
+      document.getElementById('ktr-tutorCloseX').addEventListener('click', ktrCloseTutorModal);
+      document.getElementById('ktr-modalCloseX').addEventListener('click', ktrCloseModal);
+      document.getElementById('ktr-filterCloseX').addEventListener('click', ktrCloseFilterModal);
+      document.getElementById('ktr-selectPickerCloseX').addEventListener('click', ktrCloseSelectPicker);
       document.getElementById('ktr-tutorSaveBtn').addEventListener('click', ktrSubmitTutorForm);
 
       document.getElementById('ktr-confirmCancelBtn').addEventListener('click', ktrCloseConfirmModal);
@@ -1214,7 +1237,6 @@
               '<button type="button" class="ktr-table-icon-btn ktr-edit-btn" data-id="' + k.id + '" title="Edit Kontrak" aria-label="Edit">' +
                 '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
               '</button>' +
-              waBtn +
             '</div>' +
           '</td>' +
         '</tr>';
@@ -1242,7 +1264,7 @@
                 '<th class="ktr-sort-th" data-sort="tutor" title="Urutkan Tutor & Mapel">' +
                   '<span style="display:inline-flex; align-items:center;">Tutor dan mapel' + ktrGetSortIcon('tutor') + '</span>' +
                 '</th>' +
-                '<th class="ktr-sort-th" data-sort="tanggal" title="Urutkan Tanggal Mulai" style="text-align:center; width:90px;">' +
+                '<th class="ktr-sort-th" data-sort="tanggal" title="Urutkan tanggal mulai" style="text-align:center; width:90px;">' +
                   '<span style="display:inline-flex; align-items:center; justify-content:center; width:100%;">Mulai' + ktrGetSortIcon('tanggal') + '</span>' +
                 '</th>' +
                 '<th style="text-align:center;">Status</th>' +
@@ -1386,7 +1408,7 @@
     document.querySelectorAll('.ktr-del-tutor-btn').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
-        ktrOpenConfirm('Hapus Tutor Ini?', 'Tutor akan dihapus dari kontrak ini.', function () { ktrDeleteTutor(btn.dataset.id); });
+        ktrOpenConfirm('Hapus tutor ini?', 'Tutor akan dilepas dari kontrak ini. Presensi yang sudah ada tidak ikut terhapus.', function () { ktrDeleteTutor(btn.dataset.id); });
       });
     });
   }
@@ -1407,8 +1429,8 @@
     document.getElementById('ktr-confirmTitle').textContent = title;
     document.getElementById('ktr-confirmDesc').textContent = desc;
     var okBtn = document.getElementById('ktr-confirmOkBtn');
-    okBtn.textContent = okLabel || 'Ya, Hapus';
-    okBtn.style.background = okColor || '#ff3b30';
+    okBtn.textContent = okLabel || 'Ya, hapus';
+    okBtn.style.background = okColor || '';
     ktrConfirmCallback = callback;
     ktrConfirmModal.hidden = false;
     requestAnimationFrame(function () { ktrConfirmModal.classList.add('show'); });
@@ -1447,14 +1469,14 @@
   async function ktrOpenModal(k) {
     document.getElementById('ktr-modalAlert').hidden = true;
     ktrEditId = k ? k.id : null;
-    document.getElementById('ktr-modalTitle').textContent = k ? 'Edit Kontrak' : 'Tambah Kontrak';
+    document.getElementById('ktr-modalTitle').textContent = k ? 'Edit kontrak' : 'Tambah kontrak';
     var defaultTglMulai = k ? k.tanggal_mulai : new Date().toISOString().slice(0, 10);
     document.getElementById('ktr-tglMulai').value = defaultTglMulai;
-    document.getElementById('ktr-tglMulaiLabel').textContent = ktrFormatTanggalPanjang(defaultTglMulai);
+    document.getElementById('ktr-tglMulaiLabel').textContent = ktrFormatTgl(defaultTglMulai);
     document.getElementById('ktr-tglMulaiLabel').style.color = 'var(--ink)';
 
     document.getElementById('ktr-tglSelesai').value = (k && k.tanggal_selesai) || '';
-    document.getElementById('ktr-tglSelesaiLabel').textContent = (k && k.tanggal_selesai) ? ktrFormatTanggalPanjang(k.tanggal_selesai) : 'Tidak ditentukan';
+    document.getElementById('ktr-tglSelesaiLabel').textContent = (k && k.tanggal_selesai) ? ktrFormatTgl(k.tanggal_selesai) : 'Tidak ditentukan';
     document.getElementById('ktr-tglSelesaiLabel').style.color = (k && k.tanggal_selesai) ? 'var(--ink)' : 'var(--ink-soft)';
     document.getElementById('ktr-harga').value = k ? k.harga : '';
 
@@ -1499,13 +1521,7 @@
     document.querySelectorAll('.ktr-status-opt').forEach(function (btn) {
       var active = btn.dataset.val === val;
       var isNonaktif = btn.dataset.val === 'selesai';
-      if (active) {
-        btn.style.background = isNonaktif ? 'rgba(255,59,48,.12)' : 'rgba(52,199,89,.14)';
-        btn.style.color = isNonaktif ? '#ff3b30' : '#28a745';
-        btn.style.borderColor = isNonaktif ? '#ff3b30' : '#28a745';
-      } else {
-        btn.style.background = 'var(--surface)'; btn.style.color = 'var(--ink-soft)'; btn.style.borderColor = 'var(--border)';
-      }
+      btn.classList.toggle('is-on', active);
     });
   }
 
@@ -1571,7 +1587,7 @@
     document.getElementById('ktr-tutorModalAlert').hidden = true;
     ktrTutorEditId = kt ? kt.id : null;
     document.getElementById('ktr-tutorKontrakSiswaId').value = kontrakSiswaId;
-    document.getElementById('ktr-tutorModalTitle').textContent = kt ? 'Edit Tutor' : 'Tambah Tutor';
+    document.getElementById('ktr-tutorModalTitle').textContent = kt ? 'Edit tutor' : 'Tambah tutor';
     document.getElementById('ktr-mapel').value = kt ? kt.mapel : '';
     document.getElementById('ktr-fee').value = kt ? kt.fee_mengajar : '';
     document.getElementById('ktr-durasi').value = kt ? (kt.durasi_menit || '') : '';
@@ -1672,10 +1688,10 @@
   }
 
   var KTR_FILTER_DEFS = {
-    jenis: { title: 'Pilih Jenis Paket', allLabel: 'Semua Jenis', multi: true, getOptions: function () { return KTR_JENIS_OPTIONS; } },
-    tutor: { title: 'Pilih Tutor', allLabel: 'Semua Tutor', multi: true, getOptions: ktrGetTutorFilterOptions },
-    siswa: { title: 'Pilih Siswa', allLabel: 'Semua Siswa', multi: true, getOptions: ktrGetSiswaFilterOptions },
-    ortu: { title: 'Pilih Orang Tua', allLabel: 'Semua Orang Tua', multi: true, getOptions: ktrGetOrtuFilterOptions }
+    jenis: { title: 'Pilih jenis paket', allLabel: 'Semua jenis', multi: true, getOptions: function () { return KTR_JENIS_OPTIONS; } },
+    tutor: { title: 'Pilih tutor', allLabel: 'Semua tutor', multi: true, getOptions: ktrGetTutorFilterOptions },
+    siswa: { title: 'Pilih siswa', allLabel: 'Semua siswa', multi: true, getOptions: ktrGetSiswaFilterOptions },
+    ortu: { title: 'Pilih orang tua', allLabel: 'Semua orang tua', multi: true, getOptions: ktrGetOrtuFilterOptions }
   };
   var ktrPickerCurrentType = null;
   var ktrPickerTempSingle = '';
@@ -1829,7 +1845,7 @@
   /* ===== Popup Pilih Siswa/Paket/Tutor (dengan search bar) — dipakai di form Tambah Kontrak & Tambah Tutor ===== */
   var KTR_SELECT_DEFS = {
     siswa: {
-      title: 'Pilih Siswa',
+      title: 'Pilih siswa',
       getOptions: function () { return ktrState.siswaOptions.map(function (sw) { return { value: sw.id, label: sw.nama, raw: sw }; }); },
       onPick: function (opt) {
         document.getElementById('ktr-siswaSelectedId').value = opt.value;
@@ -1838,7 +1854,7 @@
       }
     },
     paket: {
-      title: 'Pilih Paket Belajar',
+      title: 'Pilih paket belajar',
       getOptions: function () { return ktrState.paketOptions.map(function (p) { return { value: p.id, label: (p.kode_paket || '-') + ' — ' + p.nama_paket, raw: p }; }); },
       onPick: function (opt) {
         document.getElementById('ktr-paketSelectedId').value = opt.value;
@@ -1848,7 +1864,7 @@
       }
     },
     tutor: {
-      title: 'Pilih Tutor',
+      title: 'Pilih tutor',
       getOptions: function () { return ktrState.tutorOptions.map(function (t) { return { value: t.id, label: t.nama, raw: t }; }); },
       onPick: function (opt) {
         document.getElementById('ktr-tutorSelectedId').value = opt.value;
@@ -1918,7 +1934,7 @@
 
   function ktrOpenDatePicker(target) {
     ktrDpTarget = target;
-    document.getElementById('ktr-datePickerTitle').textContent = target === 'mulai' ? 'Tanggal Mulai' : 'Tanggal Selesai';
+    document.getElementById('ktr-datePickerTitle').textContent = target === 'mulai' ? 'Tanggal mulai' : 'Tanggal selesai';
     var currentVal = document.getElementById(target === 'mulai' ? 'ktr-tglMulai' : 'ktr-tglSelesai').value;
     ktrDpSelectedDate = currentVal || null;
     var base = currentVal ? new Date(currentVal + 'T00:00:00') : new Date();
@@ -1954,7 +1970,7 @@
         ktrDpSelectedDate = btn.dataset.iso;
         var labelEl = document.getElementById(ktrDpTarget === 'mulai' ? 'ktr-tglMulaiLabel' : 'ktr-tglSelesaiLabel');
         document.getElementById(ktrDpTarget === 'mulai' ? 'ktr-tglMulai' : 'ktr-tglSelesai').value = ktrDpSelectedDate;
-        labelEl.textContent = ktrFormatTanggalPanjang(ktrDpSelectedDate);
+        labelEl.textContent = ktrFormatTgl(ktrDpSelectedDate);
         labelEl.style.color = 'var(--ink)';
         ktrCloseDatePicker();
       });
