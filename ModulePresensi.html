@@ -66,6 +66,8 @@
   .pc-legend b{color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
   .pc-lg{display:inline-flex; align-items:center; gap:6px; white-space:nowrap;}
   .pc-lg > i{width:7px; height:7px; border-radius:2px; display:inline-block;}
+  .pc-denda{display:inline-flex; align-items:center; font-weight:700; color:#FFC46B; background:rgba(255,196,107,.14); border-radius:999px; padding:1px 7px; margin-left:2px; font-variant-numeric:tabular-nums;}
+  .pc2-chip.is-late b, .pt2-late b{font-weight:700; margin-left:2px;}
   .pc-side{
     background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1);
     padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:8px; min-width:190px;
@@ -1616,6 +1618,13 @@
   var PS_EMBED = 'id,tanggal,jam,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,status,catatan_approval,kontrak_tutor_id,nominal_dibayar,terlambat,unit_id,metode_input,pdf_url,' +
     'kontrak_tutor(mapel,fee_mengajar,uang_transport,tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url),kontrak_siswa(siswa(nama,orangtua(nama))))';
 
+  // Nominal denda satu presensi terlambat (persen dari fee mengajar kontrak tutor).
+  function psDendaRow(row) {
+    if (!row || !row.terlambat || !psState.persenDenda) return 0;
+    var fee = parseFloat((row.kontrak_tutor && row.kontrak_tutor.fee_mengajar) || 0) || 0;
+    return Math.round(fee * psState.persenDenda / 100);
+  }
+
   function psRenderHeroStatus(rows, pendingCount, diterimaPct) {
     var count = function (st) { return rows.filter(function (r) { return r.status === st; }).length; };
     var parts = [
@@ -1708,11 +1717,17 @@
       psRenderHeroWeeks(periodeRows, range);
       psRenderHeroStatus(periodeRows, psState.approvalRows.length, diterimaPct);
 
+      // Denda telat = persen dari fee mengajar (Pengaturan > Denda keterlambatan).
       try {
-        var pengaturan = await supaRest('pengaturan?select=persen_denda_telat&limit=1', s.access_token);
-        var persenDenda = (pengaturan && pengaturan[0] && pengaturan[0].persen_denda_telat) || 0;
-        document.getElementById('ps-heroTelatDenda').textContent = 'Kena denda ' + persenDenda + '%';
+        var pengaturan = await supaRest('pengaturan?select=kunci,nilai&kunci=eq.persen_denda_telat', s.access_token);
+        var persenDenda = parseFloat(pengaturan && pengaturan[0] && pengaturan[0].nilai) || 0;
+        psState.persenDenda = persenDenda;
+        var totalDenda = periodeRows.filter(function (r) { return r.terlambat; })
+          .reduce(function (sum, r) { return sum + psDendaRow(r); }, 0);
+        document.getElementById('ps-heroTelatDenda').innerHTML = 'Kena denda <b>' + String(persenDenda).replace('.', ',') + '%</b>' +
+          (telatCount ? ' <span class="pc-denda">&minus;' + psFormatRp(totalDenda) + '</span>' : '');
       } catch (err) {
+        psState.persenDenda = null;
         document.getElementById('ps-heroTelatDenda').textContent = 'Kena denda -';
       }
 
@@ -2248,7 +2263,7 @@
           '<td><span class="pt2-mapel" style="white-space:nowrap;">' + psEscape(mapel) + '</span></td>' +
           '<td><span style="color:var(--ink-soft); white-space:nowrap;">' + psEscape(unitNama) + '</span></td>' +
           '<td style="text-align:right; white-space:nowrap;"><span style="color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums;">' + psFormatRp(honorVal) + '</span></td>' +
-          '<td style="text-align:center; white-space:nowrap;">' + (row.terlambat ? '<span class="pt2-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat</span>' : '<span class="pt2-ok">Tepat waktu</span>') + '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + (row.terlambat ? '<span class="pt2-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat' + (psDendaRow(row) ? ' <b>&minus;' + psFormatRp(psDendaRow(row)) + '</b>' : '') + '</span>' : '<span class="pt2-ok">Tepat waktu</span>') + '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + lampiranHtml + '</td>' +
           '<td style="text-align:center; white-space:nowrap; min-width:170px;">' + statusHtml + '</td>' +
         '</tr>';
@@ -2612,7 +2627,8 @@
         (canDelete ? '<button class="ps-delete-btn pc2-icon-btn" data-id="' + row.id + '" aria-label="Hapus presensi" title="Hapus presensi"><i class="ph ph-trash" aria-hidden="true" style="pointer-events:none;"></i></button>' : '');
     }
 
-    var terlambatChip = row.terlambat ? '<span class="pc2-chip is-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat</span>' : '';
+    var dendaRow = psDendaRow(row);
+    var terlambatChip = row.terlambat ? '<span class="pc2-chip is-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat' + (dendaRow ? ' <b>&minus;' + psFormatRp(dendaRow) + '</b>' : '') + '</span>' : '';
     var metodeChip = row.metode_input === 'diwakilkan' ? '<span class="pc2-chip"><i class="ph ph-user-switch" aria-hidden="true"></i>Diwakilkan</span>' : '';
 
     return '' +
