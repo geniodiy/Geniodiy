@@ -83,18 +83,20 @@
   #ops-list.ops-view-table{display:block !important; width:100%; max-width:100%; min-width:0; box-sizing:border-box;}
   .ops-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:12px; width:100%; box-sizing:border-box;}
   .ops-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
-  .ops-table{width:100%; min-width:820px; border-collapse:separate; border-spacing:0; text-align:left; font-family:var(--font); font-size:11px;}
-  .ops-table th{padding:11px 12px; background:#fff; border-bottom:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
+  .ops-table{width:100%; border-collapse:separate; border-spacing:0; text-align:left; font-family:var(--font); font-size:11px;}
+  .ops-table th{padding:10px 10px; background:#fff; border-bottom:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
   .ops-table th.ops-sort-th{cursor:pointer; user-select:none; -webkit-user-select:none;}
   .ops-table th.ops-sort-th:hover{color:var(--ink);}
-  .ops-table td{padding:8px 12px; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle; font-size:11px;}
+  .ops-table td{padding:7px 10px; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle; font-size:11px;}
   .ops-table tbody tr:last-child td{border-bottom:none;}
   .ops-table tbody tr:hover td{background:#F8F9FD;}
   .ops-table .ops-no{width:40px; min-width:40px; max-width:40px; box-sizing:border-box; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
   .ops-table .ops-stk{position:sticky; z-index:1; background:#fff;}
   .ops-table th.ops-stk{z-index:2;}
   .ops-table .ops-stk-no{left:0;}
-  .ops-table .ops-stk-ket{left:40px; box-shadow:1px 0 0 var(--border); min-width:200px; max-width:280px;}
+  .ops-table .ops-stk-ket{left:40px; box-shadow:1px 0 0 var(--border); width:100%; max-width:0; min-width:140px;}
+  /* Kolom lain selebar isinya saja; sisa ruang untuk kolom transaksi */
+  .ops-table th:not(.ops-stk-ket), .ops-table td:not(.ops-stk-ket){width:1%; white-space:nowrap;}
   .ops-table tbody tr:hover td.ops-stk{background:#F8F9FD;}
   .ops-table .ops-ket{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;}
   .ops-table .ops-money{text-align:right; white-space:nowrap; font-weight:700; font-variant-numeric:tabular-nums;}
@@ -864,7 +866,7 @@
         '<td class="ops-no ops-stk ops-stk-no">' + (idx + 1) + '</td>' +
         '<td class="ops-stk ops-stk-ket"><span class="ops-ket" title="' + opsEscape(r.keterangan || '') + '">' + opsEscape(r.keterangan || 'Tanpa keterangan') + '</span></td>' +
         '<td style="white-space:nowrap; color:var(--ink);">' + opsEscape(unit || '-') + '</td>' +
-        '<td style="white-space:nowrap;">' + opsFormatTglPendek(r.tanggal) + '</td>' +
+        '<td style="white-space:nowrap;" title="' + (opsFormatTglPanjang(r.tanggal) || '') + '">' + opsFormatTglPendek(r.tanggal).replace(/ \d{4}$/, '') + '</td>' +
         '<td class="ops-money">' + opsFormatRp(r.nominal) + '</td>' +
         '<td>' + bukti + '</td>' +
         '<td class="ops-act">' +
