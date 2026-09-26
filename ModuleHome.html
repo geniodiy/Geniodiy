@@ -149,37 +149,60 @@
   .ht-foot .v{font-size:12px; font-weight:700; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-variant-numeric:tabular-nums;}
   .ht-foot .v.is-up{color:var(--green);} .ht-foot .v.is-down{color:var(--red);}
 
-  /* ===== Penyebaran data 5 unit (peringkat dengan bar) ===== */
-  .hu-total{display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-bottom:12px;}
-  .hu-total-l{font-size:10.5px; color:var(--ink-soft);}
-  .hu-total-n{font-size:20px; font-weight:800; letter-spacing:-.03em; font-variant-numeric:tabular-nums; margin-top:1px; white-space:nowrap;}
-  .hu-list{display:flex; flex-direction:column; gap:11px;}
-  .hu-row{display:grid; grid-template-columns:18px minmax(0,1fr) auto; column-gap:10px; align-items:center;}
-  .hu-rank{grid-row:1 / span 2; font-size:10.5px; font-weight:700; color:#A3A7BC; text-align:center;}
-  .hu-row.is-top .hu-rank{color:var(--blue);}
-  .hu-name{font-size:11.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .hu-meta{font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .hu-val{grid-row:1 / span 2; grid-column:3; text-align:right;}
-  .hu-val .n{font-size:11.5px; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap;}
-  .hu-val .d{font-size:10px; font-weight:600; margin-top:2px; white-space:nowrap;}
-  .is-good{color:var(--green);} .is-bad{color:var(--red);}
-  .hu-bar{grid-column:2; height:5px; border-radius:99px; background:var(--surface); margin-top:6px; overflow:hidden;}
-  .hu-bar i{display:block; height:100%; width:0; border-radius:99px; background:var(--blue); opacity:.5; transition:width .7s cubic-bezier(.16,1,.3,1);}
-  .hu-row.is-top .hu-bar i{opacity:1;}
-  .hu-bar i.is-neg{background:#E0524B;}
-  .hu-empty{padding:16px; text-align:center; color:var(--ink-soft); font-size:10.5px;}
+  /* ===== Rekap keuangan per unit ===== */
+  .ru-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;}
+  .ru-sub{font-size:10.5px; color:var(--ink-soft); margin-top:2px;}
+  .ru-legend{display:flex; gap:12px; font-size:10px; color:var(--ink-soft); flex-wrap:wrap;}
+  .ru-legend span{display:inline-flex; align-items:center; gap:5px;}
+  .ru-legend i{width:8px; height:8px; border-radius:2px; display:inline-block;}
+  .ru-scroll{position:relative; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:thin; margin:0 -16px;}
+  .ru-table{width:100%; min-width:640px; border-collapse:separate; border-spacing:0; font-variant-numeric:tabular-nums;}
+  .ru-table th{font-size:10.5px; font-weight:500; color:var(--ink-soft); text-align:right; padding:0 14px 9px; border-bottom:1px solid var(--border); white-space:nowrap; background:#fff;}
+  .ru-table td{padding:10px 14px; border-bottom:1px solid var(--border); text-align:right; vertical-align:middle; font-size:11.5px; white-space:nowrap; background:#fff;}
+  .ru-table th:first-child, .ru-table td:first-child{text-align:left; padding-left:16px; position:sticky; left:0; z-index:2;}
+  .ru-table th:last-child, .ru-table td:last-child{padding-right:16px;}
+  .ru-scroll.is-scrolled th:first-child, .ru-scroll.is-scrolled td:first-child{box-shadow:6px 0 8px -6px rgba(20,22,43,.18);}
+  .ru-nm{font-size:12px; font-weight:600;}
+  .ru-money{font-weight:600;}
+  .ru-laba{font-weight:700; font-size:12.5px; color:var(--blue);}
+  .ru-cost-bar{display:flex; height:3px; border-radius:99px; overflow:hidden; background:var(--surface); margin:4px 0 0 auto;}
+  .ru-cost-bar i{display:block; height:100%;}
+  .ru-split{display:flex; justify-content:flex-end; gap:8px; margin-top:3px; font-size:9px; color:var(--muted, #8A8EA5);}
+  .ru-split span{display:inline-flex; align-items:center; gap:3px;}
+  .ru-split i{width:5px; height:5px; border-radius:1.5px; display:inline-block;}
+  .ru-delta{display:block; font-size:10px; font-weight:600; margin-top:2px;}
+  .ru-delta small{font-weight:400; color:var(--muted, #8A8EA5); font-size:10px;}
+  .ru-delta.is-up{color:var(--green);} .ru-delta.is-down{color:var(--red);} .ru-delta.is-flat{color:var(--muted, #8A8EA5); font-weight:400;}
+  .ru-table tr.is-empty td > *{opacity:.45;}
+  .ru-table tfoot td{border-bottom:0; padding-top:12px; padding-bottom:12px; font-weight:700; font-size:12px;}
+  .ru-table tfoot td:first-child{font-weight:600; color:var(--ink-soft); font-size:11px;}
+  .ru-table tfoot .ru-split{font-weight:400;}
+  .ru-table tfoot td.ru-total-laba{padding-top:8px; padding-bottom:0;}
+  .ru-total-box{display:inline-block; min-width:170px; text-align:right; padding:9px 14px; border-radius:12px; color:#fff; background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .ru-total-laba .l{font-size:10px; font-weight:500; color:rgba(255,255,255,.7);}
+  .ru-total-laba .n{font-size:16px; font-weight:800; letter-spacing:-.01em; margin-top:1px;}
+  .ru-total-laba .m{font-size:9.5px; font-weight:600; color:#7CF0C3; margin-top:1px;}
+  .ru-hint{display:none; align-items:center; gap:5px; font-size:10px; color:var(--muted, #8A8EA5); margin-top:10px;}
+  .ru-empty{padding:16px; text-align:center; color:var(--ink-soft); font-size:10.5px;}
+  .ru-card{margin-bottom:14px !important;}
+  .ru-card .home-sec-title{margin:0;}
+  @media (max-width:899px){
+    .ru-scroll{margin:0 -16px;}
+    .ru-hint{display:flex;}
+    .ru-table th:first-child, .ru-table td:first-child{min-width:112px; max-width:124px; white-space:normal;}
+  }
 
   /* ===== Animasi masuk data ===== */
-  @keyframes huIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  @keyframes ruGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
   @keyframes htFade{from{opacity:0;} to{opacity:1;}}
   @keyframes htPulse{0%{r:4; opacity:.55;} 100%{r:13; opacity:0;}}
   @media (prefers-reduced-motion:no-preference){
-    .hu-row.is-anim{animation:huIn .45s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 60ms);}
+    .ru-table tr.is-anim td{animation:htFade .45s ease both; animation-delay:calc(var(--i) * 55ms);}
+    .ru-grow{transform-origin:left center; animation:ruGrow .7s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 55ms + 120ms);}
     .ht-area.is-anim{animation:htFade .8s ease both .15s;}
     .ht-pulse{animation:htPulse 1.8s ease-out infinite;}
   }
   @media (prefers-reduced-motion:reduce){
-    .hu-bar i{transition:none;}
     .ht-pulse{display:none;}
   }
   @media (max-width:899px){
@@ -277,7 +300,7 @@
     .home-sec-jadwal,
     #homeSecJadwalTutor,
     #genioNewsSection,
-    .home-sec-unit,
+    .home-sec-rekap,
     .home-sec-trend{
       margin-bottom: 0 !important;
       width: 100% !important;
@@ -287,8 +310,7 @@
 
     /* Ketinggian konten mobile agar tidak terkunci ukuran desktop */
     #homeSecJadwalTutor,
-    .home-sec-trend .card,
-    .home-sec-unit .card{
+    .home-sec-trend .card{
       height: auto !important;
     }
     #home-jmGridWrap{
@@ -313,7 +335,7 @@
     .home-sec-presensi  { order: 5 !important; }
     #homeSecJadwalTutor { order: 6 !important; }
     #genioNewsSection   { order: 7 !important; }
-    .home-sec-unit      { order: 8 !important; }
+    .home-sec-rekap     { order: 8 !important; }
     .home-sec-trend     { order: 9 !important; }
   }
 
@@ -354,7 +376,7 @@
 
     /* Baris 4: Main Workspace (Trend Progress | 5 Unit | Jadwal Tutor & News) */
     .home-main-grid{
-      display:grid !important; grid-template-columns:1.15fr 1fr 1.2fr !important; gap:10px !important; align-items:stretch !important;
+      display:grid !important; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) !important; gap:10px !important; align-items:stretch !important;
       height:445px !important; margin-bottom:12px !important;
     }
     .home-main-grid > *{
@@ -362,12 +384,9 @@
     }
     #homeJadwalCol{ display:flex !important; flex-direction:column !important; height:100% !important; min-height:0 !important; gap:10px !important; }
 
-    .home-sec-trend .card, .home-sec-unit .card{
+    .home-sec-trend .card{
       height:100% !important; display:flex !important; flex-direction:column !important;
       box-sizing:border-box !important; margin-bottom:0 !important;
-    }
-    #homeUnitTable{
-      flex:1; min-height:0; overflow-y:auto; padding-right:2px;
     }
     #homeTrendChartWrap{
       flex:1; min-height:120px;
@@ -489,7 +508,19 @@
     </div>
   </div>
 
-  <!-- Baris 3: Main Workspace (3 Kolom Sejajar di Desktop) -->
+  <!-- Rekap keuangan per unit -->
+  <div class="card home-sec-rekap ru-card" id="homeRekapCard">
+    <div class="ru-head">
+      <div style="min-width:0;">
+        <div class="home-sec-title">Rekap keuangan per unit</div>
+        <div class="ru-sub" id="homeRekapSub">-</div>
+      </div>
+      <div class="ru-legend"><span><i style="background:#F2A097"></i>Gaji</span><span><i style="background:#F9D4CF"></i>Ops</span></div>
+    </div>
+    <div id="homeRekapTable"><div class="ru-empty">Memuat data unit...</div></div>
+  </div>
+
+  <!-- Baris 4: Main Workspace (Trend | Jadwal Tutor & News) -->
   <div class="home-main-grid" id="homeMainGrid">
 
     <!-- Kolom 1: Trend Progress Cabang -->
@@ -532,27 +563,7 @@
       </div>
     </div>
 
-    <!-- Kolom 2: Penyebaran Data 5 Unit -->
-    <div class="home-sec-unit">
-      <div class="card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
-        <div class="home-sec-title">Penyebaran data 5 unit</div>
-
-        <div id="unitTabDock" class="hu-tabs">
-          <div id="unitTabGlider" class="ht-range-glider"></div>
-          <button class="home-unit-tab" data-metric="siswa">Siswa</button>
-          <button class="home-unit-tab" data-metric="omset">Omset</button>
-          <button class="home-unit-tab" data-metric="laba">Laba</button>
-          <button class="home-unit-tab" data-metric="pengeluaran">Pengeluaran</button>
-          <button class="home-unit-tab" data-metric="tutor">Tutor</button>
-        </div>
-
-        <div id="homeUnitTable" class="home-scrollable">
-          <div style="padding:16px; text-align:center; color:var(--ink-soft); font-size:10.5px;">Memuat data unit...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Kolom 3: Jadwal Tutor (Jadwal Mingguan yg di kontrak) & Genio News -->
+    <!-- Kolom 2: Jadwal Tutor (Jadwal Mingguan yg di kontrak) & Genio News -->
     <div class="home-sec-jadwal-col" id="homeJadwalCol">
       <div class="card home-sec-jadwal" id="homeSecJadwalTutor" style="display:flex; flex-direction:column; height:100%; box-sizing:border-box; margin-bottom:0; position:relative;">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex:none;">
@@ -1173,25 +1184,24 @@
     try {
       var prevRange = homePeriodeRange(prevPeriode);
       var results = await Promise.all([
-        supaRest('invoice?select=nominal&periode=eq.' + periode, token),
-        supaRest('invoice?select=nominal&periode=eq.' + prevPeriode, token),
         supaRest('slip_gaji?select=total_gaji&periode=eq.' + periode, token),
         supaRest('slip_gaji?select=total_gaji&periode=eq.' + prevPeriode, token),
         supaRest('operasional?select=nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token),
         supaRest('operasional?select=nominal&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, token),
         supaRest('kontrak_siswa?select=siswa_id,unit_id&status=eq.aktif', token),
-        supaRest('presensi?select=id,tanggal&status=in.(diterima,visit)&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token),
-        supaRest('presensi?select=id&status=in.(diterima,visit)&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, token),
+        supaRest('presensi?select=id,tanggal,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token),
+        supaRest('presensi?select=id,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, token),
         supaRest('presensi?select=id,tanggal,unit_id,kontrak_tutor(users!kontrak_tutor_tutor_id_fkey(nama))&status=eq.pending&order=tanggal.asc', token),
         supaRest('units?select=id,nama_unit&order=nama_unit.asc', token)
       ]);
 
-      var invoiceNow = results[0], invoicePrev = results[1], slipNow = results[2], slipPrev = results[3],
-          opsNow = results[4], opsPrev = results[5], kontrakAktif = results[6],
-          pertemuanNow = results[7], pertemuanPrev = results[8], pendingPresensi = results[9], unitList = results[10] || [];
+      var slipNow = results[0], slipPrev = results[1],
+          opsNow = results[2], opsPrev = results[3], kontrakAktif = results[4],
+          pertemuanNow = results[5], pertemuanPrev = results[6], pendingPresensi = results[7], unitList = results[8] || [];
 
-      var omset = homeSum(invoiceNow, 'nominal');
-      var omsetPrev = homeSum(invoicePrev, 'nominal');
+      // Omset = tagihan dari presensi yang sudah di-acc (sesi x harga kontrak).
+      var omset = pertemuanNow.reduce(function (a, r) { return a + homePresensiHarga(r); }, 0);
+      var omsetPrev = pertemuanPrev.reduce(function (a, r) { return a + homePresensiHarga(r); }, 0);
       var totalGaji = homeSum(slipNow, 'total_gaji');
       var totalGajiPrev = homeSum(slipPrev, 'total_gaji');
       var totalOps = homeSum(opsNow, 'nominal');
@@ -1253,10 +1263,19 @@
     loadTrendData(periode);
   }
 
-  /* ===== Penyebaran Data 5 Unit ===== */
-  var homeUnitDataCache = null;
-  var homeCurrentUnitMetric = 'siswa';
-  var UNIT_METRICS = ['siswa', 'omset', 'laba', 'pengeluaran', 'tutor'];
+  /* ===== Rekap keuangan per unit ===== */
+  var homeRekapCache = null;
+  var HOME_OMSET_EMBED = 'kontrak_tutor(kontrak_siswa(unit_id,harga))';
+
+  // Omset = tagihan dari presensi yang sudah di-acc: tiap sesi x harga kontrak siswa (sama dengan modul Tagihan).
+  function homePresensiHarga(r) {
+    var ks = r && r.kontrak_tutor && r.kontrak_tutor.kontrak_siswa;
+    return parseFloat((ks && ks.harga) || 0) || 0;
+  }
+  function homePresensiUnit(r) {
+    var ks = r && r.kontrak_tutor && r.kontrak_tutor.kontrak_siswa;
+    return r.unit_id || (ks && ks.unit_id) || null;
+  }
 
   async function loadUnitBreakdown(periode) {
     var session = genioGetSession();
@@ -1264,266 +1283,118 @@
     var range = homePeriodeRange(periode);
     var prevPeriode = homePrevPeriode(periode);
     var prevRange = homePeriodeRange(prevPeriode);
-    var container = document.getElementById('homeUnitTable');
+    var container = document.getElementById('homeRekapTable');
+    document.getElementById('homeRekapSub').textContent = homeFormatPeriodeLabel(periode) + ' · laba terbesar di atas';
 
     try {
       var results = await Promise.all([
         supaRest('units?select=id,nama_unit&order=nama_unit.asc', session.access_token),
-        supaRest('users?select=id,nama,unit_id&role=eq.kepala_unit', session.access_token),
         supaRest('kontrak_siswa?select=unit_id,siswa_id&status=eq.aktif', session.access_token),
-        supaRest('kontrak_tutor?select=unit_id,tutor_id&status=eq.aktif', session.access_token),
-        supaRest('invoice?select=unit_id,nominal&periode=eq.' + periode, session.access_token),
-        supaRest('invoice?select=unit_id,nominal&periode=eq.' + prevPeriode, session.access_token),
-        supaRest('presensi?select=unit_id,nominal_dibayar&status=in.(diterima,visit)&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, session.access_token),
-        supaRest('presensi?select=unit_id,nominal_dibayar&status=in.(diterima,visit)&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token),
+        supaRest('presensi?select=unit_id,nominal_dibayar,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, session.access_token),
+        supaRest('presensi?select=unit_id,nominal_dibayar,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token),
         supaRest('operasional?select=unit_id,nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, session.access_token),
         supaRest('operasional?select=unit_id,nominal&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token)
       ]);
-      var units = results[0], kepalaUsers = results[1], kontrakSiswaAktif = results[2], kontrakTutorAktif = results[3],
-          invoiceRows = results[4], invoiceRowsPrev = results[5],
-          presensiRows = results[6], presensiRowsPrev = results[7],
-          opsRows = results[8], opsRowsPrev = results[9];
+      var units = results[0], kontrakSiswaAktif = results[1],
+          presensiRows = results[2], presensiRowsPrev = results[3],
+          opsRows = results[4], opsRowsPrev = results[5];
 
-      var kepalaByUnit = {};
-      kepalaUsers.forEach(function (u) { kepalaByUnit[u.unit_id] = u.nama; });
-
-      function sumByUnit(rows, field) {
+      function blank() { return { omset: 0, gaji: 0, sesi: 0, ops: 0 }; }
+      function aggPresensi(rows) {
         var out = {};
-        rows.forEach(function (r) { out[r.unit_id] = (out[r.unit_id] || 0) + parseFloat(r[field] || 0); });
+        rows.forEach(function (r) {
+          var k = homePresensiUnit(r);
+          var o = out[k] = out[k] || blank();
+          o.omset += homePresensiHarga(r);
+          o.gaji += parseFloat(r.nominal_dibayar || 0) || 0;
+          o.sesi += 1;
+        });
         return out;
       }
-      function distinctCountByUnit(rows, field) {
-        var sets = {};
-        rows.forEach(function (r) { (sets[r.unit_id] = sets[r.unit_id] || {})[r[field]] = true; });
+      function sumOps(rows) {
         var out = {};
-        Object.keys(sets).forEach(function (k) { out[k] = Object.keys(sets[k]).length; });
+        rows.forEach(function (r) { out[r.unit_id] = (out[r.unit_id] || 0) + (parseFloat(r.nominal || 0) || 0); });
         return out;
       }
+      var siswaSets = {};
+      kontrakSiswaAktif.forEach(function (r) { (siswaSets[r.unit_id] = siswaSets[r.unit_id] || {})[r.siswa_id] = true; });
+      var now = aggPresensi(presensiRows), prev = aggPresensi(presensiRowsPrev);
+      var opsNow = sumOps(opsRows), opsPrev = sumOps(opsRowsPrev);
 
-      var siswaByUnit = distinctCountByUnit(kontrakSiswaAktif, 'siswa_id');
-      var tutorByUnit = distinctCountByUnit(kontrakTutorAktif, 'tutor_id');
-      var omsetByUnit = sumByUnit(invoiceRows, 'nominal');
-      var omsetPrevByUnit = sumByUnit(invoiceRowsPrev, 'nominal');
-      var gajiByUnit = sumByUnit(presensiRows, 'nominal_dibayar');
-      var gajiPrevByUnit = sumByUnit(presensiRowsPrev, 'nominal_dibayar');
-      var opsByUnit = sumByUnit(opsRows, 'nominal');
-      var opsPrevByUnit = sumByUnit(opsRowsPrev, 'nominal');
-
-      homeUnitDataCache = units.map(function (u) {
-        var omset = omsetByUnit[u.id] || 0;
-        var omsetPrev = omsetPrevByUnit[u.id] || 0;
-        var gaji = gajiByUnit[u.id] || 0;
-        var gajiPrev = gajiPrevByUnit[u.id] || 0;
-        var ops = opsByUnit[u.id] || 0;
-        var opsPrev = opsPrevByUnit[u.id] || 0;
-        var pengeluaran = gaji + ops;
-        var pengeluaranPrev = gajiPrev + opsPrev;
+      homeRekapCache = units.map(function (u) {
+        var a = now[u.id] || blank(), b = prev[u.id] || blank();
+        var ops = opsNow[u.id] || 0, opsP = opsPrev[u.id] || 0;
+        var hasPrev = b.omset || b.gaji || opsP;
         return {
-          id: u.id,
-          nama_unit: u.nama_unit,
-          kepala: kepalaByUnit[u.id] || 'Belum ditugaskan',
-          siswa: siswaByUnit[u.id] || 0,
-          tutor: tutorByUnit[u.id] || 0,
-          omset: omset, omsetPrev: omsetPrev,
-          laba: omset - pengeluaran, labaPrev: omsetPrev - pengeluaranPrev,
-          pengeluaran: pengeluaran, pengeluaranPrev: pengeluaranPrev,
-          gaji: gaji, ops: ops
+          nama: u.nama_unit,
+          siswa: siswaSets[u.id] ? Object.keys(siswaSets[u.id]).length : 0,
+          sesi: a.sesi, omset: a.omset, gaji: a.gaji, ops: ops,
+          pengeluaran: a.gaji + ops,
+          laba: a.omset - a.gaji - ops,
+          labaPrev: hasPrev ? (b.omset - b.gaji - opsP) : null
         };
       });
-
-      revealUnitTable();
+      renderRekapTable(true);
     } catch (err) {
-      container.innerHTML = '<div style="padding:16px; text-align:center; color:var(--red); font-size:11px;">Gagal memuat data unit: ' + homeEsc(err.message) + '</div>';
+      container.innerHTML = '<div class="ru-empty" style="color:var(--red);">Gagal memuat data unit: ' + homeEsc(err.message) + '</div>';
     }
   }
-
-  var UNIT_TOTAL_LABELS = {
-    siswa: 'Total siswa aktif',
-    omset: 'Total omset 5 unit',
-    laba: 'Total laba operasional',
-    pengeluaran: 'Total pengeluaran 5 unit',
-    tutor: 'Total tutor aktif'
-  };
 
   function homeFormatRupiahSmart(n) {
     n = n || 0;
     if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1).replace('.', ',') + ' Jt';
     return homeFormatRupiah(n);
   }
-  function homeFormatRupiahSmartLong(n) {
-    n = n || 0;
-    if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1).replace('.', ',') + ' Juta';
-    return homeFormatRupiah(n);
+
+  function homeRekapDelta(now, prev) {
+    if (prev === null) return now ? '<span class="ru-delta is-up">baru <small>bulan ini</small></span>' : '<span class="ru-delta is-flat">tidak ada data</span>';
+    if (!prev) return now ? '' : '<span class="ru-delta is-flat">tidak ada data</span>';
+    var pct = ((now - prev) / Math.abs(prev)) * 100, up = pct >= 0;
+    var txt = Math.abs(pct) > 200 && prev > 0 && now > 0 ? (now / prev).toFixed(1).replace('.', ',') + 'x' : (up ? '+' : '') + pct.toFixed(1).replace('.', ',').replace(',0', '') + '%';
+    return '<span class="ru-delta ' + (up ? 'is-up' : 'is-down') + '">' + (up ? '&#8593; ' : '&#8595; ') + txt + ' <small>vs bln lalu</small></span>';
   }
 
+  function renderRekapTable(animate) {
+    var container = document.getElementById('homeRekapTable');
+    if (!homeRekapCache) return;
+    if (!homeRekapCache.length) { container.innerHTML = '<div class="ru-empty">Belum ada data unit.</div>'; return; }
+    var rows = homeRekapCache.slice().sort(function (a, b) { return b.laba - a.laba; });
+    var T = rows.reduce(function (t, r) {
+      t.siswa += r.siswa; t.sesi += r.sesi; t.omset += r.omset; t.gaji += r.gaji; t.ops += r.ops; t.pengeluaran += r.pengeluaran; t.laba += r.laba; return t;
+    }, { siswa: 0, sesi: 0, omset: 0, gaji: 0, ops: 0, pengeluaran: 0, laba: 0 });
+    var maxCost = Math.max.apply(null, rows.map(function (r) { return r.pengeluaran; })) || 1;
+    var anim = animate && !HOME_REDUCED_MOTION;
+    var rp = homeFormatRupiah;
 
+    var body = rows.map(function (r, i) {
+      var empty = !r.omset && !r.pengeluaran && !r.sesi;
+      var w = Math.max(4, Math.round(r.pengeluaran / maxCost * 110));
+      var bar = r.pengeluaran ? '<div class="ru-cost-bar" style="width:' + w + 'px">' +
+        '<i class="' + (anim ? 'ru-grow' : '') + '" style="--i:' + i + '; flex:' + (r.gaji || 0.0001) + '; background:#F2A097"></i>' +
+        (r.ops ? '<i class="' + (anim ? 'ru-grow' : '') + '" style="--i:' + i + '; flex:' + r.ops + '; background:#F9D4CF"></i>' : '') + '</div>' : '';
+      return '<tr class="' + (anim ? 'is-anim' : '') + (empty ? ' is-empty' : '') + '" style="--i:' + i + '">' +
+        '<td><div class="ru-nm">' + homeEsc(r.nama) + '</div></td>' +
+        '<td>' + r.siswa + '</td><td>' + r.sesi + '</td>' +
+        '<td><div class="ru-money">' + rp(r.omset) + '</div></td>' +
+        '<td><div class="ru-money">' + rp(r.pengeluaran) + '</div>' + bar +
+          '<div class="ru-split"><span><i style="background:#F2A097"></i>Gaji ' + rp(r.gaji) + '</span><span><i style="background:#F9D4CF"></i>Ops ' + rp(r.ops) + '</span></div></td>' +
+        '<td><div class="ru-laba">' + rp(r.laba) + '</div>' + homeRekapDelta(r.laba, r.labaPrev) + '</td></tr>';
+    }).join('');
 
-  function homeScramble(text) {
-    return text.replace(/[0-9]/g, function () { return Math.floor(Math.random() * 10); });
+    var margin = T.omset > 0 ? (T.laba / T.omset * 100).toFixed(1).replace('.', ',') + '%' : '-';
+    container.innerHTML = '<div class="ru-scroll"><table class="ru-table">' +
+      '<thead><tr><th>Unit</th><th>Siswa aktif</th><th>Sesi</th><th>Omset</th><th>Pengeluaran</th><th>Laba bersih</th></tr></thead>' +
+      '<tbody>' + body + '</tbody>' +
+      '<tfoot><tr><td>Total semua unit</td><td>' + T.siswa + '</td><td>' + T.sesi + '</td><td>' + rp(T.omset) + '</td>' +
+        '<td>' + rp(T.pengeluaran) + '<div class="ru-split"><span>Gaji ' + rp(T.gaji) + '</span><span>Ops ' + rp(T.ops) + '</span></div></td>' +
+        '<td class="ru-total-laba"><div class="ru-total-box"><div class="l">Total laba bersih</div><div class="n" id="homeRekapTotalLaba">' + rp(T.laba) + '</div><div class="m">margin ' + margin + '</div></div></td></tr></tfoot>' +
+      '</table></div>' +
+      '<div class="ru-hint"><i class="ph ph-arrows-horizontal" aria-hidden="true"></i>Geser tabel untuk melihat kolom lain</div>';
+
+    var sc = container.querySelector('.ru-scroll');
+    sc.addEventListener('scroll', function () { sc.classList.toggle('is-scrolled', sc.scrollLeft > 2); }, { passive: true });
+    if (anim) homeRevealValue(document.getElementById('homeRekapTotalLaba'), rp(T.laba));
   }
-
-  function homeUnitDeltaHtml(val, prevVal, invert, cls) {
-    if (!prevVal) return '';
-    var pct = ((val - prevVal) / Math.abs(prevVal)) * 100;
-    var good = invert ? pct <= 0 : pct >= 0;
-    return '<div class="' + cls + ' ' + (good ? 'is-good' : 'is-bad') + '">' + (pct >= 0 ? '+' : '') + pct.toFixed(1).replace('.', ',') + '%</div>';
-  }
-
-  function renderUnitTable(animate) {
-    var container = document.getElementById('homeUnitTable');
-    if (!homeUnitDataCache) return;
-    var metric = homeCurrentUnitMetric;
-    var isMoney = (metric === 'omset' || metric === 'laba' || metric === 'pengeluaran');
-    var hasHistory = isMoney; // siswa & tutor belum ada data historis per-bulan
-    var invert = metric === 'pengeluaran';
-    var unitLabel = metric === 'siswa' ? ' siswa' : (metric === 'tutor' ? ' tutor' : '');
-    var fmt = function (v) { return isMoney ? homeFormatRupiahSmart(v) : (v + unitLabel); };
-
-    var rows = homeUnitDataCache.map(function (u, idx) { return { u: u, no: idx + 1, val: u[metric] || 0, prev: hasHistory ? (u[metric + 'Prev'] || 0) : 0 }; });
-    rows.sort(function (a, b) { return b.val - a.val; });
-    var total = 0, totalPrev = 0, maxAbs = 0;
-    rows.forEach(function (r) { total += r.val; totalPrev += r.prev; maxAbs = Math.max(maxAbs, Math.abs(r.val)); });
-
-    if (!rows.length) {
-      container.innerHTML = '<div class="hu-empty">Belum ada data unit.</div>';
-      return;
-    }
-
-    var totalDelta = hasHistory ? homeUnitDeltaHtml(total, totalPrev, invert, 'ht-delta') : '';
-    if (totalDelta) totalDelta = totalDelta.replace('is-good', 'is-up').replace('is-bad', 'is-down').replace('<div', '<span').replace('</div>', ' vs bulan lalu</span>');
-
-    var html = '<div class="hu-total"><div><div class="hu-total-l">' + UNIT_TOTAL_LABELS[metric] + '</div>' +
-      '<div class="hu-total-n" id="homeUnitTotalVal">' + fmt(total) + '</div></div>' + totalDelta + '</div>';
-
-    html += '<div class="hu-list">' + rows.map(function (r, i) {
-      var u = r.u;
-      var meta = metric === 'pengeluaran'
-        ? 'Gaji ' + homeFormatRupiahSmart(u.gaji) + ' &middot; Ops ' + homeFormatRupiahSmart(u.ops)
-        : homeEsc(u.kepala);
-      var width = maxAbs ? (Math.abs(r.val) / maxAbs) * 100 : 0;
-      return '<div class="hu-row' + (i === 0 ? ' is-top' : '') + (animate ? ' is-anim' : '') + '" style="--i:' + i + ';">' +
-        '<div class="hu-rank">' + (i + 1) + '</div>' +
-        '<div style="min-width:0;"><div class="hu-name">Unit ' + r.no + ' &middot; ' + homeEsc(u.nama_unit) + '</div><div class="hu-meta">' + meta + '</div></div>' +
-        '<div class="hu-val"><div class="n">' + fmt(r.val) + '</div>' + (hasHistory ? homeUnitDeltaHtml(r.val, r.prev, invert, 'd') : '') + '</div>' +
-        '<div class="hu-bar"><i class="' + (r.val < 0 ? 'is-neg' : '') + '" data-w="' + width.toFixed(1) + '"></i></div>' +
-      '</div>';
-    }).join('') + '</div>';
-
-    container.innerHTML = html;
-
-    var bars = container.querySelectorAll('.hu-bar i');
-    var grow = function () { bars.forEach(function (b, i) { setTimeout(function () { b.style.width = b.dataset.w + '%'; }, animate && !HOME_REDUCED_MOTION ? i * 60 : 0); }); };
-    if (animate && !HOME_REDUCED_MOTION) requestAnimationFrame(function () { requestAnimationFrame(grow); }); else grow();
-    if (animate) homeRevealValue(document.getElementById('homeUnitTotalVal'), fmt(total));
-  }
-
-  function updateUnitTabGlider(metric) {
-    var glider = document.getElementById('unitTabGlider');
-    var btn = document.querySelector('.home-unit-tab[data-metric="' + metric + '"]');
-    if (!glider) return;
-    var idx = UNIT_METRICS.indexOf(metric);
-    if (idx === -1) idx = 0;
-    if (btn && btn.offsetWidth > 0) {
-      glider.style.width = btn.offsetWidth + 'px';
-      glider.style.left = btn.offsetLeft + 'px';
-    } else {
-      glider.style.width = 'calc(20% - 4.8px)';
-      glider.style.left = 'calc(' + (idx * 20) + '% + 4px)';
-    }
-  }
-
-  function setUnitTabActive(metric) {
-    document.querySelectorAll('.home-unit-tab').forEach(function (b) {
-      var on = b.dataset.metric === metric;
-      b.style.color = on ? 'var(--ink)' : 'var(--ink-soft)';
-      b.style.fontWeight = on ? '600' : '500';
-    });
-  }
-
-  function switchUnitMetric(newMetric) {
-    homeCurrentUnitMetric = newMetric;
-    revealUnitTable();
-  }
-
-  function revealUnitTable() {
-    renderUnitTable(true);
-  }
-
-  document.querySelectorAll('.home-unit-tab').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      setUnitTabActive(btn.dataset.metric);
-      updateUnitTabGlider(btn.dataset.metric);
-      switchUnitMetric(btn.dataset.metric);
-    });
-  });
-
-  /* Drag/geser header tab — animasi & mekanisme sama seperti bottom bar */
-  (function initUnitTabScrubbing() {
-    var dock = document.getElementById('unitTabDock');
-    var glider = document.getElementById('unitTabGlider');
-    if (!dock || !glider) return;
-
-    var isPointerDown = false, isDragging = false, hasDragged = false, suppressClick = false;
-    var startX = 0, startY = 0, pointerId = null;
-    var cachedLeft = 0, cachedWidth = 0, cachedGliderWidth = 0, targetMetric = homeCurrentUnitMetric;
-    var DRAG_THRESHOLD = 8;
-
-    dock.addEventListener('dragstart', function (e) { e.preventDefault(); });
-    dock.addEventListener('click', function (e) {
-      if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
-    }, true);
-
-    dock.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      isPointerDown = true; isDragging = false; hasDragged = false; suppressClick = false;
-      pointerId = e.pointerId; startX = e.clientX; startY = e.clientY;
-      var rect = dock.getBoundingClientRect();
-      cachedLeft = rect.left; cachedWidth = rect.width;
-      cachedGliderWidth = glider.offsetWidth || (rect.width / UNIT_METRICS.length);
-      targetMetric = homeCurrentUnitMetric;
-    });
-
-    dock.addEventListener('pointermove', function (e) {
-      if (!isPointerDown) return;
-      var dx = e.clientX - startX, dy = e.clientY - startY;
-      if (!hasDragged) {
-        if (Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
-          isDragging = true; hasDragged = true; suppressClick = true;
-          try { dock.setPointerCapture(pointerId); } catch (_) {}
-        }
-      }
-      if (isDragging) {
-        if (e.cancelable) e.preventDefault();
-        var relX = e.clientX - cachedLeft;
-        var clampedPx = Math.max(0, Math.min(cachedWidth - cachedGliderWidth, relX - cachedGliderWidth / 2));
-        glider.style.transition = 'none';
-        glider.style.left = clampedPx + 'px';
-        var ratio = Math.max(0, Math.min(0.999, relX / cachedWidth));
-        var newIdx = Math.min(UNIT_METRICS.length - 1, Math.max(0, Math.floor(ratio * UNIT_METRICS.length)));
-        targetMetric = UNIT_METRICS[newIdx];
-        setUnitTabActive(targetMetric);
-      }
-    });
-
-    function endScrub() {
-      if (!isPointerDown) return;
-      isPointerDown = false;
-      glider.style.transition = '';
-      if (pointerId !== null) { try { dock.releasePointerCapture(pointerId); } catch (_) {} pointerId = null; }
-      if (hasDragged) {
-        isDragging = false;
-        updateUnitTabGlider(targetMetric);
-        switchUnitMetric(targetMetric);
-        setTimeout(function () { suppressClick = false; }, 80);
-      } else {
-        suppressClick = false;
-      }
-    }
-    dock.addEventListener('pointerup', endScrub);
-    dock.addEventListener('pointercancel', endScrub);
-  })();
-  setUnitTabActive(homeCurrentUnitMetric);
-  updateUnitTabGlider(homeCurrentUnitMetric);
 
   /* ===== Trend Progress Cabang ===== */
   var homeTrendCache = null;
@@ -1548,18 +1419,16 @@
 
     try {
       var results = await Promise.all([
-        supaRest('invoice?select=periode,nominal&periode=in.(' + periodeListSql + ')', session.access_token),
-        supaRest('presensi?select=tanggal,nominal_dibayar&status=in.(diterima,visit)&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token),
+        supaRest('presensi?select=tanggal,nominal_dibayar,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token),
         supaRest('operasional?select=tanggal,nominal&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token)
       ]);
-      var invoiceRows = results[0], presensiRows = results[1], opsRows = results[2];
+      var presensiRows = results[0], opsRows = results[1];
 
       var omsetByMonth = {}, gajiByMonth = {}, sesiByMonth = {}, opsByMonth = {};
       periods.forEach(function (p) { omsetByMonth[p] = 0; gajiByMonth[p] = 0; sesiByMonth[p] = 0; opsByMonth[p] = 0; });
-      invoiceRows.forEach(function (r) { if (omsetByMonth[r.periode] !== undefined) omsetByMonth[r.periode] += parseFloat(r.nominal || 0); });
       presensiRows.forEach(function (r) {
         var m = r.tanggal.substring(0, 7);
-        if (sesiByMonth[m] !== undefined) { sesiByMonth[m] += 1; gajiByMonth[m] += parseFloat(r.nominal_dibayar || 0); }
+        if (sesiByMonth[m] !== undefined) { sesiByMonth[m] += 1; gajiByMonth[m] += parseFloat(r.nominal_dibayar || 0); omsetByMonth[m] += homePresensiHarga(r); }
       });
       opsRows.forEach(function (r) {
         var m = r.tanggal.substring(0, 7);
