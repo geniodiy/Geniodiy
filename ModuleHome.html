@@ -32,7 +32,7 @@
     background:radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 65%);
   }
   .home-hero-label{font-size:11px; font-weight:500; color:rgba(255,255,255,.78);}
-  .home-hero-num{font-size:20.5px; font-weight:500; letter-spacing:-.02em; line-height:1.1; font-variant-numeric:tabular-nums;}
+  .home-hero-num{font-size:20.5px; font-weight:700; letter-spacing:-.02em; line-height:1.1; font-variant-numeric:tabular-nums;}
   .home-hero-delta{font-size:10px; color:rgba(255,255,255,.72); margin-top:3px;}
   .home-hero-cetak-btn{
     display:inline-flex; align-items:center; gap:6px; flex:none;
@@ -55,26 +55,26 @@
     font-size:9px; font-weight:500; white-space:nowrap;
     background:rgba(255,255,255,.14); color:#fff; padding:1px 7px; border-radius:999px;
   }
-  .home-sub-num{font-size:13.5px; font-weight:500; letter-spacing:-.01em; margin-top:6px; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .home-sub-num{font-size:13.5px; font-weight:700; letter-spacing:-.01em; margin-top:6px; font-variant-numeric:tabular-nums; white-space:nowrap;}
   .home-hero-subcard .home-hero-delta{font-size:10px; margin-top:2px;}
 
 
   /* ===== Desktop: highlight gepeng, isi berjajar kiri-kanan ===== */
   @media (min-width:900px){
-    .home-sec-hero{padding:12px 16px 12px 20px !important; gap:16px !important;}
-    .home-sec-hero .home-hero-main-col{flex:none !important; min-width:0 !important; flex-direction:row !important; align-items:baseline !important; gap:10px !important;}
+    .home-sec-hero{padding:12px 16px 12px 20px !important; gap:10px 16px !important; flex-wrap:wrap !important;}
+    .home-sec-hero .home-hero-main-col{flex:0 0 auto !important; min-width:0 !important; flex-direction:row !important; align-items:baseline !important; gap:10px !important;}
     .home-sec-hero .home-hero-badges, .home-sec-hero .home-hero-counter{display:contents !important;}
     .home-hero-label{white-space:nowrap;}
     .home-hero-label{order:1;}
     .home-hero-num{order:2; font-size:18px;}
     .home-hero-counter .home-hero-delta{order:3; margin-top:0;}
     .home-hero-cetak-btn{order:4; margin-left:6px; align-self:center;}
-    .home-sec-hero .home-hero-stats-row{flex:1 !important; gap:8px !important;}
-    .home-hero-subcard{display:flex; align-items:baseline; gap:10px; padding:9px 12px;}
+    .home-sec-hero .home-hero-stats-row{flex:1 1 380px !important; min-width:0 !important; gap:8px !important; grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;}
+    .home-hero-subcard{display:flex; align-items:baseline; gap:10px; padding:9px 12px; min-width:0; overflow:hidden;}
     .home-sub-head{flex-wrap:nowrap; flex:none;}
     .home-sub-chip{display:none;}
-    .home-sub-num{margin-top:0; font-size:12.5px;}
-    .home-hero-subcard .home-hero-delta{margin-top:0; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .home-sub-num{margin-top:0; font-size:13px; flex:none;}
+    .home-hero-subcard .home-hero-delta{margin-top:0; flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
     .home-kpi-row{align-items:stretch !important;}
     .home-sec-stats > .card{padding:10px 14px !important;}
     .home-sec-hero{flex:1.3 !important;}
@@ -87,13 +87,19 @@
     .home-stat-card .home-stat-num{font-size:15.5px;}
     .home-stat-card .home-stat-sub{grid-column:3; grid-row:2; margin:0; justify-self:end; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
   }
+  /* Laptop kecil: panel omset satu baris penuh, kartu siswa/pertemuan di bawahnya */
+  @media (min-width:900px) and (max-width:1279px){
+    .home-kpi-row{flex-wrap:wrap !important;}
+    .home-sec-hero{flex:1 1 100% !important;}
+    .home-sec-stats{flex:1 1 100% !important;}
+  }
 
   /* ===== Kartu & teks ===== */
   .module-panel[data-module="home"] .card{border:1px solid var(--border); border-radius:14px; padding:14px 16px; box-shadow:none;}
-  .home-sec-title{font-size:12px; font-weight:500; color:var(--ink); margin-bottom:12px;}
+  .home-sec-title{font-size:12px; font-weight:600; color:var(--ink); margin-bottom:12px;}
   .home-stat-card{gap:10px;}
   .home-stat-label{font-size:10.5px; font-weight:500; color:var(--ink-soft);}
-  .home-stat-num{font-size:17px; font-weight:500; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
+  .home-stat-num{font-size:17px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
   .home-stat-unit{font-size:10.5px; font-weight:500; color:var(--ink-soft);}
   .home-stat-sub{font-size:10px; color:var(--ink-soft); margin-top:2px;}
 
@@ -329,7 +335,7 @@
       <div style="width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:500; font-size:11px; flex:none;" id="homeAvatarInitials">--</div>
       <div style="min-width:0;">
         <div style="font-size:10px; font-weight:500; color:var(--ink-soft);" id="homeRoleLabel">Manajer</div>
-        <div style="font-size:12.5px; font-weight:500; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeGreeting">Selamat datang</div>
+        <div style="font-size:12.5px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeGreeting">Selamat datang</div>
       </div>
     </div>
 
@@ -340,7 +346,7 @@
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 2 20h20L12 3.5z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
         </span>
         <div style="min-width:0;">
-          <div style="font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homePresensiPendingText">0 Presensi Menunggu Approval</div>
+          <div style="font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homePresensiPendingText">0 Presensi Menunggu Approval</div>
           <div style="font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tutor sudah mengajar, perlu diverifikasi</div>
         </div>
       </div>
