@@ -285,7 +285,7 @@
     <div id="genioHeaderNavCenter" class="genio-header-nav-center"></div>
 
     <div class="genio-header-actions">
-      <div class="gh-per-wrap" id="genioHeaderPeriodeWrap" hidden>
+      <div class="gh-per-wrap" id="genioHeaderPeriodeWrap">
         <button type="button" id="genioHeaderPeriodeBtn" class="gh-per" aria-haspopup="true" aria-expanded="false" aria-label="Pilih periode">
           <span class="gh-per-ic"><i class="ph ph-calendar-blank" aria-hidden="true"></i></span>
           <span class="gh-per-t">
@@ -307,7 +307,7 @@
           </div>
         </div>
       </div>
-      <span class="gh-sep" id="genioHeaderPeriodeSep" hidden></span>
+      <span class="gh-sep" id="genioHeaderPeriodeSep"></span>
       <div style="position:relative;">
         <button id="genioHeaderBellBtn" class="genio-header-icon-btn" aria-label="Notifikasi" title="Notifikasi">
           <i class="ph ph-bell" aria-hidden="true"></i>
@@ -857,7 +857,6 @@
     window.genioDashboardShowModule = showModule;
 
     /* ===== Periode di header ===== */
-    var GENIO_PERIODE_MODULES = ['home', 'presensi', 'gaji', 'tagihan', 'operasional'];
     var genioPeriodeViewYear = null;
     window.genioRenderHeaderPeriode = function () {
       var p = genioGetPeriode().split('-');
@@ -869,8 +868,9 @@
       var btn = document.getElementById('genioHeaderPeriodeBtn');
       if (btn) btn.setAttribute('aria-label', 'Periode ' + GENIO_BULAN[m] + ' ' + y + ', pilih periode');
     };
-    window.genioSyncHeaderPeriode = function (name) {
-      var show = GENIO_PERIODE_MODULES.indexOf(name) !== -1;
+    // Periode selalu tampil di header sebagai patokan untuk semua halaman.
+    window.genioSyncHeaderPeriode = function () {
+      var show = true;
       var wrap = document.getElementById('genioHeaderPeriodeWrap');
       var sep = document.getElementById('genioHeaderPeriodeSep');
       if (wrap) wrap.hidden = !show;
