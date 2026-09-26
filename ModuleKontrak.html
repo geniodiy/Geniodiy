@@ -1,122 +1,51 @@
 <div class="module-panel" data-module="kontrak" hidden>
 <style>
-  /* Base Hero Styles */
+  /* ===== Highlight kontrak: total + unit teratas | cincin aktif + tombol ===== */
   .ktr-hero-sec{
-    background: var(--ink);
-    color: #fff;
-    border-radius: 14px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
+    position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px;
+    display:grid; grid-template-columns:minmax(0,1fr) auto;
+    background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);
   }
-  .ktr-hero-main-col{
-    display: flex;
-    flex-direction: column;
+  .kb-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
+  .kb-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
+  .kb-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .kb-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .kb-label i{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .ktr-hero-unit-pill{font-size:10px; font-weight:500; white-space:nowrap; background:rgba(255,255,255,.12); color:#fff; padding:2px 8px; border-radius:999px;}
+  .kb-row{display:flex; align-items:center; gap:32px; flex-wrap:wrap; margin-top:10px;}
+  .kb-row > div:first-child{min-width:0;}
+  .ktr-hero-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; font-variant-numeric:tabular-nums;}
+  .kb-unit{font-size:13px; font-weight:500; color:rgba(255,255,255,.65); margin-left:5px;}
+  .kb-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px;}
+  .kb-tops{display:grid; gap:7px; flex:1; min-width:240px; max-width:440px;}
+  .kb-tops:empty{display:none;}
+  .kb-tp{display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:10px; font-size:10.5px; color:rgba(255,255,255,.8);}
+  .kb-tp span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kb-tp b{font-weight:700; color:#fff; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .kb-tp .bar{grid-column:1/-1; height:4px; border-radius:99px; background:rgba(255,255,255,.08); margin-top:4px; overflow:hidden;}
+  .kb-tp .bar i{display:block; height:100%; border-radius:99px; background:#7CF0C3; transform-origin:left center;}
+  .kb-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:250px;}
+  .kb-ringwrap{display:flex; align-items:center; gap:14px;}
+  .kb-ring{width:64px; height:64px; flex:none; overflow:visible;}
+  .kb-ring-track{fill:none; stroke:rgba(255,255,255,.1); stroke-width:7;}
+  .kb-ring-arc{fill:none; stroke-width:7; transform:rotate(-90deg); transform-origin:32px 32px; transition:stroke-dasharray .8s cubic-bezier(.16,1,.3,1);}
+  .kb-ring-n{fill:#fff; font-family:var(--font); font-size:13px; font-weight:800;}
+  .kb-ring-l{fill:rgba(255,255,255,.6); font-family:var(--font); font-size:7.5px;}
+  .kb-list{display:grid; gap:6px; flex:1; min-width:150px;}
+  .kb-list div{display:flex; align-items:center; gap:7px; font-size:10.5px; color:rgba(255,255,255,.75); white-space:nowrap;}
+  .kb-list em{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
+  .kb-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .ktr-hero-add-btn{height:34px; border-radius:9px; width:100%; background:#fff; color:var(--blue); border:1px solid #fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .ktr-hero-add-btn:hover{background:var(--blue-tint);}
+  .ktr-hero-add-btn:active{transform:scale(.97);}
+  .ktr-hero-add-btn i{font-size:14px;}
+  @media (max-width:899px){
+    .ktr-hero-sec{grid-template-columns:1fr;}
+    .kb-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .ktr-hero-num{font-size:27px;}
+    .kb-row{flex-direction:column; align-items:stretch; gap:14px;}
+    .kb-tops{min-width:0; max-width:none;}
   }
-  .ktr-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .ktr-hero-badge-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .ktr-hero-unit-pill{
-    background: rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 9.5px;
-    font-weight: 500;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .ktr-hero-sublabel{
-    display: block;
-    font-size: 9.5px;
-    opacity: .65;
-    margin-top: 6px;
-  }
-  .ktr-hero-counter{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 2px;
-  }
-  .ktr-hero-num-wrap{
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-  }
-  .ktr-hero-num{
-    font-size: 20px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.1;
-  }
-  .ktr-hero-unit{
-    font-size: 11px;
-    opacity: .65;
-    font-weight: 500;
-  }
-  .ktr-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.14);
-    align-items: stretch;
-  }
-  .ktr-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 9px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-  .ktr-hero-stat-icon{
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .ktr-hero-add-btn{
-    background: #fff;
-    color: var(--ink);
-    border: none;
-    border-radius: 8px;
-    height: 28px;
-    padding: 0 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 500;
-    font-family: var(--font);
-    flex: none;
-    white-space: nowrap;
-    transition: transform .15s ease, opacity .15s ease;
-  }
-  .ktr-hero-add-btn:active{ transform: scale(.92); }
 
   @media (min-width:900px){
     .module-panel[data-module="kontrak"][hidden]{ display:none !important; }
@@ -125,89 +54,6 @@
       box-sizing: border-box;
       min-width: 0;
     }
-
-    /* Hero Card Slender Horizontal — Presisi Selaras Operasional, Presensi & Gaji */
-    .ktr-hero-sec{
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-    }
-    .ktr-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 12px !important;
-    }
-    .ktr-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .ktr-hero-badge-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .ktr-hero-unit-pill{
-      font-size: 9px !important;
-      padding: 2px 7px !important;
-    }
-    .ktr-hero-sublabel{
-      display: none !important;
-    }
-    .ktr-hero-counter{
-      margin-top: 0 !important;
-      gap: 10px !important;
-    }
-    .ktr-hero-num{
-      font-size: 18px !important;
-    }
-    .ktr-hero-unit{
-      font-size: 10.5px !important;
-    }
-    .ktr-hero-add-btn{
-      height: 26px !important;
-      padding: 0 9px !important;
-      font-size: 10.5px !important;
-      border-radius: 7px !important;
-      margin-left: 2px !important;
-    }
-    .ktr-hero-stats-row{
-      flex: none !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 14px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .ktr-hero-stat-card{
-      flex: none !important;
-      padding: 5px 9px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-    }
-    .ktr-hero-stat-card > div > div:first-child{
-      font-size: 8.5px !important;
-    }
-    .ktr-hero-stat-card > div > div:last-child{
-      font-size: 11px !important;
-    }
-    .ktr-hero-stat-icon{
-      width: 18px !important;
-      height: 18px !important;
-      border-radius: 5px !important;
-    }
-
 
     /* Toolbar & Dock */
     #ktr-toolbarRow{
@@ -303,18 +149,12 @@
     }
 
     /* Cards Grid View (Desktop) */
-    #ktr-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+    #ktr-list{ display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
     #ktr-list > .ktr-card{
       margin-bottom: 0 !important;
-      padding: 10px 12px !important;
-      border-radius: 12px !important;
     }
     #ktr-list > .ktr-full-width{ grid-column:1/-1; }
-    .ktr-card h4{ font-size: 12px !important; }
-    .ktr-card p{ font-size: 10px !important; }
     .ktr-card .ktr-detail-row{ font-size: 10px !important; padding: 2px 0 !important; }
-    .ktr-card .ktr-siswa-toggle{ padding: 6px 8px !important; font-size: 10.5px !important; border-radius: 7px !important; margin-top: 6px !important; }
-    .ktr-card .ktr-edit-btn{ height: 24px !important; font-size: 10px !important; border-radius: 6px !important; padding: 0 8px !important; }
   }
 
   /* Table View Styles — Seragam dengan Module Operasional & Presensi */
@@ -480,8 +320,69 @@
   .ktr-detail-row span:first-child{ color:#8e8e93; font-weight:500; text-transform:uppercase; font-size:9.5px; letter-spacing:.02em; flex:none; }
   .ktr-detail-row span:last-child{ font-weight:600; color:#1c1c1e; text-align:right; }
 
-  #ktr-addBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
-  #ktr-addBtn:active{ transform:scale(.85); }
+
+
+  /* ===== Kartu kontrak (gaya Presensi & Gaji) ===== */
+  .kc-card{padding:14px 16px !important; margin-bottom:12px; border-radius:14px !important; transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .kc-card:hover{border-color:#D5D8E8 !important; box-shadow:0 4px 14px -6px rgba(20,22,43,.12) !important; transform:translateY(-1px);}
+  .kc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .kc-av{width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:11.5px; flex:none;}
+  .kc-who{min-width:0; flex:1;}
+  .kc-who h4{font-size:12.5px !important; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .kc-who p{font-size:10.5px !important; color:var(--ink-soft); margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kc-status{display:inline-flex; align-items:center; gap:5px; flex:none; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .kc-status i{width:6px; height:6px; border-radius:50%;}
+  .kc-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px;}
+  .kc-chip{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:var(--ink); background:var(--surface); border-radius:8px; padding:4px 8px; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis;}
+  .kc-chip i{font-size:12px; color:var(--ink-soft);}
+  .kc-chip.is-soon{background:#FFF4E0; color:#B86E00;} .kc-chip.is-soon i{color:#B86E00;}
+  .kc-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .kc-price{min-width:0;}
+  .kc-price span{display:block; font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kc-price b{display:block; font-size:13px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; margin-top:1px;}
+  .kc-foot-r{display:flex; align-items:center; gap:6px; flex:none;}
+  .kc-tutor-btn{display:inline-flex; align-items:center; gap:5px; height:28px; padding:0 9px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:10.5px; font-weight:500; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .kc-tutor-btn i{font-size:13px; color:var(--ink-soft);}
+  .kc-tutor-btn em{font-style:normal; font-size:9.5px; font-weight:600; background:var(--blue-tint); color:var(--blue); border-radius:999px; padding:0 6px; line-height:16px;}
+  .kc-tutor-btn:hover, .kc-tutor-btn.is-open{background:var(--surface);}
+  .kc-icon{width:28px; height:28px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; padding:0; flex:none; transition:background .15s ease, color .15s ease, transform .1s ease;}
+  .kc-icon:hover{background:var(--surface); color:var(--ink);}
+  .kc-icon.is-danger:hover{background:var(--red-soft); color:var(--red); border-color:rgba(212,7,15,.25);}
+  .kc-icon:active, .kc-tutor-btn:active{transform:scale(.96);}
+  .kc-tutor{display:flex; align-items:center; gap:9px; padding:8px 10px; border:1px solid var(--border); border-radius:10px; margin-bottom:6px;}
+  .kc-tutor-av{width:26px; height:26px; border-radius:50%; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:600; flex:none;}
+  .kc-tutor-t{min-width:0; flex:1;}
+  .kc-tutor-t b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kc-tutor-t span{display:block; font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;}
+  .kc-tutor .kc-icon{width:26px; height:26px; font-size:12px;}
+  .kc-empty{font-size:10.5px; color:var(--ink-soft); text-align:center; padding:6px 0 8px; margin:0;}
+  .kc-add{width:100%; height:32px; border-radius:9px; border:1px dashed #C9CCDA; background:#fff; color:var(--blue); font-family:var(--font); font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:5px; cursor:pointer; transition:border-color .15s ease, background .15s ease;}
+  .kc-add:hover{border-color:var(--blue); background:#FAFAFF;}
+  .ktr-section-title{font-size:12px; font-weight:600; color:var(--ink);}
+  .ktr-section-sub{font-size:10.5px; color:var(--ink-soft); margin-top:1px; font-weight:400;}
+
+  @media (min-width:900px){ #ktr-list:not(.ktr-view-table){grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)) !important;} }
+  #ktr-searchInput{height:34px !important; border-radius:10px !important; font-size:12px !important;}
+  #ktr-searchInput:focus{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #ktr-filterBtn, #ktr-viewToggleBtn{width:34px !important; height:34px !important; border-radius:10px !important;}
+  /* ===== Tabel ===== */
+  .ktr-table-card{border-radius:14px !important;}
+  .ktr-table th{background:#fff !important; text-transform:none !important; letter-spacing:0 !important; font-size:10.5px !important; padding:11px 12px !important;}
+  .ktr-table td{padding:10px 12px !important; font-size:11px !important; border-bottom:1px solid #EEF0F6 !important;}
+  .ktr-table tbody tr:hover{background:#F8F9FD !important;}
+
+  /* ===== Animasi ===== */
+  @keyframes ktrIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes ktrFade{from{opacity:0;} to{opacity:1;}}
+  @keyframes ktrGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  #ktr-list > .ktr-card.ktr-in{animation:ktrIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #ktr-list .ktr-table tbody tr.ktr-in td{animation:ktrFade .35s ease both; animation-delay:calc(var(--i) * 30ms);}
+  .ktr-grow{animation:ktrGrow .8s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 70ms + 150ms);}
+  @media (prefers-reduced-motion: reduce){
+    #ktr-list > .ktr-card.ktr-in, #ktr-list .ktr-table tbody tr.ktr-in td, .ktr-grow{animation:none !important;}
+    .kb-ring-arc{transition:none;}
+    .kc-card:hover{transform:none;}
+  }
 
   .ktr-wrap{ max-height:0; opacity:0; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease; }
   .ktr-toggle-icon{ transition:transform .25s ease; }
@@ -524,51 +425,40 @@
   }
 </style>
 
-  <!-- Hero -->
+  <!-- Highlight kontrak -->
   <div class="ktr-hero-sec" id="ktr-heroCard">
-    <div class="ktr-hero-main-col">
-      <div class="ktr-hero-badges">
-        <span class="ktr-hero-badge-pill">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
-          KONTRAK BELAJAR SISWA
-        </span>
+    <div class="kb-main">
+      <div class="kb-top">
+        <span class="kb-label"><i></i>Total kontrak siswa</span>
         <span class="ktr-hero-unit-pill" id="ktr-heroUnitBadge">-</span>
       </div>
-      <div class="ktr-hero-sublabel">Total Kontrak Siswa</div>
-      <div class="ktr-hero-counter">
-        <div class="ktr-hero-num-wrap">
-          <span class="ktr-hero-num" id="ktr-heroTotal">0</span>
-          <span class="ktr-hero-unit">Kontrak</span>
+      <div class="kb-row">
+        <div>
+          <span class="ktr-hero-num" id="ktr-heroTotal">0</span><span class="kb-unit">kontrak</span>
+          <div class="kb-sub" id="ktr-heroSub">&nbsp;</div>
         </div>
-        <button id="ktr-addBtn" aria-label="Tambah kontrak" class="ktr-hero-add-btn">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Tambah Kontrak
-        </button>
+        <div class="kb-tops" id="ktr-heroTops" aria-label="Unit dengan kontrak terbanyak"></div>
       </div>
     </div>
-
-    <div class="ktr-hero-stats-row">
-      <div class="ktr-hero-stat-card">
-        <span class="ktr-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div style="font-size:9.5px; opacity:.65;">Kontrak Aktif</div>
-          <div style="font-size:11.5px; font-weight:600; margin-top:1px;" id="ktr-heroAktif">0 Siswa</div>
+    <div class="kb-side">
+      <div class="kb-ringwrap">
+        <svg class="kb-ring" viewBox="0 0 64 64" role="img" aria-label="Persentase kontrak aktif">
+          <circle class="kb-ring-track" r="26" cx="32" cy="32"></circle>
+          <g id="ktr-heroRingArcs"></g>
+          <text x="32" y="31" text-anchor="middle" class="kb-ring-n" id="ktr-heroRingPct">0%</text>
+          <text x="32" y="42" text-anchor="middle" class="kb-ring-l">aktif</text>
+        </svg>
+        <div class="kb-list">
+          <div><em style="background:#7CF0C3;"></em>Aktif<b id="ktr-heroAktif">0</b></div>
+          <div><em style="background:#FF9C94;"></em>Nonaktif<b id="ktr-heroNonaktif">0</b></div>
+          <div><em style="background:#FFC46B;"></em>Segera berakhir<b id="ktr-heroSoon">0</b></div>
         </div>
       </div>
-      <div class="ktr-hero-stat-card">
-        <span class="ktr-hero-stat-icon" style="background:rgba(255,59,48,.2); color:#ff9c94;">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div style="font-size:9.5px; opacity:.65;">Kontrak Nonaktif</div>
-          <div style="font-size:11.5px; font-weight:600; margin-top:1px;" id="ktr-heroNonaktif">0 Siswa</div>
-        </div>
-      </div>
+      <button id="ktr-addBtn" type="button" aria-label="Tambah kontrak" class="ktr-hero-add-btn">
+        <i class="ph ph-plus" aria-hidden="true"></i>Tambah kontrak
+      </button>
     </div>
   </div>
-
 
   <div id="ktr-desktopAnchor"></div>
 
@@ -576,11 +466,11 @@
   <div class="ktr-dock ktr-dock-sec" id="ktr-dock">
     <div class="ktr-dock-glider" id="ktr-dockGlider"></div>
     <button class="ktr-dock-btn ktr-tab-btn ktr-dock-active" data-tab="aktif">
-      <span>Kontrak Aktif</span>
+      <span>Kontrak aktif</span>
       <span id="ktr-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
     <button class="ktr-dock-btn ktr-tab-btn" data-tab="nonaktif">
-      <span>Kontrak Nonaktif</span>
+      <span>Kontrak nonaktif</span>
       <span id="ktr-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
   </div>
@@ -964,7 +854,7 @@
     ktrState.tab = tab;
     document.querySelectorAll('.ktr-dock-btn').forEach(function (b) { b.classList.toggle('ktr-dock-active', b.dataset.tab === tab); });
     ktrUpdateDockGlider();
-    ktrRenderList();
+    ktrRenderList(true);
   }
   function ktrUpdateDockGlider() {
     var activeBtn = document.querySelector('.ktr-dock-btn.ktr-dock-active');
@@ -1043,17 +933,67 @@
       var aktifCount = ktrState.kontrakList.filter(function (k) { return k.status === 'aktif'; }).length;
       var nonaktifCount = ktrState.kontrakList.length - aktifCount;
 
-      document.getElementById('ktr-heroUnitBadge').textContent = unitCount + ' Unit Cabang';
-      document.getElementById('ktr-heroTotal').textContent = ktrState.kontrakList.length;
-      document.getElementById('ktr-heroAktif').textContent = aktifCount + ' Siswa';
-      document.getElementById('ktr-heroNonaktif').textContent = nonaktifCount + ' Siswa';
+      document.getElementById('ktr-heroUnitBadge').textContent = unitCount + ' unit cabang';
+      ktrRenderHero(ktrState.kontrakList, aktifCount, nonaktifCount);
       document.getElementById('ktr-aktifCount').textContent = aktifCount;
       document.getElementById('ktr-nonaktifCount').textContent = nonaktifCount;
 
-      ktrRenderList();
+      ktrRenderList(true);
     } catch (err) {
       listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + ktrEscape(err.message) + '</div>';
     }
+  }
+
+  var KTR_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function ktrCountUp(el, to) {
+    if (!el) return;
+    if (KTR_REDUCED_MOTION || !to) { el.textContent = to; return; }
+    var t0 = performance.now(), dur = 650;
+    (function tick(t) {
+      var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(to * e);
+      if (k < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  // Kontrak aktif yang tanggal selesainya dalam 30 hari ke depan.
+  function ktrIsEndingSoon(k) {
+    if (k.status !== 'aktif' || !k.tanggal_selesai) return false;
+    var end = new Date(k.tanggal_selesai + 'T00:00:00'), now = new Date(); now.setHours(0, 0, 0, 0);
+    var days = (end - now) / 86400000;
+    return days >= 0 && days <= 30;
+  }
+  function ktrRenderHero(list, aktif, non) {
+    ktrCountUp(document.getElementById('ktr-heroTotal'), list.length);
+    document.getElementById('ktr-heroAktif').textContent = aktif;
+    document.getElementById('ktr-heroNonaktif').textContent = non;
+    document.getElementById('ktr-heroSoon').textContent = list.filter(ktrIsEndingSoon).length;
+    document.getElementById('ktr-heroSub').textContent = aktif + ' aktif · ' + non + ' nonaktif';
+    var byUnit = {};
+    list.forEach(function (k) {
+      if (k.status !== 'aktif') return;
+      var nm = (k.units && k.units.nama_unit) || 'Tanpa unit';
+      byUnit[nm] = (byUnit[nm] || 0) + 1;
+    });
+    var top = Object.keys(byUnit).map(function (n) { return [n, byUnit[n]]; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 3);
+    var mx = top.length ? top[0][1] : 1;
+    document.getElementById('ktr-heroTops').innerHTML = top.map(function (u, i) {
+      return '<div class="kb-tp"><span>' + ktrEscape(u[0]) + '</span><b>' + u[1] + ' kontrak</b><div class="bar"><i class="' + (KTR_REDUCED_MOTION ? '' : 'ktr-grow') + '" style="width:' + (u[1] / mx * 100).toFixed(1) + '%; opacity:' + (1 - i * 0.22) + '; --i:' + i + '"></i></div></div>';
+    }).join('');
+    var total = aktif + non;
+    document.getElementById('ktr-heroRingPct').textContent = (total ? Math.round(aktif / total * 100) : 0) + '%';
+    var g = document.getElementById('ktr-heroRingArcs');
+    var C = 2 * Math.PI * 26, off = 0, gap = aktif && non ? 1.5 : 0, html = '';
+    [[aktif, '#7CF0C3'], [non, '#FF9C94']].forEach(function (p) {
+      if (!total || !p[0]) return;
+      var len = p[0] / total * C;
+      html += '<circle class="kb-ring-arc" r="26" cx="32" cy="32" stroke="' + p[1] + '" stroke-dasharray="0 ' + C.toFixed(2) + '" data-len="' + Math.max(len - gap, .5).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '"></circle>';
+      off += len;
+    });
+    g.innerHTML = html;
+    var arcs = g.querySelectorAll('.kb-ring-arc');
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      arcs.forEach(function (a) { a.setAttribute('stroke-dasharray', a.dataset.len + ' ' + C.toFixed(2)); });
+    }); });
   }
 
   function ktrMatchesSearch(k) {
@@ -1111,7 +1051,7 @@
     try {
       localStorage.setItem('genio_ktr_view_mode', ktrState.viewMode);
     } catch (e) {}
-    ktrRenderList();
+    ktrRenderList(true);
   }
 
   function ktrGetSortIcon(field) {
@@ -1250,10 +1190,10 @@
       return '' +
         '<tr class="ktr-table-row" data-kontrak-id="' + k.id + '">' +
           '<td style="text-align:center; width:32px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
-          '<td style="white-space:nowrap; font-family:monospace; font-size:11px; color:var(--ink); font-weight:400;">' + ktrEscape(k.nomor_kontrak || '-') + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink-soft); font-variant-numeric:tabular-nums;">' + ktrEscape(k.nomor_kontrak || '-') + '</td>' +
           '<td>' +
             '<div style="display:flex; align-items:center; flex-wrap:wrap; gap:2px;">' +
-              '<span style="font-weight:400; color:var(--ink); font-size:11.5px;">' + ktrEscape(siswa.nama || '-') + '</span>' +
+              '<span style="font-weight:600; color:var(--ink);">' + ktrEscape(siswa.nama || '-') + '</span>' +
               unitBadge +
             '</div>' +
             (sekolahLine ? '<div style="color:var(--ink-soft); font-size:10px; font-weight:400; margin-top:2px;">' + ktrEscape(sekolahLine) + '</div>' : '') +
@@ -1262,11 +1202,11 @@
             ktrEscape(k.paket_belajar && k.paket_belajar.nama_paket || '-') +
           '</td>' +
           '<td style="text-align:right; white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' +
-            ktrFormatRp(k.harga) +
+            '<b style="font-weight:700;">' + ktrFormatRp(k.harga) + '</b>' +
           '</td>' +
           '<td>' + tutorHtml + '</td>' +
-          '<td style="white-space:nowrap; text-align:center; color:var(--ink); font-size:10.5px; font-weight:400; font-family:monospace; width:70px;">' +
-            ktrFormatTglRingkas(k.tanggal_mulai) +
+          '<td style="white-space:nowrap; text-align:center; color:var(--ink-soft); width:90px;">' +
+            ktrFormatTgl(k.tanggal_mulai) +
           '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + statusBadge + '</td>' +
           '<td style="text-align:center; white-space:nowrap; width:65px;">' +
@@ -1288,21 +1228,21 @@
               '<tr>' +
                 '<th style="width:32px; text-align:center;">No</th>' +
                 '<th class="ktr-sort-th" data-sort="nomor_kontrak" title="Urutkan No. Kontrak">' +
-                  '<span style="display:inline-flex; align-items:center;">No. Kontrak' + ktrGetSortIcon('nomor_kontrak') + '</span>' +
+                  '<span style="display:inline-flex; align-items:center;">No. kontrak' + ktrGetSortIcon('nomor_kontrak') + '</span>' +
                 '</th>' +
                 '<th class="ktr-sort-th" data-sort="siswa" title="Urutkan Siswa (A - Z)">' +
                   '<span style="display:inline-flex; align-items:center;">Siswa' + ktrGetSortIcon('siswa') + '</span>' +
                 '</th>' +
                 '<th class="ktr-sort-th" data-sort="paket" title="Urutkan Paket Belajar">' +
-                  '<span style="display:inline-flex; align-items:center;">Paket Belajar' + ktrGetSortIcon('paket') + '</span>' +
+                  '<span style="display:inline-flex; align-items:center;">Paket belajar' + ktrGetSortIcon('paket') + '</span>' +
                 '</th>' +
                 '<th class="ktr-sort-th" data-sort="biaya" title="Urutkan Biaya" style="text-align:right;">' +
-                  '<span style="display:inline-flex; align-items:center; justify-content:flex-end; width:100%;">Biaya / Sesi' + ktrGetSortIcon('biaya') + '</span>' +
+                  '<span style="display:inline-flex; align-items:center; justify-content:flex-end; width:100%;">Biaya per sesi' + ktrGetSortIcon('biaya') + '</span>' +
                 '</th>' +
                 '<th class="ktr-sort-th" data-sort="tutor" title="Urutkan Tutor & Mapel">' +
-                  '<span style="display:inline-flex; align-items:center;">Tutor &amp; Mapel' + ktrGetSortIcon('tutor') + '</span>' +
+                  '<span style="display:inline-flex; align-items:center;">Tutor dan mapel' + ktrGetSortIcon('tutor') + '</span>' +
                 '</th>' +
-                '<th class="ktr-sort-th" data-sort="tanggal" title="Urutkan Tanggal Mulai" style="text-align:center; width:70px;">' +
+                '<th class="ktr-sort-th" data-sort="tanggal" title="Urutkan Tanggal Mulai" style="text-align:center; width:90px;">' +
                   '<span style="display:inline-flex; align-items:center; justify-content:center; width:100%;">Mulai' + ktrGetSortIcon('tanggal') + '</span>' +
                 '</th>' +
                 '<th style="text-align:center;">Status</th>' +
@@ -1317,7 +1257,7 @@
       '</div>';
   }
 
-  function ktrRenderList() {
+  function ktrRenderList(animate) {
     var listEl = document.getElementById('ktr-list');
     var wantStatus = ktrState.tab === 'aktif' ? 'aktif' : null;
     var rows = ktrState.kontrakList.filter(function (k) {
@@ -1326,8 +1266,8 @@
 
     rows = ktrSortRows(rows);
 
-    document.getElementById('ktr-sectionLabel').textContent = ktrState.tab === 'aktif' ? 'Kontrak Aktif' : 'Kontrak Nonaktif';
-    document.getElementById('ktr-resultCount').textContent = rows.length + ' Kontrak';
+    document.getElementById('ktr-sectionLabel').innerHTML = '<div class="ktr-section-title">' + (ktrState.tab === 'aktif' ? 'Kontrak aktif' : 'Kontrak nonaktif') + '</div><div class="ktr-section-sub">' + (ktrState.tab === 'aktif' ? 'Siswa yang sedang belajar' : 'Kontrak selesai atau dibatalkan') + '</div>';
+    document.getElementById('ktr-resultCount').textContent = rows.length + ' kontrak';
     ktrUpdateViewToggleUI();
 
     if (!rows.length) {
@@ -1345,86 +1285,62 @@
       listEl.innerHTML = rows.map(ktrRenderCard).join('');
     }
     ktrBindCardEvents();
+    if (animate && !KTR_REDUCED_MOTION) {
+      var items = ktrState.viewMode === 'table' ? listEl.querySelectorAll('.ktr-table tbody tr') : listEl.querySelectorAll(':scope > .ktr-card');
+      items.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('ktr-in'); });
+      clearTimeout(listEl._ktrAnimT);
+      listEl._ktrAnimT = setTimeout(function () { items.forEach(function (el) { el.classList.remove('ktr-in'); }); }, 1200);
+    }
   }
 
   function ktrRenderCard(k) {
     var siswa = k.siswa || {};
-    var ortu = siswa.orangtua || {};
     var initials = (siswa.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
     var isAktif = k.status === 'aktif';
-    var statusLabel = k.status === 'aktif' ? 'Aktif' : (k.status === 'selesai' ? 'Selesai' : 'Dibatalkan');
-    var statusBadge = isAktif
-      ? '<span class="ktr-status-badge" style="background:rgba(52,199,89,.14); color:#28a745; height:22px; font-size:9.5px; padding:0 8px;"><span style="width:11px; height:11px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>' + statusLabel + '</span>'
-      : '<span class="ktr-status-badge" style="background:rgba(255,59,48,.12); color:#ff3b30; height:22px; font-size:9.5px; padding:0 8px;"><span style="width:11px; height:11px; border-radius:50%; background:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>' + statusLabel + '</span>';
-
-    var unitBadge = k.units ? '<span style="background:var(--blue); color:#fff; font-size:9px; font-weight:500; padding:1.5px 6px; border-radius:999px; white-space:nowrap;">' + ktrEscape(k.units.nama_unit) + '</span>' : '';
-    var sekolahLine = [siswa.kelas, siswa.sekolah].filter(Boolean).join(' &bull; ') || 'Kelas &amp; sekolah belum diisi';
-
+    var soon = ktrIsEndingSoon(k);
+    var statusLabel = isAktif ? 'Aktif' : (k.status === 'selesai' ? 'Selesai' : 'Dibatalkan');
+    var stColor = isAktif ? '#1E8E5A' : '#D4070F', stBg = isAktif ? '#E9F7EF' : '#FDEAEA';
+    var statusBadge = '<span class="kc-status" style="color:' + stColor + '; background:' + stBg + ';"><i style="background:' + stColor + ';"></i>' + statusLabel + '</span>';
+    var sekolahLine = [siswa.kelas, siswa.sekolah].filter(Boolean).join(' · ');
     var isOpen = ktrState.openCard === k.id;
     var tutorList = k.kontrak_tutor || [];
 
-    var tutorRows = tutorList.map(function (kt, idx) {
-      var durasiText = kt.durasi_menit ? kt.durasi_menit + ' Menit' : '-';
-
-      return '<div style="background:var(--surface); border-radius:9px; padding:9px 11px; margin-top:' + (idx > 0 ? '8px' : '0') + '; border:1px solid var(--border);">' +
-        '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">' +
-          '<div style="min-width:0; flex:1;">' +
-            '<div style="font-size:11.5px; font-weight:600; color:#1c1c1e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + ktrEscape(kt.users && kt.users.nama || 'Tutor') + '">' + (idx + 1) + '. ' + ktrEscape(kt.users && kt.users.nama || 'Tutor') + '</div>' +
-          '</div>' +
-          '<div style="display:flex; align-items:center; gap:4px; flex:none;">' +
-            '<span style="background:var(--blue); color:#fff; font-size:9.5px; font-weight:500; padding:2px 7px; border-radius:999px; white-space:nowrap;">' + ktrEscape(kt.mapel || '-') + '</span>' +
-            '<button type="button" class="ktr-edit-tutor-btn" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Edit Tutor" aria-label="Edit Tutor" style="width:22px; height:22px; border-radius:5px; background:transparent; border:1px solid var(--border); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex:none; transition:all .15s ease;">' +
-              '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
-            '</button>' +
-            '<button type="button" class="ktr-del-tutor-btn" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Hapus Tutor" aria-label="Hapus Tutor" style="width:22px; height:22px; border-radius:5px; background:transparent; border:1px solid var(--border); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex:none; transition:all .15s ease;">' +
-              '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
-            '</button>' +
-          '</div>' +
-        '</div>' +
-        '<div style="display:flex; flex-wrap:wrap; gap:4px 10px; margin-top:5px; font-size:10px; color:#8e8e93; font-family:monospace;">' +
-          '<span style="white-space:nowrap;">Durasi: <b style="color:var(--ink);">' + durasiText + '</b></span>' +
-          '<span style="white-space:nowrap;">Fee: <b style="color:var(--ink);">' + ktrFormatRp(kt.fee_mengajar) + '</b></span>' +
-          '<span style="white-space:nowrap;">Transport: <b style="color:var(--ink);">' + ktrFormatRp(kt.uang_transport) + '</b></span>' +
-        '</div>' +
+    var tutorRows = tutorList.map(function (kt) {
+      var nm = (kt.users && kt.users.nama) || 'Tutor';
+      return '<div class="kc-tutor">' +
+        '<span class="kc-tutor-av">' + ktrEscape(nm.charAt(0).toUpperCase()) + '</span>' +
+        '<div class="kc-tutor-t"><b>' + ktrEscape(nm) + '</b><span>' + ktrEscape(kt.mapel || '-') + (kt.durasi_menit ? ' · ' + kt.durasi_menit + ' mnt' : '') + ' · fee ' + ktrFormatRp(kt.fee_mengajar) + ' · transport ' + ktrFormatRp(kt.uang_transport) + '</span></div>' +
+        '<button type="button" class="ktr-edit-tutor-btn kc-icon" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Edit tutor" aria-label="Edit tutor"><i class="ph ph-pencil-simple" aria-hidden="true" style="pointer-events:none;"></i></button>' +
+        '<button type="button" class="ktr-del-tutor-btn kc-icon is-danger" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Hapus tutor" aria-label="Hapus tutor"><i class="ph ph-trash" aria-hidden="true" style="pointer-events:none;"></i></button>' +
       '</div>';
     }).join('');
 
     return '' +
-      '<div class="card ktr-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
-            '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex:none;">' + ktrEscape(initials) + '</div>' +
-            '<div style="min-width:0;">' +
-              '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
-                '<h4 style="font-size:12.5px; font-weight:600; color:#1c1c1e; margin:0; line-height:1.3;">' + ktrEscape(siswa.nama || '-') + '</h4>' +
-                unitBadge +
-              '</div>' +
-              '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:2px 0 0;">' + sekolahLine + '</p>' +
-            '</div>' +
+      '<div class="card ktr-card kc-card">' +
+        '<div class="kc-head">' +
+          '<div class="kc-av">' + ktrEscape(initials) + '</div>' +
+          '<div class="kc-who">' +
+            '<h4>' + ktrEscape(siswa.nama || '-') + '</h4>' +
+            '<p>' + (sekolahLine ? ktrEscape(sekolahLine) : 'Kelas dan sekolah belum diisi') + '</p>' +
           '</div>' +
-          '<div style="display:flex; align-items:center; gap:6px; flex:none;">' +
-            '<button class="ktr-edit-btn" data-id="' + k.id + '" style="background:var(--blue); color:#fff; border:none; border-radius:7px; padding:0 10px; height:26px; font-size:10.5px; font-weight:500; cursor:pointer; flex:none; font-family:var(--font);">Edit</button>' +
-            statusBadge +
+          statusBadge +
+        '</div>' +
+        '<div class="kc-chips">' +
+          (k.units ? '<span class="kc-chip"><i class="ph ph-buildings" aria-hidden="true"></i>' + ktrEscape(k.units.nama_unit) + '</span>' : '') +
+          '<span class="kc-chip"><i class="ph ph-books" aria-hidden="true"></i>' + ktrEscape(k.paket_belajar && k.paket_belajar.nama_paket || '-') + '</span>' +
+          '<span class="kc-chip"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Mulai ' + ktrFormatTgl(k.tanggal_mulai) + '</span>' +
+          (soon ? '<span class="kc-chip is-soon"><i class="ph ph-hourglass" aria-hidden="true"></i>Berakhir ' + ktrFormatTgl(k.tanggal_selesai) + '</span>' : '') +
+        '</div>' +
+        '<div class="kc-foot">' +
+          '<div class="kc-price"><span>Biaya per sesi · ' + ktrEscape(k.nomor_kontrak || '-') + '</span><b>' + ktrFormatRp(k.harga) + '</b></div>' +
+          '<div class="kc-foot-r">' +
+            '<button type="button" class="ktr-siswa-toggle kc-tutor-btn' + (isOpen ? ' is-open' : '') + '" data-id="' + k.id + '"><i class="ph ph-chalkboard-teacher" aria-hidden="true" style="pointer-events:none;"></i>Tutor <em>' + tutorList.length + '</em><svg class="ktr-toggle-icon" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg); pointer-events:none;"><polyline points="6 9 12 15 18 9"/></svg></button>' +
+            '<button type="button" class="ktr-edit-btn kc-icon" data-id="' + k.id + '" title="Edit kontrak" aria-label="Edit kontrak"><i class="ph ph-pencil-simple" aria-hidden="true" style="pointer-events:none;"></i></button>' +
           '</div>' +
         '</div>' +
-
-        '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:9px; padding:8px 10px; margin-top:8px;">' +
-          '<div class="ktr-detail-row"><span>Paket Mapel</span><span>' + ktrEscape(k.paket_belajar && k.paket_belajar.nama_paket || '-') + '</span></div>' +
-          '<div class="ktr-detail-row"><span>No. Kontrak</span><span>' + ktrEscape(k.nomor_kontrak || '-') + '</span></div>' +
-          '<div class="ktr-detail-row"><span>Tgl Mulai</span><span>' + ktrFormatTgl(k.tanggal_mulai) + '</span></div>' +
-          '<div class="ktr-detail-row"><span>Biaya Satuan</span><span style="color:#28a745; font-size:12px;">' + ktrFormatRp(k.harga) + ' / Sesi</span></div>' +
-        '</div>' +
-
-        '<button class="ktr-siswa-toggle" data-id="' + k.id + '" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,.04); border:none; border-radius:8px; padding:7px 10px; font-size:11px; font-weight:500; color:#3a3a3c; cursor:pointer; margin-top:8px; font-family:var(--font);">' +
-          'Daftar Tutor' +
-          '<svg class="ktr-toggle-icon" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
-        '</button>' +
-        '<div class="ktr-wrap" data-id="' + k.id + '" style="' + (isOpen ? 'max-height:2000px; opacity:1;' : '') + ' padding-top:' + (isOpen ? '8px' : '0') + ';">' +
-          '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">' +
-            '<span style="font-size:10px; font-weight:500; color:#8e8e93; text-transform:uppercase; letter-spacing:.02em;">Daftar Tutor &amp; Mapel</span>' +
-            '<button class="ktr-add-tutor-btn" data-kontrak-id="' + k.id + '" style="background:var(--blue-tint); color:var(--blue); border:none; border-radius:7px; padding:0 10px; height:26px; font-size:10.5px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:4px; font-family:var(--font);"><span style="width:13px; height:13px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>Tambah Tutor</button>' +
-          '</div>' +
-          (tutorRows || '<p style="font-size:11.5px; color:#8e8e93; text-align:center; padding:8px 0;">Belum ada tutor yang ditugaskan.</p>') +
+        '<div class="ktr-wrap" data-id="' + k.id + '" style="' + (isOpen ? 'max-height:2000px; opacity:1;' : '') + ' padding-top:' + (isOpen ? '10px' : '0') + ';">' +
+          (tutorRows || '<p class="kc-empty">Belum ada tutor yang ditugaskan.</p>') +
+          '<button type="button" class="ktr-add-tutor-btn kc-add" data-kontrak-id="' + k.id + '"><i class="ph ph-plus" aria-hidden="true" style="pointer-events:none;"></i>Tambah tutor</button>' +
         '</div>' +
       '</div>';
   }
@@ -1900,14 +1816,14 @@
   document.getElementById('ktr-filterApplyBtn').addEventListener('click', function () {
     ktrUpdateFilterBadge();
     ktrCloseFilterModal();
-    ktrRenderList();
+    ktrRenderList(true);
   });
   document.getElementById('ktr-filterResetBtn').addEventListener('click', function () {
     ktrState.filterJenis = []; ktrState.filterTutor = []; ktrState.filterSiswa = []; ktrState.filterOrtu = [];
     ktrUpdateFilterSummary('jenis'); ktrUpdateFilterSummary('tutor'); ktrUpdateFilterSummary('siswa'); ktrUpdateFilterSummary('ortu');
     ktrUpdateFilterBadge();
     ktrCloseFilterModal();
-    ktrRenderList();
+    ktrRenderList(true);
   });
 
   /* ===== Popup Pilih Siswa/Paket/Tutor (dengan search bar) — dipakai di form Tambah Kontrak & Tambah Tutor ===== */
