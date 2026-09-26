@@ -57,17 +57,12 @@
   .hb-bar{height:4px; border-radius:99px; background:rgba(255,255,255,.1); overflow:hidden; margin-top:8px;}
   .hb-bar i{display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg, #7CF0C3, #46D3A0); transition:width .6s cubic-bezier(.16,1,.3,1);}
   .hb-margin{font-size:9.5px; color:rgba(255,255,255,.55); margin-top:4px;}
-  /* Kartu putih laba & pengeluaran di panel kanan */
-  .hb-side{gap:10px !important;}
-  .hb-card{background:#fff; color:var(--ink); border-radius:12px; padding:11px 12px; box-shadow:0 1px 2px rgba(7,8,51,.18);}
-  .hb-card .hb-row-l{color:var(--ink-soft);}
-  .hb-card .hb-row-n{color:var(--ink);}
-  .hb-card .hb-row-d{color:var(--ink-soft);}
-  .hb-card .hb-ico.is-laba{background:var(--green-soft); color:var(--green);}
-  .hb-card .hb-ico.is-ops{background:var(--red-soft); color:var(--red);}
-  .hb-card .hb-bar{background:var(--surface);}
-  .hb-card .hb-bar i{background:linear-gradient(90deg, #2FBF85, var(--green));}
-  .hb-card .hb-margin{color:var(--ink-soft);}
+  /* Kaca: kartu transparan dengan garis terang */
+  .hb-side{gap:10px !important; background:transparent !important;}
+  .hb-card{position:relative; border-radius:14px; padding:12px 14px; background:linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.04)); border:1px solid rgba(255,255,255,.18); box-shadow:inset 0 1px 0 rgba(255,255,255,.18), 0 8px 24px rgba(3,4,30,.25); backdrop-filter:blur(8px);}
+  .hb-card .hb-ico.is-laba{background:rgba(124,240,195,.18); color:#7CF0C3;}
+  .hb-card .hb-ico.is-ops{background:rgba(255,156,148,.18); color:#FF9C94;}
+  .hb-card .hb-row-n{font-size:15px;}
   .home-hero-cetak-btn{
     display:inline-flex; align-items:center; gap:6px; flex:none;
     height:28px; padding:0 10px; border-radius:8px;
@@ -1108,9 +1103,9 @@
       homeRevealValue(document.getElementById('homeLaba'), homeFormatRupiah(laba));
       document.getElementById('homeMargin').textContent = omset > 0 ? ('Margin ' + marginPct.toFixed(1) + '%') : 'Margin -';
       document.getElementById('homeMarginBar').style.width = Math.max(0, Math.min(100, marginPct)).toFixed(1) + '%';
-      document.getElementById('homeLabaDelta').innerHTML = homeDeltaBadge(laba, labaPrev, false);
+      document.getElementById('homeLabaDelta').innerHTML = homeDeltaBadge(laba, labaPrev, true);
       homeRevealValue(document.getElementById('homeOperasional'), homeFormatRupiah(pengeluaran));
-      document.getElementById('homeOperasionalDelta').innerHTML = homeDeltaBadge(pengeluaran, pengeluaranPrev, false);
+      document.getElementById('homeOperasionalDelta').innerHTML = homeDeltaBadge(pengeluaran, pengeluaranPrev, true);
 
       var pendingCount = pendingPresensi.length;
       homeRenderPresensiBanner(pendingPresensi, unitList);
