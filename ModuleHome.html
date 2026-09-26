@@ -102,6 +102,98 @@
     .home-sec-stats{flex:1 1 100% !important;}
   }
 
+  /* ===== Trend progress cabang (kurva halus + pembanding) ===== */
+  .ht-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+  .ht-sub{font-size:10.5px; color:var(--ink-soft); margin-top:2px;}
+  .ht-range, .hu-tabs{
+    position:relative; display:flex; align-items:center; gap:2px; flex:none;
+    background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:2px;
+    touch-action:none; -webkit-user-select:none; user-select:none;
+  }
+  .ht-range-glider{
+    position:absolute; top:2px; bottom:2px; left:2px; z-index:1; pointer-events:none;
+    background:#fff; border-radius:7px; box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border);
+    transition:left .28s cubic-bezier(.16,1,.3,1), width .28s cubic-bezier(.16,1,.3,1);
+  }
+  .ht-range button, .hu-tabs button{
+    position:relative; z-index:2; border:none; background:none; cursor:pointer;
+    font-family:var(--font); font-size:10.5px; font-weight:500; color:var(--ink-soft);
+    height:24px; padding:0 9px; white-space:nowrap;
+  }
+  .hu-tabs{margin-bottom:12px;}
+  .hu-tabs button{flex:1; padding:0 4px;}
+  .ht-tabs{display:flex; gap:16px; border-bottom:1px solid var(--border); margin-top:12px;}
+  .ht-tab{
+    border:none; background:none; cursor:pointer; font-family:var(--font);
+    font-size:11px; font-weight:500; color:var(--ink-soft);
+    padding:0 0 8px; margin-bottom:-1px; border-bottom:2px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .ht-tab:hover{color:var(--ink);}
+  .ht-tab.is-on{color:var(--blue); font-weight:600; border-bottom-color:var(--blue);}
+  .ht-hero{display:flex; align-items:baseline; gap:8px; margin-top:12px; flex-wrap:wrap;}
+  .ht-num{font-size:21px; font-weight:800; letter-spacing:-.03em; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .ht-delta{font-size:10px; font-weight:600; padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .ht-delta:empty{display:none;}
+  .ht-delta.is-up{background:var(--green-soft); color:var(--green);}
+  .ht-delta.is-down{background:var(--red-soft); color:var(--red);}
+  .ht-note{font-size:10.5px; color:var(--ink-soft);}
+  .ht-legend{display:flex; gap:14px; margin-top:6px; font-size:10px; color:var(--ink-soft);}
+  .ht-legend > span{display:inline-flex; align-items:center; gap:6px;}
+  .ht-legend i{display:inline-block; width:14px; border-top:2px solid var(--blue);}
+  .ht-legend i.is-ghost{border-top:2px dashed #B9BDD6;}
+  .ht-chart{position:relative; flex:1; min-height:130px; margin-top:4px;}
+  .ht-chart svg{position:absolute; inset:0; width:100%; height:100%; display:block; overflow:visible;}
+  .ht-axis{font-size:9.5px; fill:#8A8EA5; font-family:var(--font);}
+  .ht-tip{
+    position:absolute; display:none; pointer-events:none; z-index:5;
+    background:var(--ink); color:#fff; border-radius:9px; padding:6px 9px;
+    font-size:10.5px; line-height:1.4; white-space:nowrap; box-shadow:0 10px 24px -10px rgba(20,22,43,.5);
+  }
+  .ht-tip b{font-weight:700;}
+  .ht-tip .is-up{color:#7CF0C3;} .ht-tip .is-down{color:#FF9C94;} .ht-tip .is-soft{opacity:.7;}
+  .ht-foot{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);}
+  .ht-foot .l{font-size:10px; color:var(--ink-soft);}
+  .ht-foot .v{font-size:12px; font-weight:700; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-variant-numeric:tabular-nums;}
+  .ht-foot .v.is-up{color:var(--green);} .ht-foot .v.is-down{color:var(--red);}
+
+  /* ===== Penyebaran data 5 unit (peringkat dengan bar) ===== */
+  .hu-total{display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-bottom:12px;}
+  .hu-total-l{font-size:10.5px; color:var(--ink-soft);}
+  .hu-total-n{font-size:20px; font-weight:800; letter-spacing:-.03em; font-variant-numeric:tabular-nums; margin-top:1px; white-space:nowrap;}
+  .hu-list{display:flex; flex-direction:column; gap:11px;}
+  .hu-row{display:grid; grid-template-columns:18px minmax(0,1fr) auto; column-gap:10px; align-items:center;}
+  .hu-rank{grid-row:1 / span 2; font-size:10.5px; font-weight:700; color:#A3A7BC; text-align:center;}
+  .hu-row.is-top .hu-rank{color:var(--blue);}
+  .hu-name{font-size:11.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .hu-meta{font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .hu-val{grid-row:1 / span 2; grid-column:3; text-align:right;}
+  .hu-val .n{font-size:11.5px; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .hu-val .d{font-size:10px; font-weight:600; margin-top:2px; white-space:nowrap;}
+  .is-good{color:var(--green);} .is-bad{color:var(--red);}
+  .hu-bar{grid-column:2; height:5px; border-radius:99px; background:var(--surface); margin-top:6px; overflow:hidden;}
+  .hu-bar i{display:block; height:100%; width:0; border-radius:99px; background:var(--blue); opacity:.5; transition:width .7s cubic-bezier(.16,1,.3,1);}
+  .hu-row.is-top .hu-bar i{opacity:1;}
+  .hu-bar i.is-neg{background:#E0524B;}
+  .hu-empty{padding:16px; text-align:center; color:var(--ink-soft); font-size:10.5px;}
+
+  /* ===== Animasi masuk data ===== */
+  @keyframes huIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  @keyframes htFade{from{opacity:0;} to{opacity:1;}}
+  @keyframes htPulse{0%{r:4; opacity:.55;} 100%{r:13; opacity:0;}}
+  @media (prefers-reduced-motion:no-preference){
+    .hu-row.is-anim{animation:huIn .45s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 60ms);}
+    .ht-area.is-anim{animation:htFade .8s ease both .15s;}
+    .ht-pulse{animation:htPulse 1.8s ease-out infinite;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .hu-bar i{transition:none;}
+    .ht-pulse{display:none;}
+  }
+  @media (max-width:899px){
+    .ht-chart{min-height:150px;}
+  }
+
   /* ===== Kartu & teks ===== */
   .module-panel[data-module="home"] .card{border:1px solid var(--border); border-radius:14px; padding:14px 16px; box-shadow:none;}
   .home-sec-title{font-size:12px; font-weight:600; color:var(--ink); margin-bottom:12px;}
@@ -111,10 +203,6 @@
   .home-stat-unit{font-size:10.5px; font-weight:500; color:var(--ink-soft);}
   .home-stat-sub{font-size:10px; color:var(--ink-soft); margin-top:2px;}
 
-  #trendRangeDock, #unitTabDock{background:var(--surface) !important; border-radius:10px !important; margin-bottom:10px !important;}
-  #trendRangeGlider, #unitTabGlider{border:none !important; box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border) !important;}
-  .home-trend-range, .home-unit-tab{font-size:10.5px !important; font-weight:500 !important;}
-  .home-trend-metric{border-width:1px !important;}
 
   /* ===== Mobile Layout Khusus (Gaya Presensi: Jarak Vertikal 14px Rapi) ===== */
   @media (max-width:899px){
@@ -376,45 +464,41 @@
 
     <!-- Kolom 1: Trend Progress Cabang -->
     <div class="home-sec-trend">
-      <div class="card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
-        <div class="home-sec-title">Trend progress cabang</div>
-
-        <div id="trendRangeDock" style="position:relative; display:flex; margin-bottom:8px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; touch-action:none; -webkit-user-select:none; user-select:none; height:38px; box-sizing:border-box; align-items:center;">
-          <div id="trendRangeGlider" style="position:absolute; top:3px; bottom:3px; left:3px; width:calc(33.33% - 4px); background:#fff; border-radius:8px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;"></div>
-          <button class="home-trend-range" data-range="3" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">3 Bulan</button>
-          <button class="home-trend-range" data-range="6" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">6 Bulan</button>
-          <button class="home-trend-range" data-range="12" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:10px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center;">12 Bulan</button>
+      <div class="card ht-card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
+        <div class="ht-head">
+          <div style="min-width:0;">
+            <div class="home-sec-title" style="margin:0;">Trend progress cabang</div>
+            <div class="ht-sub" id="homeTrendSub">-</div>
+          </div>
+          <div id="trendRangeDock" class="ht-range">
+            <div id="trendRangeGlider" class="ht-range-glider"></div>
+            <button class="home-trend-range" data-range="3">3 bln</button>
+            <button class="home-trend-range" data-range="6">6 bln</button>
+            <button class="home-trend-range" data-range="12">12 bln</button>
+          </div>
         </div>
 
-        <div id="trendMetricCardsRow" style="display:flex; gap:5px; margin-bottom:8px;">
-          <button class="home-trend-metric" data-metric="omset" style="flex:1; padding:6px 5px; border-radius:10px; border:1px solid var(--blue); background:var(--blue-tint); text-align:left; cursor:pointer; min-width:0;">
-            <div style="font-size:9px; color:var(--blue); font-weight:500;">OMSET</div>
-            <div style="font-size:10px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendOmsetVal">-</div>
-          </button>
-          <button class="home-trend-metric" data-metric="laba" style="flex:1; padding:6px 5px; border-radius:10px; border:1px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
-            <div style="font-size:9px; color:var(--ink-soft); font-weight:500;">LABA</div>
-            <div style="font-size:10px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendLabaVal">-</div>
-          </button>
-          <button class="home-trend-metric" data-metric="sesi" style="flex:1; padding:6px 5px; border-radius:10px; border:1px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
-            <div style="font-size:9px; color:var(--ink-soft); font-weight:500;">SESI</div>
-            <div style="font-size:10px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="homeTrendSesiVal">-</div>
-          </button>
-          <button class="home-trend-metric" data-metric="semua" style="flex:1; padding:6px 5px; border-radius:10px; border:1px solid var(--border); background:#fff; text-align:left; cursor:pointer; min-width:0;">
-            <div style="font-size:9px; color:var(--ink-soft); font-weight:500;">SEMUA</div>
-            <div style="font-size:9.5px; font-weight:500; margin-top:2px; display:flex; gap:3px;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#1C1AAF; display:inline-block;"></span>
-              <span style="width:6px; height:6px; border-radius:50%; background:#1E8E5A; display:inline-block;"></span>
-              <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
-            </div>
-          </button>
+        <div class="ht-tabs" role="tablist">
+          <button class="home-trend-metric ht-tab" data-metric="omset" role="tab">Omset</button>
+          <button class="home-trend-metric ht-tab" data-metric="laba" role="tab">Laba</button>
+          <button class="home-trend-metric ht-tab" data-metric="sesi" role="tab">Sesi</button>
         </div>
 
-        <div id="homeTrendChartWrap" style="position:relative; flex:1; min-height:120px;">
-          <svg id="homeTrendSvg" viewBox="0 0 340 140" style="width:100%; height:100%; display:block; position:absolute; inset:0;"></svg>
-          <div id="homeTrendTooltip" style="position:absolute; display:none; background:var(--ink); color:#fff; font-size:9.5px; font-weight:500; padding:4px 8px; border-radius:8px; white-space:nowrap; pointer-events:none; z-index:5; transform:translate(-50%,-115%);"></div>
+        <div class="ht-hero">
+          <span class="ht-num" id="homeTrendHeroVal">-</span>
+          <span class="ht-delta" id="homeTrendHeroDelta"></span>
+          <span class="ht-note" id="homeTrendHeroNote"></span>
         </div>
-        <div id="homeTrendLegend" style="display:none; justify-content:center; gap:12px; margin-top:4px; font-size:9px; font-weight:500; color:var(--ink-soft);"></div>
-        <div id="homeTrendFooter" style="font-size:9px; color:var(--ink-soft); text-align:center; margin-top:6px;"></div>
+        <div class="ht-legend" id="homeTrendLegend">
+          <span><i></i>Periode ini</span>
+          <span id="homeTrendGhostLegend"><i class="is-ghost"></i><span id="homeTrendGhostLabel">Periode sebelumnya</span></span>
+        </div>
+
+        <div id="homeTrendChartWrap" class="ht-chart">
+          <svg id="homeTrendSvg" viewBox="0 0 340 140" aria-label="Grafik tren" role="img"></svg>
+          <div id="homeTrendTooltip" class="ht-tip"></div>
+        </div>
+        <div class="ht-foot" id="homeTrendFooter"></div>
       </div>
     </div>
 
@@ -423,18 +507,13 @@
       <div class="card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
         <div class="home-sec-title">Penyebaran data 5 unit</div>
 
-        <div id="unitTabDock" style="position:relative; display:flex; margin-bottom:8px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; touch-action:none; -webkit-user-select:none; user-select:none; height:38px; box-sizing:border-box; align-items:center;">
-          <div id="unitTabGlider" style="position:absolute; top:3px; bottom:3px; left:3px; width:calc(20% - 3.8px); background:#fff; border-radius:8px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;"></div>
-          <button class="home-unit-tab" data-metric="siswa" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Siswa</button>
-          <button class="home-unit-tab" data-metric="omset" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Omset</button>
-          <button class="home-unit-tab" data-metric="laba" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Laba</button>
-          <button class="home-unit-tab" data-metric="pengeluaran" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Pengeluaran</button>
-          <button class="home-unit-tab" data-metric="tutor" style="position:relative; z-index:2; flex:1; height:32px; border:none; background:none; font-size:9.5px; font-weight:500; cursor:pointer; color:var(--ink-soft); font-family:var(--font); white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; padding:0 2px;">Tutor</button>
-        </div>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:0 3px 6px;">
-          <span style="font-size:10px; font-weight:500; color:var(--ink-soft);">Unit / kepala unit</span>
-          <span id="homeUnitColRight" style="font-size:10px; font-weight:500; color:var(--ink-soft);">Siswa &amp; Perubahan</span>
+        <div id="unitTabDock" class="hu-tabs">
+          <div id="unitTabGlider" class="ht-range-glider"></div>
+          <button class="home-unit-tab" data-metric="siswa">Siswa</button>
+          <button class="home-unit-tab" data-metric="omset">Omset</button>
+          <button class="home-unit-tab" data-metric="laba">Laba</button>
+          <button class="home-unit-tab" data-metric="pengeluaran">Pengeluaran</button>
+          <button class="home-unit-tab" data-metric="tutor">Tutor</button>
         </div>
 
         <div id="homeUnitTable" class="home-scrollable">
@@ -519,18 +598,33 @@
   /* Animasi "mengocok" angka acak sebentar sebelum settle ke nilai asli.
      Hanya untuk elemen berisi teks polos (textContent) — aman karena tidak
      menyentuh markup HTML/style yang mengandung digit. */
+  var HOME_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Angka "menghitung naik" ke nilai akhir. Pola teks (Rp, titik ribuan, "Jt", satuan)
+     dipertahankan; teks tanpa angka langsung ditampilkan. */
   function homeRevealValue(el, finalText) {
     if (!el) return;
-    clearInterval(el._revealTimer);
-    clearTimeout(el._revealStopTimer);
-    el.textContent = homeScramble(finalText);
-    el._revealTimer = setInterval(function () {
-      el.textContent = homeScramble(finalText);
-    }, 45);
-    el._revealStopTimer = setTimeout(function () {
-      clearInterval(el._revealTimer);
-      el.textContent = finalText;
-    }, 450);
+    cancelAnimationFrame(el._countRaf);
+    var m = String(finalText).match(/^(.*?)(-?\d[\d.]*(?:,\d+)?|-?\d+(?:\.\d+)?)(.*)$/);
+    if (HOME_REDUCED_MOTION || !m) { el.textContent = finalText; return; }
+    var prefix = m[1], numStr = m[2], suffix = m[3];
+    var isDecimal = /^-?\d+,\d+$/.test(numStr) && /Jt|Juta/.test(suffix);
+    var target = parseFloat(numStr.replace(/\./g, '').replace(',', '.'));
+    if (!isFinite(target)) { el.textContent = finalText; return; }
+    var decimals = isDecimal ? (numStr.split(',')[1] || '').length : 0;
+    var fmt = function (v) {
+      if (isDecimal) return prefix + v.toFixed(decimals).replace('.', ',') + suffix;
+      return prefix + Math.round(v).toLocaleString('id-ID') + suffix;
+    };
+    var start = null, dur = 700;
+    function step(t) {
+      if (start === null) start = t;
+      var k = Math.min(1, (t - start) / dur);
+      var e = 1 - Math.pow(1 - k, 3);
+      el.textContent = k < 1 ? fmt(target * e) : finalText;
+      if (k < 1) el._countRaf = requestAnimationFrame(step);
+    }
+    el._countRaf = requestAnimationFrame(step);
   }
 
   function homeFormatPeriodeLabel(periode) {
@@ -665,32 +759,13 @@
     window.addEventListener('resize', function () {
       clearTimeout(homeColResizeTimer);
       homeColResizeTimer = setTimeout(function () {
-        renderTrendChart();
+        renderTrendChart(false);
         homeRenderHeroSpark();
-        homeMatchTrendRangeDockHeight();
       }, 150);
     });
-    setTimeout(function () { renderTrendChart(); homeMatchTrendRangeDockHeight(); }, 350);
+    setTimeout(function () { renderTrendChart(false); }, 350);
   }
 
-  function homeMatchTrendRangeDockHeight() {
-    if (!window.matchMedia('(min-width:900px)').matches) return;
-    var dock = document.getElementById('trendRangeDock');
-    var metricsRow = document.getElementById('trendMetricCardsRow');
-    if (!dock || !metricsRow) return;
-    dock.style.height = 'auto';
-    var targetHeight = metricsRow.offsetHeight;
-    if (targetHeight > 30) {
-      dock.style.height = targetHeight + 'px';
-      dock.style.alignItems = 'center';
-      dock.querySelectorAll('.home-trend-range').forEach(function (btn) {
-        btn.style.height = '100%';
-        btn.style.display = 'flex';
-        btn.style.alignItems = 'center';
-        btn.style.justifyContent = 'center';
-      });
-    }
-  }
 
   /* Safe stub untuk backwards compatibility */
   function homeApplyResponsiveColumns() {}
@@ -1159,114 +1234,83 @@
   }
 
   var UNIT_TOTAL_LABELS = {
-    siswa: 'Total Siswa Konsolidasi',
-    omset: 'Total Omset 5 Cabang',
-    laba: 'Total Laba Operasional',
-    pengeluaran: 'Total Pengeluaran 5 Cabang',
-    tutor: 'Total Tutor Terdaftar'
-  };
-  var UNIT_COLUMN_LABELS = {
-    siswa: 'Siswa &amp; Perubahan',
-    omset: 'Omset &amp; Perubahan',
-    laba: 'Laba &amp; Perubahan',
-    pengeluaran: 'Pengeluaran &amp; Perubahan',
-    tutor: 'Tutor &amp; Perubahan'
+    siswa: 'Total siswa aktif',
+    omset: 'Total omset 5 unit',
+    laba: 'Total laba operasional',
+    pengeluaran: 'Total pengeluaran 5 unit',
+    tutor: 'Total tutor aktif'
   };
 
   function homeFormatRupiahSmart(n) {
     n = n || 0;
-    if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1) + ' Jt';
+    if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1).replace('.', ',') + ' Jt';
     return homeFormatRupiah(n);
   }
   function homeFormatRupiahSmartLong(n) {
     n = n || 0;
-    if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1) + ' Juta';
+    if (Math.abs(n) >= 1000000) return 'Rp ' + (n / 1000000).toFixed(1).replace('.', ',') + ' Juta';
     return homeFormatRupiah(n);
   }
 
-  function homePillDelta(current, previous, hasHistory) {
-    var pct, isUp;
-    if (!hasHistory) { pct = 100; isUp = true; }
-    else { pct = previous ? ((current - previous) / previous) * 100 : 100; isUp = pct >= 0; }
-    var bg = isUp ? 'var(--green-soft)' : 'var(--red-soft)';
-    var fg = isUp ? 'var(--green)' : 'var(--red)';
-    var arrow = isUp ? '&#8593;' : '&#8595;';
-    var sign = isUp ? '+' : '';
-    return '<span style="display:inline-block; background:' + bg + '; color:' + fg + '; font-weight:500; font-size:9.5px; padding:2px 8px; border-radius:999px; white-space:nowrap;">' + sign + pct.toFixed(1) + '% ' + arrow + '</span>';
-  }
 
-  function homeTotalPill(current, previous, hasHistory, diffLabel) {
-    var pct, isUp;
-    if (!hasHistory) { pct = 100; isUp = true; }
-    else { pct = previous ? ((current - previous) / previous) * 100 : 100; isUp = pct >= 0; }
-    var bg = isUp ? 'var(--green-soft)' : 'var(--red-soft)';
-    var fg = isUp ? 'var(--green)' : 'var(--red)';
-    var sign = isUp ? '+' : '';
-    var text = sign + pct.toFixed(1) + '% vs Bulan Lalu' + (diffLabel ? ' (' + diffLabel + ')' : '');
-    return '<span style="display:inline-block; background:' + bg + '; color:' + fg + '; font-weight:500; font-size:9.5px; padding:3px 10px; border-radius:999px; white-space:nowrap;">' + text + '</span>';
-  }
 
   function homeScramble(text) {
     return text.replace(/[0-9]/g, function () { return Math.floor(Math.random() * 10); });
   }
 
-  function renderUnitTable(scramble) {
+  function homeUnitDeltaHtml(val, prevVal, invert, cls) {
+    if (!prevVal) return '';
+    var pct = ((val - prevVal) / Math.abs(prevVal)) * 100;
+    var good = invert ? pct <= 0 : pct >= 0;
+    return '<div class="' + cls + ' ' + (good ? 'is-good' : 'is-bad') + '">' + (pct >= 0 ? '+' : '') + pct.toFixed(1).replace('.', ',') + '%</div>';
+  }
+
+  function renderUnitTable(animate) {
     var container = document.getElementById('homeUnitTable');
     if (!homeUnitDataCache) return;
     var metric = homeCurrentUnitMetric;
     var isMoney = (metric === 'omset' || metric === 'laba' || metric === 'pengeluaran');
     var hasHistory = isMoney; // siswa & tutor belum ada data historis per-bulan
-    var unitLabel = metric === 'siswa' ? ' Siswa' : (metric === 'tutor' ? ' Tutor' : '');
+    var invert = metric === 'pengeluaran';
+    var unitLabel = metric === 'siswa' ? ' siswa' : (metric === 'tutor' ? ' tutor' : '');
+    var fmt = function (v) { return isMoney ? homeFormatRupiahSmart(v) : (v + unitLabel); };
 
-    var colRightEl = document.getElementById('homeUnitColRight');
-    if (colRightEl) colRightEl.innerHTML = UNIT_COLUMN_LABELS[metric];
+    var rows = homeUnitDataCache.map(function (u, idx) { return { u: u, no: idx + 1, val: u[metric] || 0, prev: hasHistory ? (u[metric + 'Prev'] || 0) : 0 }; });
+    rows.sort(function (a, b) { return b.val - a.val; });
+    var total = 0, totalPrev = 0, maxAbs = 0;
+    rows.forEach(function (r) { total += r.val; totalPrev += r.prev; maxAbs = Math.max(maxAbs, Math.abs(r.val)); });
 
-    var total = 0, totalPrev = 0;
-
-    var rowsHtml = homeUnitDataCache.map(function (u, idx) {
-      var val = u[metric];
-      var prevVal = hasHistory ? u[metric + 'Prev'] : 0;
-      total += val;
-      totalPrev += prevVal;
-      var display = isMoney ? homeFormatRupiahSmart(val) : (val + unitLabel);
-      if (scramble) display = homeScramble(display);
-      var subLine = metric === 'pengeluaran'
-        ? ('<span style="color:var(--red); font-size:9px;">Gaji ' + homeFormatRupiahSmart(u.gaji) + ' &middot; Ops ' + homeFormatRupiahSmart(u.ops) + '</span>')
-        : ('<span style="color:var(--blue);">' + homeEsc(u.kepala) + '</span>');
-      return '' +
-        '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--surface); border-radius:10px; padding:6px 9px; margin-bottom:4px;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
-            '<div style="width:26px; height:26px; border-radius:8px; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:9px; flex:none;">U' + (idx + 1) + '</div>' +
-            '<div style="min-width:0;">' +
-              '<div style="font-size:10.5px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Unit ' + (idx + 1) + ' &ndash; ' + homeEsc(u.nama_unit) + '</div>' +
-              '<div style="font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + subLine + '</div>' +
-            '</div>' +
-          '</div>' +
-          '<div style="text-align:right; flex:none;">' +
-            '<div style="font-size:10px; font-weight:500; color:var(--ink); font-variant-numeric:tabular-nums; margin-bottom:2px;">' + display + '</div>' +
-            homePillDelta(val, prevVal, hasHistory) +
-          '</div>' +
-        '</div>';
-    }).join('');
-
-    var totalDisplay = isMoney ? homeFormatRupiahSmartLong(total) : (total + unitLabel);
-    if (scramble) totalDisplay = homeScramble(totalDisplay);
-    var diffLabel = null;
-    if (hasHistory) {
-      var diff = total - totalPrev;
-      var sign = diff >= 0 ? '+' : '-';
-      diffLabel = sign + homeFormatRupiahSmart(Math.abs(diff));
+    if (!rows.length) {
+      container.innerHTML = '<div class="hu-empty">Belum ada data unit.</div>';
+      return;
     }
-    rowsHtml += '' +
-      '<div style="background:var(--blue); border-radius:10px; padding:10px 12px; margin-top:4px;">' +
-        '<div style="font-size:9px; font-weight:500; color:rgba(255,255,255,.75); text-transform:uppercase; letter-spacing:.02em; margin-bottom:4px;">' + UNIT_TOTAL_LABELS[metric] + '</div>' +
-        '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">' +
-          '<div style="font-size:14px; font-weight:600; color:#fff; font-variant-numeric:tabular-nums;">' + totalDisplay + '</div>' +
-          homeTotalPill(total, totalPrev, hasHistory, diffLabel) +
-        '</div>' +
-      '</div>';
 
-    container.innerHTML = rowsHtml;
+    var totalDelta = hasHistory ? homeUnitDeltaHtml(total, totalPrev, invert, 'ht-delta') : '';
+    if (totalDelta) totalDelta = totalDelta.replace('is-good', 'is-up').replace('is-bad', 'is-down').replace('<div', '<span').replace('</div>', ' vs bulan lalu</span>');
+
+    var html = '<div class="hu-total"><div><div class="hu-total-l">' + UNIT_TOTAL_LABELS[metric] + '</div>' +
+      '<div class="hu-total-n" id="homeUnitTotalVal">' + fmt(total) + '</div></div>' + totalDelta + '</div>';
+
+    html += '<div class="hu-list">' + rows.map(function (r, i) {
+      var u = r.u;
+      var meta = metric === 'pengeluaran'
+        ? 'Gaji ' + homeFormatRupiahSmart(u.gaji) + ' &middot; Ops ' + homeFormatRupiahSmart(u.ops)
+        : homeEsc(u.kepala);
+      var width = maxAbs ? (Math.abs(r.val) / maxAbs) * 100 : 0;
+      return '<div class="hu-row' + (i === 0 ? ' is-top' : '') + (animate ? ' is-anim' : '') + '" style="--i:' + i + ';">' +
+        '<div class="hu-rank">' + (i + 1) + '</div>' +
+        '<div style="min-width:0;"><div class="hu-name">Unit ' + r.no + ' &middot; ' + homeEsc(u.nama_unit) + '</div><div class="hu-meta">' + meta + '</div></div>' +
+        '<div class="hu-val"><div class="n">' + fmt(r.val) + '</div>' + (hasHistory ? homeUnitDeltaHtml(r.val, r.prev, invert, 'd') : '') + '</div>' +
+        '<div class="hu-bar"><i class="' + (r.val < 0 ? 'is-neg' : '') + '" data-w="' + width.toFixed(1) + '"></i></div>' +
+      '</div>';
+    }).join('') + '</div>';
+
+    container.innerHTML = html;
+
+    var bars = container.querySelectorAll('.hu-bar i');
+    var grow = function () { bars.forEach(function (b, i) { setTimeout(function () { b.style.width = b.dataset.w + '%'; }, animate && !HOME_REDUCED_MOTION ? i * 60 : 0); }); };
+    if (animate && !HOME_REDUCED_MOTION) requestAnimationFrame(function () { requestAnimationFrame(grow); }); else grow();
+    if (animate) homeRevealValue(document.getElementById('homeUnitTotalVal'), fmt(total));
   }
 
   function updateUnitTabGlider(metric) {
@@ -1286,27 +1330,19 @@
 
   function setUnitTabActive(metric) {
     document.querySelectorAll('.home-unit-tab').forEach(function (b) {
-      b.style.color = (b.dataset.metric === metric) ? 'var(--ink)' : 'var(--ink-soft)';
+      var on = b.dataset.metric === metric;
+      b.style.color = on ? 'var(--ink)' : 'var(--ink-soft)';
+      b.style.fontWeight = on ? '600' : '500';
     });
   }
 
-  /* Ganti metrik tabel unit dengan animasi geser kiri/kanan mengikuti arah pindah tab */
   function switchUnitMetric(newMetric) {
     homeCurrentUnitMetric = newMetric;
     revealUnitTable();
   }
 
-  /* Render tabel unit berulang dengan angka acak (efek "mengocok" yang benar-benar
-     berjalan/flicker), lalu ~450ms kemudian settle ke angka asli. */
   function revealUnitTable() {
-    clearInterval(window._unitTableScrambleTimer);
-    clearTimeout(window._unitTableRevealTimer);
     renderUnitTable(true);
-    window._unitTableScrambleTimer = setInterval(function () { renderUnitTable(true); }, 60);
-    window._unitTableRevealTimer = setTimeout(function () {
-      clearInterval(window._unitTableScrambleTimer);
-      renderUnitTable(false);
-    }, 450);
   }
 
   document.querySelectorAll('.home-unit-tab').forEach(function (btn) {
@@ -1387,10 +1423,9 @@
 
   /* ===== Trend Progress Cabang ===== */
   var homeTrendCache = null;
-  var homeTrendRange = 3;
+  var homeTrendRange = 6;
   var homeTrendMetric = 'omset';
   var TREND_RANGES = [3, 6, 12];
-  var TREND_COLORS = { omset: '#1C1AAF', laba: '#1E8E5A', sesi: '#F59E0B' };
 
   function homeMonthsBack(endPeriode, n) {
     var result = [];
@@ -1473,150 +1508,160 @@
     if (tooltip) tooltip.style.display = 'none';
   }
 
-  function homeShowTrendTooltip(circleEl, text) {
-    var tooltip = document.getElementById('homeTrendTooltip');
-    var wrap = document.getElementById('homeTrendChartWrap');
-    if (!tooltip || !wrap) return;
-    var wrapRect = wrap.getBoundingClientRect();
-    var circleRect = circleEl.getBoundingClientRect();
-    var x = circleRect.left + circleRect.width / 2 - wrapRect.left;
-    var y = circleRect.top - wrapRect.top;
-    tooltip.innerHTML = text;
-    tooltip.style.left = x + 'px';
-    tooltip.style.top = y + 'px';
-    tooltip.style.display = 'block';
-    clearTimeout(window._homeTrendTooltipTimer);
-    window._homeTrendTooltipTimer = setTimeout(homeHideTrendTooltip, 3000);
+  // Kurva monoton (Fritsch-Carlson): halus tapi tidak pernah melewati nilai data.
+  function homeMonotonePath(pts) {
+    var n = pts.length;
+    if (n < 2) return pts.length ? 'M' + pts[0][0] + ',' + pts[0][1] : '';
+    var d = [], m = [], i;
+    for (i = 0; i < n - 1; i++) d.push((pts[i + 1][1] - pts[i][1]) / ((pts[i + 1][0] - pts[i][0]) || 1));
+    m[0] = d[0]; m[n - 1] = d[n - 2];
+    for (i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+    var out = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+    for (i = 0; i < n - 1; i++) {
+      var h = pts[i + 1][0] - pts[i][0];
+      out += ' C' + (pts[i][0] + h / 3).toFixed(1) + ',' + (pts[i][1] + m[i] * h / 3).toFixed(1) + ' ' +
+        (pts[i + 1][0] - h / 3).toFixed(1) + ',' + (pts[i + 1][1] - m[i + 1] * h / 3).toFixed(1) + ' ' +
+        pts[i + 1][0].toFixed(1) + ',' + pts[i + 1][1].toFixed(1);
+    }
+    return out;
   }
 
-  function renderTrendChart() {
+  function homeTrendFmt(metric, v) {
+    return metric === 'sesi' ? (Math.round(v) + ' sesi') : homeFormatRupiah(v);
+  }
+  function homeTrendFmtShort(metric, v) {
+    return metric === 'sesi' ? (Math.round(v) + ' sesi') : homeFormatRupiahSmart(v);
+  }
+  function homeShortMonth(periode) {
+    return HOME_BULAN_PENDEK[parseInt(periode.split('-')[1], 10) - 1];
+  }
+  function homePctText(cur, prev) {
+    if (!prev) return null;
+    var pct = ((cur - prev) / Math.abs(prev)) * 100;
+    return { text: (pct >= 0 ? '+' : '') + pct.toFixed(1).replace('.', ',') + '%', up: pct >= 0 };
+  }
+
+  function renderTrendChart(animate) {
     if (!homeTrendCache) return;
-    var n = homeTrendRange;
+    if (animate === undefined) animate = true;
+    var metric = homeTrendMetric;
+    var series = homeTrendCache[metric];
+    var n = Math.min(homeTrendRange, series.length);
+    var vals = series.slice(-n);
     var periods = homeTrendCache.periods.slice(-n);
+    var prev = series.length >= n * 2 ? series.slice(-n * 2, -n) : null;
+    var li = n - 1;
 
-    homeRevealValue(document.getElementById('homeTrendOmsetVal'), homeFormatRupiahSmart(homeTrendCache.omset[homeTrendCache.omset.length - 1]));
-    homeRevealValue(document.getElementById('homeTrendLabaVal'), homeFormatRupiahSmart(homeTrendCache.laba[homeTrendCache.laba.length - 1]));
-    homeRevealValue(document.getElementById('homeTrendSesiVal'), homeTrendCache.sesi[homeTrendCache.sesi.length - 1] + ' sesi');
-
-    var chartWrap = document.getElementById('homeTrendChartWrap');
-    var w = (chartWrap && chartWrap.offsetWidth) || 340;
-    var h = (chartWrap && chartWrap.offsetHeight) || 140;
-    var padX = Math.max(20, w * 0.06), padY = Math.max(16, h * 0.14);
-    document.getElementById('homeTrendSvg').setAttribute('viewBox', '0 0 ' + w + ' ' + h);
-
-    function toPoints(values) {
-      var minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values);
-      if (minV === maxV) { minV -= 1; maxV += 1; }
-      return values.map(function (v, i) {
-        var x = padX + (i / (values.length - 1 || 1)) * (w - padX * 2);
-        var y = h - padY - ((v - minV) / (maxV - minV)) * (h - padY * 2);
-        return { x: x, y: y, rawVal: v };
-      });
-    }
-    function buildSmoothPath(points) {
-      var d = 'M ' + points[0].x + ' ' + points[0].y;
-      for (var i = 1; i < points.length; i++) {
-        var prev = points[i - 1], cur = points[i];
-        var cpX = (prev.x + cur.x) / 2;
-        d += ' C ' + cpX + ' ' + prev.y + ', ' + cpX + ' ' + cur.y + ', ' + cur.x + ' ' + cur.y;
-      }
-      return d;
-    }
-    function displayValFor(key, val) {
-      return (key === 'sesi') ? (val + ' sesi') : homeFormatRupiahSmart(val);
-    }
-
-    var legend = document.getElementById('homeTrendLegend');
-
-    if (homeTrendMetric === 'semua') {
-      legend.style.display = 'flex';
-      legend.innerHTML = ['omset', 'laba', 'sesi'].map(function (key) {
-        return '<span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:' + TREND_COLORS[key] + '; display:inline-block;"></span>' + key.toUpperCase() + '</span>';
-      }).join('');
-
-      var seriesOrder = ['sesi', 'laba', 'omset']; // digambar terakhir = paling atas/terlihat
-      var seriesData = {};
-      seriesOrder.forEach(function (key) {
-        var values = homeTrendCache[key].slice(-n);
-        seriesData[key] = { values: values, points: toPoints(values) };
-      });
-
-      var defsHtml = '';
-      var fillsHtml = '';
-      var strokesHtml = '';
-      seriesOrder.forEach(function (key) {
-        var color = TREND_COLORS[key];
-        var points = seriesData[key].points;
-        var pathD = buildSmoothPath(points);
-        var areaD = pathD + ' L ' + points[points.length - 1].x + ' ' + h + ' L ' + points[0].x + ' ' + h + ' Z';
-        var gradId = 'homeTrendGrad_' + key;
-        defsHtml += '<linearGradient id="' + gradId + '" x1="0" y1="0" x2="0" y2="1">' +
-          '<stop offset="0%" stop-color="' + color + '" stop-opacity="0.22"/>' +
-          '<stop offset="100%" stop-color="' + color + '" stop-opacity="0"/>' +
-        '</linearGradient>';
-        fillsHtml += '<path d="' + areaD + '" fill="url(#' + gradId + ')"/>';
-        strokesHtml += '<path d="' + pathD + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
-        strokesHtml += points.map(function (p, idx) {
-          return '<circle class="trend-dot" data-metric="' + key + '" data-idx="' + idx + '" cx="' + p.x + '" cy="' + p.y + '" r="3.5" fill="#fff" stroke="' + color + '" stroke-width="2" style="cursor:pointer;"/>';
-        }).join('');
-      });
-
-      document.getElementById('homeTrendSvg').innerHTML = '<defs>' + defsHtml + '</defs>' + fillsHtml + strokesHtml;
-
-      document.querySelectorAll('#homeTrendSvg .trend-dot').forEach(function (circle) {
-        circle.addEventListener('click', function () {
-          var key = circle.dataset.metric;
-          var idx = +circle.dataset.idx;
-          var val = homeTrendCache[key].slice(-n)[idx];
-          homeShowTrendTooltip(circle, key.toUpperCase() + ' &middot; ' + homeFormatPeriodeLabel(periods[idx]) + ': ' + displayValFor(key, val));
-        });
-      });
-    } else {
-      legend.style.display = 'none';
-      var values = homeTrendCache[homeTrendMetric].slice(-n);
-      var color = TREND_COLORS[homeTrendMetric];
-      var points = toPoints(values);
-      var pathD = buildSmoothPath(points);
-      var areaD = pathD + ' L ' + points[points.length - 1].x + ' ' + h + ' L ' + points[0].x + ' ' + h + ' Z';
-      var circles = points.map(function (p, idx) {
-        return '<circle class="trend-dot" data-idx="' + idx + '" cx="' + p.x + '" cy="' + p.y + '" r="4" fill="#fff" stroke="' + color + '" stroke-width="2.5" style="cursor:pointer;"/>';
-      }).join('');
-
-      document.getElementById('homeTrendSvg').innerHTML =
-        '<defs><linearGradient id="homeTrendGrad" x1="0" y1="0" x2="0" y2="1">' +
-          '<stop offset="0%" stop-color="' + color + '" stop-opacity="0.25"/>' +
-          '<stop offset="100%" stop-color="' + color + '" stop-opacity="0"/>' +
-        '</linearGradient></defs>' +
-        '<path d="' + areaD + '" fill="url(#homeTrendGrad)"/>' +
-        '<path d="' + pathD + '" fill="none" stroke="' + color + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
-        circles;
-
-      document.querySelectorAll('#homeTrendSvg .trend-dot').forEach(function (circle) {
-        circle.addEventListener('click', function () {
-          var idx = +circle.dataset.idx;
-          homeShowTrendTooltip(circle, homeFormatPeriodeLabel(periods[idx]) + ': ' + displayValFor(homeTrendMetric, values[idx]));
-        });
-      });
-    }
-
-    document.getElementById('homeTrendFooter').textContent =
-      'Menampilkan tren ' + n + ' bulan terakhir (' + homeFormatPeriodeLabel(periods[0]) + ' - ' + homeFormatPeriodeLabel(periods[periods.length - 1]) + ')';
-
-    document.querySelectorAll('.home-trend-metric').forEach(function (btn) {
-      var m = btn.dataset.metric;
-      if (m === 'semua') {
-        var isSemuaActive = homeTrendMetric === 'semua';
-        btn.style.border = isSemuaActive ? '1.5px solid var(--ink)' : '1.5px solid var(--border)';
-        btn.style.background = isSemuaActive ? 'var(--surface)' : '#fff';
-        return;
-      }
-      var isActive = homeTrendMetric === m;
-      var c = TREND_COLORS[m];
-      btn.style.border = isActive ? ('1.5px solid ' + c) : '1.5px solid var(--border)';
-      btn.style.background = isActive ? (c + '1A') : '#fff';
-      var labelEl = btn.querySelector('div:first-child');
-      if (labelEl) labelEl.style.color = isActive ? c : 'var(--ink-soft)';
+    document.querySelectorAll('.home-trend-metric').forEach(function (b) {
+      var on = b.dataset.metric === metric;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
     });
+    document.getElementById('homeTrendSub').textContent =
+      homeShortMonth(periods[0]) + ' ' + periods[0].slice(0, 4) + ' - ' + homeShortMonth(periods[li]) + ' ' + periods[li].slice(0, 4);
+
+    var heroEl = document.getElementById('homeTrendHeroVal');
+    if (animate) homeRevealValue(heroEl, homeTrendFmt(metric, vals[li])); else heroEl.textContent = homeTrendFmt(metric, vals[li]);
+    var mom = n > 1 ? homePctText(vals[li], vals[li - 1]) : null;
+    var deltaEl = document.getElementById('homeTrendHeroDelta');
+    deltaEl.textContent = mom ? mom.text : '';
+    deltaEl.className = 'ht-delta' + (mom ? (mom.up ? ' is-up' : ' is-down') : '');
+    document.getElementById('homeTrendHeroNote').textContent = (mom && n > 1) ? 'vs ' + homeFormatPeriodeLabel(periods[li - 1]).split(' ')[0] : '';
+
+    var ghostLegend = document.getElementById('homeTrendGhostLegend');
+    ghostLegend.style.display = prev ? '' : 'none';
+    document.getElementById('homeTrendGhostLabel').textContent = n + ' bulan sebelumnya';
+
+    var wrap = document.getElementById('homeTrendChartWrap');
+    var svg = document.getElementById('homeTrendSvg');
+    var W = wrap.clientWidth || 340, H = wrap.clientHeight || 140;
+    var pl = 4, pr = 4, pt = 12, pb = 20;
+    var all = vals.concat(prev || []);
+    var maxV = Math.max.apply(null, all), minV = Math.min(0, Math.min.apply(null, all));
+    if (maxV === minV) maxV = minV + 1;
+    maxV = maxV + (maxV - minV) * 0.08;
+    var x = function (i) { return n > 1 ? pl + i * (W - pl - pr) / (n - 1) : W / 2; };
+    var y = function (v) { return pt + (1 - (v - minV) / (maxV - minV)) * (H - pt - pb); };
+    var P = vals.map(function (v, i) { return [x(i), y(v)]; });
+    var line = homeMonotonePath(P), base = H - pb;
+    var labelEvery = n > 6 ? 2 : 1;
+
+    var grid = [0.33, 0.66, 1].map(function (f) {
+      var gy = pt + (1 - f) * (H - pt - pb);
+      return '<line x1="0" x2="' + W + '" y1="' + gy.toFixed(1) + '" y2="' + gy.toFixed(1) + '" stroke="#EEF0F6"/>';
+    }).join('');
+    var labels = periods.map(function (p, i) {
+      if (i !== li && i % labelEvery) return '';
+      var anchor = i === 0 ? 'start' : (i === li ? 'end' : 'middle');
+      return '<text class="ht-axis" x="' + x(i).toFixed(1) + '" y="' + (H - 4) + '" text-anchor="' + anchor + '"' +
+        (i === li ? ' style="font-weight:600; fill:#14162B;"' : '') + '>' + homeShortMonth(p) + '</text>';
+    }).join('');
+    var ghost = prev ? '<path d="' + homeMonotonePath(prev.map(function (v, i) { return [x(i), y(v)]; })) + '" fill="none" stroke="#B9BDD6" stroke-width="1.5" stroke-dasharray="4 4"/>' : '';
+
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.innerHTML =
+      '<defs>' +
+        '<linearGradient id="homeTrendFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1C1AAF" stop-opacity=".2"/><stop offset="1" stop-color="#1C1AAF" stop-opacity="0"/></linearGradient>' +
+        '<linearGradient id="homeTrendStroke" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#6E7BF2"/><stop offset="1" stop-color="#1C1AAF"/></linearGradient>' +
+      '</defs>' +
+      grid + '<line x1="0" x2="' + W + '" y1="' + base + '" y2="' + base + '" stroke="#E3E5F0"/>' + ghost +
+      '<path class="ht-area' + (animate ? ' is-anim' : '') + '" d="' + line + ' L' + x(li).toFixed(1) + ',' + base + ' L' + x(0).toFixed(1) + ',' + base + ' Z" fill="url(#homeTrendFill)"/>' +
+      '<path id="homeTrendLine" d="' + line + '" fill="none" stroke="url(#homeTrendStroke)" stroke-width="2.5" stroke-linecap="round"/>' +
+      '<line id="homeTrendCross" x1="0" x2="0" y1="' + pt + '" y2="' + base + '" stroke="#1C1AAF" stroke-opacity=".3" stroke-dasharray="3 3" style="display:none;"/>' +
+      '<circle class="ht-pulse" cx="' + P[li][0].toFixed(1) + '" cy="' + P[li][1].toFixed(1) + '" r="4" fill="#1C1AAF"/>' +
+      '<circle cx="' + P[li][0].toFixed(1) + '" cy="' + P[li][1].toFixed(1) + '" r="4" fill="#1C1AAF" stroke="#fff" stroke-width="2"/>' +
+      '<circle id="homeTrendHoverDot" r="4.5" fill="#1C1AAF" stroke="#fff" stroke-width="2" style="display:none;"/>' +
+      labels;
+
+    var lineEl = document.getElementById('homeTrendLine');
+    if (animate && !HOME_REDUCED_MOTION && lineEl.getTotalLength) {
+      var len = lineEl.getTotalLength();
+      lineEl.style.strokeDasharray = len;
+      lineEl.style.strokeDashoffset = len;
+      lineEl.getBoundingClientRect();
+      lineEl.style.transition = 'stroke-dashoffset .9s cubic-bezier(.16,1,.3,1)';
+      lineEl.style.strokeDashoffset = '0';
+    }
+
+    var tip = document.getElementById('homeTrendTooltip');
+    var cross = document.getElementById('homeTrendCross');
+    var hdot = document.getElementById('homeTrendHoverDot');
+    function show(i) {
+      cross.setAttribute('x1', P[i][0]); cross.setAttribute('x2', P[i][0]); cross.style.display = '';
+      hdot.setAttribute('cx', P[i][0]); hdot.setAttribute('cy', P[i][1]); hdot.style.display = '';
+      var ch = i ? homePctText(vals[i], vals[i - 1]) : null;
+      tip.innerHTML = homeFormatPeriodeLabel(periods[i]) + '<br><b>' + homeTrendFmt(metric, vals[i]) + '</b>' +
+        (ch ? ' <span class="' + (ch.up ? 'is-up' : 'is-down') + '">' + ch.text + '</span>' : '') +
+        (prev ? '<br><span class="is-soft">Periode lalu ' + homeTrendFmtShort(metric, prev[i]) + '</span>' : '');
+      tip.style.display = 'block';
+      var tw = tip.offsetWidth, th = tip.offsetHeight;
+      tip.style.left = Math.max(0, Math.min(W - tw, P[i][0] - tw / 2)) + 'px';
+      tip.style.top = Math.max(-th, P[i][1] - th - 12) + 'px';
+    }
+    function hide() { tip.style.display = 'none'; cross.style.display = 'none'; hdot.style.display = 'none'; }
+    svg.onpointermove = function (e) {
+      var r = svg.getBoundingClientRect();
+      var step = n > 1 ? (W - pl - pr) / (n - 1) : 1;
+      var i = Math.round((e.clientX - r.left - pl) / step);
+      show(Math.max(0, Math.min(li, i)));
+    };
+    svg.onpointerleave = hide;
+    hide();
+
+    var sum = vals.reduce(function (a, v) { return a + v; }, 0);
+    var maxIdx = vals.indexOf(Math.max.apply(null, vals));
+    var third;
+    if (prev) {
+      var prevSum = prev.reduce(function (a, v) { return a + v; }, 0);
+      var cmp = homePctText(sum, prevSum);
+      third = '<div><div class="l">vs periode lalu</div><div class="v' + (cmp ? (cmp.up ? ' is-up' : ' is-down') : '') + '">' + (cmp ? cmp.text : '-') + '</div></div>';
+    } else {
+      third = '<div><div class="l">Total ' + n + ' bulan</div><div class="v">' + homeTrendFmtShort(metric, sum) + '</div></div>';
+    }
+    document.getElementById('homeTrendFooter').innerHTML =
+      '<div><div class="l">Rata-rata / bulan</div><div class="v">' + homeTrendFmtShort(metric, sum / n) + '</div></div>' +
+      '<div><div class="l">Tertinggi</div><div class="v">' + homeTrendFmtShort(metric, vals[maxIdx]) + ' <span style="font-weight:500; color:var(--ink-soft);">' + homeShortMonth(periods[maxIdx]) + '</span></div></div>' +
+      third;
   }
 
   document.querySelectorAll('.home-trend-metric').forEach(function (btn) {
@@ -1639,7 +1684,9 @@
   }
   function setTrendRangeActive(range) {
     document.querySelectorAll('.home-trend-range').forEach(function (b) {
-      b.style.color = (+b.dataset.range === range) ? 'var(--ink)' : 'var(--ink-soft)';
+      var on = +b.dataset.range === range;
+      b.style.color = on ? 'var(--ink)' : 'var(--ink-soft)';
+      b.style.fontWeight = on ? '600' : '500';
     });
   }
   document.querySelectorAll('.home-trend-range').forEach(function (btn) {
