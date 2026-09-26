@@ -149,6 +149,24 @@
   .genio-tool-btn:active{transform:scale(.97);}
   .genio-tool-btn:focus-visible{outline:3px solid rgba(28,26,175,.25); outline-offset:1px;}
   .genio-tool-icon{width:32px; padding:0; color:var(--ink-soft);}
+  .genio-tool-btn i{font-size:14px; color:var(--ink-soft); pointer-events:none;}
+  .genio-tool-btn svg{pointer-events:none;}
+
+  /* Kartu periode bersama (Home, Presensi, Gaji): ukuran, gaya & animasi sama */
+  .card.genio-periode-card{display:flex !important; align-items:center; justify-content:space-between; gap:10px; width:100%; box-sizing:border-box;
+    padding:12px 16px !important; border:1px solid var(--border) !important; border-radius:14px !important; box-shadow:none !important; background:#fff;}
+  .genio-periode-card .genio-periode-hit{min-width:0; cursor:pointer; border-radius:8px; margin:-4px -6px; padding:4px 6px; transition:background .15s ease;}
+  .genio-periode-card .genio-periode-hit:hover{background:var(--surface);}
+  .genio-periode-card .genio-periode-label{font-size:10.5px; font-weight:500;}
+  .genio-periode-card .genio-periode-value{font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:5px;}
+  .genio-periode-card .genio-periode-value::after{content:''; width:6px; height:6px; border-right:1.6px solid var(--ink-soft); border-bottom:1.6px solid var(--ink-soft); transform:rotate(45deg) translateY(-2px); opacity:.7;}
+  .genio-periode-card .genio-periode-tools{display:flex; align-items:center; gap:8px; flex:none; position:relative;}
+  .genio-periode-value.is-changed{animation:genioPeriodeIn .38s cubic-bezier(.16,1,.3,1);}
+  .genio-spin{animation:genioSpin .6s cubic-bezier(.34,1.2,.64,1);}
+  @keyframes genioPeriodeIn{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+  @keyframes genioSpin{from{transform:rotate(0);} to{transform:rotate(360deg);}}
+  @media (max-width:420px){ .genio-periode-card .genio-tool-btn .genio-hide-sm{display:none;} }
+  @media (prefers-reduced-motion: reduce){ .genio-periode-value.is-changed, .genio-spin{animation:none;} }
   .badge{
     display:inline-flex; align-items:center;
     font-size:12px; font-weight:500;
@@ -507,6 +525,31 @@
     d.textContent = s == null ? '' : s;
     return d.innerHTML;
   }
+  // Putar ikon tombol refresh (ikon Phosphor <i> atau <svg>).
+  function genioSpinRefresh(btn) {
+    var icon = btn && (btn.querySelector('i') || btn.querySelector('svg'));
+    if (!icon) return;
+    icon.classList.remove('genio-spin'); void icon.getBoundingClientRect(); icon.classList.add('genio-spin');
+    setTimeout(function () { icon.classList.remove('genio-spin'); }, 650);
+  }
+  // Animasi halus setiap label periode berganti.
+  (function () {
+    function watch() {
+      document.querySelectorAll('.genio-periode-value').forEach(function (el) {
+        if (el._genioWatch) return;
+        el._genioWatch = true;
+        var last = el.textContent;
+        new MutationObserver(function () {
+          if (el.textContent === last) return;
+          last = el.textContent;
+          el.classList.remove('is-changed'); void el.offsetWidth; el.classList.add('is-changed');
+        }).observe(el, { childList: true, characterData: true, subtree: true });
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+    setTimeout(watch, 1500);
+  })();
+
   function genioToast(msg, type, persist) {
     type = (type === 'success' || type === 'error') ? type : 'loading';
     var el = document.getElementById('genioToast');

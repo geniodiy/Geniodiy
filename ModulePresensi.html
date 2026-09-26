@@ -29,7 +29,6 @@
   .ps-thanks-popup.show .ps-thanks-card{ transform:scale(1); }
 
   /* Radius rule (sama dgn Login/Gaji): interaktif = 8-10px, kartu = 14px, panel hero = 18px */
-  .module-panel[data-module="presensi"] .ps-periode-sec{padding:14px 16px; border-radius:14px; box-shadow:none;}
   .ps-periode-sec, .ps-hero-sec, .ps-dock-sec, .ps-search-sec{margin-bottom:14px;}
   #ps-sectionLabel{margin-bottom:12px;}
   #ps-desktopAnchor{display:none !important;}
@@ -748,18 +747,18 @@
 
 <div>
   <!-- Periode presensi -->
-  <div class="card ps-card ps-periode-sec" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-    <div id="ps-periodeLabelWrap" style="min-width:0; cursor:pointer;" title="Pilih periode">
+  <div class="card ps-card ps-periode-sec genio-periode-card">
+    <div id="ps-periodeLabelWrap" class="genio-periode-hit" title="Pilih periode">
       <div class="genio-periode-label">Periode presensi</div>
       <div class="genio-periode-value" id="ps-periodeLabel">-</div>
     </div>
-    <div style="display:flex; align-items:center; gap:8px; flex:none; position:relative;">
-      <button id="ps-refreshBtn" aria-label="Refresh data" class="genio-tool-btn genio-tool-icon">
-        <i class="ph ph-arrow-clockwise" style="font-size:14px;" aria-hidden="true"></i>
+    <div class="genio-periode-tools">
+      <button id="ps-refreshBtn" type="button" aria-label="Refresh data" class="genio-tool-btn genio-tool-icon">
+        <i class="ph ph-arrow-clockwise" aria-hidden="true"></i>
       </button>
       <button id="ps-pilihPeriodeBtn" type="button" class="genio-tool-btn">
-        <i class="ph ph-calendar-blank" style="font-size:14px; color:var(--ink-soft);" aria-hidden="true"></i>
-        Pilih bulan
+        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+        <span>Pilih bulan</span>
       </button>
       <input type="month" id="ps-periodeInput" style="position:absolute; right:0; bottom:0; width:1px; height:1px; opacity:0; pointer-events:none; border:none;">
     </div>
@@ -1291,12 +1290,7 @@
       psLoadAll();
     };
     document.getElementById('ps-refreshBtn').onclick = function () {
-      var icon = this.querySelector('svg');
-      if (icon) {
-        icon.style.transition = 'transform .5s ease';
-        icon.style.transform = 'rotate(360deg)';
-        setTimeout(function () { icon.style.transition = 'none'; icon.style.transform = 'rotate(0deg)'; }, 500);
-      }
+      genioSpinRefresh(this);
       psLoadAll();
     };
 
