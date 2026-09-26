@@ -2,566 +2,363 @@
 <style>
   @media (min-width:900px){
     .module-panel[data-module="data-tutor"][hidden]{ display:none !important; }
-    .module-panel[data-module="data-tutor"]:not([hidden]){
-      width:94%; max-width:1500px; margin:0 auto;
-      box-sizing: border-box;
-      min-width: 0;
-    }
-    .dt-hero-sec{
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-    }
-    .dt-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 12px !important;
-    }
-    .dt-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .dt-hero-badge-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .dt-hero-unit-badge{
-      font-size: 9px !important;
-      padding: 2px 7px !important;
-    }
-    .dt-hero-sublabel{
-      display: none !important;
-    }
-    .dt-hero-counter{
-      margin-top: 0 !important;
-    }
-    .dt-hero-num-wrap{
-      display: flex !important;
-      align-items: baseline !important;
-      gap: 6px !important;
-      margin-top: 0 !important;
-    }
-    .dt-hero-num{
-      font-size: 18px !important;
-      line-height: 1.1 !important;
-    }
-    .dt-hero-unit{
-      font-size: 10.5px !important;
-    }
-    .dt-hero-stats-row{
-      flex: none !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 16px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .dt-hero-stat-card{
-      flex: none !important;
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-      min-width: 0 !important;
-    }
-    #dt-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
-    #dt-list.dt-view-table{ display:block !important; width:100% !important; max-width:100% !important; min-width:0 !important; box-sizing:border-box !important; }
-    #dt-list > .dt-card{ margin-bottom:0 !important; }
+    .module-panel[data-module="data-tutor"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
+    #dt-list:not(.dt-view-table){ display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:12px; align-items:start; }
     #dt-list > .dt-full-width{ grid-column:1/-1; }
-
     #dt-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:12px; }
     #dt-toolbarRow .dt-dock-sec{ flex:none; width:280px !important; margin-bottom:0 !important; }
-    #dt-toolbarRow .dt-search-sec{ flex:1; min-width:0; margin-bottom:0 !important; display:flex; align-items:center; gap:8px; }
-
-    #dt-pendaftaranList{ display:flex; flex-direction:column; gap:10px; }
+    #dt-toolbarRow .dt-search-sec{ flex:1; min-width:0; margin-bottom:0 !important; display:flex; align-items:center; }
   }
 
-  /* Table View Styles */
-  #dt-list.dt-view-table{
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-  .dt-table-card{
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,.03);
-    margin-bottom: 12px;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-  .dt-table-wrap{
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box !important;
-  }
-  .dt-table{
-    width: 100%;
-    min-width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-family: var(--font);
-    font-size: 11.5px;
-    box-sizing: border-box !important;
-  }
-  .dt-table th{
-    padding: 6px 8px;
-    background: rgba(0,0,0,.025);
-    border-bottom: 1px solid var(--border);
-    font-size: 10.5px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    letter-spacing: .02em;
-    white-space: nowrap;
-    vertical-align: middle !important;
-  }
-  .dt-table th.dt-sort-th{
-    cursor: pointer;
-    user-select: none;
-    transition: color .15s ease, background .15s ease;
-  }
-  .dt-table th.dt-sort-th:hover{
-    color: var(--ink);
-    background: rgba(0,0,0,.04);
-  }
-  .dt-table td{
-    padding: 5px 8px;
-    border-bottom: 1px solid rgba(0,0,0,.05);
-    color: var(--ink);
-    vertical-align: middle !important;
-    font-size: 11.5px;
-    font-weight: 400;
-    line-height: 1.3;
-  }
-  .dt-table tbody tr:last-child td{
-    border-bottom: none;
-  }
-  .dt-table tbody tr{
-    transition: background .12s ease;
-  }
-  .dt-table tbody tr:hover{
-    background: rgba(0,122,255,.03);
-  }
-  .dt-table-icon-btn{
-    width: 24px !important;
-    height: 24px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-radius: 6px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer;
-    flex: none;
-    background: var(--surface) !important;
-    color: var(--ink-soft) !important;
-    border: 1px solid var(--border) !important;
-    box-sizing: border-box !important;
-    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
-    text-decoration: none;
-  }
-  .dt-table-icon-btn:hover{
-    background: #fff !important;
-    color: var(--ink) !important;
-    border-color: rgba(20, 22, 43, 0.22) !important;
-  }
-  .dt-table-icon-btn.dt-del-btn:hover{
-    color: #ff3b30 !important;
-    border-color: rgba(255, 59, 48, 0.3) !important;
-  }
-  .dt-table-icon-btn:active{
-    transform: scale(.9);
-  }
-  @keyframes dtPop{
-    0% { transform: scale(1); }
-    35% { transform: scale(1.18); }
-    100% { transform: scale(1); }
-  }
-  .dt-btn-pop{
-    animation: dtPop .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #dt-viewToggleBtn:active{
-    transform: scale(.9);
+  /* ===== Highlight: total tutor + komposisi | ring status + tinjau pendaftar ===== */
+  .dt-hb{position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .dtb-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
+  .dtb-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
+  .dtb-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .dtb-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .dtb-label i{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .dtb-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .dtb-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; margin-top:8px; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .dtb-unit{font-size:13px; font-weight:500; color:rgba(255,255,255,.65); margin-left:5px; letter-spacing:0;}
+  .dtb-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .dtb-bar{display:flex; height:10px; border-radius:99px; overflow:hidden; gap:2px; margin-top:14px; max-width:540px; background:rgba(255,255,255,.08);}
+  .dtb-bar i{display:block; height:100%; transform-origin:left center;}
+  .dtb-leg{display:flex; gap:6px 16px; margin-top:9px; font-size:10.5px; color:rgba(255,255,255,.7); flex-wrap:wrap;}
+  .dtb-leg span{display:inline-flex; align-items:center; gap:6px; white-space:nowrap;}
+  .dtb-leg em{width:7px; height:7px; border-radius:2px; display:inline-block;}
+  .dtb-leg b{color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .dtb-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:250px;}
+  .dtb-ringwrap{display:flex; align-items:center; gap:14px;}
+  .dtb-ring{width:64px; height:64px; flex:none; overflow:visible;}
+  .dtb-ring circle{fill:none; stroke-width:7;}
+  .dtb-ring .tr{stroke:rgba(255,255,255,.1);}
+  .dtb-ring .arc{stroke:#7CF0C3; transform:rotate(-90deg); transform-origin:32px 32px; transition:stroke-dasharray .9s cubic-bezier(.16,1,.3,1);}
+  .dtb-ring text{fill:#fff; font-family:var(--font); font-size:13px; font-weight:800;}
+  .dtb-list{display:grid; gap:6px; flex:1; min-width:140px;}
+  .dtb-list div{display:flex; align-items:center; gap:7px; font-size:10.5px; color:rgba(255,255,255,.75); white-space:nowrap;}
+  .dtb-list em{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
+  .dtb-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .dt-hero-add-btn{height:34px; border-radius:9px; width:100%; background:#fff; color:var(--blue); border:1px solid #fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .dt-hero-add-btn:hover{background:var(--blue-tint);}
+  .dt-hero-add-btn:active{transform:scale(.97);}
+  .dt-hero-add-btn i{font-size:14px;}
+  .dt-hero-add-btn #dt-pendingBadge{background:var(--blue); color:#fff; font-size:10px; font-weight:700; border-radius:999px; padding:1px 7px; margin-left:2px;}
+  .dt-hero-add-btn #dt-pendingBadge.is-zero{background:var(--surface); color:var(--ink-soft);}
+  @keyframes dtGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  .dtb-bar.dt-anim i{animation:dtGrow .9s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 80ms);}
+  @media (max-width:899px){
+    .dt-hb{grid-template-columns:1fr;}
+    .dtb-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .dtb-num{font-size:28px;}
   }
 
-  .dt-dock{
-    position:relative; display:flex; align-items:center; height:38px;
-    background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px;
-    margin-bottom:12px; touch-action:none; -webkit-user-select:none; user-select:none;
-    box-sizing:border-box;
-  }
-  .dt-dock-glider{
-    position:absolute; top:3px; bottom:3px; border-radius:8px; background:#fff;
-    border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08);
-    transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1);
-    z-index:1; pointer-events:none;
-  }
-  .dt-dock-btn{
-    position:relative; z-index:2; flex:1; height:32px; display:flex; align-items:center; justify-content:center; gap:6px;
-    background:none; border:none; cursor:pointer; padding:0 8px; font-size:11.5px; font-family:var(--font);
-    color:var(--ink-soft); font-weight:500; transition:color .18s ease; white-space:nowrap;
-  }
-  .dt-dock-btn.dt-dock-active{ color:var(--ink); font-weight:600; }
+  /* ===== Tab dan toolbar ===== */
+  .dt-dock{position:relative; display:flex; align-items:center; height:38px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; margin-bottom:12px; touch-action:none; -webkit-user-select:none; user-select:none; box-sizing:border-box;}
+  .dt-dock-glider{position:absolute; top:3px; bottom:3px; border-radius:8px; background:#fff; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;}
+  .dt-dock-btn{position:relative; z-index:2; flex:1; height:32px; display:flex; align-items:center; justify-content:center; gap:5px; background:none; border:none; cursor:pointer; padding:0 10px; font-size:11.5px; font-family:var(--font); color:var(--ink-soft); font-weight:500; transition:color .18s ease; white-space:nowrap;}
+  .dt-dock-btn.dt-dock-active{color:var(--ink); font-weight:600;}
+  #dt-searchInput{height:34px !important; border-radius:10px !important; font-size:12px !important;}
+  #dt-searchInput:focus{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #dt-filterBtn, #dt-viewToggleBtn{width:34px !important; height:34px !important; border-radius:10px !important; transition:transform .15s ease, background .15s ease;}
+  #dt-filterBtn:hover, #dt-viewToggleBtn:hover{background:var(--surface) !important;}
+  #dt-filterBtn:active, #dt-viewToggleBtn:active{transform:scale(.9);}
+  #dt-filterCount[hidden]{display:none !important;}
+  @keyframes dtPop{0%{transform:scale(1);} 35%{transform:scale(1.18);} 100%{transform:scale(1);}}
+  .dt-btn-pop{animation:dtPop .32s cubic-bezier(.34,1.56,.64,1);}
+  .dt-list-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;}
+  #dt-sectionLabel{font-size:12px; font-weight:600; color:var(--ink);}
+  #dt-resultCount{display:inline-flex; align-items:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;}
 
-  .dt-gender-badge{ width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9.5px; font-weight:600; color:#fff; flex:none; }
-  .dt-mapel-badge{ background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:500; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+  /* ===== Elemen bersama ===== */
+  .dt-gender-badge{width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:700; flex:none;}
+  .dt-g{font-size:9.5px; font-weight:700; margin-left:5px; letter-spacing:.02em;}
+  .dt-g.is-l{color:#3B4BD8;} .dt-g.is-p{color:#C2366A;}
+  .dt-mapel-badge{display:inline-flex; align-items:center; background:var(--surface); color:var(--ink); font-size:10.5px; font-weight:500; padding:3px 8px; border-radius:7px; white-space:nowrap;}
+  .dt-mapel-more{background:var(--blue-tint); color:var(--blue); font-weight:600;}
+  .dt-status{display:inline-flex; align-items:center; gap:5px; flex:none; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .dt-status i{width:6px; height:6px; border-radius:50%;}
+  .dt-status.is-on{background:#E9F7EF; color:#1E8E5A;} .dt-status.is-on i{background:#1E8E5A;}
+  .dt-status.is-off{background:var(--surface); color:var(--ink-soft);} .dt-status.is-off i{background:#A9ADC0;}
+  .dt-av{width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:11.5px; flex:none; object-fit:cover;}
+  .dt-table-icon-btn{width:28px; height:28px; padding:0; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex:none; background:#fff; color:var(--ink-soft); border:1px solid var(--border); box-sizing:border-box; transition:background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease; text-decoration:none; font-size:13px; vertical-align:middle;}
+  .dt-table-icon-btn:hover{background:var(--surface); color:var(--ink);}
+  .dt-table-icon-btn:active{transform:scale(.94);}
+  .dt-table-icon-btn.is-wa{color:#14A44D;} .dt-table-icon-btn.is-wa:hover{background:#E9F7EF;}
+  .dt-table-icon-btn.dt-del-btn:hover{background:var(--red-soft); color:var(--red); border-color:rgba(212,7,15,.25);}
+  .dt-muted{color:var(--ink-soft); font-size:10.5px;}
 
-  .dt-wrap{ max-height:0; opacity:0; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease; }
-  .dt-toggle-icon{ transition:transform .25s ease; }
+  /* ===== Tabel ===== */
+  #dt-list.dt-view-table{display:block !important; width:100%; max-width:100%; min-width:0; box-sizing:border-box;}
+  .dt-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:12px; width:100%; box-sizing:border-box;}
+  .dt-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .dt-table{width:100%; min-width:960px; border-collapse:separate; border-spacing:0; text-align:left; font-family:var(--font); font-size:11px;}
+  .dt-table th{padding:11px 12px; background:#fff; border-bottom:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
+  .dt-table th.dt-sort-th{cursor:pointer; user-select:none;}
+  .dt-table th.dt-sort-th:hover{color:var(--ink);}
+  .dt-table td{padding:8px 12px; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle; font-size:11px;}
+  .dt-table tbody tr:last-child td{border-bottom:none;}
+  .dt-table tbody tr:hover td{background:#F8F9FD;}
+  .dt-table .dt-no{width:40px; min-width:40px; max-width:40px; box-sizing:border-box; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  .dt-table .dt-stk{position:sticky; z-index:1; background:#fff;}
+  .dt-table th.dt-stk{z-index:2;}
+  .dt-table .dt-stk-no{left:0;}
+  .dt-table .dt-stk-nama{left:40px; box-shadow:1px 0 0 var(--border);}
+  .dt-table tbody tr:hover td.dt-stk{background:#F8F9FD;}
+  .dt-table .dt-who{display:flex; align-items:center; gap:8px; min-width:0;}
+  .dt-table .dt-who .dt-av{width:26px; height:26px; font-size:9.5px;}
+  .dt-table .dt-who b{display:block; font-weight:600; white-space:nowrap;}
+  .dt-table .dt-who span{display:block; font-size:10px; color:var(--ink-soft); white-space:nowrap;}
+  .dt-table .dt-who span.dt-g{display:inline; font-size:9.5px;}
+  .dt-table .dt-who span.dt-g.is-l{color:#3B4BD8;} .dt-table .dt-who span.dt-g.is-p{color:#C2366A;}
+  .dt-table .dt-chips{display:flex; gap:4px; flex-wrap:nowrap;}
+  .dt-table .dt-act{text-align:right; white-space:nowrap;}
+  .dt-table .dt-act .dt-table-icon-btn{margin-left:4px;}
 
-  #dt-modal, #dt-confirmModal, #dt-filterModal, #dt-pickerModal, #dt-pendaftaranModal{
-    align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-    opacity:0; transition:opacity .28s ease;
-  }
-  #dt-modal.show, #dt-confirmModal.show, #dt-filterModal.show, #dt-pickerModal.show, #dt-pendaftaranModal.show{ opacity:1; }
-  #dt-modal .modal-sheet, #dt-confirmModal .modal-sheet, #dt-filterModal .modal-sheet, #dt-pickerModal .modal-sheet, #dt-pendaftaranModal .modal-sheet{
-    border-radius:16px; width:100%; max-width:400px; margin:0 auto; max-height:88vh; overflow-y:auto; padding:16px 18px 18px; box-sizing:border-box;
-    transform:scale(.88) translateY(10px); transition:transform .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #dt-pendaftaranModal .modal-sheet{ max-width:480px; }
-  #dt-modal.show .modal-sheet, #dt-confirmModal.show .modal-sheet, #dt-filterModal.show .modal-sheet, #dt-pickerModal.show .modal-sheet, #dt-pendaftaranModal.show .modal-sheet{ transform:scale(1) translateY(0); }
+  /* ===== Kartu ===== */
+  .dt-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:12px; min-width:0; box-sizing:border-box; transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .dt-card:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12); transform:translateY(-1px);}
+  .dt-card.dt-full-width{grid-column:1/-1; text-align:center; color:var(--ink-soft); font-size:11.5px; padding:28px 14px;}
+  .dt-card.dt-full-width:hover{transform:none; box-shadow:none;}
+  .dtc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .dtc-who{min-width:0; flex:1;}
+  .dtc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .dtc-who p{font-size:10.5px; color:var(--ink-soft); margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .dtc-chips{display:flex; gap:6px; margin-top:10px; flex-wrap:nowrap; overflow:hidden; min-height:22px;}
+  .dtc-chips .dt-muted{align-self:center;}
+  .dtc-foot{display:flex; align-items:center; gap:6px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .dtc-wa{min-width:0; flex:1;}
+  .dtc-wa span{display:block; font-size:10px; color:var(--ink-soft);}
+  .dtc-wa b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .dtc-foot .dt-table-icon-btn{width:30px; height:30px; font-size:14px;}
+  .dt-detail-toggle{height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:11px; font-weight:600; padding:0 11px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex:none;}
+  .dt-detail-toggle:hover{background:var(--surface);}
+  .dt-toggle-icon{transition:transform .25s ease;}
+  .dt-wrap{max-height:0; opacity:0; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;}
+  .dtc-info{margin-top:10px; background:var(--surface); border-radius:10px; padding:4px 12px;}
+  .dtc-info div{display:flex; justify-content:space-between; gap:12px; padding:7px 0; font-size:11px;}
+  .dtc-info div + div{border-top:1px solid #E7E9F2;}
+  .dtc-info span{color:var(--ink-soft); flex:none;}
+  .dtc-info b{font-weight:500; color:var(--ink); text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .dtc-actions{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;}
+  .dtc-actions button{height:32px; border-radius:9px; font-family:var(--font); font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;}
+  .dtc-actions .dt-edit-btn{background:var(--blue); color:#fff; border:none;}
+  .dtc-actions .dt-delete-btn{background:#fff; color:var(--red); border:1px solid rgba(212,7,15,.3);}
+  .dtc-actions .dt-delete-btn:hover{background:var(--red-soft);}
 
-  #dt-modal .modal-actions .btn, #dt-confirmModal .modal-actions .btn, #dt-filterModal .modal-actions .btn, #dt-pickerModal .modal-actions .btn, #dt-pendaftaranModal .modal-actions .btn{
-    height: 36px !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    border-radius: 9px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
-  }
+  /* ===== Popup ===== */
+  #dt-modal, #dt-confirmModal, #dt-filterModal, #dt-pickerModal, #dt-pendaftaranModal{align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;}
+  #dt-modal.show, #dt-confirmModal.show, #dt-filterModal.show, #dt-pickerModal.show, #dt-pendaftaranModal.show{opacity:1;}
+  #dt-pendaftaranModal .modal-sheet.gx-sheet{max-width:480px !important;}
+  #dt-pendaftaranList{display:grid; gap:10px; padding:12px 0 4px;}
+  .dtp-item{border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff;}
+  .dtp-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .dtp-head .dtc-who{flex:1;}
+  .dtp-time{font-size:10px; color:var(--ink-soft); flex:none;}
+  .dtp-chips{display:flex; gap:5px; flex-wrap:wrap; margin-top:9px;}
+  .dtp-actions{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;}
+  .dtp-actions button{height:32px; border-radius:9px; font-family:var(--font); font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;}
+  .dtp-actions .dt-reject-btn{background:#fff; color:var(--red); border:1px solid rgba(212,7,15,.3);}
+  .dtp-actions .dt-reject-btn:hover{background:var(--red-soft);}
+  .dtp-actions .dt-approve-btn{background:var(--blue); color:#fff; border:none;}
+  .dtp-empty{text-align:center; padding:26px 10px;}
+  .dtp-empty .ico{width:42px; height:42px; border-radius:50%; background:#E9F7EF; color:#1E8E5A; display:inline-flex; align-items:center; justify-content:center; font-size:20px;}
+  .dtp-empty b{display:block; font-size:12.5px; font-weight:600; color:var(--ink); margin-top:8px;}
+  .dtp-empty span{display:block; font-size:11px; color:var(--ink-soft); margin-top:3px;}
 
-  .dt-group-title{ font-size:10px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
-  .dt-group-title:first-of-type{ margin-top:0; }
-  .dt-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-  .dt-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
-  .dt-row:last-child{ border-bottom:none; }
-  .dt-row label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:2px; }
-  .dt-row input, .dt-row select{
-    width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
-    background:none; color:var(--ink); outline:none;
-  }
-  .dt-opt-row{ display:flex; gap:6px; }
-  .dt-opt{
-    flex:1; text-align:center; padding:7px 4px; border-radius:8px;
-    border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;
-  }
-  .dt-opt input{ display:none; }
-
-  /* Hero Data Tutor */
-  .dt-hero-sec{
-    background: var(--ink);
-    color: #fff;
-    border-radius: 14px;
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
-  }
-  .dt-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .dt-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .dt-hero-badge-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 3px 8px;
-    border-radius: 999px;
-  }
-  .dt-hero-unit-badge{
-    background: rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 500;
-    padding: 3px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .dt-hero-sublabel{
-    font-size: 10.5px;
-    opacity: .65;
-    margin-top: 8px;
-  }
-  .dt-hero-num-wrap{
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    margin-top: 2px;
-  }
-  .dt-hero-num{
-    font-size: 21px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-  .dt-hero-unit{
-    font-size: 11.5px;
-    opacity: .6;
-    font-weight: 500;
-  }
-  .dt-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.14);
-  }
-  .dt-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .dt-hero-stat-label{
-    font-size: 9.5px;
-    opacity: .65;
-  }
-  .dt-hero-stat-val{
-    font-size: 12px;
-    font-weight: 600;
-    margin-top: 1px;
+  /* ===== Animasi ===== */
+  @keyframes dtIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes dtFade{from{opacity:0;} to{opacity:1;}}
+  #dt-list .dt-card.dt-in{animation:dtIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #dt-list .dt-table tbody tr.dt-in td{animation:dtFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
+  @media (prefers-reduced-motion: reduce){
+    #dt-list .dt-card.dt-in, #dt-list .dt-table tbody tr.dt-in td, .dtb-bar.dt-anim i, .dt-btn-pop{animation:none !important;}
+    .dtb-ring .arc{transition:none;}
+    .dt-card:hover{transform:none;}
   }
 </style>
 
-  <!-- Hero -->
-  <div class="dt-hero-sec">
-    <div class="dt-hero-main-col">
-      <div class="dt-hero-badges">
-        <span class="dt-hero-badge-pill">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
-          MANAJEMEN TUTOR PENGAJAR
-        </span>
-        <span class="dt-hero-unit-badge" id="dt-heroUnitBadge">-</span>
+  <!-- Highlight -->
+  <div class="dt-hb">
+    <div class="dtb-main">
+      <div class="dtb-top">
+        <span class="dtb-label"><i></i>Tutor terdaftar</span>
+        <span class="dtb-pill" id="dt-heroUnitBadge">-</span>
       </div>
-      <div class="dt-hero-counter">
-        <div class="dt-hero-sublabel">Total Pengajar Terdaftar</div>
-        <div class="dt-hero-num-wrap">
-          <span class="dt-hero-num" id="dt-heroTotal">0</span>
-          <span class="dt-hero-unit">Tutor Aktif</span>
-        </div>
+      <div class="dtb-num"><span id="dt-heroTotal">0</span><span class="dtb-unit">tutor</span></div>
+      <div class="dtb-sub" id="dt-heroSub">-</div>
+      <div class="dtb-bar" id="dt-heroBar" aria-hidden="true"></div>
+      <div class="dtb-leg">
+        <span><em style="background:#9DB6FF;"></em>Laki-laki aktif <b id="dt-heroL">0</b></span>
+        <span><em style="background:#FFB3C7;"></em>Perempuan aktif <b id="dt-heroP">0</b></span>
+        <span><em style="background:rgba(255,255,255,.25);"></em>Nonaktif <b id="dt-heroNon">0</b></span>
       </div>
     </div>
-
-    <div class="dt-hero-stats-row">
-      <div class="dt-hero-stat-card">
-        <span class="dt-gender-badge" style="width:22px; height:22px; font-size:10px; background:var(--blue);">L</span>
-        <div style="min-width:0;">
-          <div class="dt-hero-stat-label">Laki-laki (L)</div>
-          <div class="dt-hero-stat-val" id="dt-heroL">0 Pengajar</div>
+    <div class="dtb-side">
+      <div class="dtb-ringwrap">
+        <svg class="dtb-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="tr" cx="32" cy="32" r="25"/>
+          <circle class="arc" id="dt-heroRingArc" cx="32" cy="32" r="25" stroke-dasharray="0 157.08" stroke-linecap="round"/>
+          <text id="dt-heroRingPct" x="32" y="36.5" text-anchor="middle">0%</text>
+        </svg>
+        <div class="dtb-list">
+          <div><em style="background:#7CF0C3;"></em>Aktif<b id="dt-heroRingAktif">0</b></div>
+          <div><em style="background:#FF9C94;"></em>Nonaktif<b id="dt-heroRingNon">0</b></div>
+          <div><em style="background:#FFC46B;"></em>Pendaftar<b id="dt-heroRingPend">0</b></div>
         </div>
       </div>
-      <div class="dt-hero-stat-card">
-        <span class="dt-gender-badge" style="width:22px; height:22px; font-size:10px; background:#d6285c;">P</span>
-        <div style="min-width:0;">
-          <div class="dt-hero-stat-label">Perempuan (P)</div>
-          <div class="dt-hero-stat-val" id="dt-heroP">0 Pengajar</div>
-        </div>
-      </div>
+      <button type="button" id="dt-pendaftaranToggle" class="dt-hero-add-btn"><i class="ph ph-user-plus" aria-hidden="true"></i>Tinjau pendaftar<span id="dt-pendingBadge" class="is-zero">0</span></button>
     </div>
   </div>
 
-  <!-- Banner Pendaftaran Tutor Web (membuka popup saat tombol Tinjau diklik) -->
-  <div class="card" style="padding:10px 14px; margin-bottom:12px; border-radius:12px;">
-    <div style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px;">
-      <div style="display:flex; align-items:center; gap:8px; min-width:0;">
-        <span style="width:7px; height:7px; border-radius:50%; background:#ff9500; flex:none;"></span>
-        <div style="min-width:0;">
-          <div style="font-size:12px; font-weight:600; color:#1c1c1e;">Pendaftaran Tutor Web</div>
-          <div style="font-size:10px; color:#8e8e93; margin-top:1px;">Tinjau calon tutor baru yang mendaftar online</div>
-        </div>
-      </div>
-      <div style="display:flex; align-items:center; gap:8px; flex:none;">
-        <span id="dt-pendingBadge" style="background:rgba(255,149,0,.14); color:#c06400; font-size:10px; font-weight:600; padding:0 8px; height:24px; box-sizing:border-box; border-radius:999px; white-space:nowrap; display:flex; align-items:center;">0 Calon Pendaftar</span>
-        <button type="button" id="dt-pendaftaranToggle" style="background:var(--blue); color:#fff; font-size:10.5px; font-weight:500; padding:0 12px; height:26px; box-sizing:border-box; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:var(--font); transition:transform .12s ease;">
-          Tinjau
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Popup Pendaftaran Tutor Web -->
+  <!-- Popup pendaftaran tutor web -->
   <div class="modal-overlay" id="dt-pendaftaranModal" hidden>
-    <div class="modal-sheet" style="max-width:480px;">
-      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px;">
-        <div>
-          <h3 style="font-size:13.5px; font-weight:500; margin:0 0 2px;">Pendaftaran Tutor Web</h3>
-          <p id="dt-pendaftaranModalSub" style="font-size:11px; color:var(--ink-soft); margin:0;">0 calon pendaftar menunggu verifikasi</p>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-user-plus" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Pendaftar tutor baru</h3>
+          <p class="gx-sub" id="dt-pendaftaranModalSub">0 calon tutor menunggu verifikasi</p>
         </div>
-        <button type="button" id="dt-pendaftaranModalCloseIcon" aria-label="Tutup" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:2px; display:inline-flex; align-items:center; justify-content:center;">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <button type="button" class="gx-close" id="dt-pendaftaranModalCloseIcon" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div id="dt-pendaftaranList" style="max-height:65vh; overflow-y:auto; padding-right:2px;"></div>
-
-      <div class="modal-actions" style="margin-top:12px;">
-        <button type="button" class="btn btn-outline" id="dt-pendaftaranModalCloseBtn" style="height:36px; font-size:12px; border-radius:9px; width:100%;">Tutup</button>
+      <div class="gx-body"><div id="dt-pendaftaranList"></div></div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="dt-pendaftaranModalCloseBtn">Tutup</button>
       </div>
     </div>
   </div>
 
-  <!-- Tab switcher -->
+  <!-- Tab -->
   <div class="dt-dock dt-dock-sec" id="dt-dock">
     <div class="dt-dock-glider" id="dt-dockGlider"></div>
     <button class="dt-dock-btn dt-tab-btn dt-dock-active" data-tab="aktif">
-      <span>Tutor Aktif</span>
+      <span>Tutor aktif</span>
       <span id="dt-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
     <button class="dt-dock-btn dt-tab-btn" data-tab="nonaktif">
-      <span>Tutor Nonaktif</span>
+      <span>Tutor nonaktif</span>
       <span id="dt-nonaktifCount" style="background:var(--border); color:var(--ink-soft); font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
   </div>
 
   <div id="dt-desktopAnchor"></div>
 
-  <!-- Search + Filter -->
+  <!-- Pencarian, filter, ganti tampilan -->
   <div class="dt-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
     <div style="flex:1; position:relative;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" id="dt-searchInput" placeholder="Cari nama tutor, mapel, pendidikan, rekening..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
     </div>
-    <button id="dt-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
+    <button id="dt-filterBtn" type="button" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
       <span id="dt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
     </button>
-    <button id="dt-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
-    </button>
+    <button id="dt-viewToggleBtn" type="button" aria-label="Tampilkan sebagai tabel" title="Tampilkan sebagai tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;"></button>
+  </div>
+
+  <div class="dt-list-head">
+    <div id="dt-sectionLabel">Tutor aktif</div>
+    <div id="dt-resultCount">0 tutor</div>
   </div>
 
   <div id="dt-list" data-genio-masonry>
     <div class="empty-state">Memuat data tutor...</div>
   </div>
 
-  <!-- Modal Edit Tutor -->
+  <!-- Popup edit tutor -->
   <div class="modal-overlay" id="dt-modal" hidden>
-    <div class="modal-sheet">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Edit Tutor</h3>
-      <div id="dt-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-      <input type="hidden" id="dt-editId">
-
-      <div class="dt-group-title">Status</div>
-      <div class="dt-opt-row" id="dt-statusOpts" style="margin-bottom:4px;">
-        <label class="dt-opt" data-val="aktif"><input type="radio" name="dt-status" value="aktif">Aktif</label>
-        <label class="dt-opt" data-val="nonaktif"><input type="radio" name="dt-status" value="nonaktif">Nonaktif</label>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-chalkboard-teacher" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Edit tutor</h3>
+          <p class="gx-sub" id="dt-modalSub">Perbarui data diri, mapel, dan rekening.</p>
+        </div>
+        <button type="button" class="gx-close" id="dt-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="dt-group-title">Data Diri</div>
-      <div class="dt-group" style="margin-bottom:4px;">
-        <div class="dt-row"><label for="dt-nama">Nama Lengkap</label><input type="text" id="dt-nama"></div>
-        <div class="dt-row"><label for="dt-email">Email</label><input type="email" id="dt-email"></div>
-        <div class="dt-row"><label for="dt-noWa">Nomor WhatsApp</label><input type="tel" id="dt-noWa"></div>
+      <div class="gx-body">
+        <div id="dt-modalAlert" class="alert alert-error" hidden></div>
+        <input type="hidden" id="dt-editId">
+        <div class="gx-step-title"><span class="gx-step">1</span>Status</div>
+        <div class="gx-seg" id="dt-statusOpts">
+          <label class="dt-opt" data-val="aktif"><input type="radio" name="dt-status" value="aktif"><i></i>Aktif</label>
+          <label class="dt-opt" data-val="nonaktif"><input type="radio" name="dt-status" value="nonaktif"><i></i>Nonaktif</label>
+        </div>
+        <div class="gx-step-title"><span class="gx-step">2</span>Data diri</div>
+        <div class="gx-row"><label for="dt-nama">Nama lengkap <em class="gx-req">wajib</em></label><input type="text" id="dt-nama"></div>
+        <div class="gx-2col">
+          <div class="gx-row"><label for="dt-email">Email <em class="gx-req">wajib</em></label><input type="email" id="dt-email"></div>
+          <div class="gx-row"><label for="dt-noWa">WhatsApp</label><input type="tel" id="dt-noWa" placeholder="08xxxxxxxxxx"></div>
+        </div>
+        <div class="gx-row"><label>Jenis kelamin</label>
+          <div class="gx-gender" id="dt-genderOpts">
+            <label class="dt-opt" data-val="L"><input type="radio" name="dt-gender" value="L"><b>L</b>Laki-laki</label>
+            <label class="dt-opt" data-val="P"><input type="radio" name="dt-gender" value="P"><b>P</b>Perempuan</label>
+          </div>
+        </div>
+        <div class="gx-step-title"><span class="gx-step">3</span>Mapel dan pendidikan</div>
+        <div class="gx-row"><label for="dt-keahlian">Mapel yang dikuasai <em class="gx-opt">pisahkan koma</em></label><input type="text" id="dt-keahlian" placeholder="mis. Matematika, Fisika"></div>
+        <div class="gx-row"><label for="dt-pendidikan">Pendidikan terakhir</label><input type="text" id="dt-pendidikan" placeholder="mis. S1 Pendidikan Matematika UNY"></div>
+        <div class="gx-step-title"><span class="gx-step">4</span>Rekening gaji</div>
+        <div class="gx-2col">
+          <div class="gx-row"><label for="dt-namaBank">Bank</label><input type="text" id="dt-namaBank" placeholder="mis. BCA"></div>
+          <div class="gx-row"><label for="dt-noRekening">Nomor rekening</label><input type="text" id="dt-noRekening"></div>
+        </div>
       </div>
-
-      <div class="dt-group-title">Jenis Kelamin</div>
-      <div class="dt-opt-row" id="dt-genderOpts" style="margin-bottom:4px;">
-        <label class="dt-opt" data-val="L"><input type="radio" name="dt-gender" value="L">Laki-laki</label>
-        <label class="dt-opt" data-val="P"><input type="radio" name="dt-gender" value="P">Perempuan</label>
-      </div>
-
-      <div class="dt-group-title">Keahlian &amp; Pendidikan</div>
-      <div class="dt-group" style="margin-bottom:4px;">
-        <div class="dt-row"><label for="dt-keahlian">Keahlian / Mapel (pisahkan koma)</label><input type="text" id="dt-keahlian" placeholder="mis. Matematika Saintek, Fisika UTBK"></div>
-        <div class="dt-row"><label for="dt-pendidikan">Pendidikan Terakhir</label><input type="text" id="dt-pendidikan" placeholder="mis. S1 Pendidikan Matematika - UNJ"></div>
-      </div>
-
-      <div class="dt-group-title">Rekening</div>
-      <div class="dt-group" style="margin-bottom:4px;">
-        <div class="dt-row"><label for="dt-namaBank">Nama Bank</label><input type="text" id="dt-namaBank" placeholder="mis. BCA"></div>
-        <div class="dt-row"><label for="dt-noRekening">Nomor Rekening</label><input type="text" id="dt-noRekening"></div>
-      </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="dt-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="dt-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="dt-cancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="dt-saveBtn">Simpan</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Filter -->
+  <!-- Popup filter -->
   <div class="modal-overlay" id="dt-filterModal" hidden>
-    <div class="modal-sheet">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Filter</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar tutor berdasarkan mapel atau jenis kelamin.</p>
-
-      <div class="dt-group-title">Mapel</div>
-      <div class="dt-group" style="margin-bottom:4px;">
-        <button type="button" class="dt-filter-row-btn" data-picker="mapel" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="dt-filterMapelSummary">Semua Mapel</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-funnel-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Filter tutor</h3><p class="gx-sub">Bisa dikombinasikan dengan pencarian.</p></div>
+        <button type="button" class="gx-close" id="dt-filterCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="dt-group-title">Jenis Kelamin</div>
-      <div class="dt-group">
-        <button type="button" class="dt-filter-row-btn" data-picker="gender" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="dt-filterGenderSummary">Semua</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+      <div class="gx-body">
+        <div class="gx-step-title"><span class="gx-step">1</span>Mapel</div>
+        <div class="gx-row"><button type="button" class="dt-filter-row-btn gx-field" data-picker="mapel"><span id="dt-filterMapelSummary">Semua mapel</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button></div>
+        <div class="gx-step-title"><span class="gx-step">2</span>Jenis kelamin</div>
+        <div class="gx-row"><button type="button" class="dt-filter-row-btn gx-field" data-picker="gender"><span id="dt-filterGenderSummary">Semua</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button></div>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="dt-filterResetBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Reset</button>
-        <button type="button" class="btn btn-primary" id="dt-filterApplyBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Terapkan Filter</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="dt-filterResetBtn">Reset</button>
+        <button type="button" class="btn btn-primary" id="dt-filterApplyBtn">Terapkan filter</button>
       </div>
     </div>
   </div>
 
-  <!-- Popup Picker (dengan search bar) -->
+  <!-- Popup pilih opsi filter -->
   <div class="modal-overlay" id="dt-pickerModal" hidden style="z-index:70;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="dt-pickerTitle" style="font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih</h3>
-      <div id="dt-pickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
-        <button type="button" class="btn btn-outline" id="dt-pickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="dt-pickerDoneBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Selesai</button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-list-checks" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="dt-pickerTitle">Pilih</h3></div>
+      </div>
+      <div class="gx-body"><div id="dt-pickerList" style="padding:6px 0;"></div></div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="dt-pickerCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="dt-pickerDoneBtn">Selesai</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Konfirmasi -->
+  <!-- Popup konfirmasi -->
   <div class="modal-overlay" id="dt-confirmModal" hidden>
-    <div class="modal-sheet" style="max-width:360px;">
-      <div id="dt-confirmIconWrap" style="width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;"></div>
-      <h3 style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 4px;" id="dt-confirmTitle">Yakin?</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;" id="dt-confirmDesc">-</p>
-      <div class="modal-actions" style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-outline" id="dt-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="dt-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Ya</button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-confirm">
+        <span class="gx-head-ico is-danger" id="dt-confirmIconWrap"><i class="ph ph-warning" aria-hidden="true"></i></span>
+        <h3 id="dt-confirmTitle">Yakin?</h3>
+        <p id="dt-confirmDesc">-</p>
+      </div>
+      <div class="modal-actions gx-foot" style="border-top:none;">
+        <button type="button" class="btn btn-outline" id="dt-confirmCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="dt-confirmOkBtn">Ya</button>
       </div>
     </div>
   </div>
@@ -602,19 +399,94 @@
   function dtRelativeTime(iso) {
     var diffMin = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
     if (diffMin < 1) return 'Baru saja';
-    if (diffMin < 60) return diffMin + ' Menit lalu';
+    if (diffMin < 60) return diffMin + ' menit lalu';
     var diffHour = Math.floor(diffMin / 60);
-    if (diffHour < 24) return diffHour + ' Jam lalu';
-    return Math.floor(diffHour / 24) + ' Hari lalu';
+    if (diffHour < 24) return diffHour + ' jam lalu';
+    return Math.floor(diffHour / 24) + ' hari lalu';
   }
-  function dtGenderBadge(g, size) {
-    size = size || 20;
-    var bg = g === 'P' ? '#d6285c' : 'var(--blue)';
-    return '<span class="dt-gender-badge" style="width:' + size + 'px; height:' + size + 'px; font-size:' + Math.round(size * 0.5) + 'px; background:' + bg + ';">' + (g || '-') + '</span>';
+  var DT_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DT_RING_LEN = 2 * Math.PI * 25;
+
+  function dtInitials(nama) {
+    return (nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
   }
-  function dtMapelBadges(keahlian) {
-    if (!keahlian || !keahlian.length) return '';
-    return keahlian.map(function (k) { return '<span class="dt-mapel-badge">' + dtEscape(k) + '</span>'; }).join('');
+  function dtAvatar(u) {
+    return u.foto_profil_url
+      ? '<img class="dt-av" src="' + dtEscape(u.foto_profil_url) + '" alt="">'
+      : '<div class="dt-av">' + dtEscape(dtInitials(u.nama)) + '</div>';
+  }
+  function dtGenderTag(g) {
+    if (g === 'L') return '<span class="dt-g is-l" title="Laki-laki">[L]</span>';
+    if (g === 'P') return '<span class="dt-g is-p" title="Perempuan">[P]</span>';
+    return '';
+  }
+  function dtStatusPill(isAktif) {
+    return '<span class="dt-status ' + (isAktif ? 'is-on' : 'is-off') + '"><i></i>' + (isAktif ? 'Aktif' : 'Nonaktif') + '</span>';
+  }
+  function dtWaLink(u) {
+    var tp = u.tutor_profile || {};
+    var n = (tp.no_wa || u.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
+    return n ? 'https://wa.me/' + n : '';
+  }
+  function dtCountUp(el, to) {
+    if (!el) return;
+    if (DT_REDUCED_MOTION || !to) { el.textContent = to; return; }
+    var start = null, dur = 700;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function dtRenderHero() {
+    var list = dtState.tutorList;
+    var aktif = list.filter(function (u) { return u.status === 'aktif'; });
+    var non = list.length - aktif.length;
+    var lA = aktif.filter(function (u) { return u.jenis_kelamin === 'L'; }).length;
+    var pA = aktif.filter(function (u) { return u.jenis_kelamin === 'P'; }).length;
+    var other = aktif.length - lA - pA;
+    var pend = dtState.pendingList.length;
+    var pct = list.length ? Math.round(aktif.length / list.length * 100) : 0;
+    var years = list.map(function (u) { return u.created_at ? new Date(u.created_at).getFullYear() : null; }).filter(Boolean);
+    var since = years.length ? Math.min.apply(null, years) : null;
+
+    dtCountUp(document.getElementById('dt-heroTotal'), list.length);
+    document.getElementById('dt-heroSub').textContent = aktif.length + ' aktif · ' + non + ' nonaktif' + (since ? ' · bergabung sejak ' + since : '');
+    document.getElementById('dt-heroL').textContent = lA;
+    document.getElementById('dt-heroP').textContent = pA + (other ? ' (+' + other + ' belum diisi)' : '');
+    document.getElementById('dt-heroNon').textContent = non;
+    document.getElementById('dt-heroRingPct').textContent = pct + '%';
+    document.getElementById('dt-heroRingAktif').textContent = aktif.length;
+    document.getElementById('dt-heroRingNon').textContent = non;
+    document.getElementById('dt-heroRingPend').textContent = pend;
+    var badge = document.getElementById('dt-pendingBadge');
+    badge.textContent = pend;
+    badge.classList.toggle('is-zero', !pend);
+
+    var bar = document.getElementById('dt-heroBar');
+    var parts = [[lA, '#9DB6FF'], [pA + other, '#FFB3C7'], [non, 'rgba(255,255,255,.25)']];
+    bar.innerHTML = parts.filter(function (p) { return p[0] > 0; }).map(function (p, i) {
+      return '<i style="flex:' + p[0] + '; background:' + p[1] + '; --i:' + i + ';"></i>';
+    }).join('');
+    if (!DT_REDUCED_MOTION) { bar.classList.remove('dt-anim'); void bar.offsetWidth; bar.classList.add('dt-anim'); }
+
+    var arc = document.getElementById('dt-heroRingArc');
+    arc.setAttribute('stroke-dasharray', '0 ' + DT_RING_LEN);
+    var len = list.length ? aktif.length / list.length * DT_RING_LEN : 0;
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      arc.setAttribute('stroke-dasharray', len.toFixed(2) + ' ' + DT_RING_LEN.toFixed(2));
+    }); });
+  }
+
+  function dtChips(keahlian, max) {
+    if (!keahlian || !keahlian.length) return '<span class="dt-muted">Mapel belum diisi</span>';
+    var shown = keahlian.slice(0, max);
+    var html = shown.map(function (k) { return '<span class="dt-mapel-badge">' + dtEscape(k) + '</span>'; }).join('');
+    if (keahlian.length > max) html += '<span class="dt-mapel-badge dt-mapel-more" title="' + dtEscape(keahlian.slice(max).join(', ')) + '">+' + (keahlian.length - max) + '</span>';
+    return html;
   }
 
   function dtInit() {
@@ -626,7 +498,7 @@
 
       document.getElementById('dt-searchInput').addEventListener('input', function (e) {
         dtState.search = e.target.value.toLowerCase();
-        dtRenderList();
+        dtRenderList(false);
       });
       var pendaftaranToggle = document.getElementById('dt-pendaftaranToggle');
       if (pendaftaranToggle) pendaftaranToggle.addEventListener('click', dtOpenPendaftaranModal);
@@ -640,16 +512,13 @@
       document.getElementById('dt-cancelBtn').addEventListener('click', dtCloseModal);
       document.getElementById('dt-saveBtn').addEventListener('click', dtSubmitEdit);
       document.getElementById('dt-confirmCancelBtn').addEventListener('click', dtCloseConfirm);
+      document.getElementById('dt-modalCloseX').addEventListener('click', dtCloseModal);
+      document.getElementById('dt-filterCloseX').addEventListener('click', dtCloseFilterModal);
 
       document.querySelectorAll('.dt-opt').forEach(function (opt) {
-        opt.addEventListener('click', function () {
-          var group = opt.closest('.dt-opt-row');
-          group.querySelectorAll('.dt-opt').forEach(function (o) {
-            o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
-          });
-          var c = DT_OPT_COLORS[opt.dataset.val] || { bg: 'var(--blue-tint)', fg: 'var(--blue)', border: 'var(--blue)' };
-          opt.style.background = c.bg; opt.style.color = c.fg; opt.style.borderColor = c.border;
-          opt.querySelector('input').checked = true;
+        opt.addEventListener('click', function (e) {
+          e.preventDefault();
+          dtSetOpt('#' + opt.parentNode.id, opt.dataset.val);
         });
       });
 
@@ -700,7 +569,7 @@
     dtState.tab = tab;
     document.querySelectorAll('.dt-dock-btn').forEach(function (b) { b.classList.toggle('dt-dock-active', b.dataset.tab === tab); });
     dtUpdateDockGlider();
-    dtRenderList();
+    dtRenderList(true);
   }
   function dtUpdateDockGlider() {
     var activeBtn = document.querySelector('.dt-dock-btn.dt-dock-active');
@@ -774,24 +643,17 @@
       dtState.tutorList = rows.filter(function (u) { return u.status !== 'pending_approval'; });
 
       var aktifCount = dtState.tutorList.filter(function (u) { return u.status === 'aktif'; }).length;
-      var nonaktifCount = dtState.tutorList.length - aktifCount;
-      var lCount = dtState.tutorList.filter(function (u) { return u.jenis_kelamin === 'L'; }).length;
-      var pCount = dtState.tutorList.filter(function (u) { return u.jenis_kelamin === 'P'; }).length;
-
-      document.getElementById('dt-heroTotal').textContent = aktifCount;
-      document.getElementById('dt-heroL').textContent = lCount + ' Pengajar';
-      document.getElementById('dt-heroP').textContent = pCount + ' Pengajar';
       document.getElementById('dt-aktifCount').textContent = aktifCount;
-      document.getElementById('dt-nonaktifCount').textContent = nonaktifCount;
-      document.getElementById('dt-pendingBadge').textContent = dtState.pendingList.length + ' Calon Pendaftar';
+      document.getElementById('dt-nonaktifCount').textContent = dtState.tutorList.length - aktifCount;
+      dtRenderHero();
 
       try {
         var unitRows = await supaRest('units?select=id', s.access_token);
-        document.getElementById('dt-heroUnitBadge').textContent = unitRows.length + ' Unit Cabang';
+        document.getElementById('dt-heroUnitBadge').textContent = unitRows.length + ' unit cabang';
       } catch (e2) {}
 
       dtRenderPendaftaranList();
-      dtRenderList();
+      dtRenderList(true);
     } catch (err) {
       listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + dtEscape(err.message) + '</div>';
     }
@@ -816,61 +678,29 @@
   function dtRenderPendaftaranList() {
     var listEl = document.getElementById('dt-pendaftaranList');
     var subEl = document.getElementById('dt-pendaftaranModalSub');
-    if (subEl) subEl.textContent = dtState.pendingList.length + ' calon pendaftar menunggu verifikasi';
+    if (subEl) subEl.textContent = dtState.pendingList.length + ' calon tutor menunggu verifikasi';
     if (!listEl) return;
     if (!dtState.pendingList.length) {
-      listEl.innerHTML = '<div style="padding:32px 14px; text-align:center;">' +
-        '<div style="width:42px; height:42px; border-radius:50%; background:rgba(52,199,89,.12); color:#34c759; display:inline-flex; align-items:center; justify-content:center; margin:0 auto 10px;">' +
-          '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
-        '</div>' +
-        '<div style="font-size:13px; font-weight:500; color:var(--ink);">Semua Beres!</div>' +
-        '<p style="font-size:11px; color:var(--ink-soft); margin:4px 0 0;">Tidak ada calon pendaftar yang menunggu verifikasi.</p>' +
-      '</div>';
+      listEl.innerHTML = '<div class="dtp-empty"><span class="ico"><i class="ph ph-check" aria-hidden="true"></i></span><b>Semua sudah ditinjau</b><span>Belum ada calon tutor baru yang mendaftar.</span></div>';
       return;
     }
     listEl.innerHTML = dtState.pendingList.map(function (u) {
       var tp = u.tutor_profile || {};
-      var mapelPills = (tp.keahlian && tp.keahlian.length)
-        ? '<div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">' +
-            tp.keahlian.map(function (k) {
-              return '<span style="display:inline-flex; align-items:center; background:#fff; border:1px solid var(--border); border-radius:5px; padding:2px 6px; font-size:10.5px; color:var(--ink); font-weight:400;">' + dtEscape(k) + '</span>';
-            }).join('') +
-          '</div>'
-        : '';
-
-      var waNumber = (tp.no_wa || u.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
-      var waLink = waNumber ? ('https://wa.me/' + waNumber) : '';
-
-      return '<div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:10px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
-            (u.foto_profil_url
-              ? '<img src="' + u.foto_profil_url + '" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex:none;">'
-              : '<div style="width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>') +
-            '<div style="min-width:0;">' +
-              '<div style="display:flex; align-items:center; gap:6px;"><span style="font-size:12.5px; font-weight:600; color:#1c1c1e;">' + dtEscape(u.nama) + '</span>' + dtGenderBadge(u.jenis_kelamin, 16) + '</div>' +
-              (u.email ? '<div style="font-size:10.5px; color:var(--ink-soft);">' + dtEscape(u.email) + '</div>' : '') +
-            '</div>' +
-          '</div>' +
-          '<span style="font-size:10px; color:#8e8e93; flex:none;">' + dtRelativeTime(u.created_at) + '</span>' +
+      var wa = dtWaLink(u);
+      return '<div class="dtp-item">' +
+        '<div class="dtp-head">' + dtAvatar(u) +
+          '<div class="dtc-who"><h4>' + dtEscape(u.nama) + dtGenderTag(u.jenis_kelamin) + '</h4><p>' + dtEscape(u.email || '-') + '</p></div>' +
+          '<span class="dtp-time">' + dtRelativeTime(u.created_at) + '</span>' +
         '</div>' +
-        mapelPills +
-        '<div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-top:8px;">' +
-          '<div style="font-size:10.5px; color:var(--ink-soft);">Pendidikan: <span style="font-weight:500; color:var(--ink);">' + dtEscape(tp.pendidikan_terakhir || '-') + '</span></div>' +
-          '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">WhatsApp: <span style="font-weight:500; color:var(--ink);">' + dtEscape(tp.no_wa || u.no_hp || '-') + '</span>' +
-            (waLink ? ' <a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="color:#25D366; text-decoration:none; font-weight:500; margin-left:4px;">(Chat WA)</a>' : '') +
-          '</div>' +
-          (tp.no_rekening ? '<div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;">Rekening: <span style="font-weight:500; color:var(--ink);">' + dtEscape(tp.nama_bank || '') + ' • ' + dtEscape(tp.no_rekening) + '</span></div>' : '') +
+        '<div class="dtp-chips">' + dtChips(tp.keahlian, 6) + '</div>' +
+        '<div class="dtc-info">' +
+          '<div><span>Pendidikan</span><b>' + dtEscape(tp.pendidikan_terakhir || '-') + '</b></div>' +
+          '<div><span>WhatsApp</span><b>' + dtEscape(tp.no_wa || u.no_hp || '-') + (wa ? ' · <a href="' + wa + '" target="_blank" rel="noopener noreferrer" style="color:#14A44D; text-decoration:none; font-weight:600;">chat</a>' : '') + '</b></div>' +
+          '<div><span>Rekening</span><b>' + (tp.no_rekening ? dtEscape((tp.nama_bank ? tp.nama_bank + ' · ' : '') + tp.no_rekening) : 'Belum diisi') + '</b></div>' +
         '</div>' +
-        '<div style="display:flex; gap:8px; margin-top:10px;">' +
-          '<button type="button" class="dt-reject-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" style="flex:1; height:32px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:8px; border:none; font-size:11.5px; font-weight:500; cursor:pointer; background:rgba(255,59,48,.12); color:var(--red); font-family:var(--font); transition:transform .1s ease;">' +
-            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
-            'Tolak' +
-          '</button>' +
-          '<button type="button" class="dt-approve-btn" data-id="' + u.id + '" style="flex:1; height:32px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:8px; border:none; font-size:11.5px; font-weight:500; cursor:pointer; background:rgba(52,199,89,.14); color:#28a745; font-family:var(--font); transition:transform .1s ease;">' +
-            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
-            'Terima' +
-          '</button>' +
+        '<div class="dtp-actions">' +
+          '<button type="button" class="dt-reject-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '"><i class="ph ph-x" aria-hidden="true"></i>Tolak</button>' +
+          '<button type="button" class="dt-approve-btn" data-id="' + u.id + '"><i class="ph ph-check" aria-hidden="true"></i>Terima</button>' +
         '</div>' +
       '</div>';
     }).join('');
@@ -880,7 +710,7 @@
     });
     listEl.querySelectorAll('.dt-reject-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        dtOpenConfirm('Tolak Pendaftaran Ini?', btn.dataset.nama + ' akan dihapus permanen dari sistem.', 'Ya, Tolak', '#ff3b30', function () { dtReject(btn.dataset.id); });
+        dtOpenConfirm('Tolak pendaftaran ini?', 'Akun ' + btn.dataset.nama + ' akan dihapus permanen.', 'Ya, tolak', '#ff3b30', function () { dtReject(btn.dataset.id); });
       });
     });
   }
@@ -927,18 +757,12 @@
     var btn = document.getElementById('dt-viewToggleBtn');
     if (!btn) return;
     var isTable = dtState.viewMode === 'table';
-    btn.style.borderColor = 'var(--border)';
-    btn.style.color = 'var(--ink)';
-    btn.style.background = '#fff';
-    if (isTable) {
-      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
-      btn.setAttribute('aria-label', 'Tampilkan sebagai Kartu');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
-    } else {
-      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
-      btn.setAttribute('aria-label', 'Tampilkan sebagai Tabel');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
-    }
+    var label = isTable ? 'Tampilkan sebagai kartu' : 'Tampilkan sebagai tabel';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
+    btn.innerHTML = isTable
+      ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
   }
 
   function dtToggleViewMode() {
@@ -952,7 +776,7 @@
     try {
       localStorage.setItem('genio_dt_view_mode', dtState.viewMode);
     } catch (e) {}
-    dtRenderList();
+    dtRenderList(true);
   }
 
   function dtGetSortIcon(field) {
@@ -1011,7 +835,7 @@
           dtState.sortField = field;
           dtState.sortDir = 'asc';
         }
-        dtRenderList();
+        dtRenderList(false);
       });
     });
     document.querySelectorAll('.dt-table-edit-btn').forEach(function (btn) {
@@ -1021,7 +845,7 @@
     });
     document.querySelectorAll('.dt-table-del-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        dtOpenConfirm('Hapus Tutor Ini?', btn.dataset.nama + ' akan dihapus permanen. Tutor yang sudah punya riwayat kontrak/presensi tidak bisa dihapus.', 'Ya, Hapus', '#ff3b30', function () {
+        dtOpenConfirm('Hapus tutor ini?', btn.dataset.nama + ' akan dihapus permanen. Tutor yang sudah punya riwayat kontrak atau presensi tidak bisa dihapus.', 'Ya, hapus', '#ff3b30', function () {
           dtDelete(btn.dataset.id);
         });
       });
@@ -1032,120 +856,53 @@
     var sortedRows = dtSortRows(rows);
     var trs = sortedRows.map(function (u, idx) {
       var tp = u.tutor_profile || {};
-      var isAktif = u.status === 'aktif';
-      var statusBadge = isAktif
-        ? '<span style="display:inline-flex; align-items:center; background:rgba(52,199,89,.12); color:#28a745; height:18px; font-size:9px; font-weight:500; padding:0 6px; border-radius:999px;"><span style="width:5px; height:5px; border-radius:50%; background:#34c759; display:inline-block; flex:none; margin-right:3.5px;"></span>Aktif</span>'
-        : '<span style="display:inline-flex; align-items:center; background:rgba(255,59,48,.1); color:#ff3b30; height:18px; font-size:9px; font-weight:500; padding:0 6px; border-radius:999px;"><span style="width:5px; height:5px; border-radius:50%; background:#ff3b30; display:inline-block; flex:none; margin-right:3.5px;"></span>Nonaktif</span>';
-
-      var avatar = u.foto_profil_url
-        ? '<img src="' + u.foto_profil_url + '" style="width:24px; height:24px; border-radius:50%; object-fit:cover; flex:none;">'
-        : '<div style="width:24px; height:24px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:9.5px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>';
-
-      var genderHtml = (u.jenis_kelamin === 'L' || u.jenis_kelamin === 'P')
-        ? '<span style="font-size:11.5px; font-weight:500; color:var(--ink);">' + u.jenis_kelamin + '</span>'
-        : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">-</span>';
-
-      var waNumber = (tp.no_wa || u.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
-      var waLink = waNumber ? ('https://wa.me/' + waNumber) : '';
-      var waBtn = waLink
-        ? '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" class="dt-table-icon-btn" title="Hubungi WhatsApp (' + dtEscape(u.nama) + ')" aria-label="Chat WA" style="color:#25D366 !important;">' +
-            '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg>' +
-          '</a>'
-        : '';
-
-      var mapelBadgesHtml = (tp.keahlian && tp.keahlian.length)
-        ? '<div style="display:flex; flex-wrap:wrap; gap:3px;">' +
-            tp.keahlian.map(function (k) {
-              return '<span class="dt-table-mapel-pill" style="display:inline-flex; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.5px 5px; font-size:10px; color:var(--ink); font-weight:400; white-space:nowrap;">' +
-                dtEscape(k) +
-              '</span>';
-            }).join('') +
-          '</div>'
-        : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">-</span>';
-
-      var rekeningText = tp.no_rekening
-        ? '<div style="font-size:11px; color:var(--ink); font-weight:500;">' + dtEscape(tp.no_rekening) + '</div>' +
-          (tp.nama_bank ? '<div style="font-size:9.5px; color:var(--ink-soft);">' + dtEscape(tp.nama_bank) + '</div>' : '')
-        : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">Belum diisi</span>';
-
-      var phoneText = (tp.no_wa || u.no_hp)
-        ? '<div style="font-size:11px; color:var(--ink); font-weight:500;">' + dtEscape(tp.no_wa || u.no_hp) + '</div>'
-        : '<span style="color:var(--ink-soft); font-size:10.5px; font-style:italic;">-</span>';
-
-      return '' +
-        '<tr class="dt-table-row" data-id="' + u.id + '">' +
-          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px;">' + (idx + 1) + '</td>' +
-          '<td>' +
-            '<div style="display:flex; align-items:center; gap:7px;">' +
-              avatar +
-              '<div style="min-width:0;">' +
-                '<div style="font-weight:500; color:var(--ink); font-size:11.5px; line-height:1.25;">' + dtEscape(u.nama || '-') + '</div>' +
-                (u.email ? '<div style="color:var(--ink-soft); font-size:10px; margin-top:1px;">' + dtEscape(u.email) + '</div>' : '') +
-              '</div>' +
-            '</div>' +
-          '</td>' +
-          '<td style="text-align:center; white-space:nowrap;">' + genderHtml + '</td>' +
-          '<td style="white-space:nowrap;">' + phoneText + '</td>' +
-          '<td>' + mapelBadgesHtml + '</td>' +
-          '<td style="font-size:11px; color:var(--ink); white-space:nowrap;">' + dtEscape(tp.pendidikan_terakhir || '-') + '</td>' +
-          '<td>' + rekeningText + '</td>' +
-          '<td style="white-space:nowrap;">' + statusBadge + '</td>' +
-          '<td style="text-align:right; white-space:nowrap;">' +
-            '<div style="display:inline-flex; align-items:center; gap:4px;">' +
-              waBtn +
-              '<button type="button" class="dt-table-icon-btn dt-table-edit-btn" data-id="' + u.id + '" title="Edit Tutor (' + dtEscape(u.nama) + ')" aria-label="Edit Tutor">' +
-                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
-              '</button>' +
-              '<button type="button" class="dt-table-icon-btn dt-table-del-btn dt-del-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" title="Hapus Tutor (' + dtEscape(u.nama) + ')" aria-label="Hapus Tutor">' +
-                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
-              '</button>' +
-            '</div>' +
-          '</td>' +
-        '</tr>';
+      var wa = dtWaLink(u);
+      var rek = tp.no_rekening
+        ? '<b style="font-weight:500; font-variant-numeric:tabular-nums;">' + dtEscape(tp.no_rekening) + '</b>' + (tp.nama_bank ? '<div class="dt-muted">' + dtEscape(tp.nama_bank) + '</div>' : '')
+        : '<span class="dt-muted">Belum diisi</span>';
+      return '<tr class="dt-table-row" data-id="' + u.id + '">' +
+        '<td class="dt-no dt-stk dt-stk-no">' + (idx + 1) + '</td>' +
+        '<td class="dt-stk dt-stk-nama"><div class="dt-who">' + dtAvatar(u) + '<div style="min-width:0;"><b>' + dtEscape(u.nama || '-') + dtGenderTag(u.jenis_kelamin) + '</b>' + (u.email ? '<span>' + dtEscape(u.email) + '</span>' : '') + '</div></div></td>' +
+        '<td style="white-space:nowrap; font-variant-numeric:tabular-nums;">' + (tp.no_wa || u.no_hp ? dtEscape(tp.no_wa || u.no_hp) : '<span class="dt-muted">-</span>') + '</td>' +
+        '<td><div class="dt-chips">' + dtChips(tp.keahlian, 3) + '</div></td>' +
+        '<td style="white-space:nowrap;">' + (tp.pendidikan_terakhir ? dtEscape(tp.pendidikan_terakhir) : '<span class="dt-muted">-</span>') + '</td>' +
+        '<td style="white-space:nowrap;">' + rek + '</td>' +
+        '<td>' + dtStatusPill(u.status === 'aktif') + '</td>' +
+        '<td class="dt-act">' +
+          (wa ? '<a href="' + wa + '" target="_blank" rel="noopener noreferrer" class="dt-table-icon-btn is-wa" title="Hubungi lewat WhatsApp" aria-label="Hubungi lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' : '') +
+          '<button type="button" class="dt-table-icon-btn dt-table-edit-btn" data-id="' + u.id + '" title="Edit tutor" aria-label="Edit tutor"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button>' +
+          '<button type="button" class="dt-table-icon-btn dt-table-del-btn dt-del-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" title="Hapus tutor" aria-label="Hapus tutor"><i class="ph ph-trash" aria-hidden="true"></i></button>' +
+        '</td>' +
+      '</tr>';
     }).join('');
 
-    return '' +
-      '<div class="dt-table-card dt-full-width">' +
-        '<div class="dt-table-wrap">' +
-          '<table class="dt-table">' +
-            '<thead>' +
-              '<tr>' +
-                '<th style="width:34px; text-align:center;">No</th>' +
-                '<th class="dt-sort-th" data-sort="nama" style="min-width:170px;">' +
-                  '<span style="display:inline-flex; align-items:center;">Nama Tutor' + dtGetSortIcon('nama') + '</span>' +
-                '</th>' +
-                '<th class="dt-sort-th" data-sort="gender" style="min-width:85px; text-align:center;">' +
-                  '<span style="display:inline-flex; align-items:center; justify-content:center;">Jenis Kelamin' + dtGetSortIcon('gender') + '</span>' +
-                '</th>' +
-                '<th style="min-width:110px;">Kontak (WA)</th>' +
-                '<th style="min-width:170px;">Keahlian / Mapel</th>' +
-                '<th class="dt-sort-th" data-sort="pendidikan" style="min-width:130px;">' +
-                  '<span style="display:inline-flex; align-items:center;">Pendidikan' + dtGetSortIcon('pendidikan') + '</span>' +
-                '</th>' +
-                '<th style="min-width:130px;">Rekening Bank</th>' +
-                '<th class="dt-sort-th" data-sort="status" style="min-width:90px;">' +
-                  '<span style="display:inline-flex; align-items:center;">Status' + dtGetSortIcon('status') + '</span>' +
-                '</th>' +
-                '<th style="min-width:100px; text-align:right;">Aksi</th>' +
-              '</tr>' +
-            '</thead>' +
-            '<tbody>' +
-              trs +
-            '</tbody>' +
-          '</table>' +
-        '</div>' +
-      '</div>';
+    function th(field, label, extra) {
+      return '<th class="dt-sort-th' + (extra || '') + '" data-sort="' + field + '"><span style="display:inline-flex; align-items:center;">' + label + dtGetSortIcon(field) + '</span></th>';
+    }
+    return '<div class="dt-table-card dt-full-width"><div class="dt-table-wrap"><table class="dt-table">' +
+      '<thead><tr>' +
+        '<th class="dt-no dt-stk dt-stk-no">No</th>' +
+        th('nama', 'Nama tutor', ' dt-stk dt-stk-nama') +
+        '<th>WhatsApp</th>' +
+        '<th>Mapel</th>' +
+        th('pendidikan', 'Pendidikan') +
+        '<th>Rekening</th>' +
+        th('status', 'Status') +
+        '<th style="text-align:right;">Aksi</th>' +
+      '</tr></thead><tbody>' + trs + '</tbody></table></div></div>';
   }
 
-  function dtRenderList() {
+  function dtRenderList(animate) {
     var listEl = document.getElementById('dt-list');
     var rows = dtState.tutorList.filter(function (u) { return u.status === dtState.tab; }).filter(dtMatchesSearch).filter(dtMatchesFilters);
 
     dtUpdateViewToggleUI();
+    document.getElementById('dt-sectionLabel').textContent = dtState.tab === 'aktif' ? 'Tutor aktif' : 'Tutor nonaktif';
+    document.getElementById('dt-resultCount').textContent = rows.length + ' tutor';
 
     if (!rows.length) {
       listEl.classList.remove('dt-view-table');
-      listEl.innerHTML = '<div class="dt-card dt-full-width empty-state">Tidak ada tutor yang cocok.</div>';
+      listEl.innerHTML = '<div class="dt-card dt-full-width"><i class="ph ph-chalkboard-teacher" aria-hidden="true" style="font-size:26px; opacity:.6;"></i><div style="font-size:12px; font-weight:600; color:var(--ink); margin-top:6px;">Tidak ada tutor yang cocok</div><div style="margin-top:2px;">Ubah filter atau kata kunci pencarian.</div></div>';
       return;
     }
 
@@ -1158,48 +915,49 @@
       listEl.innerHTML = rows.map(dtRenderCard).join('');
       dtBindCardEvents();
     }
-    genioMasonry(listEl, { item: '.dt-card:not(.dt-full-width)', cols: function () { return 2; }, gap: 10 });
+
+    if (animate && !DT_REDUCED_MOTION) {
+      var items = dtState.viewMode === 'table' ? listEl.querySelectorAll('.dt-table tbody tr') : listEl.querySelectorAll('.dt-card:not(.dt-full-width)');
+      items.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('dt-in'); });
+      clearTimeout(listEl._dtAnimT);
+      listEl._dtAnimT = setTimeout(function () { items.forEach(function (el) { el.classList.remove('dt-in'); }); }, 1200);
+    }
+    genioMasonry(listEl, { item: '.dt-card:not(.dt-full-width)', min: 340, gap: 12 });
   }
 
   function dtRenderCard(u) {
     var tp = u.tutor_profile || {};
     var isOpen = dtState.openCard === u.id;
-    var waLink = 'https://wa.me/' + (tp.no_wa || u.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
+    var isAktif = u.status === 'aktif';
+    var wa = dtWaLink(u);
+    var sub = tp.pendidikan_terakhir || u.email || 'Pendidikan belum diisi';
 
-    return '' +
-      '<div class="card dt-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
-            (u.foto_profil_url
-              ? '<img src="' + u.foto_profil_url + '" style="width:32px; height:32px; border-radius:50%; object-fit:cover; flex:none;">'
-              : '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex:none;">' + dtEscape((u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase()) + '</div>') +
-            '<div style="min-width:0;">' +
-              '<div style="display:flex; align-items:center; gap:6px;"><h4 style="font-size:12.5px; font-weight:600; color:#1c1c1e; margin:0; line-height:1.3;">' + dtEscape(u.nama) + '</h4>' + dtGenderBadge(u.jenis_kelamin, 16) + '</div>' +
-              '<div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:3px;">' + dtMapelBadges(tp.keahlian) + '</div>' +
-            '</div>' +
-          '</div>' +
-          '<button class="dt-detail-toggle" data-id="' + u.id + '" style="background:var(--blue); color:#fff; border:none; border-radius:8px; height:26px; padding:0 10px; font-size:11px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:4px; flex:none; font-family:var(--font);">' +
-            (isOpen ? 'Tutup' : 'Detail') +
-            '<svg class="dt-toggle-icon" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
-          '</button>' +
+    return '<div class="dt-card">' +
+      '<div class="dtc-head">' + dtAvatar(u) +
+        '<div class="dtc-who"><h4>' + dtEscape(u.nama) + dtGenderTag(u.jenis_kelamin) + '</h4><p>' + dtEscape(sub) + '</p></div>' +
+        dtStatusPill(isAktif) +
+      '</div>' +
+      '<div class="dtc-chips">' + dtChips(tp.keahlian, 3) + '</div>' +
+      '<div class="dtc-foot">' +
+        '<div class="dtc-wa"><span>WhatsApp</span><b>' + dtEscape(tp.no_wa || u.no_hp || '-') + '</b></div>' +
+        (wa ? '<a href="' + wa + '" target="_blank" rel="noopener noreferrer" class="dt-table-icon-btn is-wa" title="Hubungi lewat WhatsApp" aria-label="Hubungi lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' : '') +
+        '<button type="button" class="dt-detail-toggle" data-id="' + u.id + '">' + (isOpen ? 'Tutup' : 'Detail') +
+          '<svg class="dt-toggle-icon" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</button>' +
+      '</div>' +
+      '<div class="dt-wrap" data-id="' + u.id + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
+        '<div class="dtc-info">' +
+          '<div><span>Email</span><b>' + dtEscape(u.email || '-') + '</b></div>' +
+          '<div><span>Pendidikan</span><b>' + dtEscape(tp.pendidikan_terakhir || '-') + '</b></div>' +
+          '<div><span>Rekening</span><b>' + (tp.no_rekening ? dtEscape((tp.nama_bank ? tp.nama_bank + ' · ' : '') + tp.no_rekening) : 'Belum diisi') + '</b></div>' +
+          '<div><span>Mapel</span><b>' + dtEscape((tp.keahlian || []).join(', ') || '-') + '</b></div>' +
         '</div>' +
-
-        '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="margin-top:8px; height:30px; background:rgba(52,199,89,.12); color:#1DB954; border-radius:8px; padding:0 10px; font-size:11px; font-weight:500; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:6px; font-family:var(--font);">' +
-          '<span style="width:16px; height:16px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="9" height="9" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>' +
-          'Hubungi WhatsApp' +
-        '</a>' +
-
-        '<div class="dt-wrap" data-id="' + u.id + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
-          '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:9px; padding:8px 10px; margin-top:8px;">' +
-            '<div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px;"><span style="color:#8e8e93;">Pendidikan Terakhir:</span><span style="font-weight:500; color:var(--ink); text-align:right;">' + dtEscape(tp.pendidikan_terakhir || '-') + '</span></div>' +
-            '<div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px; margin-top:4px;"><span style="color:#8e8e93;">Nomor Rekening:</span><span style="font-weight:500; color:var(--ink); text-align:right;">' + (tp.no_rekening ? dtEscape(tp.nama_bank || '') + ' &bull; ' + dtEscape(tp.no_rekening) : '<span style="color:#8e8e93; font-weight:500;">Belum diisi</span>') + '</span></div>' +
-          '</div>' +
-          '<div style="display:flex; gap:8px; margin-top:8px;">' +
-            '<button class="dt-edit-btn" data-id="' + u.id + '" style="flex:1; height:30px; background:var(--blue); color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:500; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Edit</button>' +
-            '<button class="dt-delete-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '" style="flex:1; height:30px; background:var(--red); color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:500; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Hapus</button>' +
-          '</div>' +
+        '<div class="dtc-actions">' +
+          '<button type="button" class="dt-delete-btn" data-id="' + u.id + '" data-nama="' + dtEscape(u.nama) + '"><i class="ph ph-trash" aria-hidden="true"></i>Hapus</button>' +
+          '<button type="button" class="dt-edit-btn" data-id="' + u.id + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit tutor</button>' +
         '</div>' +
-      '</div>';
+      '</div>' +
+    '</div>';
   }
 
   function dtBindCardEvents() {
@@ -1233,7 +991,7 @@
     });
     document.querySelectorAll('.dt-delete-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        dtOpenConfirm('Hapus Tutor Ini?', btn.dataset.nama + ' akan dihapus permanen. Tutor yang sudah punya riwayat kontrak/presensi tidak bisa dihapus.', 'Ya, Hapus', '#ff3b30', function () { dtDelete(btn.dataset.id); });
+        dtOpenConfirm('Hapus tutor ini?', btn.dataset.nama + ' akan dihapus permanen. Tutor yang sudah punya riwayat kontrak atau presensi tidak bisa dihapus.', 'Ya, hapus', '#ff3b30', function () { dtDelete(btn.dataset.id); });
       });
     });
   }
@@ -1249,19 +1007,10 @@
 
   /* ===== Modal Edit ===== */
   var dtModal = document.getElementById('dt-modal');
-  var DT_OPT_COLORS = {
-    L: { bg: 'var(--blue-tint)', fg: 'var(--blue)', border: 'var(--blue)' },
-    P: { bg: 'rgba(255,59,48,.1)', fg: '#ff3b30', border: '#ff3b30' },
-    aktif: { bg: 'rgba(52,199,89,.14)', fg: '#28a745', border: '#28a745' },
-    nonaktif: { bg: 'rgba(255,59,48,.1)', fg: '#ff3b30', border: '#ff3b30' }
-  };
   function dtSetOpt(groupSelector, val) {
     document.querySelectorAll(groupSelector + ' .dt-opt').forEach(function (o) {
       var active = o.dataset.val === val;
-      var c = DT_OPT_COLORS[o.dataset.val] || { bg: 'var(--blue-tint)', fg: 'var(--blue)', border: 'var(--blue)' };
-      o.style.background = active ? c.bg : '#fff';
-      o.style.color = active ? c.fg : 'var(--ink-soft)';
-      o.style.borderColor = active ? c.border : 'var(--border)';
+      o.classList.toggle('is-on', active);
       o.querySelector('input').checked = active;
     });
   }
@@ -1280,6 +1029,7 @@
     document.getElementById('dt-noRekening').value = tp.no_rekening || '';
     dtSetOpt('#dt-genderOpts', u.jenis_kelamin);
     dtSetOpt('#dt-statusOpts', u.status);
+    document.getElementById('dt-modalSub').textContent = (u.nama || 'Tutor') + (u.email ? ' · ' + u.email : '');
     dtModal.hidden = false;
     requestAnimationFrame(function () { dtModal.classList.add('show'); });
   }
@@ -1338,11 +1088,13 @@
     document.getElementById('dt-confirmTitle').textContent = title;
     document.getElementById('dt-confirmDesc').textContent = desc;
     var okBtn = document.getElementById('dt-confirmOkBtn');
-    okBtn.textContent = okLabel; okBtn.style.background = okColor;
+    var danger = okColor === '#ff3b30';
+    okBtn.textContent = okLabel;
+    okBtn.classList.toggle('is-danger', danger);
     var iconWrap = document.getElementById('dt-confirmIconWrap');
-    iconWrap.style.background = okColor === '#ff3b30' ? 'rgba(255,59,48,.12)' : 'rgba(52,199,89,.12)';
-    iconWrap.style.color = okColor;
-    iconWrap.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    iconWrap.classList.toggle('is-danger', danger);
+    var ico = /^tolak/i.test(title) ? 'ph-user-minus' : (/^hapus/i.test(title) ? 'ph-trash' : 'ph-warning');
+    iconWrap.innerHTML = '<i class="ph ' + ico + '" aria-hidden="true"></i>';
     dtConfirmCallback = callback;
     dtConfirmModal.hidden = false;
     requestAnimationFrame(function () { dtConfirmModal.classList.add('show'); });
@@ -1370,8 +1122,8 @@
   }
 
   var DT_FILTER_DEFS = {
-    mapel: { title: 'Pilih Mapel', allLabel: 'Semua Mapel', multi: true, getOptions: dtGetMapelOptions },
-    gender: { title: 'Pilih Jenis Kelamin', allLabel: 'Semua', multi: false, getOptions: function () { return [{ value: 'L', label: 'Laki-laki' }, { value: 'P', label: 'Perempuan' }]; } }
+    mapel: { title: 'Pilih mapel', allLabel: 'Semua mapel', multi: true, getOptions: dtGetMapelOptions },
+    gender: { title: 'Pilih jenis kelamin', allLabel: 'Semua', multi: false, getOptions: function () { return [{ value: 'L', label: 'Laki-laki' }, { value: 'P', label: 'Perempuan' }]; } }
   };
   var dtPickerCurrentType = null;
   var dtPickerTempSingle = '';
@@ -1438,13 +1190,13 @@
 
     if (!def.multi) {
       var options = def.getOptions();
-      var allRow = '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
-        '<input type="radio" name="dt-picker-opt" class="dt-picker-opt-single" value="" ' + (!dtPickerTempSingle ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+      var allRow = '<label class="gx-opt-row">' +
+        '<input type="radio" name="dt-picker-opt" class="dt-picker-opt-single" value="" ' + (!dtPickerTempSingle ? 'checked' : '') + '>' +
         def.allLabel + '</label>';
       var rows = options.map(function (opt) {
         var checked = dtPickerTempSingle === opt.value;
-        return '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
-          '<input type="radio" name="dt-picker-opt" class="dt-picker-opt-single" value="' + dtEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+        return '<label class="gx-opt-row">' +
+          '<input type="radio" name="dt-picker-opt" class="dt-picker-opt-single" value="' + dtEscape(opt.value) + '" ' + (checked ? 'checked' : '') + '>' +
           dtEscape(opt.label) + '</label>';
       }).join('');
       listEl.innerHTML = allRow + rows;
@@ -1456,10 +1208,7 @@
 
     // Multi-select (Mapel) — pakai search bar di atas daftar
     listEl.innerHTML =
-      '<div style="position:relative; margin-bottom:8px;">' +
-        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
-        '<input type="text" id="dt-pickerSearchInput" placeholder="Cari mapel..." style="width:100%; border:1.5px solid var(--border); border-radius:999px; padding:9px 14px 9px 34px; font-family:var(--font); font-size:12.5px; background:#fff; box-sizing:border-box;">' +
-      '</div>' +
+      '<div class="gx-search" style="margin-top:6px;"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input type="text" id="dt-pickerSearchInput" placeholder="Cari mapel..."></div>' +
       '<div id="dt-pickerRows"></div>';
     document.getElementById('dt-pickerSearchInput').addEventListener('input', function (e) {
       dtPickerSearch = e.target.value.toLowerCase();
@@ -1479,13 +1228,13 @@
     var rowsEl = document.getElementById('dt-pickerRows');
 
     if (!options.length) {
-      rowsEl.innerHTML = '<div style="font-size:12.5px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data.') + '</div>';
+      rowsEl.innerHTML = '<div style="font-size:11px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data.') + '</div>';
       return;
     }
     rowsEl.innerHTML = options.map(function (opt) {
       var checked = dtPickerTempMulti.indexOf(opt.value) !== -1;
-      return '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
-        '<input type="checkbox" class="dt-picker-opt-multi" value="' + dtEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+      return '<label class="gx-opt-row">' +
+        '<input type="checkbox" class="dt-picker-opt-multi" value="' + dtEscape(opt.value) + '" ' + (checked ? 'checked' : '') + '>' +
         dtEscape(opt.label) + '</label>';
     }).join('');
     rowsEl.querySelectorAll('.dt-picker-opt-multi').forEach(function (input) {
@@ -1513,13 +1262,13 @@
   document.getElementById('dt-filterApplyBtn').addEventListener('click', function () {
     dtUpdateFilterBadge();
     dtCloseFilterModal();
-    dtRenderList();
+    dtRenderList(true);
   });
   document.getElementById('dt-filterResetBtn').addEventListener('click', function () {
     dtState.filterMapel = []; dtState.filterGender = '';
     dtUpdateFilterSummary('mapel'); dtUpdateFilterSummary('gender');
     dtUpdateFilterBadge();
     dtCloseFilterModal();
-    dtRenderList();
+    dtRenderList(true);
   });
 </script>
