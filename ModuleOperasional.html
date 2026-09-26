@@ -2,594 +2,397 @@
 <style>
   @media (min-width:900px){
     .module-panel[data-module="operasional"][hidden]{ display:none !important; }
-    .module-panel[data-module="operasional"]:not([hidden]){
-      width:94%; max-width:1500px; margin:0 auto;
-    }
-    .ops-hero-sec{
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-    }
-    .ops-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-    }
-    .ops-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .ops-hero-total-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .ops-hero-sublabel{
-      display: none !important;
-    }
-    .ops-hero-counter{
-      margin-top: 1px !important;
-    }
-    .ops-hero-num{
-      font-size: 18px !important;
-    }
-    .ops-hero-stats-row{
-      flex: none !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 14px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .ops-hero-stat-card{
-      flex: none !important;
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-    }
-    #ops-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
-    #ops-list > .ops-card{ margin-bottom:0 !important; }
+    .module-panel[data-module="operasional"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
+    #ops-list:not(.ops-view-table){ display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:12px; align-items:start; }
     #ops-list > .ops-full-width{ grid-column:1/-1; }
   }
 
-  #ops-modal, #ops-confirmModal, #ops-datePickerModal, #ops-unitPickerModal, #ops-previewModal, #ops-filterModal{
-    align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-    opacity:0; transition:opacity .28s ease;
-  }
-  #ops-modal.show, #ops-confirmModal.show, #ops-datePickerModal.show, #ops-unitPickerModal.show, #ops-previewModal.show, #ops-filterModal.show{ opacity:1; }
-  #ops-modal .modal-sheet, #ops-confirmModal .modal-sheet, #ops-datePickerModal .modal-sheet, #ops-unitPickerModal .modal-sheet, #ops-previewModal .modal-sheet, #ops-filterModal .modal-sheet{
-    border-radius:16px; width:100%; max-width:400px; margin:0 auto; max-height:88vh; overflow-y:auto; padding:16px 18px 18px; box-sizing:border-box;
-    transform:scale(.88) translateY(10px); transition:transform .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #ops-previewModal .modal-sheet{ max-width:500px; }
-  #ops-modal.show .modal-sheet, #ops-confirmModal.show .modal-sheet, #ops-datePickerModal.show .modal-sheet, #ops-unitPickerModal.show .modal-sheet, #ops-previewModal.show .modal-sheet, #ops-filterModal.show .modal-sheet{ transform:scale(1) translateY(0); }
-
-  #ops-modal .modal-actions .btn, #ops-confirmModal .modal-actions .btn, #ops-filterModal .modal-actions .btn, #ops-unitPickerModal .modal-actions .btn, #ops-datePickerModal .modal-actions .btn{
-    height: 36px !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    border-radius: 9px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
-  }
-
-  .ops-group-title{ font-size:10px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
-  .ops-group-title:first-of-type{ margin-top:0; }
-  .ops-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-  .ops-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
-  .ops-row:last-child{ border-bottom:none; }
-  .ops-row label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:2px; }
-  .ops-row input, .ops-row textarea{
-    width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
-    background:none; color:var(--ink); outline:none; resize:none;
-  }
-
-  .ops-dp-day{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:500; color:var(--ink); border-radius:8px; cursor:pointer; background:none; border:none; font-family:var(--font); }
-  .ops-dp-day:hover{ background:var(--surface); }
-  .ops-dp-day.ops-dp-selected{ background:var(--ink-soft); color:#fff; font-weight:600; box-shadow:none !important; }
-  .ops-dp-day.ops-dp-empty{ visibility:hidden; cursor:default; }
-
-  .ops-detail-row{ display:flex; justify-content:space-between; gap:8px; padding:3.5px 0; font-size:10.5px; }
-  .ops-detail-row span:first-child{ color:var(--ink-soft); }
-  .ops-detail-row span:last-child{ color:var(--ink); font-weight:500; text-align:right; }
-
-  .ops-edit-btn{
-    width:100%; height:30px; margin-top:8px;
-    background:var(--surface); color:var(--ink);
-    border:1px solid var(--border); border-radius:7px;
-    padding:0; font-size:11px; font-weight:500;
-    cursor:pointer; font-family:var(--font);
-    display:flex; align-items:center; justify-content:center;
-    transition:background .15s ease;
-  }
-  .ops-edit-btn:active{ transform:scale(.99); background:var(--border); }
-
-  .ops-delete-btn{
-    width: 28px; height: 28px; border-radius: 8px;
-    background: var(--surface); color: var(--ink-soft);
-    border: 1.5px solid var(--border);
-    display: inline-flex; align-items: center; justify-content: center;
-    cursor: pointer; flex: none; padding: 0; box-sizing: border-box;
-    transition: transform .1s ease, background .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .ops-delete-btn:hover{
-    background: #fff;
-    color: var(--ink);
-    border-color: rgba(20, 22, 43, 0.22);
-  }
-  .ops-delete-btn:active{ transform: scale(.9); }
-
-  .ops-preview-btn{
-    display: inline-flex; align-items: center; gap: 6px;
-    height: 28px; padding: 0 10px;
-    border-radius: 8px; border: 1.5px solid var(--border);
-    background: var(--surface); color: var(--ink);
-    font-size: 11px; font-weight: 500; font-family: var(--font);
-    cursor: pointer; flex: none; text-decoration: none;
-    box-sizing: border-box;
-    transition: transform .1s ease, background .15s ease, border-color .15s ease, color .15s ease;
-  }
-  .ops-preview-btn:hover{
-    background: #fff;
-    border-color: rgba(20, 22, 43, 0.22);
-  }
-  .ops-preview-btn:active{ transform: scale(.96); }
-
-  /* Table Icon Buttons — matching Presensi .ps-table-icon-btn */
-  .ops-table-icon-btn{
-    width: 24px !important;
-    height: 24px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-radius: 6px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer;
-    flex: none;
-    background: var(--surface) !important;
-    color: var(--ink-soft) !important;
-    border: 1.5px solid var(--border) !important;
-    box-sizing: border-box !important;
-    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .ops-table-icon-btn:hover{
-    background: #fff !important;
-    color: var(--ink) !important;
-    border-color: rgba(20, 22, 43, 0.22) !important;
-  }
-  .ops-table-icon-btn:active{
-    transform: scale(.9);
+  /* ===== Highlight: total pengeluaran + bar per unit | ring bukti foto + tambah ===== */
+  .ops-hb{position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .opb-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
+  .opb-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(255,156,148,.18), rgba(255,156,148,0) 65%); pointer-events:none;}
+  .opb-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-width:0;}
+  .opb-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72); white-space:nowrap;}
+  .opb-label i{width:6px; height:6px; border-radius:50%; background:#FF9C94; box-shadow:0 0 0 4px rgba(255,156,148,.16);}
+  .opb-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .opb-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; margin-top:8px; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .opb-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .opb-units{display:grid; gap:7px; margin-top:14px; max-width:560px;}
+  .opb-u{display:grid; grid-template-columns:minmax(0,108px) minmax(0,1fr) 64px 34px; align-items:center; gap:10px; font-size:10.5px;}
+  .opb-u .n{color:rgba(255,255,255,.75); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .opb-u .t{height:8px; border-radius:99px; background:rgba(255,255,255,.08); overflow:hidden; min-width:0;}
+  .opb-u .t i{display:block; height:100%; border-radius:99px; background:#FF9C94; transform-origin:left center;}
+  .opb-u b{font-weight:700; color:#fff; font-variant-numeric:tabular-nums; white-space:nowrap; text-align:right;}
+  .opb-u em{font-style:normal; color:rgba(255,255,255,.55); text-align:right; font-variant-numeric:tabular-nums;}
+  .opb-empty{font-size:10.5px; color:rgba(255,255,255,.55); margin-top:14px;}
+  .opb-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:250px;}
+  .opb-ringwrap{display:flex; align-items:center; gap:14px;}
+  .opb-ring{width:64px; height:64px; flex:none; overflow:visible;}
+  .opb-ring circle{fill:none; stroke-width:7;}
+  .opb-ring .tr{stroke:rgba(255,255,255,.1);}
+  .opb-ring .arc{stroke:#7CF0C3; transform:rotate(-90deg); transform-origin:32px 32px; transition:stroke-dasharray .9s cubic-bezier(.16,1,.3,1);}
+  .opb-ring text{fill:#fff; font-family:var(--font); font-size:13px; font-weight:800;}
+  .opb-list{display:grid; gap:6px; flex:1; min-width:150px;}
+  .opb-list div{display:flex; align-items:center; gap:7px; font-size:10.5px; color:rgba(255,255,255,.75); white-space:nowrap;}
+  .opb-list em{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
+  .opb-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .ops-hero-add-btn{height:34px; border-radius:9px; width:100%; background:#fff; color:var(--blue); border:1px solid #fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .ops-hero-add-btn:hover{background:var(--blue-tint);}
+  .ops-hero-add-btn:active{transform:scale(.97);}
+  .ops-hero-add-btn i{font-size:14px;}
+  @keyframes opsGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  .opb-units.ops-anim .t i{animation:opsGrow .9s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 80ms);}
+  @media (max-width:899px){
+    .ops-hb{grid-template-columns:1fr;}
+    .opb-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .opb-num{font-size:28px;}
+    .opb-u{grid-template-columns:minmax(0,84px) minmax(0,1fr) 60px 30px; gap:8px;}
   }
 
-  #ops-list.ops-view-table{
-    display: block !important;
-  }
-  .ops-table-card{
-    background: #fff;
-    border: 1.5px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,.03);
-    margin-bottom: 14px;
-  }
-  .ops-table-wrap{
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .ops-table{
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-family: var(--font);
-    font-size: 11.5px;
-  }
-  .ops-table th{
-    padding: 6px 8px;
-    background: rgba(0,0,0,.025);
-    border-bottom: 1.5px solid var(--border);
-    font-size: 10.5px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: .02em;
-    white-space: nowrap;
-  }
-  .ops-table td{
-    padding: 5px 8px;
-    border-bottom: 1px solid rgba(0,0,0,.05);
-    color: var(--ink);
-    vertical-align: middle;
-    font-size: 11.5px;
-    line-height: 1.3;
-  }
-  .ops-table tbody tr:last-child td{
-    border-bottom: none;
-  }
-  .ops-table tbody tr{
-    transition: background .12s ease;
-  }
-  .ops-table tbody tr:hover{
-    background: rgba(0,122,255,.03);
-  }
-  .ops-table-edit-btn{
-    width:24px !important; height:24px !important; margin:0 !important; padding:0 !important;
-    border-radius:6px !important; background:var(--surface) !important;
-    border:1.5px solid var(--border) !important; display:inline-flex !important;
-    align-items:center !important; justify-content:center !important;
-    cursor:pointer; color:var(--ink-soft); flex:none;
-    transition:background .15s ease, transform .1s ease, color .15s ease, border-color .15s ease;
-  }
-  .ops-table-edit-btn:hover{
-    background: #fff !important;
-    color: var(--ink) !important;
-    border-color: rgba(20, 22, 43, 0.22) !important;
-  }
-  .ops-table-edit-btn:active{ transform:scale(.9); background:var(--border) !important; }
+  /* ===== Toolbar ===== */
+  #ops-searchInput{height:34px !important; border-radius:10px !important; font-size:12px !important;}
+  #ops-searchInput:focus{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #ops-filterBtn, #ops-viewToggleBtn{width:34px !important; height:34px !important; border-radius:10px !important; transition:transform .15s ease, background .15s ease;}
+  #ops-filterBtn:hover, #ops-viewToggleBtn:hover{background:var(--surface) !important;}
+  #ops-filterBtn:active, #ops-viewToggleBtn:active{transform:scale(.9);}
+  #ops-filterCount[hidden]{display:none !important;}
+  @keyframes opsPop{0%{transform:scale(1);} 35%{transform:scale(1.18);} 100%{transform:scale(1);}}
+  .ops-btn-pop{animation:opsPop .32s cubic-bezier(.34,1.56,.64,1);}
+  .ops-list-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;}
+  #ops-sectionLabel{font-size:12px; font-weight:600; color:var(--ink);}
+  #ops-resultCount{display:inline-flex; align-items:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;}
 
-  @keyframes opsPop{
-    0% { transform: scale(1); }
-    35% { transform: scale(1.18); }
-    70% { transform: scale(0.92); }
-    100% { transform: scale(1); }
-  }
-  .ops-btn-pop{
-    animation: opsPop .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #ops-viewToggleBtn:active{
-    transform: scale(.9);
-  }
+  /* ===== Elemen bersama ===== */
+  .ops-ico{width:34px; height:34px; border-radius:10px; background:#FFF1EF; color:#E0574B; display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
+  .ops-unit-chip{display:inline-flex; align-items:center; background:var(--blue-tint); color:var(--blue); font-size:10px; font-weight:600; padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .ops-bukti{display:inline-flex; align-items:center; gap:5px; height:26px; padding:0 9px; border-radius:8px; font-family:var(--font); font-size:10.5px; font-weight:600; white-space:nowrap; flex:none; box-sizing:border-box;}
+  .ops-bukti i{font-size:13px;}
+  button.ops-bukti{background:#E9F7EF; color:#1E8E5A; border:1px solid rgba(30,142,90,.25); cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  button.ops-bukti:hover{background:#DDF2E6;}
+  button.ops-bukti:active{transform:scale(.96);}
+  span.ops-bukti{background:var(--surface); color:var(--ink-soft); border:1px solid var(--border); font-weight:500;}
+  .ops-icon-btn{width:28px; height:28px; padding:0; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex:none; background:#fff; color:var(--ink-soft); border:1px solid var(--border); box-sizing:border-box; transition:background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease; font-size:13px; vertical-align:middle;}
+  .ops-icon-btn:hover{background:var(--surface); color:var(--ink);}
+  .ops-icon-btn:active{transform:scale(.94);}
+  .ops-icon-btn.is-bukti{color:#1E8E5A;} .ops-icon-btn.is-bukti:hover{background:#E9F7EF;}
+  .ops-icon-btn.is-del:hover{background:var(--red-soft); color:var(--red); border-color:rgba(212,7,15,.25);}
+  .ops-muted{color:var(--ink-soft); font-size:10.5px;}
 
-  .ops-sort-th{
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    transition: background .12s ease, color .12s ease;
-  }
-  .ops-sort-th:hover{
-    background: rgba(0,0,0,.045) !important;
-    color: var(--ink) !important;
-  }
-  .ops-sort-th:hover svg{
-    opacity: .75 !important;
-  }
+  /* ===== Tabel ===== */
+  #ops-list.ops-view-table{display:block !important; width:100%; max-width:100%; min-width:0; box-sizing:border-box;}
+  .ops-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:12px; width:100%; box-sizing:border-box;}
+  .ops-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .ops-table{width:100%; min-width:820px; border-collapse:separate; border-spacing:0; text-align:left; font-family:var(--font); font-size:11px;}
+  .ops-table th{padding:11px 12px; background:#fff; border-bottom:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
+  .ops-table th.ops-sort-th{cursor:pointer; user-select:none; -webkit-user-select:none;}
+  .ops-table th.ops-sort-th:hover{color:var(--ink);}
+  .ops-table td{padding:8px 12px; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle; font-size:11px;}
+  .ops-table tbody tr:last-child td{border-bottom:none;}
+  .ops-table tbody tr:hover td{background:#F8F9FD;}
+  .ops-table .ops-no{width:40px; min-width:40px; max-width:40px; box-sizing:border-box; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  .ops-table .ops-stk{position:sticky; z-index:1; background:#fff;}
+  .ops-table th.ops-stk{z-index:2;}
+  .ops-table .ops-stk-no{left:0;}
+  .ops-table .ops-stk-ket{left:40px; box-shadow:1px 0 0 var(--border); min-width:200px; max-width:280px;}
+  .ops-table tbody tr:hover td.ops-stk{background:#F8F9FD;}
+  .ops-table .ops-ket{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;}
+  .ops-table .ops-money{text-align:right; white-space:nowrap; font-weight:700; font-variant-numeric:tabular-nums;}
+  .ops-table .ops-act{text-align:right; white-space:nowrap;}
+  .ops-table .ops-act .ops-icon-btn{margin-left:4px;}
 
-  /* Hero Operasional — matching Presensi & Gaji (gepeng / compact) */
-  .ops-hero-sec{
-    background: var(--ink);
-    color: #fff;
-    border-radius: 14px;
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
-  }
-  .ops-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .ops-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .ops-hero-total-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 3px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .ops-hero-unit-pill{
-    background: rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 500;
-    padding: 3px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .ops-hero-counter{
-    margin-top: 6px;
-  }
-  .ops-hero-sublabel{
-    display: block;
-    font-size: 10.5px;
-    opacity: .65;
-  }
-  .ops-hero-num-wrap{
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    margin-top: 2px;
-  }
-  .ops-hero-num{
-    font-size: 21px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.1;
-  }
-  .ops-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.14);
-    align-items: center;
-  }
-  .ops-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-  .ops-hero-stat-icon{
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .ops-hero-nav-btn{
-    background: rgba(255,255,255,.12);
-    border: none;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    color: #fff;
-    font-size: 15px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-    transition: background .12s ease;
-  }
-  .ops-hero-nav-btn:hover{
-    background: rgba(255,255,255,.24);
-  }
-  .ops-hero-nav-btn:active{
-    transform: scale(.92);
+  /* ===== Kartu ===== */
+  .ops-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:12px; min-width:0; box-sizing:border-box; transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .ops-card:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12); transform:translateY(-1px);}
+  .ops-card.ops-full-width{grid-column:1/-1; text-align:center; color:var(--ink-soft); font-size:11.5px; padding:28px 14px;}
+  .ops-card.ops-full-width:hover{transform:none; box-shadow:none;}
+  .opc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .opc-who{min-width:0; flex:1;}
+  .opc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .opc-who p{font-size:10.5px; color:var(--ink-soft); margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:6px;}
+  .opc-money{text-align:right; flex:none;}
+  .opc-money b{display:block; font-size:13px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .opc-money span{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px;}
+  .opc-foot{display:flex; align-items:center; gap:6px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .opc-foot .ops-grow{flex:1; min-width:0;}
+  .ops-detail-toggle{height:28px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:11px; font-weight:600; padding:0 11px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex:none;}
+  .ops-detail-toggle:hover{background:var(--surface);}
+  .ops-toggle-icon{transition:transform .25s ease;}
+  .ops-wrap{max-height:0; opacity:0; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;}
+  .opc-info{margin-top:10px; background:var(--surface); border-radius:10px; padding:4px 12px;}
+  .opc-info div{display:flex; justify-content:space-between; gap:12px; padding:7px 0; font-size:11px;}
+  .opc-info div + div{border-top:1px solid #E7E9F2;}
+  .opc-info span{color:var(--ink-soft); flex:none;}
+  .opc-info b{font-weight:500; color:var(--ink); text-align:right; min-width:0; word-break:break-word;}
+  .opc-actions{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;}
+  .opc-actions button{height:32px; border-radius:9px; font-family:var(--font); font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;}
+  .opc-actions .ops-edit-btn{background:var(--blue); color:#fff; border:none;}
+  .opc-actions .ops-delete-btn{background:#fff; color:var(--red); border:1px solid rgba(212,7,15,.3);}
+  .opc-actions .ops-delete-btn:hover{background:var(--red-soft);}
+
+  /* ===== Popup ===== */
+  #ops-modal, #ops-confirmModal, #ops-datePickerModal, #ops-unitPickerModal, #ops-previewModal, #ops-filterModal{align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;}
+  #ops-modal.show, #ops-confirmModal.show, #ops-datePickerModal.show, #ops-unitPickerModal.show, #ops-previewModal.show, #ops-filterModal.show{opacity:1;}
+  #ops-previewModal .modal-sheet.gx-sheet{max-width:500px !important;}
+  .gx-sheet .gx-row textarea{width:100%; box-sizing:border-box; min-height:62px; padding:8px 11px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-family:var(--font); font-size:11.5px; color:var(--ink); outline:none; resize:vertical; line-height:1.45; transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;}
+  .gx-sheet .gx-row textarea:focus{border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .gx-sheet .gx-row textarea::placeholder{color:#9A9EB3;}
+  .ops-money-input{position:relative;}
+  .ops-money-input span{position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:11.5px; color:var(--ink-soft); pointer-events:none;}
+  .gx-sheet .gx-row .ops-money-input input{padding-left:32px; font-variant-numeric:tabular-nums;}
+  .ops-file{display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px dashed #C9CCDA; border-radius:10px; background:var(--surface); cursor:pointer; transition:border-color .15s ease, background .15s ease;}
+  .ops-file:hover{border-color:var(--blue); background:#fff;}
+  .ops-file input{display:none;}
+  .ops-file .ops-ico{width:32px; height:32px; background:var(--blue-tint); color:var(--blue);}
+  .ops-file.has-file .ops-ico{background:#E9F7EF; color:#1E8E5A;}
+  .ops-file-t{min-width:0; flex:1; display:block;}
+  .ops-file-t b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .ops-file-t span{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px;}
+  #ops-fotoExistingWrap[hidden]{display:none !important;}
+  .ops-dp-nav{display:flex; align-items:center; justify-content:space-between; gap:6px; margin:14px 0 10px;}
+  .ops-dp-nav button{width:28px; height:28px; border-radius:8px; border:none; background:var(--surface); color:var(--ink); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px;}
+  .ops-dp-nav button:hover{background:#EBEDF5;}
+  #ops-dpMonthYear{font-size:12px; font-weight:600; color:var(--ink); flex:1; text-align:center;}
+  .ops-dp-week{display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;}
+  .ops-dp-week span{text-align:center; font-size:10px; font-weight:500; color:var(--ink-soft); padding:3px 0;}
+  #ops-dpGrid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px; padding-bottom:10px;}
+  .ops-dp-day{aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:500; color:var(--ink); border-radius:8px; cursor:pointer; background:none; border:none; font-family:var(--font);}
+  .ops-dp-day:hover{background:var(--surface);}
+  .ops-dp-day.ops-dp-today{box-shadow:inset 0 0 0 1.5px var(--blue); color:var(--blue);}
+  .ops-dp-day.ops-dp-selected{background:var(--blue); color:#fff; font-weight:600; box-shadow:none;}
+  .ops-dp-day.ops-dp-empty{visibility:hidden; cursor:default;}
+  .ops-unit-opt .ops-check{margin-left:auto; color:var(--blue); font-size:14px; visibility:hidden;}
+  .ops-unit-opt.is-on{font-weight:600;}
+  .ops-unit-opt.is-on .ops-check{visibility:visible;}
+  .ops-unit-opt .ops-uico{width:26px; height:26px; border-radius:8px; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:13px; flex:none;}
+  .ops-unit-opt.is-on .ops-uico{background:var(--blue-tint); color:var(--blue);}
+  .ops-preview-box{position:relative; width:100%; min-height:200px; max-height:56vh; background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:14px 0 10px;}
+  #ops-previewImg{display:none; width:100%; max-height:56vh; object-fit:contain;}
+  #ops-previewSpinner{display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--ink-soft); font-size:11px;}
+  #ops-previewError{text-align:center; padding:16px 12px; font-size:11px; color:var(--ink-soft);}
+  #ops-previewError i{font-size:22px; color:#E0574B; display:block; margin-bottom:6px;}
+  #ops-previewErrorLink{color:var(--blue); font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;}
+
+  /* ===== Animasi ===== */
+  @keyframes opsIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes opsFade{from{opacity:0;} to{opacity:1;}}
+  #ops-list .ops-card.ops-in{animation:opsIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #ops-list .ops-table tbody tr.ops-in td{animation:opsFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
+  @media (prefers-reduced-motion: reduce){
+    #ops-list .ops-card.ops-in, #ops-list .ops-table tbody tr.ops-in td, .opb-units.ops-anim .t i, .ops-btn-pop{animation:none !important;}
+    .opb-ring .arc, .ops-wrap, .ops-toggle-icon{transition:none;}
+    .ops-card:hover{transform:none;}
   }
 </style>
 
-  <!-- Hero -->
-  <div class="ops-hero-sec">
-    <div class="ops-hero-main-col">
-      <div class="ops-hero-badges">
-        <span class="ops-hero-total-pill">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block; flex:none;"></span>
-          OPERASIONAL
-        </span>
-        <span class="ops-hero-unit-pill" id="ops-heroUnitBadge">-</span>
+  <!-- Highlight -->
+  <div class="ops-hb">
+    <div class="opb-main">
+      <div class="opb-top">
+        <span class="opb-label"><i></i><span id="ops-heroPeriode">Pengeluaran bulan ini</span></span>
+        <span class="opb-pill"><span id="ops-heroCount">0</span> transaksi</span>
+        <span class="opb-pill" id="ops-heroUnitBadge">-</span>
       </div>
-      <div class="ops-hero-counter">
-        <div class="ops-hero-sublabel">Total Pengeluaran Bulan Ini</div>
-        <div class="ops-hero-num-wrap">
-          <span class="ops-hero-num" id="ops-heroTotal">Rp 0</span>
+      <div class="opb-num" id="ops-heroTotal">Rp 0</div>
+      <div class="opb-sub" id="ops-heroSub">-</div>
+      <div id="ops-heroUnits" class="opb-units" aria-label="Pengeluaran per unit"></div>
+    </div>
+    <div class="opb-side">
+      <div class="opb-ringwrap">
+        <svg class="opb-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="tr" cx="32" cy="32" r="25"/>
+          <circle class="arc" id="ops-heroRingArc" cx="32" cy="32" r="25" stroke-dasharray="0 157.08" stroke-linecap="round"/>
+          <text id="ops-heroRingPct" x="32" y="36.5" text-anchor="middle">0%</text>
+        </svg>
+        <div class="opb-list">
+          <div><em style="background:#7CF0C3;"></em>Ada bukti foto<b id="ops-heroBukti">0</b></div>
+          <div><em style="background:rgba(255,255,255,.25);"></em>Belum ada bukti<b id="ops-heroNoBukti">0</b></div>
+          <div><em style="background:#FF9C94;"></em>Rata-rata<b id="ops-heroAvg">Rp 0</b></div>
         </div>
       </div>
+      <button type="button" id="ops-addBtn" class="ops-hero-add-btn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah pengeluaran</button>
     </div>
 
-    <div class="ops-hero-stats-row">
-      <div class="ops-hero-stat-card" id="ops-periodeNavCard" style="gap:8px;">
-        <button type="button" id="ops-prevMonthBtn" class="ops-hero-nav-btn" title="Bulan Sebelumnya">&lsaquo;</button>
-        <span id="ops-monthLabel" style="font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; padding:0 4px;" title="Pilih Periode">-</span>
-        <button type="button" id="ops-nextMonthBtn" class="ops-hero-nav-btn" title="Bulan Berikutnya">&rsaquo;</button>
-      </div>
-      <div class="ops-hero-stat-card" style="min-width:110px;">
-        <span class="ops-hero-stat-icon" style="background:rgba(0,122,255,.2); color:#5ac8fa;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div style="font-size:9.5px; opacity:.65; white-space:nowrap;">Jumlah Transaksi</div>
-          <div style="font-size:13.5px; font-weight:600; margin-top:1px;" id="ops-heroCount">0</div>
-        </div>
-      </div>
+    <!-- Navigasi periode lama: disembunyikan (periode dipilih dari header), hook JS tetap ada -->
+    <div id="ops-periodeNavCard" hidden>
+      <button type="button" id="ops-prevMonthBtn" title="Bulan sebelumnya">&lsaquo;</button>
+      <span id="ops-monthLabel" title="Pilih periode">-</span>
+      <button type="button" id="ops-nextMonthBtn" title="Bulan berikutnya">&rsaquo;</button>
     </div>
   </div>
 
   <div id="ops-desktopAnchor"></div>
 
-  <!-- Search + Filter + Add -->
+  <!-- Pencarian, filter, ganti tampilan -->
   <div class="ops-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
     <div style="flex:1; position:relative;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" id="ops-searchInput" placeholder="Cari keterangan pengeluaran..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
     </div>
-    <button id="ops-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
+    <button id="ops-filterBtn" type="button" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
       <span id="ops-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
     </button>
-    <button id="ops-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
-    </button>
-    <button id="ops-addBtn" aria-label="Tambah pengeluaran" style="width:32px; height:32px; border-radius:8px; background:var(--blue); color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;">
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    </button>
+    <button id="ops-viewToggleBtn" type="button" aria-label="Tampilkan sebagai tabel" title="Tampilkan sebagai tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;"></button>
   </div>
 
-  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-    <div id="ops-sectionLabel" style="font-size:11.5px; color:var(--ink-soft); font-weight:500;">Daftar Pengeluaran</div>
-    <span id="ops-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Transaksi</span>
+  <div class="ops-list-head">
+    <div id="ops-sectionLabel">Daftar pengeluaran</div>
+    <div id="ops-resultCount">0 transaksi</div>
   </div>
 
-  <div id="ops-list">
+  <div id="ops-list" data-genio-masonry>
     <div class="empty-state">Memuat data operasional...</div>
   </div>
 
-  <!-- Modal Tambah/Edit -->
+  <!-- Popup tambah / edit pengeluaran -->
   <div class="modal-overlay" id="ops-modal" hidden>
-    <div class="modal-sheet">
-      <h3 id="ops-modalTitle" style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Tambah Pengeluaran</h3>
-      <div id="ops-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-      <input type="hidden" id="ops-editId">
-
-      <div class="ops-group-title">Unit</div>
-      <div class="ops-group" style="margin-bottom:4px;">
-        <div class="ops-row"><label for="ops-unitBtn">Unit / Cabang</label>
-          <button type="button" id="ops-unitBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ops-unitLabel">Pilih unit...</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-          </button>
-          <input type="hidden" id="ops-unitId">
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-receipt" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3 id="ops-modalTitle">Tambah pengeluaran</h3>
+          <p class="gx-sub">Catat biaya operasional per unit beserta buktinya.</p>
         </div>
+        <button type="button" class="gx-close" id="ops-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
+      <div class="gx-body">
+        <div id="ops-modalAlert" class="alert alert-error" hidden></div>
+        <input type="hidden" id="ops-editId">
 
-      <div class="ops-group-title">Tanggal &amp; Nominal</div>
-      <div class="ops-group" style="margin-bottom:4px;">
-        <div class="ops-row"><label for="ops-tglBtn">Tanggal</label>
-          <button type="button" id="ops-tglBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-            <span id="ops-tglLabel">Pilih tanggal...</span>
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          </button>
-          <input type="hidden" id="ops-tgl">
+        <div class="gx-step-title"><span class="gx-step">1</span>Unit dan tanggal</div>
+        <div class="gx-2col">
+          <div class="gx-row"><label for="ops-unitBtn">Unit <em class="gx-req">wajib</em></label>
+            <button type="button" id="ops-unitBtn" class="gx-field"><span id="ops-unitLabel">Pilih unit...</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+            <input type="hidden" id="ops-unitId">
+          </div>
+          <div class="gx-row"><label for="ops-tglBtn">Tanggal <em class="gx-req">wajib</em></label>
+            <button type="button" id="ops-tglBtn" class="gx-field"><span id="ops-tglLabel">Pilih tanggal...</span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
+            <input type="hidden" id="ops-tgl">
+          </div>
         </div>
-        <div class="ops-row"><label for="ops-nominal">Nominal (Rp)</label><input type="number" id="ops-nominal" placeholder="mis. 150000"></div>
-      </div>
 
-      <div class="ops-group-title">Keterangan</div>
-      <div class="ops-group" style="margin-bottom:4px;">
-        <div class="ops-row"><label for="ops-keterangan">Deskripsi Pengeluaran</label><textarea id="ops-keterangan" rows="2" placeholder="mis. Beli spidol &amp; kertas untuk unit"></textarea></div>
-      </div>
-
-      <div class="ops-group-title">Bukti Foto (Opsional)</div>
-      <div class="ops-group">
-        <div class="ops-row">
-          <input type="file" id="ops-fotoFile" accept="image/*" style="font-size:11px;">
-          <div id="ops-fotoExistingWrap" hidden style="margin-top:6px; font-size:10.5px; color:var(--ink-soft);">Foto sudah ada. Pilih file baru untuk mengganti.</div>
+        <div class="gx-step-title"><span class="gx-step">2</span>Nominal dan keterangan</div>
+        <div class="gx-row"><label for="ops-nominal">Nominal <em class="gx-req">wajib</em></label>
+          <div class="ops-money-input"><span>Rp</span><input type="number" id="ops-nominal" inputmode="numeric" placeholder="mis. 150000"></div>
         </div>
-      </div>
+        <div class="gx-row"><label for="ops-keterangan">Keterangan <em class="gx-req">wajib</em></label><textarea id="ops-keterangan" rows="2" placeholder="mis. Beli spidol dan kertas untuk unit"></textarea></div>
 
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="ops-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; padding:0 14px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="ops-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; padding:0 14px; flex:1;">Simpan</button>
+        <div class="gx-step-title"><span class="gx-step">3</span>Bukti foto <em class="gx-opt">opsional</em></div>
+        <label class="ops-file" id="ops-fotoBox" for="ops-fotoFile">
+          <input type="file" id="ops-fotoFile" accept="image/*">
+          <span class="ops-ico"><i class="ph ph-upload-simple" aria-hidden="true"></i></span>
+          <span class="ops-file-t">
+            <b id="ops-fotoName">Pilih foto nota atau struk</b>
+            <span id="ops-fotoHint">JPG atau PNG, diunggah ke Google Drive</span>
+          </span>
+        </label>
+        <div id="ops-fotoExistingWrap" class="gx-note" hidden><i class="ph ph-image" aria-hidden="true"></i><span>Foto bukti sudah ada. Pilih file baru hanya jika ingin menggantinya.</span></div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="ops-cancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="ops-saveBtn">Simpan</button>
       </div>
     </div>
   </div>
 
-  <!-- Popup Pilih Unit -->
+  <!-- Popup pilih unit -->
   <div class="modal-overlay" id="ops-unitPickerModal" hidden style="z-index:70;">
-    <div class="modal-sheet" style="max-width:340px;">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih Unit</h3>
-      <div id="ops-unitPickerList"></div>
-      <div class="modal-actions" style="margin-top:12px;">
-        <button type="button" class="btn btn-outline" id="ops-unitPickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Batal</button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-buildings" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Pilih unit</h3><p class="gx-sub">Unit yang menanggung pengeluaran ini.</p></div>
+      </div>
+      <div class="gx-body"><div id="ops-unitPickerList" style="padding:6px 0;"></div></div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="ops-unitPickerCancelBtn">Batal</button>
       </div>
     </div>
   </div>
 
-  <!-- Popup Kalender -->
+  <!-- Popup kalender -->
   <div class="modal-overlay" id="ops-datePickerModal" hidden style="z-index:70;">
-    <div class="modal-sheet" style="max-width:320px;">
-      <h3 style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih Tanggal</h3>
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-        <button type="button" id="ops-dpPrevYear" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&laquo;</button>
-        <button type="button" id="ops-dpPrevMonth" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&lsaquo;</button>
-        <span id="ops-dpMonthYear" style="font-size:12.5px; font-weight:600; color:var(--ink);">-</span>
-        <button type="button" id="ops-dpNextMonth" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:14px; display:inline-flex; align-items:center; justify-content:center;">&rsaquo;</button>
-        <button type="button" id="ops-dpNextYear" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; cursor:pointer; color:var(--ink); font-size:13px; display:inline-flex; align-items:center; justify-content:center;">&raquo;</button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-calendar-blank" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Pilih tanggal</h3><p class="gx-sub">Tanggal transaksi dilakukan.</p></div>
+        <button type="button" class="gx-close" id="ops-dpCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-      <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;">
-        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Min</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Sen</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Sel</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Rab</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Kam</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Jum</span>
-        <span style="text-align:center; font-size:9.5px; font-weight:500; color:var(--ink-soft); padding:3px 0;">Sab</span>
+      <div class="gx-body">
+        <div class="ops-dp-nav">
+          <button type="button" id="ops-dpPrevYear" aria-label="Tahun sebelumnya"><i class="ph ph-caret-double-left" aria-hidden="true"></i></button>
+          <button type="button" id="ops-dpPrevMonth" aria-label="Bulan sebelumnya"><i class="ph ph-caret-left" aria-hidden="true"></i></button>
+          <span id="ops-dpMonthYear">-</span>
+          <button type="button" id="ops-dpNextMonth" aria-label="Bulan berikutnya"><i class="ph ph-caret-right" aria-hidden="true"></i></button>
+          <button type="button" id="ops-dpNextYear" aria-label="Tahun berikutnya"><i class="ph ph-caret-double-right" aria-hidden="true"></i></button>
+        </div>
+        <div class="ops-dp-week"><span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span></div>
+        <div id="ops-dpGrid"></div>
       </div>
-      <div id="ops-dpGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px;"></div>
     </div>
   </div>
 
-  <!-- Modal Konfirmasi Hapus -->
+  <!-- Popup konfirmasi hapus -->
   <div class="modal-overlay" id="ops-confirmModal" hidden>
-    <div class="modal-sheet" style="max-width:360px;">
-      <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-confirm">
+        <span class="gx-head-ico is-danger"><i class="ph ph-trash" aria-hidden="true"></i></span>
+        <h3>Hapus catatan ini?</h3>
+        <p>Data pengeluaran ini akan dihapus permanen.</p>
       </div>
-      <h3 style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 4px;">Hapus Catatan Ini?</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;">Data pengeluaran ini akan dihapus permanen.</p>
-      <div class="modal-actions" style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-outline" id="ops-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="ops-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1; background:var(--red);">Ya, Hapus</button>
+      <div class="modal-actions gx-foot" style="border-top:none;">
+        <button type="button" class="btn btn-outline" id="ops-confirmCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary is-danger" id="ops-confirmOkBtn">Ya, hapus</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Preview Bukti Transaksi -->
+  <!-- Popup bukti transaksi -->
   <div class="modal-overlay" id="ops-previewModal" hidden style="z-index:90;">
-    <div class="modal-sheet" style="max-width:500px;">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-        <h3 id="ops-previewTitle" style="margin:0; font-size:13.5px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Bukti Transaksi</h3>
-        <button type="button" id="ops-previewCloseX" aria-label="Tutup" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft); flex:none;">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-
-      <div style="position:relative; width:100%; min-height:180px; max-height:52vh; background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
-        <div id="ops-previewSpinner" style="display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--ink-soft); font-size:11px; font-weight:500;">
-          <span class="spinner" style="border-color:rgba(20,22,43,.2); border-top-color:var(--blue); width:22px; height:22px;"></span>
-          <span>Memuat foto...</span>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-image" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3 id="ops-previewTitle" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Bukti transaksi</h3>
+          <p class="gx-sub">Bukti transaksi</p>
         </div>
-        <img id="ops-previewImg" alt="Bukti Transaksi" style="display:none; width:100%; max-height:52vh; object-fit:contain; border-radius:12px;">
-        <div id="ops-previewError" hidden style="text-align:center; padding:16px 12px; font-size:11.5px; color:var(--ink-soft);">
-          <div style="font-size:20px; margin-bottom:4px;">&#9888;</div>
-          Foto tidak dapat dimuat langsung.<br>
-          <a id="ops-previewErrorLink" href="#" target="_blank" rel="noopener noreferrer" style="color:var(--blue); font-weight:500; text-decoration:none; margin-top:6px; display:inline-block;">Buka di Google Drive &rarr;</a>
+        <button type="button" class="gx-close" id="ops-previewCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="gx-body">
+        <div class="ops-preview-box">
+          <div id="ops-previewSpinner">
+            <span class="spinner" style="border-color:rgba(20,22,43,.2); border-top-color:var(--blue); width:22px; height:22px;"></span>
+            <span>Memuat foto...</span>
+          </div>
+          <img id="ops-previewImg" alt="Bukti transaksi">
+          <div id="ops-previewError" hidden>
+            <i class="ph ph-warning-circle" aria-hidden="true"></i>
+            Foto tidak dapat dimuat langsung.<br>
+            <a id="ops-previewErrorLink" href="#" target="_blank" rel="noopener noreferrer">Buka di Google Drive</a>
+          </div>
         </div>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px;">
-        <a id="ops-previewExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:11.5px; height:32px; border-radius:8px; padding:0 12px; flex:1;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          Buka di Tab Baru
-        </a>
-        <button type="button" class="btn btn-primary" id="ops-previewCloseBtn" style="font-size:11.5px; height:32px; border-radius:8px; padding:0 14px; flex:none;">Tutup</button>
+      <div class="modal-actions gx-foot">
+        <a id="ops-previewExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px;"><i class="ph ph-arrow-square-out" aria-hidden="true"></i>Buka di tab baru</a>
+        <button type="button" class="btn btn-primary" id="ops-previewCloseBtn">Tutup</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Filter Operasional (Unit Saja) -->
+  <!-- Popup filter -->
   <div class="modal-overlay" id="ops-filterModal" hidden style="z-index:75;">
-    <div class="modal-sheet" style="max-width:380px;">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Filter Operasional</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring data pengeluaran berdasarkan unit / cabang.</p>
-
-      <div class="ops-group-title">Unit / Cabang</div>
-      <div class="ops-group" style="margin-bottom:14px;">
-        <div id="ops-filterUnitList" style="max-height:220px; overflow-y:auto;"></div>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-funnel-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Filter operasional</h3><p class="gx-sub">Saring pengeluaran berdasarkan unit.</p></div>
+        <button type="button" class="gx-close" id="ops-filterCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-outline" id="ops-filterResetBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Reset</button>
-        <button type="button" class="btn btn-primary" id="ops-filterApplyBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Terapkan Filter</button>
+      <div class="gx-body">
+        <div class="gx-step-title"><span class="gx-step">1</span>Unit</div>
+        <div id="ops-filterUnitList" style="max-height:260px; overflow-y:auto; padding-bottom:4px;"></div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="ops-filterResetBtn">Reset</button>
+        <button type="button" class="btn btn-primary" id="ops-filterApplyBtn">Terapkan filter</button>
       </div>
     </div>
   </div>
@@ -613,11 +416,13 @@
   });
 
   var OPS_BULAN_NAMA = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  var OPS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var OPS_RING_LEN = 2 * Math.PI * 25;
 
   var opsState = {
     itemList: [], unitOptions: [], search: '', filterUnit: '', initialized: false,
     viewYear: new Date().getFullYear(), viewMonth: new Date().getMonth(),
-    sortField: 'tanggal', sortDir: 'desc',
+    sortField: 'tanggal', sortDir: 'desc', openCard: null,
     viewMode: (function () {
       try { return localStorage.getItem('genio_ops_view_mode') || 'cards'; } catch (e) { return 'cards'; }
     })()
@@ -629,6 +434,15 @@
     return d.innerHTML;
   }
   function opsFormatRp(n) { return 'Rp ' + Math.round(n || 0).toLocaleString('id-ID'); }
+  function opsFormatShort(n) {
+    n = Math.round(parseFloat(n) || 0);
+    var abs = Math.abs(n);
+    function fmt(v) { return (Math.round(v * 10) / 10).toLocaleString('id-ID', { maximumFractionDigits: 1 }); }
+    if (abs >= 1e9) return 'Rp ' + fmt(n / 1e9) + ' M';
+    if (abs >= 1e6) return 'Rp ' + fmt(n / 1e6) + ' Jt';
+    if (abs >= 1e3) return 'Rp ' + fmt(n / 1e3) + ' rb';
+    return 'Rp ' + n.toLocaleString('id-ID');
+  }
   function opsFormatTglPanjang(iso) {
     if (!iso) return null;
     var parts = iso.split('-');
@@ -638,6 +452,36 @@
     if (!iso) return '-';
     var parts = iso.split('-');
     return parseInt(parts[2], 10) + ' ' + OPS_BULAN_NAMA[parseInt(parts[1], 10) - 1].slice(0, 3) + ' ' + parts[0];
+  }
+  function opsUnitName(r) { return (r.units && r.units.nama_unit) ? r.units.nama_unit : ''; }
+
+  function opsCountUpRp(el, to) {
+    if (!el) return;
+    if (OPS_REDUCED_MOTION || !to) { el.textContent = opsFormatShort(to); return; }
+    var start = null, dur = 800;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = opsFormatShort(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function opsShowModal(el) {
+    el.hidden = false;
+    el.removeAttribute('hidden');
+    el.style.display = 'flex';
+    requestAnimationFrame(function () { el.classList.add('show'); });
+  }
+  function opsHideModal(el, after) {
+    el.classList.remove('show');
+    setTimeout(function () {
+      el.hidden = true;
+      el.setAttribute('hidden', '');
+      el.style.display = 'none';
+      if (after) after();
+    }, 280);
   }
 
   function opsInit() {
@@ -660,7 +504,7 @@
             var currentVal = opsState.viewYear + '-' + String(opsState.viewMonth + 1).padStart(2, '0');
             genioOpenMonthYearPicker({
               currentValue: currentVal,
-              title: 'Periode Operasional',
+              title: 'Periode operasional',
               onSelect: function (val) {
                 var parts = val.split('-');
                 opsState.viewYear = parseInt(parts[0], 10);
@@ -674,54 +518,44 @@
 
       document.getElementById('ops-searchInput').addEventListener('input', function (e) {
         opsState.search = e.target.value.toLowerCase();
-        opsRenderList();
+        opsRenderList(false);
       });
 
-      var filterBtn = document.getElementById('ops-filterBtn');
-      if (filterBtn) filterBtn.addEventListener('click', opsOpenFilterModal);
-      var viewToggleBtn = document.getElementById('ops-viewToggleBtn');
-      if (viewToggleBtn) viewToggleBtn.addEventListener('click', opsToggleViewMode);
-      var filterApplyBtn = document.getElementById('ops-filterApplyBtn');
-      if (filterApplyBtn) {
-        filterApplyBtn.addEventListener('click', function () {
-          var checked = document.querySelector('input[name="opsFilterUnitRadio"]:checked');
-          opsState.filterUnit = checked ? checked.value : '';
-          opsUpdateFilterBadge();
-          opsCloseFilterModal();
-          opsRenderList();
-        });
-      }
-      var filterResetBtn = document.getElementById('ops-filterResetBtn');
-      if (filterResetBtn) {
-        filterResetBtn.addEventListener('click', function () {
-          opsState.filterUnit = '';
-          opsUpdateFilterBadge();
-          opsCloseFilterModal();
-          opsRenderList();
-        });
-      }
-      var filterModal = document.getElementById('ops-filterModal');
-      if (filterModal) {
-        filterModal.addEventListener('click', function (e) {
-          if (e.target === this) opsCloseFilterModal();
-        });
-      }
+      document.getElementById('ops-filterBtn').addEventListener('click', opsOpenFilterModal);
+      document.getElementById('ops-filterCloseX').addEventListener('click', opsCloseFilterModal);
+      document.getElementById('ops-viewToggleBtn').addEventListener('click', opsToggleViewMode);
+      document.getElementById('ops-filterApplyBtn').addEventListener('click', function () {
+        var checked = document.querySelector('input[name="opsFilterUnitRadio"]:checked');
+        opsState.filterUnit = checked ? checked.value : '';
+        opsUpdateFilterBadge();
+        opsCloseFilterModal();
+        opsRenderList(true);
+      });
+      document.getElementById('ops-filterResetBtn').addEventListener('click', function () {
+        opsState.filterUnit = '';
+        opsUpdateFilterBadge();
+        opsCloseFilterModal();
+        opsRenderList(true);
+      });
 
       document.getElementById('ops-addBtn').addEventListener('click', function () { opsOpenModal(null); });
       document.getElementById('ops-cancelBtn').addEventListener('click', opsCloseModal);
+      document.getElementById('ops-modalCloseX').addEventListener('click', opsCloseModal);
       document.getElementById('ops-saveBtn').addEventListener('click', opsSubmitForm);
+      document.getElementById('ops-fotoFile').addEventListener('change', opsUpdateFotoBox);
       document.getElementById('ops-confirmCancelBtn').addEventListener('click', opsCloseConfirm);
       document.getElementById('ops-confirmOkBtn').addEventListener('click', async function () {
         var btn = this;
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Menghapus...';
         try { if (opsConfirmCallback) await opsConfirmCallback(); }
-        finally { btn.disabled = false; btn.textContent = 'Ya, Hapus'; opsCloseConfirm(); }
+        finally { btn.disabled = false; btn.textContent = 'Ya, hapus'; opsCloseConfirm(); }
       });
 
       document.getElementById('ops-unitBtn').addEventListener('click', opsOpenUnitPicker);
       document.getElementById('ops-unitPickerCancelBtn').addEventListener('click', opsCloseUnitPicker);
       document.getElementById('ops-tglBtn').addEventListener('click', opsOpenDatePicker);
+      document.getElementById('ops-dpCloseX').addEventListener('click', opsCloseDatePicker);
       document.getElementById('ops-dpPrevMonth').addEventListener('click', function () {
         opsDpViewMonth--; if (opsDpViewMonth < 0) { opsDpViewMonth = 11; opsDpViewYear--; }
         opsRenderDatePicker();
@@ -735,8 +569,11 @@
 
       document.getElementById('ops-previewCloseBtn').addEventListener('click', opsClosePreview);
       document.getElementById('ops-previewCloseX').addEventListener('click', opsClosePreview);
-      document.getElementById('ops-previewModal').addEventListener('click', function (e) {
-        if (e.target === this) opsClosePreview();
+
+      // Klik di luar popup menutupnya
+      [['ops-modal', opsCloseModal], ['ops-unitPickerModal', opsCloseUnitPicker], ['ops-datePickerModal', opsCloseDatePicker],
+       ['ops-confirmModal', opsCloseConfirm], ['ops-previewModal', opsClosePreview], ['ops-filterModal', opsCloseFilterModal]].forEach(function (p) {
+        document.getElementById(p[0]).addEventListener('click', function (e) { if (e.target === this) p[1](); });
       });
 
       var opsListEl = document.getElementById('ops-list');
@@ -746,27 +583,32 @@
           var sortTh = e.target.closest('.ops-sort-th');
           if (sortTh) {
             e.preventDefault();
-            var field = sortTh.dataset.sort || sortTh.getAttribute('data-sort');
-            if (field) opsHandleSort(field);
+            if (sortTh.dataset.sort) opsHandleSort(sortTh.dataset.sort);
             return;
           }
           var prevBtn = e.target.closest('.ops-preview-btn');
           if (prevBtn) {
             e.preventDefault();
-            opsOpenPreview(prevBtn.dataset.url || prevBtn.getAttribute('data-url'), prevBtn.dataset.ket || prevBtn.getAttribute('data-ket'));
+            opsOpenPreview(prevBtn.dataset.url, prevBtn.dataset.ket);
+            return;
+          }
+          var toggle = e.target.closest('.ops-detail-toggle');
+          if (toggle) {
+            e.preventDefault();
+            opsToggleCard(toggle);
             return;
           }
           var editBtn = e.target.closest('.ops-edit-btn');
           if (editBtn) {
             e.preventDefault();
-            opsOpenModal(editBtn.dataset.id || editBtn.getAttribute('data-id'));
+            opsOpenModal(editBtn.dataset.id);
             return;
           }
           var delBtn = e.target.closest('.ops-delete-btn');
           if (delBtn) {
             e.preventDefault();
-            var delId = delBtn.dataset.id || delBtn.getAttribute('data-id');
-            opsOpenConfirm(function () { opsDelete(delId); });
+            var delId = delBtn.dataset.id;
+            opsOpenConfirm(function () { return opsDelete(delId); });
             return;
           }
         });
@@ -798,7 +640,7 @@
       if (!toolbarRow) {
         toolbarRow = document.createElement('div');
         toolbarRow.id = 'ops-toolbarRow';
-        toolbarRow.style.cssText = 'margin-bottom:14px;';
+        toolbarRow.style.cssText = 'margin-bottom:12px;';
         anchor.parentNode.insertBefore(toolbarRow, anchor.nextSibling);
       }
       var searchEl = document.querySelector('.ops-search-sec');
@@ -807,7 +649,7 @@
       var cursor = anchor;
       OPS_MOBILE_ORDER.forEach(function (sel) {
         var el = document.querySelector(sel);
-        if (el) { el.style.marginBottom = '14px'; cursor.parentNode.insertBefore(el, cursor.nextSibling); cursor = el; }
+        if (el) { el.style.marginBottom = '12px'; cursor.parentNode.insertBefore(el, cursor.nextSibling); cursor = el; }
       });
       toolbarRow.remove();
     }
@@ -815,7 +657,9 @@
 
   async function opsLoadAll() {
     var listEl = document.getElementById('ops-list');
-    document.getElementById('ops-monthLabel').textContent = OPS_BULAN_NAMA[opsState.viewMonth] + ' ' + opsState.viewYear;
+    var periodeLabel = OPS_BULAN_NAMA[opsState.viewMonth] + ' ' + opsState.viewYear;
+    document.getElementById('ops-monthLabel').textContent = periodeLabel;
+    document.getElementById('ops-heroPeriode').textContent = 'Pengeluaran ' + periodeLabel;
     try {
       var s = genioGetSession();
       var mulai = opsState.viewYear + '-' + String(opsState.viewMonth + 1).padStart(2, '0') + '-01';
@@ -826,21 +670,76 @@
 
       await opsEnsureUnitOptions();
       opsUpdateFilterBadge();
-
-      var total = opsState.itemList.reduce(function (a, r) { return a + parseFloat(r.nominal || 0); }, 0);
-      document.getElementById('ops-heroTotal').textContent = opsFormatRp(total);
-      document.getElementById('ops-heroCount').textContent = opsState.itemList.length;
-      document.getElementById('ops-heroUnitBadge').textContent = opsState.unitOptions.length + ' Unit';
-
-      opsRenderList();
+      opsRenderHero();
+      opsRenderList(true);
     } catch (err) {
-      listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + opsEscape(err.message) + '</div>';
+      listEl.classList.remove('ops-view-table');
+      listEl.innerHTML = '<div class="ops-card ops-full-width">Gagal memuat data: ' + opsEscape(err.message) + '</div>';
     }
+  }
+
+  function opsRenderHero() {
+    var list = opsState.itemList || [];
+    var total = list.reduce(function (a, r) { return a + parseFloat(r.nominal || 0); }, 0);
+    var withFoto = list.filter(function (r) { return !!r.foto_url; }).length;
+    var pct = list.length ? Math.round(withFoto / list.length * 100) : 0;
+
+    // Kelompokkan per unit, urut dari yang terbesar
+    var byUnit = {};
+    list.forEach(function (r) {
+      var key = r.unit_id || '-';
+      if (!byUnit[key]) byUnit[key] = { nama: opsUnitName(r) || 'Tanpa unit', total: 0, n: 0 };
+      byUnit[key].total += parseFloat(r.nominal || 0);
+      byUnit[key].n++;
+    });
+    var units = Object.keys(byUnit).map(function (k) { return byUnit[k]; }).sort(function (a, b) { return b.total - a.total; });
+    if (units.length > 4) {
+      var rest = units.slice(3).reduce(function (a, u) { a.total += u.total; a.n += u.n; return a; }, { nama: (units.length - 3) + ' unit lain', total: 0, n: 0 });
+      units = units.slice(0, 3).concat([rest]);
+    }
+
+    opsCountUpRp(document.getElementById('ops-heroTotal'), total);
+    document.getElementById('ops-heroCount').textContent = list.length;
+    document.getElementById('ops-heroUnitBadge').textContent = opsState.unitOptions.length + ' unit';
+    document.getElementById('ops-heroSub').textContent = list.length
+      ? opsFormatRp(total) + ' dari ' + Object.keys(byUnit).length + ' unit'
+      : 'Belum ada pengeluaran tercatat';
+    document.getElementById('ops-heroBukti').textContent = withFoto;
+    document.getElementById('ops-heroNoBukti').textContent = list.length - withFoto;
+    document.getElementById('ops-heroAvg').textContent = opsFormatShort(list.length ? total / list.length : 0);
+    document.getElementById('ops-heroRingPct').textContent = pct + '%';
+
+    var unitsEl = document.getElementById('ops-heroUnits');
+    if (!units.length) {
+      unitsEl.className = 'opb-empty';
+      unitsEl.textContent = 'Bar per unit muncul setelah ada pengeluaran bulan ini.';
+    } else {
+      var max = units[0].total || 1;
+      unitsEl.className = 'opb-units';
+      unitsEl.innerHTML = units.map(function (u, i) {
+        var share = total ? Math.round(u.total / total * 100) : 0;
+        return '<div class="opb-u" title="' + opsEscape(u.nama) + ': ' + opsFormatRp(u.total) + ' (' + u.n + ' transaksi)">' +
+          '<span class="n">' + opsEscape(u.nama) + '</span>' +
+          '<span class="t"><i style="width:' + Math.max(3, u.total / max * 100).toFixed(1) + '%; --i:' + i + ';"></i></span>' +
+          '<b>' + opsFormatShort(u.total) + '</b>' +
+          '<em>' + share + '%</em>' +
+        '</div>';
+      }).join('');
+      if (!OPS_REDUCED_MOTION) { void unitsEl.offsetWidth; unitsEl.classList.add('ops-anim'); }
+    }
+
+    var arc = document.getElementById('ops-heroRingArc');
+    arc.setAttribute('stroke-dasharray', '0 ' + OPS_RING_LEN);
+    var len = list.length ? withFoto / list.length * OPS_RING_LEN : 0;
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      arc.setAttribute('stroke-dasharray', len.toFixed(2) + ' ' + OPS_RING_LEN.toFixed(2));
+    }); });
   }
 
   function opsMatchesSearch(r) {
     if (!opsState.search) return true;
-    return (r.keterangan || '').toLowerCase().indexOf(opsState.search) !== -1;
+    return (r.keterangan || '').toLowerCase().indexOf(opsState.search) !== -1 ||
+      opsUnitName(r).toLowerCase().indexOf(opsState.search) !== -1;
   }
 
   function opsMatchesFilter(r) {
@@ -852,18 +751,12 @@
     var btn = document.getElementById('ops-viewToggleBtn');
     if (!btn) return;
     var isTable = opsState.viewMode === 'table';
-    btn.style.borderColor = 'var(--border)';
-    btn.style.color = 'var(--ink)';
-    btn.style.background = '#fff';
-    if (isTable) {
-      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
-      btn.setAttribute('aria-label', 'Tampilkan sebagai Kartu');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
-    } else {
-      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
-      btn.setAttribute('aria-label', 'Tampilkan sebagai Tabel');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
-    }
+    var label = isTable ? 'Tampilkan sebagai kartu' : 'Tampilkan sebagai tabel';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
+    btn.innerHTML = isTable
+      ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
   }
 
   function opsToggleViewMode() {
@@ -874,19 +767,16 @@
       btn.classList.add('ops-btn-pop');
     }
     opsState.viewMode = (opsState.viewMode === 'table') ? 'cards' : 'table';
-    try {
-      localStorage.setItem('genio_ops_view_mode', opsState.viewMode);
-    } catch (e) {}
-    opsRenderList();
+    try { localStorage.setItem('genio_ops_view_mode', opsState.viewMode); } catch (e) {}
+    opsRenderList(true);
   }
 
   function opsGetSortIcon(field) {
     if (opsState.sortField === field) {
       if (opsState.sortDir === 'asc') {
         return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
-      } else {
-        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
       }
+      return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
     }
     return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; opacity:.2; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
   }
@@ -895,31 +785,20 @@
     var field = opsState.sortField || 'tanggal';
     var dir = opsState.sortDir || 'desc';
     var sorted = rows.slice();
+    function cmp(a, b) {
+      if (a < b) return dir === 'asc' ? -1 : 1;
+      if (a > b) return dir === 'asc' ? 1 : -1;
+      return 0;
+    }
     sorted.sort(function (a, b) {
       if (field === 'nominal') {
-        var numA = parseFloat(a.nominal || 0);
-        var numB = parseFloat(b.nominal || 0);
+        var numA = parseFloat(a.nominal || 0), numB = parseFloat(b.nominal || 0);
         return dir === 'asc' ? (numA - numB) : (numB - numA);
       }
-      if (field === 'tanggal') {
-        var tglA = a.tanggal || '';
-        var tglB = b.tanggal || '';
-        if (tglA < tglB) return dir === 'asc' ? -1 : 1;
-        if (tglA > tglB) return dir === 'asc' ? 1 : -1;
-        return 0;
-      }
-      if (field === 'unit') {
-        var unitA = (a.units && a.units.nama_unit ? a.units.nama_unit : '').toLowerCase();
-        var unitB = (b.units && b.units.nama_unit ? b.units.nama_unit : '').toLowerCase();
-        if (unitA < unitB) return dir === 'asc' ? -1 : 1;
-        if (unitA > unitB) return dir === 'asc' ? 1 : -1;
-        return 0;
-      }
-      var ketA = (a.keterangan || '').toLowerCase();
-      var ketB = (b.keterangan || '').toLowerCase();
-      if (ketA < ketB) return dir === 'asc' ? -1 : 1;
-      if (ketA > ketB) return dir === 'asc' ? 1 : -1;
-      return 0;
+      if (field === 'tanggal') return cmp(a.tanggal || '', b.tanggal || '');
+      if (field === 'unit') return cmp(opsUnitName(a).toLowerCase(), opsUnitName(b).toLowerCase());
+      if (field === 'bukti') return cmp(a.foto_url ? 1 : 0, b.foto_url ? 1 : 0);
+      return cmp((a.keterangan || '').toLowerCase(), (b.keterangan || '').toLowerCase());
     });
     return sorted;
   }
@@ -929,26 +808,27 @@
       opsState.sortDir = (opsState.sortDir === 'asc') ? 'desc' : 'asc';
     } else {
       opsState.sortField = field;
-      opsState.sortDir = (field === 'nominal' || field === 'tanggal') ? 'desc' : 'asc';
+      opsState.sortDir = (field === 'nominal' || field === 'tanggal' || field === 'bukti') ? 'desc' : 'asc';
     }
-    opsRenderList();
+    opsRenderList(false);
   }
 
-  function opsRenderList() {
+  function opsRenderList(animate) {
     var listEl = document.getElementById('ops-list');
-    var rows = opsState.itemList.filter(function (r) {
+    var rows = opsSortRows(opsState.itemList.filter(function (r) {
       return opsMatchesSearch(r) && opsMatchesFilter(r);
-    });
-    rows = opsSortRows(rows);
-    document.getElementById('ops-resultCount').textContent = rows.length + ' Transaksi';
+    }));
+    var unitSel = opsState.filterUnit ? opsState.unitOptions.find(function (u) { return u.id === opsState.filterUnit; }) : null;
+    document.getElementById('ops-sectionLabel').textContent = unitSel ? 'Pengeluaran ' + unitSel.nama_unit : 'Daftar pengeluaran';
+    document.getElementById('ops-resultCount').textContent = rows.length + ' transaksi';
     opsUpdateViewToggleUI();
 
     if (!rows.length) {
       listEl.classList.remove('ops-view-table');
-      var emptyMsg = (opsState.search || opsState.filterUnit)
-        ? 'Tidak ada pengeluaran yang sesuai filter / pencarian.'
-        : 'Belum ada pengeluaran tercatat bulan ini.';
-      listEl.innerHTML = '<div class="ops-card ops-full-width empty-state">' + emptyMsg + '</div>';
+      var filtered = opsState.search || opsState.filterUnit;
+      listEl.innerHTML = '<div class="ops-card ops-full-width"><i class="ph ph-receipt" aria-hidden="true" style="font-size:26px; opacity:.6;"></i>' +
+        '<div style="font-size:12px; font-weight:600; color:var(--ink); margin-top:6px;">' + (filtered ? 'Tidak ada pengeluaran yang cocok' : 'Belum ada pengeluaran bulan ini') + '</div>' +
+        '<div style="margin-top:2px;">' + (filtered ? 'Ubah filter atau kata kunci pencarian.' : 'Catat lewat tombol Tambah pengeluaran di atas.') + '</div></div>';
       return;
     }
 
@@ -959,144 +839,112 @@
       listEl.classList.remove('ops-view-table');
       listEl.innerHTML = rows.map(opsRenderCard).join('');
     }
-    opsBindCardEvents();
+
+    if (animate && !OPS_REDUCED_MOTION) {
+      var items = opsState.viewMode === 'table' ? listEl.querySelectorAll('.ops-table tbody tr') : listEl.querySelectorAll('.ops-card:not(.ops-full-width)');
+      items.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('ops-in'); });
+      clearTimeout(listEl._opsAnimT);
+      listEl._opsAnimT = setTimeout(function () { items.forEach(function (el) { el.classList.remove('ops-in'); }); }, 1200);
+    }
+    genioMasonry(listEl, { item: '.ops-card:not(.ops-full-width)', min: 340, gap: 12 });
+  }
+
+  function opsBuktiAttrs(r) {
+    return 'data-url="' + opsEscape(r.foto_url) + '" data-ket="' + opsEscape(r.keterangan || 'Bukti transaksi') + '"';
   }
 
   function opsRenderTable(rows) {
     var trs = rows.map(function (r, idx) {
-      var unitText = (r.units && r.units.nama_unit)
-        ? opsEscape(r.units.nama_unit)
-        : '-';
-
-      var buktiBtn = r.foto_url
-        ? '<button type="button" class="ops-preview-btn ops-table-icon-btn" data-url="' + opsEscape(r.foto_url) + '" data-ket="' + opsEscape(r.keterangan || 'Bukti Transaksi') + '" aria-label="Lihat Bukti Transaksi" title="Lihat Bukti Transaksi">' +
-            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' +
-          '</button>'
-        : '<span style="color:var(--ink-soft); font-size:11.5px; opacity:.4;">-</span>';
-
-      return '' +
-        '<tr>' +
-          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px;">' + (idx + 1) + '</td>' +
-          '<td><div style="color:var(--ink); font-size:11.5px; font-weight:500; line-height:1.3; word-break:break-word;">' + opsEscape(r.keterangan || 'Tanpa keterangan') + '</div></td>' +
-          '<td><span style="color:var(--ink); font-size:11.5px; white-space:nowrap;">' + unitText + '</span></td>' +
-          '<td style="white-space:nowrap;"><span style="color:var(--ink-soft); font-size:11px;">' + (opsFormatTglPanjang(r.tanggal) || '-') + '</span></td>' +
-          '<td style="text-align:right; white-space:nowrap;"><span style="color:var(--ink); font-size:11.5px; font-weight:500;">' + opsFormatRp(r.nominal) + '</span></td>' +
-          '<td style="text-align:center; white-space:nowrap;">' + buktiBtn + '</td>' +
-          '<td style="text-align:center; white-space:nowrap; width:65px;">' +
-            '<div style="display:inline-flex; align-items:center; gap:4px;">' +
-              '<button type="button" class="ops-table-edit-btn ops-table-icon-btn ops-edit-btn" data-id="' + r.id + '" title="Edit Pengeluaran" aria-label="Edit">' +
-                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
-              '</button>' +
-              '<button type="button" class="ops-delete-btn ops-table-icon-btn" data-id="' + r.id + '" title="Hapus Pengeluaran" aria-label="Hapus">' +
-                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
-              '</button>' +
-            '</div>' +
-          '</td>' +
-        '</tr>';
+      var unit = opsUnitName(r);
+      var bukti = r.foto_url
+        ? '<button type="button" class="ops-bukti ops-preview-btn" ' + opsBuktiAttrs(r) + ' title="Lihat bukti transaksi"><i class="ph ph-image" aria-hidden="true"></i>Lihat</button>'
+        : '<span class="ops-muted">Belum ada</span>';
+      return '<tr>' +
+        '<td class="ops-no ops-stk ops-stk-no">' + (idx + 1) + '</td>' +
+        '<td class="ops-stk ops-stk-ket"><span class="ops-ket" title="' + opsEscape(r.keterangan || '') + '">' + opsEscape(r.keterangan || 'Tanpa keterangan') + '</span></td>' +
+        '<td>' + (unit ? '<span class="ops-unit-chip">' + opsEscape(unit) + '</span>' : '<span class="ops-muted">-</span>') + '</td>' +
+        '<td style="white-space:nowrap;">' + opsFormatTglPendek(r.tanggal) + '</td>' +
+        '<td class="ops-money">' + opsFormatRp(r.nominal) + '</td>' +
+        '<td>' + bukti + '</td>' +
+        '<td class="ops-act">' +
+          '<button type="button" class="ops-icon-btn ops-edit-btn" data-id="' + r.id + '" title="Edit pengeluaran" aria-label="Edit pengeluaran"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button>' +
+          '<button type="button" class="ops-icon-btn is-del ops-delete-btn" data-id="' + r.id + '" title="Hapus pengeluaran" aria-label="Hapus pengeluaran"><i class="ph ph-trash" aria-hidden="true"></i></button>' +
+        '</td>' +
+      '</tr>';
     }).join('');
 
-    return '' +
-      '<div class="ops-table-card">' +
-        '<div class="ops-table-wrap">' +
-          '<table class="ops-table">' +
-            '<thead>' +
-              '<tr>' +
-                '<th style="width:38px; text-align:center;">No</th>' +
-                '<th class="ops-sort-th" data-sort="keterangan" title="Urutkan Transaksi (A - Z)">' +
-                  '<span style="display:inline-flex; align-items:center;">Transaksi' + opsGetSortIcon('keterangan') + '</span>' +
-                '</th>' +
-                '<th class="ops-sort-th" data-sort="unit" title="Urutkan Unit (A - Z)">' +
-                  '<span style="display:inline-flex; align-items:center;">Unit' + opsGetSortIcon('unit') + '</span>' +
-                '</th>' +
-                '<th class="ops-sort-th" data-sort="tanggal" title="Urutkan Tanggal">' +
-                  '<span style="display:inline-flex; align-items:center;">Tanggal' + opsGetSortIcon('tanggal') + '</span>' +
-                '</th>' +
-                '<th class="ops-sort-th" data-sort="nominal" title="Urutkan Nominal (Besar ke Kecil)" style="text-align:right;">' +
-                  '<span style="display:inline-flex; align-items:center; justify-content:flex-end; width:100%;">Nominal' + opsGetSortIcon('nominal') + '</span>' +
-                '</th>' +
-                '<th style="text-align:center;">Bukti Transaksi</th>' +
-                '<th style="text-align:center; width:68px;">Aksi</th>' +
-              '</tr>' +
-            '</thead>' +
-            '<tbody>' +
-              trs +
-            '</tbody>' +
-          '</table>' +
-        '</div>' +
-      '</div>';
+    function th(field, label, extra, style) {
+      return '<th class="ops-sort-th' + (extra || '') + '" data-sort="' + field + '"' + (style ? ' style="' + style + '"' : '') + '><span style="display:inline-flex; align-items:center;">' + label + opsGetSortIcon(field) + '</span></th>';
+    }
+    return '<div class="ops-table-card ops-full-width"><div class="ops-table-wrap"><table class="ops-table">' +
+      '<thead><tr>' +
+        '<th class="ops-no ops-stk ops-stk-no">No</th>' +
+        th('keterangan', 'Transaksi', ' ops-stk ops-stk-ket') +
+        th('unit', 'Unit') +
+        th('tanggal', 'Tanggal') +
+        th('nominal', 'Nominal', '', 'text-align:right;') +
+        th('bukti', 'Bukti') +
+        '<th style="text-align:right;">Aksi</th>' +
+      '</tr></thead><tbody>' + trs + '</tbody></table></div></div>';
   }
 
   function opsRenderCard(r) {
-    var unitBadge = (r.units && r.units.nama_unit)
-      ? '<span style="background:var(--blue); color:#fff; font-size:9px; font-weight:500; padding:1.5px 6px; border-radius:999px; flex:none;">' + opsEscape(r.units.nama_unit) + '</span>'
-      : '';
+    var isOpen = opsState.openCard === r.id;
+    var unit = opsUnitName(r);
+    var bukti = r.foto_url
+      ? '<button type="button" class="ops-bukti ops-preview-btn" ' + opsBuktiAttrs(r) + '><i class="ph ph-image" aria-hidden="true"></i>Lihat bukti</button>'
+      : '<span class="ops-bukti"><i class="ph ph-image-broken" aria-hidden="true"></i>Belum ada bukti</span>';
 
-    var buktiBtn = r.foto_url
-      ? '<button type="button" class="ops-preview-btn" data-url="' + opsEscape(r.foto_url) + '" data-ket="' + opsEscape(r.keterangan || 'Bukti Transaksi') + '" aria-label="Lihat Bukti Transaksi" title="Lihat Bukti Transaksi">' +
-          '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none; flex:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' +
-          '<span>Bukti Transaksi</span>' +
-        '</button>'
-      : '';
-
-    return '' +
-      '<div class="card ops-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
-            '<div style="width:32px; height:32px; border-radius:50%; background:rgba(255,59,48,.1); color:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none; border:2px solid #fff; box-shadow:0 1px 2px rgba(0,0,0,.06);">' +
-              '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-                '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>' +
-              '</svg>' +
-            '</div>' +
-            '<div style="min-width:0; flex:1;">' +
-              '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
-                '<h4 style="font-size:12.5px; font-weight:600; color:#1c1c1e; margin:0; line-height:1.35; word-break:break-word;">' + opsEscape(r.keterangan || 'Tanpa keterangan') + '</h4>' +
-                unitBadge +
-              '</div>' +
-              '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:2px 0 0;">' + (opsFormatTglPanjang(r.tanggal) || '-') + '</p>' +
-            '</div>' +
-          '</div>' +
-          '<div style="display:flex; align-items:center; gap:6px; flex:none;">' +
-            buktiBtn +
-            '<button type="button" class="ops-delete-btn" data-id="' + r.id + '" aria-label="Hapus pengeluaran" title="Hapus">' +
-              '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
-            '</button>' +
-          '</div>' +
+    return '<div class="ops-card">' +
+      '<div class="opc-head">' +
+        '<span class="ops-ico"><i class="ph ph-receipt" aria-hidden="true"></i></span>' +
+        '<div class="opc-who"><h4 title="' + opsEscape(r.keterangan || '') + '">' + opsEscape(r.keterangan || 'Tanpa keterangan') + '</h4>' +
+          '<p>' + (unit ? '<span class="ops-unit-chip">' + opsEscape(unit) + '</span>' : '') + '<span>' + opsFormatTglPendek(r.tanggal) + '</span></p></div>' +
+        '<div class="opc-money"><b>' + opsFormatRp(r.nominal) + '</b></div>' +
+      '</div>' +
+      '<div class="opc-foot">' +
+        bukti +
+        '<span class="ops-grow"></span>' +
+        '<button type="button" class="ops-detail-toggle" data-id="' + r.id + '" aria-expanded="' + isOpen + '"><span>' + (isOpen ? 'Tutup' : 'Detail') + '</span>' +
+          '<svg class="ops-toggle-icon" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</button>' +
+      '</div>' +
+      '<div class="ops-wrap" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
+        '<div class="opc-info">' +
+          '<div><span>Keterangan</span><b>' + opsEscape(r.keterangan || '-') + '</b></div>' +
+          '<div><span>Unit</span><b>' + opsEscape(unit || '-') + '</b></div>' +
+          '<div><span>Tanggal</span><b>' + (opsFormatTglPanjang(r.tanggal) || '-') + '</b></div>' +
+          '<div><span>Nominal</span><b style="font-weight:700;">' + opsFormatRp(r.nominal) + '</b></div>' +
         '</div>' +
-        '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:9px; padding:8px 10px; margin-top:8px;">' +
-          '<div class="ops-detail-row"><span>Unit / Cabang</span><span>' + opsEscape(r.units ? r.units.nama_unit : '-') + '</span></div>' +
-          '<div class="ops-detail-row"><span>Tanggal Transaksi</span><span>' + (opsFormatTglPanjang(r.tanggal) || '-') + '</span></div>' +
-          '<div style="display:flex; justify-content:space-between; align-items:center; padding-top:6px; margin-top:4px; border-top:1px solid rgba(0,0,0,.06); font-size:10.5px;">' +
-            '<span style="color:#8e8e93; font-weight:500;">Nominal</span>' +
-            '<span style="font-weight:600; color:#1c1c1e; font-size:12px;">' + opsFormatRp(r.nominal) + '</span>' +
-          '</div>' +
+        '<div class="opc-actions">' +
+          '<button type="button" class="ops-delete-btn" data-id="' + r.id + '"><i class="ph ph-trash" aria-hidden="true"></i>Hapus</button>' +
+          '<button type="button" class="ops-edit-btn" data-id="' + r.id + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit pengeluaran</button>' +
         '</div>' +
-        '<button type="button" class="ops-edit-btn" data-id="' + r.id + '">Edit Pengeluaran</button>' +
-      '</div>';
+      '</div>' +
+    '</div>';
   }
 
-  function opsBindCardEvents() {
-    document.querySelectorAll('.ops-edit-btn').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        opsOpenModal(btn.dataset.id || btn.getAttribute('data-id'));
-      });
-    });
-    document.querySelectorAll('.ops-delete-btn').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var id = btn.dataset.id || btn.getAttribute('data-id');
-        opsOpenConfirm(function () { opsDelete(id); });
-      });
-    });
-    document.querySelectorAll('.ops-preview-btn').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        opsOpenPreview(btn.dataset.url || btn.getAttribute('data-url'), btn.dataset.ket || btn.getAttribute('data-ket'));
-      });
-    });
+  function opsToggleCard(btn) {
+    var card = btn.closest('.ops-card');
+    var wrap = card && card.querySelector('.ops-wrap');
+    if (!wrap) return;
+    var id = btn.dataset.id;
+    var open = opsState.openCard !== id;
+    // Tutup kartu lain yang sedang terbuka
+    if (open && opsState.openCard) {
+      var prev = document.querySelector('#ops-list .ops-detail-toggle[data-id="' + opsState.openCard + '"]');
+      if (prev) opsSetCardOpen(prev, false);
+    }
+    opsState.openCard = open ? id : null;
+    opsSetCardOpen(btn, open);
+  }
+  function opsSetCardOpen(btn, open) {
+    var wrap = btn.closest('.ops-card').querySelector('.ops-wrap');
+    wrap.style.maxHeight = open ? (wrap.scrollHeight + 20) + 'px' : '0px';
+    wrap.style.opacity = open ? '1' : '0';
+    btn.querySelector('span').textContent = open ? 'Tutup' : 'Detail';
+    btn.querySelector('.ops-toggle-icon').style.transform = 'rotate(' + (open ? '180' : '0') + 'deg)';
+    btn.setAttribute('aria-expanded', open);
   }
 
   async function opsDelete(id) {
@@ -1104,50 +952,62 @@
       var s = genioGetSession();
       await supaRest('operasional?id=eq.' + id, s.access_token, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
       genioToast('Catatan pengeluaran berhasil dihapus', 'success');
+      if (opsState.openCard === id) opsState.openCard = null;
       opsLoadAll();
     } catch (err) { genioToast('Gagal menghapus: ' + err.message, 'error'); }
   }
 
-  /* ===== Modal Tambah/Edit ===== */
+  /* ===== Popup tambah / edit ===== */
   var opsModal = document.getElementById('ops-modal');
   var opsEditId = null;
-  var opsSelectedUnitId = '';
+
+  function opsUpdateFotoBox() {
+    var file = document.getElementById('ops-fotoFile').files[0];
+    var box = document.getElementById('ops-fotoBox');
+    box.classList.toggle('has-file', !!file);
+    box.querySelector('.ops-ico i').className = 'ph ' + (file ? 'ph-check' : 'ph-upload-simple');
+    document.getElementById('ops-fotoName').textContent = file ? file.name : 'Pilih foto nota atau struk';
+    document.getElementById('ops-fotoHint').textContent = file ? (Math.round(file.size / 1024).toLocaleString('id-ID') + ' KB, ketuk untuk mengganti') : 'JPG atau PNG, diunggah ke Google Drive';
+  }
+
+  function opsSetUnitField(id, nama) {
+    document.getElementById('ops-unitId').value = id || '';
+    var lbl = document.getElementById('ops-unitLabel');
+    lbl.textContent = nama || 'Pilih unit...';
+    lbl.style.color = id ? 'var(--ink)' : 'var(--ink-soft)';
+  }
 
   async function opsOpenModal(id) {
     document.getElementById('ops-modalAlert').hidden = true;
     document.getElementById('ops-fotoFile').value = '';
+    opsUpdateFotoBox();
     var r = id ? opsState.itemList.find(function (x) { return x.id === id; }) : null;
-    opsEditId = id;
-    document.getElementById('ops-modalTitle').textContent = r ? 'Edit Pengeluaran' : 'Tambah Pengeluaran';
+    opsEditId = r ? id : null;
+    document.getElementById('ops-editId').value = opsEditId || '';
+    document.getElementById('ops-modalTitle').textContent = r ? 'Edit pengeluaran' : 'Tambah pengeluaran';
     document.getElementById('ops-keterangan').value = r ? (r.keterangan || '') : '';
     document.getElementById('ops-nominal').value = r ? r.nominal : '';
 
-    var defaultTgl = r ? r.tanggal : new Date().toISOString().slice(0, 10);
+    var now = new Date();
+    var todayIso = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+    var defaultTgl = r ? r.tanggal : todayIso;
     document.getElementById('ops-tgl').value = defaultTgl;
     document.getElementById('ops-tglLabel').textContent = opsFormatTglPanjang(defaultTgl);
-    document.getElementById('ops-tglLabel').style.color = 'var(--ink)';
 
-    opsSelectedUnitId = r ? r.unit_id : '';
-    document.getElementById('ops-unitId').value = opsSelectedUnitId;
-    document.getElementById('ops-unitLabel').textContent = r && r.units ? r.units.nama_unit : 'Pilih unit...';
-    document.getElementById('ops-unitLabel').style.color = r ? 'var(--ink)' : 'var(--ink-soft)';
+    // Unit default: unit yang sedang difilter, atau satu-satunya unit
+    var defUnit = r ? { id: r.unit_id, nama: opsUnitName(r) } : null;
+    if (!r) {
+      var f = opsState.filterUnit ? opsState.unitOptions.find(function (u) { return u.id === opsState.filterUnit; }) : (opsState.unitOptions.length === 1 ? opsState.unitOptions[0] : null);
+      if (f) defUnit = { id: f.id, nama: f.nama_unit };
+    }
+    opsSetUnitField(defUnit && defUnit.id, defUnit && defUnit.nama);
 
     document.getElementById('ops-fotoExistingWrap').hidden = !(r && r.foto_url);
 
-    if (!opsState.unitOptions.length) {
-      try {
-        var s = genioGetSession();
-        opsState.unitOptions = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
-      } catch (e) {}
-    }
-
-    opsModal.hidden = false;
-    requestAnimationFrame(function () { opsModal.classList.add('show'); });
+    opsShowModal(opsModal);
+    await opsEnsureUnitOptions();
   }
-  function opsCloseModal() {
-    opsModal.classList.remove('show');
-    setTimeout(function () { opsModal.hidden = true; }, 280);
-  }
+  function opsCloseModal() { opsHideModal(opsModal); }
 
   function opsReadFileAsBase64(file) {
     return new Promise(function (resolve, reject) {
@@ -1179,10 +1039,11 @@
     var keterangan = document.getElementById('ops-keterangan').value.trim();
     var fotoFile = document.getElementById('ops-fotoFile').files[0];
 
-    if (!unitId) { alertEl.textContent = 'Unit wajib dipilih.'; alertEl.hidden = false; return; }
-    if (!tgl) { alertEl.textContent = 'Tanggal wajib diisi.'; alertEl.hidden = false; return; }
-    if (!nominal || parseFloat(nominal) <= 0) { alertEl.textContent = 'Nominal wajib diisi.'; alertEl.hidden = false; return; }
-    if (!keterangan) { alertEl.textContent = 'Keterangan wajib diisi.'; alertEl.hidden = false; return; }
+    function fail(msg) { alertEl.textContent = msg; alertEl.hidden = false; alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    if (!unitId) return fail('Unit wajib dipilih.');
+    if (!tgl) return fail('Tanggal wajib diisi.');
+    if (!nominal || parseFloat(nominal) <= 0) return fail('Nominal wajib diisi.');
+    if (!keterangan) return fail('Keterangan wajib diisi.');
     alertEl.hidden = true;
 
     var btn = document.getElementById('ops-saveBtn');
@@ -1206,41 +1067,42 @@
       opsCloseModal();
       opsLoadAll();
     } catch (err) {
-      alertEl.textContent = err.message || 'Gagal menyimpan data.'; alertEl.hidden = false;
+      fail((err && err.message) || 'Gagal menyimpan data.');
     } finally {
       btn.disabled = false;
       btn.textContent = 'Simpan';
     }
   }
 
-  /* ===== Popup Pilih Unit ===== */
+  /* ===== Popup pilih unit ===== */
   var opsUnitPickerModal = document.getElementById('ops-unitPickerModal');
-  function opsOpenUnitPicker() {
+  async function opsOpenUnitPicker() {
     var listEl = document.getElementById('ops-unitPickerList');
+    opsShowModal(opsUnitPickerModal);
     if (!opsState.unitOptions.length) {
-      listEl.innerHTML = '<p style="font-size:12.5px; color:var(--ink-soft); text-align:center; padding:14px 0;">Memuat unit...</p>';
-    } else {
-      listEl.innerHTML = opsState.unitOptions.map(function (u) {
-        return '<button type="button" class="ops-unit-opt" data-id="' + u.id + '" data-nama="' + opsEscape(u.nama_unit) + '" style="width:100%; text-align:left; display:block; background:none; border:none; padding:12px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' + opsEscape(u.nama_unit) + '</button>';
-      }).join('');
-      listEl.querySelectorAll('.ops-unit-opt').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          document.getElementById('ops-unitId').value = btn.dataset.id;
-          document.getElementById('ops-unitLabel').textContent = btn.dataset.nama;
-          document.getElementById('ops-unitLabel').style.color = 'var(--ink)';
-          opsCloseUnitPicker();
-        });
-      });
+      listEl.innerHTML = '<div style="font-size:11px; color:var(--ink-soft); text-align:center; padding:14px 0;">Memuat unit...</div>';
+      await opsEnsureUnitOptions();
     }
-    opsUnitPickerModal.hidden = false;
-    requestAnimationFrame(function () { opsUnitPickerModal.classList.add('show'); });
+    if (!opsState.unitOptions.length) {
+      listEl.innerHTML = '<div style="font-size:11px; color:var(--ink-soft); text-align:center; padding:14px 0;">Tidak ada data unit.</div>';
+      return;
+    }
+    var cur = document.getElementById('ops-unitId').value;
+    listEl.innerHTML = opsState.unitOptions.map(function (u) {
+      return '<button type="button" class="gx-opt-row ops-unit-opt' + (u.id === cur ? ' is-on' : '') + '" data-id="' + opsEscape(u.id) + '" data-nama="' + opsEscape(u.nama_unit) + '">' +
+        '<span class="ops-uico"><i class="ph ph-buildings" aria-hidden="true"></i></span>' + opsEscape(u.nama_unit) +
+        '<i class="ph ph-check ops-check" aria-hidden="true"></i></button>';
+    }).join('');
+    listEl.querySelectorAll('.ops-unit-opt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        opsSetUnitField(btn.dataset.id, btn.dataset.nama);
+        opsCloseUnitPicker();
+      });
+    });
   }
-  function opsCloseUnitPicker() {
-    opsUnitPickerModal.classList.remove('show');
-    setTimeout(function () { opsUnitPickerModal.hidden = true; }, 280);
-  }
+  function opsCloseUnitPicker() { opsHideModal(opsUnitPickerModal); }
 
-  /* ===== Popup Kalender ===== */
+  /* ===== Popup kalender ===== */
   var opsDatePickerModal = document.getElementById('ops-datePickerModal');
   var opsDpViewYear, opsDpViewMonth, opsDpSelectedDate;
 
@@ -1251,27 +1113,23 @@
     opsDpViewYear = base.getFullYear();
     opsDpViewMonth = base.getMonth();
     opsRenderDatePicker();
-    opsDatePickerModal.hidden = false;
-    requestAnimationFrame(function () { opsDatePickerModal.classList.add('show'); });
+    opsShowModal(opsDatePickerModal);
   }
-  function opsCloseDatePicker() {
-    opsDatePickerModal.classList.remove('show');
-    setTimeout(function () { opsDatePickerModal.hidden = true; }, 280);
-  }
+  function opsCloseDatePicker() { opsHideModal(opsDatePickerModal); }
   function opsRenderDatePicker() {
     document.getElementById('ops-dpMonthYear').textContent = OPS_BULAN_NAMA[opsDpViewMonth] + ' ' + opsDpViewYear;
     var gridEl = document.getElementById('ops-dpGrid');
     var firstDay = new Date(opsDpViewYear, opsDpViewMonth, 1).getDay();
     var daysInMonth = new Date(opsDpViewYear, opsDpViewMonth + 1, 0).getDate();
-    var todayIso = new Date().toISOString().slice(0, 10);
+    var now = new Date();
+    var todayIso = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
 
     var html = '';
     for (var i = 0; i < firstDay; i++) html += '<span class="ops-dp-day ops-dp-empty">-</span>';
     for (var d = 1; d <= daysInMonth; d++) {
       var iso = opsDpViewYear + '-' + String(opsDpViewMonth + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-      var isSelected = iso === opsDpSelectedDate;
-      var isToday = iso === todayIso;
-      html += '<button type="button" class="ops-dp-day' + (isSelected ? ' ops-dp-selected' : '') + '" data-iso="' + iso + '" style="' + (isToday && !isSelected ? 'box-shadow:inset 0 0 0 1.5px var(--ink-soft);' : '') + '">' + d + '</button>';
+      var cls = 'ops-dp-day' + (iso === opsDpSelectedDate ? ' ops-dp-selected' : '') + (iso === todayIso ? ' ops-dp-today' : '');
+      html += '<button type="button" class="' + cls + '" data-iso="' + iso + '">' + d + '</button>';
     }
     gridEl.innerHTML = html;
     gridEl.querySelectorAll('.ops-dp-day:not(.ops-dp-empty)').forEach(function (btn) {
@@ -1279,35 +1137,24 @@
         opsDpSelectedDate = btn.dataset.iso;
         document.getElementById('ops-tgl').value = opsDpSelectedDate;
         document.getElementById('ops-tglLabel').textContent = opsFormatTglPanjang(opsDpSelectedDate);
-        document.getElementById('ops-tglLabel').style.color = 'var(--ink)';
         opsCloseDatePicker();
       });
     });
   }
 
-  /* ===== Modal Konfirmasi ===== */
+  /* ===== Popup konfirmasi ===== */
   var opsConfirmModal = document.getElementById('ops-confirmModal');
   var opsConfirmCallback = null;
   function opsOpenConfirm(callback) {
     opsConfirmCallback = callback;
-    opsConfirmModal.hidden = false;
-    requestAnimationFrame(function () { opsConfirmModal.classList.add('show'); });
+    opsShowModal(opsConfirmModal);
   }
-  function opsCloseConfirm() {
-    opsConfirmModal.classList.remove('show');
-    setTimeout(function () { opsConfirmModal.hidden = true; }, 280);
-  }
+  function opsCloseConfirm() { opsHideModal(opsConfirmModal); }
 
-  /* ===== Modal Preview Bukti Transaksi ===== */
-  function opsGetDriveImageSrc(url) {
-    if (!url) return '';
-    var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
-            url.match(/id=([a-zA-Z0-9_-]+)/) ||
-            url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (m && m[1]) {
-      return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1200';
-    }
-    return url;
+  /* ===== Popup bukti transaksi ===== */
+  function opsDriveId(url) {
+    var m = (url || '').match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || (url || '').match(/id=([a-zA-Z0-9_-]+)/) || (url || '').match(/\/d\/([a-zA-Z0-9_-]+)/);
+    return m ? m[1] : null;
   }
 
   function opsOpenPreview(url, ket) {
@@ -1315,64 +1162,44 @@
     var modal = document.getElementById('ops-previewModal');
     var img = document.getElementById('ops-previewImg');
     var spinner = document.getElementById('ops-previewSpinner');
-    var link = document.getElementById('ops-previewExternalLink');
-    var title = document.getElementById('ops-previewTitle');
     var errorMsg = document.getElementById('ops-previewError');
 
-    if (title) title.textContent = ket || 'Bukti Transaksi';
-    if (link) link.href = url;
-    if (errorMsg) {
-      errorMsg.hidden = true;
-      var errLink = document.getElementById('ops-previewErrorLink');
-      if (errLink) errLink.href = url;
-    }
+    document.getElementById('ops-previewTitle').textContent = ket || 'Bukti transaksi';
+    document.getElementById('ops-previewExternalLink').href = url;
+    document.getElementById('ops-previewErrorLink').href = url;
+    errorMsg.hidden = true;
+    spinner.style.display = 'flex';
+    img.style.display = 'none';
+    img.src = '';
 
-    if (spinner) spinner.style.display = 'flex';
-    if (img) {
-      img.style.display = 'none';
-      img.src = '';
+    var driveId = opsDriveId(url);
+    img.onload = function () {
+      spinner.style.display = 'none';
+      img.style.display = 'block';
+    };
+    img.onerror = function () {
+      if (driveId && img.src.indexOf('thumbnail') !== -1) {
+        img.src = 'https://lh3.googleusercontent.com/d/' + driveId;
+      } else {
+        spinner.style.display = 'none';
+        errorMsg.hidden = false;
+      }
+    };
+    img.src = driveId ? ('https://drive.google.com/thumbnail?id=' + driveId + '&sz=w1200') : url;
 
-      var driveIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
-                         url.match(/id=([a-zA-Z0-9_-]+)/) ||
-                         url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      var driveId = driveIdMatch ? driveIdMatch[1] : null;
-      var initialSrc = driveId ? ('https://drive.google.com/thumbnail?id=' + driveId + '&sz=w1200') : url;
-
-      img.onload = function () {
-        if (spinner) spinner.style.display = 'none';
-        img.style.display = 'block';
-      };
-      img.onerror = function () {
-        if (driveId && img.src.indexOf('thumbnail') !== -1) {
-          img.src = 'https://lh3.googleusercontent.com/d/' + driveId;
-        } else {
-          if (spinner) spinner.style.display = 'none';
-          if (errorMsg) errorMsg.hidden = false;
-        }
-      };
-      img.src = initialSrc;
-    }
-
-    modal.hidden = false;
-    modal.removeAttribute('hidden');
-    modal.style.display = 'flex';
-    requestAnimationFrame(function () { modal.classList.add('show'); });
+    opsShowModal(modal);
   }
 
   function opsClosePreview() {
     var modal = document.getElementById('ops-previewModal');
     if (!modal) return;
-    modal.classList.remove('show');
-    setTimeout(function () {
-      modal.hidden = true;
-      modal.setAttribute('hidden', '');
-      modal.style.display = 'none';
+    opsHideModal(modal, function () {
       var img = document.getElementById('ops-previewImg');
-      if (img) { img.src = ''; img.onload = null; img.onerror = null; }
-    }, 280);
+      if (img) { img.onload = null; img.onerror = null; img.src = ''; }
+    });
   }
 
-  /* ===== Modal Filter Operasional ===== */
+  /* ===== Popup filter ===== */
   async function opsEnsureUnitOptions() {
     if (opsState.unitOptions && opsState.unitOptions.length) return opsState.unitOptions;
     try {
@@ -1388,21 +1215,13 @@
     var badge = document.getElementById('ops-filterCount');
     var btn = document.getElementById('ops-filterBtn');
     if (!badge) return;
-    if (opsState.filterUnit) {
-      badge.textContent = '1';
-      badge.hidden = false;
-      if (btn) {
-        btn.style.borderColor = 'var(--blue)';
-        btn.style.color = 'var(--blue)';
-        btn.style.background = 'rgba(0,122,255,.05)';
-      }
-    } else {
-      badge.hidden = true;
-      if (btn) {
-        btn.style.borderColor = 'var(--border)';
-        btn.style.color = 'var(--ink)';
-        btn.style.background = '#fff';
-      }
+    var on = !!opsState.filterUnit;
+    badge.textContent = '1';
+    badge.hidden = !on;
+    if (btn) {
+      btn.style.borderColor = on ? 'var(--blue)' : 'var(--border)';
+      btn.style.color = on ? 'var(--blue)' : 'var(--ink)';
+      btn.style.background = on ? 'var(--blue-tint)' : '#fff';
     }
   }
 
@@ -1411,47 +1230,30 @@
     if (!modal) return;
     await opsEnsureUnitOptions();
     opsRenderFilterUnitList();
-    modal.hidden = false;
-    modal.removeAttribute('hidden');
-    modal.style.display = 'flex';
-    requestAnimationFrame(function () { modal.classList.add('show'); });
+    opsShowModal(modal);
   }
 
   function opsCloseFilterModal() {
     var modal = document.getElementById('ops-filterModal');
-    if (!modal) return;
-    modal.classList.remove('show');
-    setTimeout(function () {
-      modal.hidden = true;
-      modal.setAttribute('hidden', '');
-      modal.style.display = 'none';
-    }, 280);
+    if (modal) opsHideModal(modal);
   }
 
   function opsRenderFilterUnitList() {
     var container = document.getElementById('ops-filterUnitList');
     if (!container) return;
-    var isAll = !opsState.filterUnit;
-    var html = '' +
-      '<label style="display:flex; align-items:center; gap:10px; padding:11px 14px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' +
-        '<input type="radio" name="opsFilterUnitRadio" value="" ' + (isAll ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
-        '<span style="font-weight:500;">Semua Unit</span>' +
-      '</label>';
-
-    (opsState.unitOptions || []).forEach(function (u, idx) {
-      var isLast = idx === opsState.unitOptions.length - 1;
-      var checked = opsState.filterUnit === u.id;
-      html += '' +
-        '<label style="display:flex; align-items:center; gap:10px; padding:11px 14px; font-size:13px; color:var(--ink); cursor:pointer;' + (isLast ? '' : ' border-bottom:1px solid var(--border);') + ' font-family:var(--font);">' +
-          '<input type="radio" name="opsFilterUnitRadio" value="' + opsEscape(u.id) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
-          '<span>' + opsEscape(u.nama_unit) + '</span>' +
-        '</label>';
-    });
-
     if (!opsState.unitOptions.length) {
-      html = '<div style="font-size:12.5px; color:var(--ink-soft); padding:14px 4px; text-align:center;">Tidak ada data unit.</div>';
+      container.innerHTML = '<div style="font-size:11px; color:var(--ink-soft); padding:14px 4px; text-align:center;">Tidak ada data unit.</div>';
+      return;
     }
-
+    // Jumlah transaksi per unit bulan ini sebagai petunjuk
+    var counts = {};
+    opsState.itemList.forEach(function (r) { counts[r.unit_id] = (counts[r.unit_id] || 0) + 1; });
+    var html = '<label class="gx-opt-row"><input type="radio" name="opsFilterUnitRadio" value="" ' + (!opsState.filterUnit ? 'checked' : '') + '>Semua unit' +
+      '<span class="ops-muted" style="margin-left:auto;">' + opsState.itemList.length + '</span></label>';
+    opsState.unitOptions.forEach(function (u) {
+      html += '<label class="gx-opt-row"><input type="radio" name="opsFilterUnitRadio" value="' + opsEscape(u.id) + '" ' + (opsState.filterUnit === u.id ? 'checked' : '') + '>' +
+        opsEscape(u.nama_unit) + '<span class="ops-muted" style="margin-left:auto;">' + (counts[u.id] || 0) + '</span></label>';
+    });
     container.innerHTML = html;
   }
 </script>
