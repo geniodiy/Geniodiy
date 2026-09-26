@@ -325,6 +325,59 @@
     #ps-list > .pc2-card.ps-in, #ps-list .ps-table tbody tr.ps-in td, #ps-editStatusModal .ps-editstatus-icon{animation:none !important;}
     .pc2-card:hover{transform:none;}
   }
+
+  /* ===== Popup filter: pakai gaya form isi presensi ===== */
+  #ps-filterModal .pw-sheet{max-width:440px !important; padding:0 !important; display:flex; flex-direction:column; max-height:88vh; overflow:hidden;}
+  #ps-filterModal .pw-head{display:flex; align-items:center; gap:11px; padding:16px 18px 12px; border-bottom:1px solid var(--border);}
+  #ps-filterModal .pw-head-ico{width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
+  #ps-filterModal .pw-head h3{font-size:13.5px !important; font-weight:600 !important; margin:0 !important; line-height:1.3;}
+  #ps-filterModal .pw-sub{font-size:10.5px !important; color:var(--ink-soft) !important; margin:2px 0 0 !important;}
+  #ps-filterModal .pw-body{padding:4px 18px 8px; overflow-y:auto; flex:1;}
+  #ps-filterModal .ps-wakil-group-title{display:flex !important; align-items:center; gap:7px; font-size:11px !important; font-weight:600 !important; margin:14px 0 8px !important;}
+  #ps-filterModal .pw-step{width:17px; height:17px; border-radius:50%; background:var(--ink); color:#fff; font-size:9.5px; font-weight:600; display:inline-flex; align-items:center; justify-content:center;}
+  #ps-filterModal .ps-wakil-row{padding:0 0 10px !important;}
+  #ps-filterModal .ps-wakil-row > label{font-size:10.5px !important; margin-bottom:5px !important;}
+  #ps-filterModal .pf-field{display:flex !important; align-items:center; justify-content:space-between; gap:8px; min-height:34px; padding:7px 11px !important; border-radius:9px !important; background:var(--surface) !important; border:1px solid var(--border) !important; font-family:var(--font); font-size:11.5px !important; font-weight:400 !important; color:var(--ink) !important; cursor:pointer; text-align:left; transition:border-color .15s ease, background .15s ease;}
+  #ps-filterModal .pf-field:hover{border-color:#C9CCDA !important;}
+  #ps-filterModal .pf-field:focus-visible{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #ps-filterModal .pf-field svg{color:var(--ink-soft); flex:none;}
+  #ps-filterModal .pf-toggle{position:relative; display:flex !important; align-items:center; gap:12px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; cursor:pointer; margin:0 0 6px !important;}
+  #ps-filterModal .pf-toggle-t{flex:1; min-width:0; display:flex; flex-direction:column;}
+  #ps-filterModal .pf-toggle-t b{font-size:11.5px; font-weight:600; color:var(--ink);}
+  #ps-filterModal .pf-toggle-t small{font-size:10px; color:var(--ink-soft); margin-top:1px;}
+  #ps-filterModal .pf-toggle input{position:absolute; opacity:0; width:1px; height:1px; pointer-events:none;}
+  #ps-filterModal .pf-switch{width:32px; height:19px; border-radius:99px; background:#D5D8E5; position:relative; flex:none; transition:background .18s ease;}
+  #ps-filterModal .pf-switch::after{content:''; position:absolute; top:2px; left:2px; width:15px; height:15px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(20,22,43,.25); transition:transform .2s cubic-bezier(.16,1,.3,1);}
+  #ps-filterModal .pf-toggle input:checked ~ .pf-switch{background:var(--blue);}
+  #ps-filterModal .pf-toggle input:checked ~ .pf-switch::after{transform:translateX(13px);}
+  #ps-filterModal .pf-toggle input:focus-visible ~ .pf-switch{box-shadow:0 0 0 3px rgba(28,26,175,.18);}
+  #ps-filterModal .pw-foot{padding:12px 18px 14px !important; margin:0 !important; border-top:1px solid var(--border); background:#fff;}
+  #ps-filterModal .pw-foot .btn{height:34px !important; font-size:11.5px !important;}
+
+  /* Sheet tanpa transform setelah muncul: iPad/iOS menaruh menu pilih file di pojok kiri atas kalau ada transform di induknya */
+  @keyframes pwSheetIn{from{transform:scale(.94) translateY(8px);} to{transform:scale(1) translateY(0);}}
+  #ps-wakilModal.show .modal-sheet, #ps-filterModal.show .modal-sheet{transform:none !important; animation:pwSheetIn .3s cubic-bezier(.34,1.56,.64,1);}
+  @media (prefers-reduced-motion: reduce){ #ps-wakilModal.show .modal-sheet, #ps-filterModal.show .modal-sheet{animation:none;} }
+
+  /* ===== Popup preview lampiran ===== */
+  #ps-previewModal .pv-head{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px 10px 16px;}
+  #ps-previewModal .pv-head h3{font-size:13px !important; font-weight:600 !important;}
+  #ps-previewModal #ps-previewSub{font-size:10.5px !important;}
+  #ps-previewModal .pv-close{width:28px; height:28px; border-radius:8px; background:var(--surface); border:none; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;}
+  #ps-previewModal .pv-close:hover{background:#EBEDF5; color:var(--ink);}
+  #ps-previewModal .pv-media{background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+  #ps-previewModal .pv-ext{text-align:center; padding:22px 18px; max-width:100%; box-sizing:border-box;}
+  #ps-previewModal .pv-ext-ico{width:36px; height:36px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; margin:0 auto 10px;}
+  #ps-previewModal .pv-ext-url{word-break:break-all; font-size:10.5px; color:var(--ink-soft); margin:0 auto 12px; max-width:340px; max-height:48px; overflow:hidden;}
+  #ps-previewModal .pv-ext-btn{display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 14px; border-radius:9px; background:var(--blue); color:#fff; font-size:11px; font-weight:600; text-decoration:none;}
+  #ps-previewModal .pv-ext-btn:hover{filter:brightness(1.08);}
+  #ps-previewModal .pv-text{width:100%; max-height:50vh; overflow-y:auto; padding:14px 16px; box-sizing:border-box; text-align:left; background:#fff;}
+  #ps-previewModal .pv-text-badge{font-size:10px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;}
+  #ps-previewModal .pv-text-p{font-size:11.5px; color:var(--ink); line-height:1.6; white-space:pre-wrap; margin:0; word-break:break-word; font-family:var(--font);}
+  #ps-previewModal .pv-foot{display:flex; justify-content:flex-end; padding:9px 14px 11px;}
+  #ps-previewModal .pv-foot-link{display:inline-flex; align-items:center; gap:5px; height:30px; padding:0 11px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-size:10.5px; font-weight:500; text-decoration:none;}
+  #ps-previewModal .pv-foot-link:hover{background:var(--surface);}
+  #ps-previewModal .pv-foot-link[style*="display: none"], #ps-previewModal .pv-foot-link[style*="display:none"]{display:none !important;}
   /* ===== Popup isi presensi untuk tutor ===== */
   #ps-wakilModal .pw-sheet{max-width:440px !important; padding:0 !important; display:flex; flex-direction:column; max-height:88vh; overflow:hidden;}
   #ps-wakilModal .pw-head{display:flex; align-items:center; gap:11px; padding:16px 18px 12px; border-bottom:1px solid var(--border);}
@@ -818,61 +871,72 @@
 
   <!-- Modal Filter Lanjutan -->
   <div class="modal-overlay" id="ps-filterModal" hidden>
-    <div class="modal-sheet" style="max-height:86vh; overflow-y:auto;">
-      <h3>Filter Presensi</h3>
-      <p style="font-size:10px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar presensi sesuai kebutuhan. Bisa dikombinasikan dengan pencarian di atas.</p>
-
-      <div class="ps-wakil-group-title">Unit / Cabang</div>
-      <div class="ps-wakil-group">
-        <button type="button" class="ps-filter-row-btn" data-picker="unit" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:10.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ps-filterUnitSummary">Semua Unit</span>
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="ps-wakil-group-title">Metode Input</div>
-      <div class="ps-wakil-group">
-        <button type="button" class="ps-filter-row-btn" data-picker="metode" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:10.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ps-filterMetodeSummary">Semua Metode</span>
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="ps-wakil-group-title">Tutor</div>
-      <div class="ps-wakil-group">
-        <button type="button" class="ps-filter-row-btn" data-picker="tutor" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:10.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ps-filterTutorSummary">Semua Tutor</span>
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="ps-wakil-group-title">Siswa</div>
-      <div class="ps-wakil-group">
-        <button type="button" class="ps-filter-row-btn" data-picker="siswa" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:10.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ps-filterSiswaSummary">Semua Siswa</span>
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="ps-wakil-group-title">Orang Tua</div>
-      <div class="ps-wakil-group">
-        <button type="button" class="ps-filter-row-btn" data-picker="ortu" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:8px 12px; font-size:10.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="ps-filterOrtuSummary">Semua Orang Tua</span>
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="ps-wakil-group-title">Lainnya</div>
-      <div class="ps-wakil-group">
-        <div class="ps-wakil-row" style="display:flex; align-items:center; justify-content:space-between;">
-          <label for="ps-filterTerlambat" style="margin:0; font-size:10.5px;">Cuma yang Terlambat</label>
-          <input type="checkbox" id="ps-filterTerlambat" style="width:16px; height:16px; accent-color:var(--blue);">
+    <div class="modal-sheet pw-sheet">
+      <div class="pw-head">
+        <span class="pw-head-ico"><i class="ph ph-funnel-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Filter presensi</h3>
+          <p class="pw-sub">Bisa dikombinasikan dengan pencarian di atas.</p>
         </div>
       </div>
 
-      <div class="modal-actions">
+      <div class="pw-body">
+        <div class="ps-wakil-group-title"><span class="pw-step">1</span>Lokasi dan metode</div>
+        <div class="ps-wakil-group">
+          <div class="ps-wakil-row">
+            <label>Unit atau cabang</label>
+            <button type="button" class="ps-filter-row-btn pf-field" data-picker="unit" style="width:100%;">
+              <span id="ps-filterUnitSummary">Semua Unit</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+          </div>
+          <div class="ps-wakil-row">
+            <label>Metode input</label>
+            <button type="button" class="ps-filter-row-btn pf-field" data-picker="metode" style="width:100%;">
+              <span id="ps-filterMetodeSummary">Semua Metode</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="ps-wakil-group-title"><span class="pw-step">2</span>Orang</div>
+        <div class="ps-wakil-group">
+          <div class="ps-wakil-row">
+            <label>Tutor</label>
+            <button type="button" class="ps-filter-row-btn pf-field" data-picker="tutor" style="width:100%;">
+              <span id="ps-filterTutorSummary">Semua Tutor</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+          </div>
+          <div class="ps-wakil-row">
+            <label>Siswa</label>
+            <button type="button" class="ps-filter-row-btn pf-field" data-picker="siswa" style="width:100%;">
+              <span id="ps-filterSiswaSummary">Semua Siswa</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+          </div>
+          <div class="ps-wakil-row">
+            <label>Orang tua</label>
+            <button type="button" class="ps-filter-row-btn pf-field" data-picker="ortu" style="width:100%;">
+              <span id="ps-filterOrtuSummary">Semua Orang Tua</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="ps-wakil-group-title"><span class="pw-step">3</span>Lainnya</div>
+        <div class="ps-wakil-group">
+          <label class="pf-toggle" for="ps-filterTerlambat">
+            <span class="pf-toggle-t"><b>Cuma yang terlambat</b><small>Tampilkan presensi yang kena denda keterlambatan</small></span>
+            <input type="checkbox" id="ps-filterTerlambat">
+            <span class="pf-switch" aria-hidden="true"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-actions pw-foot">
         <button type="button" class="btn btn-outline" id="ps-filterResetBtn">Reset</button>
-        <button type="button" class="btn btn-primary" id="ps-filterApplyBtn">Terapkan Filter</button>
+        <button type="button" class="btn btn-primary" id="ps-filterApplyBtn">Terapkan filter</button>
       </div>
     </div>
   </div>
@@ -1099,42 +1163,41 @@
   <!-- Modal Preview Lampiran Presensi (Foto / Berkas / Link) -->
   <div class="modal-overlay" id="ps-previewModal" hidden style="z-index:90; justify-content:center;">
     <div class="modal-sheet" style="max-width:480px; width:100%; padding:0; overflow:hidden; border-radius:16px;">
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px 10px;">
+      <div class="pv-head">
         <div style="min-width:0;">
-          <h3 id="ps-previewTitle" style="margin:0; font-size:12.5px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Lampiran</h3>
+          <h3 id="ps-previewTitle" style="margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Lampiran</h3>
           <div id="ps-previewSub" style="font-size:10px; color:var(--ink-soft); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
         </div>
-        <button type="button" id="ps-previewCloseX" aria-label="Tutup" style="background:var(--surface); border:none; width:26px; height:26px; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-soft); flex:none; margin-left:10px;">
+        <button type="button" id="ps-previewCloseX" class="pv-close" aria-label="Tutup">
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
 
-      <div id="ps-previewMediaBox" style="position:relative; width:100%; height:52vh; max-height:55vh; background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); border-left:none; border-right:none; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:0;">
+      <div id="ps-previewMediaBox" class="pv-media" style="position:relative; width:100%; height:52vh; max-height:55vh; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:0;">
         <div id="ps-previewSpinner" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--ink-soft); font-size:10.5px; font-weight:500; padding:30px 20px;">
           <span class="spinner" style="border-color:rgba(20,22,43,.2); border-top-color:var(--blue); width:22px; height:22px;"></span>
           <span>Memuat berkas...</span>
         </div>
         <img id="ps-previewImg" alt="Preview Lampiran" style="display:none; width:100%; height:100%; object-fit:contain; border-radius:0;">
         <iframe id="ps-previewIframe" style="display:none; width:100%; height:100%; border:none;" allowfullscreen></iframe>
-        <div id="ps-previewExternalCard" hidden style="text-align:center; padding:20px 16px; font-size:10.5px; color:var(--ink);">
-          <div style="width:38px; height:38px; border-radius:50%; background:rgba(0,122,255,.12); color:#007aff; display:flex; align-items:center; justify-content:center; margin:0 auto 8px;">
+        <div id="ps-previewExternalCard" class="pv-ext" hidden>
+          <div class="pv-ext-ico">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           </div>
-          <div id="ps-previewExternalUrlText" style="word-break:break-all; font-weight:500; font-size:10px; color:var(--ink-soft); margin-bottom:10px; max-height:50px; overflow:hidden;"></div>
-          <a id="ps-previewExternalBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:10.5px; height:32px; padding:0 14px; width:auto; margin:0 auto; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; font-weight:500;">
-            Buka Tautan Web &rarr;
+          <div id="ps-previewExternalUrlText" class="pv-ext-url"></div>
+          <a id="ps-previewExternalBtn" href="#" target="_blank" rel="noopener noreferrer" class="pv-ext-btn">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i>Buka tautan
           </a>
         </div>
-        <div id="ps-previewTextCard" hidden style="width:100%; max-height:50vh; overflow-y:auto; padding:14px 16px; box-sizing:border-box; text-align:left; background:#fff; border-radius:0;">
-          <div id="ps-previewTextBadge" style="font-size:9px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;">Laporan Pembelajaran</div>
-          <p id="ps-previewTextContent" style="font-size:10.5px; color:var(--ink); line-height:1.55; white-space:pre-wrap; margin:0; word-break:break-word; font-family:var(--font);"></p>
+        <div id="ps-previewTextCard" class="pv-text" hidden>
+          <div id="ps-previewTextBadge" class="pv-text-badge">Laporan pembelajaran</div>
+          <p id="ps-previewTextContent" class="pv-text-p"></p>
         </div>
       </div>
 
-      <div class="modal-actions" style="padding:10px 16px 14px; margin-top:0;">
-        <a id="ps-previewDirectLink" href="#" target="_blank" rel="noopener noreferrer" class="btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:10.5px; height:32px; padding:0 14px; width:100%; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; font-weight:500; box-sizing:border-box;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          Buka di Tab Baru
+      <div class="pv-foot">
+        <a id="ps-previewDirectLink" href="#" target="_blank" rel="noopener noreferrer" class="pv-foot-link">
+          <i class="ph ph-arrow-square-out" aria-hidden="true"></i>Buka di tab baru
         </a>
       </div>
     </div>
@@ -1305,7 +1368,7 @@
           var txt = lapBtn.dataset.laporan || lapBtn.getAttribute('data-laporan');
           var title = lapBtn.dataset.title || lapBtn.getAttribute('data-title') || 'Laporan Pembelajaran';
           var sub = lapBtn.dataset.sub || lapBtn.getAttribute('data-sub') || '';
-          if (txt) psOpenPreviewText(txt, title, sub, 'Laporan Pembelajaran');
+          if (txt) psOpenPreviewText(txt, title, sub, 'Laporan pembelajaran');
           return;
         }
         var alasanBtn = e.target.closest('.ps-table-alasan-btn');
@@ -1315,7 +1378,7 @@
           var alasanTxt = alasanBtn.dataset.alasan || alasanBtn.getAttribute('data-alasan') || 'Tidak ada catatan penolakan spesifik.';
           var alasanTitle = alasanBtn.dataset.title || alasanBtn.getAttribute('data-title') || 'Alasan Penolakan';
           var alasanSub = alasanBtn.dataset.sub || alasanBtn.getAttribute('data-sub') || '';
-          psOpenPreviewText(alasanTxt, alasanTitle, alasanSub, 'Alasan Penolakan');
+          psOpenPreviewText(alasanTxt, alasanTitle, alasanSub, 'Alasan penolakan');
           return;
         }
         var statusBtn = e.target.closest('.ps-table-status-btn');
@@ -2622,7 +2685,7 @@
         var txt = btn.dataset.laporan || btn.getAttribute('data-laporan');
         var title = btn.dataset.title || btn.getAttribute('data-title') || 'Laporan Pembelajaran';
         var sub = btn.dataset.sub || btn.getAttribute('data-sub') || '';
-        if (txt) psOpenPreviewText(txt, title, sub, 'Laporan Pembelajaran');
+        if (txt) psOpenPreviewText(txt, title, sub, 'Laporan pembelajaran');
       });
     });
     document.querySelectorAll('.ps-table-alasan-btn').forEach(function (btn) {
@@ -2632,7 +2695,7 @@
         var txt = btn.dataset.alasan || btn.getAttribute('data-alasan') || 'Tidak ada catatan penolakan spesifik.';
         var title = btn.dataset.title || btn.getAttribute('data-title') || 'Alasan Penolakan';
         var sub = btn.dataset.sub || btn.getAttribute('data-sub') || '';
-        psOpenPreviewText(txt, title, sub, 'Alasan Penolakan');
+        psOpenPreviewText(txt, title, sub, 'Alasan penolakan');
       });
     });
     document.querySelectorAll('.ps-download-pdf-btn').forEach(function (btn) {
@@ -3349,7 +3412,8 @@
 
     if (titleEl) titleEl.textContent = title || 'Lampiran';
     if (subEl) subEl.textContent = subtitle || '';
-    if (link) { link.href = url; link.style.display = ''; }
+    if (link) { link.href = url; link.style.display = ''; if (link.parentElement) link.parentElement.style.display = ''; }
+    if (mediaBox) mediaBox.style.borderBottom = '';
     if (extBtn) extBtn.href = url;
     if (extUrlText) extUrlText.textContent = url;
 
@@ -3427,11 +3491,13 @@
         img.onerror = function () {
           if (spinner) spinner.style.display = 'none';
           if (extCard) extCard.hidden = false;
+        if (link && link.parentElement) link.parentElement.style.display = 'none';
         };
         img.src = url;
       } else {
         if (spinner) spinner.style.display = 'none';
         if (extCard) extCard.hidden = false;
+        if (link && link.parentElement) link.parentElement.style.display = 'none';
       }
     }
 
@@ -3464,14 +3530,15 @@
     if (titleEl) titleEl.textContent = title || 'Laporan Pembelajaran';
     if (subEl) subEl.textContent = subtitle || '';
     if (badgeEl) {
-      badgeEl.textContent = badgeText || (title ? title.toUpperCase() : 'LAPORAN PEMBELAJARAN');
+      badgeEl.textContent = badgeText || title || 'Laporan pembelajaran';
       if (title && title.toLowerCase().includes('alasan')) {
-        badgeEl.style.color = '#ff3b30';
+        badgeEl.style.color = 'var(--red)';
       } else {
         badgeEl.style.color = 'var(--ink-soft)';
       }
     }
-    if (link) link.style.display = 'none';
+    if (link) { link.style.display = 'none'; if (link.parentElement) link.parentElement.style.display = 'none'; }
+    if (mediaBox) mediaBox.style.borderBottom = 'none';
 
     if (img) { img.style.display = 'none'; img.onload = null; img.onerror = null; img.src = ''; }
     if (iframe) { iframe.style.display = 'none'; iframe.src = ''; }
