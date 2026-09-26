@@ -57,6 +57,17 @@
   .hb-bar{height:4px; border-radius:99px; background:rgba(255,255,255,.1); overflow:hidden; margin-top:8px;}
   .hb-bar i{display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg, #7CF0C3, #46D3A0); transition:width .6s cubic-bezier(.16,1,.3,1);}
   .hb-margin{font-size:9.5px; color:rgba(255,255,255,.55); margin-top:4px;}
+  /* Kartu putih laba & pengeluaran di panel kanan */
+  .hb-side{gap:10px !important;}
+  .hb-card{background:#fff; color:var(--ink); border-radius:12px; padding:11px 12px; box-shadow:0 1px 2px rgba(7,8,51,.18);}
+  .hb-card .hb-row-l{color:var(--ink-soft);}
+  .hb-card .hb-row-n{color:var(--ink);}
+  .hb-card .hb-row-d{color:var(--ink-soft);}
+  .hb-card .hb-ico.is-laba{background:var(--green-soft); color:var(--green);}
+  .hb-card .hb-ico.is-ops{background:var(--red-soft); color:var(--red);}
+  .hb-card .hb-bar{background:var(--surface);}
+  .hb-card .hb-bar i{background:linear-gradient(90deg, #2FBF85, var(--green));}
+  .hb-card .hb-margin{color:var(--ink-soft);}
   .home-hero-cetak-btn{
     display:inline-flex; align-items:center; gap:6px; flex:none;
     height:28px; padding:0 10px; border-radius:8px;
@@ -416,7 +427,7 @@
       </div>
 
       <div class="hb-side">
-        <div>
+        <div class="hb-card">
           <div class="hb-row">
             <span class="hb-ico is-laba"><i class="ph ph-coins" aria-hidden="true"></i></span>
             <div class="hb-row-text">
@@ -428,6 +439,7 @@
           <div class="hb-bar"><i id="homeMarginBar"></i></div>
           <div class="hb-margin" id="homeMargin">Margin -</div>
         </div>
+        <div class="hb-card">
         <div class="hb-row">
           <span class="hb-ico is-ops"><i class="ph ph-receipt" aria-hidden="true"></i></span>
           <div class="hb-row-text">
@@ -435,6 +447,7 @@
             <div class="hb-row-n" id="homeOperasional">Rp 0</div>
           </div>
           <span class="hb-row-d" id="homeOperasionalDelta"></span>
+        </div>
         </div>
       </div>
     </div>
@@ -1095,9 +1108,9 @@
       homeRevealValue(document.getElementById('homeLaba'), homeFormatRupiah(laba));
       document.getElementById('homeMargin').textContent = omset > 0 ? ('Margin ' + marginPct.toFixed(1) + '%') : 'Margin -';
       document.getElementById('homeMarginBar').style.width = Math.max(0, Math.min(100, marginPct)).toFixed(1) + '%';
-      document.getElementById('homeLabaDelta').innerHTML = homeDeltaBadge(laba, labaPrev, true);
+      document.getElementById('homeLabaDelta').innerHTML = homeDeltaBadge(laba, labaPrev, false);
       homeRevealValue(document.getElementById('homeOperasional'), homeFormatRupiah(pengeluaran));
-      document.getElementById('homeOperasionalDelta').innerHTML = homeDeltaBadge(pengeluaran, pengeluaranPrev, true);
+      document.getElementById('homeOperasionalDelta').innerHTML = homeDeltaBadge(pengeluaran, pengeluaranPrev, false);
 
       var pendingCount = pendingPresensi.length;
       homeRenderPresensiBanner(pendingPresensi, unitList);
