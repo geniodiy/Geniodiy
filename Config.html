@@ -191,6 +191,29 @@
   .gx-seg button.is-on[data-val="aktif"] i{background:#1E8E5A;}
   .gx-seg button.is-on[data-val="selesai"]{background:#FDEAEA !important; color:#D4070F !important; border-color:#D4070F !important;}
   .gx-seg button.is-on[data-val="selesai"] i{background:#D4070F;}
+  .gx-seg label{height:34px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; margin:0; transition:background .15s ease, border-color .15s ease, color .15s ease;}
+  .gx-seg label input{display:none;}
+  .gx-seg .is-on{background:var(--blue-tint) !important; color:var(--blue) !important; border-color:var(--blue) !important;}
+  .gx-seg .is-on[data-val="aktif"]{background:#E9F7EF !important; color:#1E8E5A !important; border-color:#1E8E5A !important;}
+  .gx-seg .is-on[data-val="nonaktif"]{background:#FDEAEA !important; color:#D4070F !important; border-color:#D4070F !important;}
+  .gx-seg .is-on[data-val="P"]{background:#FFEFF3 !important; color:#C2366A !important; border-color:#C2366A !important;}
+  .gx-seg .is-on[data-val="aktif"] i{background:#1E8E5A;} .gx-seg .is-on[data-val="nonaktif"] i{background:#D4070F;}
+  .gx-seg + .gx-row, .gx-row + .gx-seg{margin-top:10px;}
+  .gx-sheet .gx-row{padding:0 0 10px;}
+  .gx-sheet .gx-row > label{display:flex; align-items:center; gap:6px; font-size:10.5px; font-weight:500; color:var(--ink-soft); margin:0 0 5px; text-transform:none; letter-spacing:0;}
+  .gx-sheet .gx-row input:not([type="hidden"]), .gx-sheet .gx-row select{width:100%; box-sizing:border-box; min-height:34px; padding:7px 11px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-family:var(--font); font-size:11.5px; font-weight:400; color:var(--ink); outline:none; transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;}
+  .gx-sheet .gx-row select{-webkit-appearance:none; appearance:none; padding-right:30px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235B5F76' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 11px center;}
+  .gx-sheet .gx-row input:focus, .gx-sheet .gx-row select:focus{border-color:var(--blue); background-color:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .gx-sheet .gx-row input::placeholder{color:#9A9EB3;}
+  .gx-info{background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:4px 12px;}
+  .gx-info > div{display:flex; justify-content:space-between; gap:12px; padding:8px 0; font-size:11.5px;}
+  .gx-info > div + div{border-top:1px solid var(--border);}
+  .gx-info span{color:var(--ink-soft); font-size:10.5px; flex:none;}
+  .gx-info b{font-weight:500; color:var(--ink); text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .gx-opt-row{display:flex; align-items:center; gap:10px; width:100%; padding:10px 2px; font-family:var(--font); font-size:12px; color:var(--ink); cursor:pointer; border:none; border-bottom:1px solid #EEF0F6; background:none; text-align:left; margin:0;}
+  .gx-opt-row:last-child{border-bottom:none;}
+  .gx-opt-row:hover{background:#FAFBFD;}
+  .gx-opt-row input{width:16px; height:16px; accent-color:var(--blue); flex:none; margin:0;}
   .gx-field{display:flex !important; align-items:center; justify-content:space-between; gap:8px; width:100%; min-height:34px; padding:7px 11px !important; border-radius:9px !important; background:var(--surface) !important; border:1px solid var(--border) !important; font-family:var(--font); font-size:11.5px !important; font-weight:400 !important; color:var(--ink) !important; cursor:pointer; text-align:left; transition:border-color .15s ease;}
   .gx-field:hover{border-color:#C9CCDA !important;}
   .gx-field svg{stroke:var(--ink-soft); flex:none;}

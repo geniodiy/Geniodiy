@@ -5,86 +5,7 @@
     .module-panel[data-module="ortu-siswa"]:not([hidden]){
       width:94%; max-width:1500px; margin:0 auto;
     }
-    .os-hero-sec{
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-    }
-    .os-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 12px !important;
-    }
-    .os-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .os-hero-badge-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .os-hero-unit-badge{
-      font-size: 9px !important;
-      padding: 2px 7px !important;
-    }
-    .os-hero-sublabel{
-      display: none !important;
-    }
-    .os-hero-counter{
-      margin-top: 0 !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 10px !important;
-    }
-    .os-hero-num-wrap{
-      display: flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      margin-top: 0 !important;
-    }
-    .os-hero-num{
-      font-size: 18px !important;
-      line-height: 1.1 !important;
-    }
-    .os-hero-unit{
-      font-size: 10.5px !important;
-    }
-    .os-hero-add-btn{
-      height: 26px !important;
-      font-size: 10.5px !important;
-      padding: 0 10px !important;
-      border-radius: 7px !important;
-      margin-left: 2px !important;
-    }
-    .os-hero-stats-row{
-      flex: none !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 16px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .os-hero-stat-card{
-      flex: none !important;
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-      min-width: 0 !important;
-    }
-    #os-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+    #os-list:not(.os-view-table){ display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:12px; align-items:start; }
     #os-list > .os-card{ margin-bottom:0 !important; }
     #os-list > .os-full-width{ grid-column:1/-1; }
 
@@ -93,7 +14,44 @@
     #os-toolbarRow .os-search-sec{ flex:1; margin-bottom:0 !important; }
   }
 
-  /* Tab switcher: dock + glider — sama persis mekanisme Gaji/Presensi */
+  /* ===== Highlight: titik per siswa | jenjang + tombol ===== */
+  .os-hero-sec{
+    position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px;
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto);
+    background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);
+  }
+  .ob-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0;}
+  .ob-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
+  .ob-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .ob-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .ob-label i{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .ob-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .ob-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; margin-top:8px; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .ob-unit{font-size:13px; font-weight:500; color:rgba(255,255,255,.65); margin-left:5px; letter-spacing:0;}
+  .ob-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px;}
+  .ob-sub .is-on{color:#7CF0C3;}
+  .ob-dots{display:flex; flex-wrap:wrap; gap:5px; margin-top:14px; max-width:520px;}
+  .ob-dots i{width:10px; height:10px; border-radius:50%; background:#7CF0C3; flex:none;}
+  .ob-dots i.is-off{background:rgba(255,255,255,.22);}
+  .ob-dots-note{font-size:10px; color:rgba(255,255,255,.5); margin-top:8px;}
+  .ob-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:10px; min-width:240px;}
+  .ob-side-l{font-size:10.5px; color:rgba(255,255,255,.62);}
+  .ob-jj{display:grid; gap:6px;}
+  .ob-jj div{display:grid; grid-template-columns:52px minmax(0,1fr) 28px; align-items:center; gap:8px; font-size:10.5px; color:rgba(255,255,255,.75);}
+  .ob-jj .t{height:6px; border-radius:99px; background:rgba(255,255,255,.08); overflow:hidden;}
+  .ob-jj .t i{display:block; height:100%; border-radius:99px; background:#9DB6FF; transform-origin:left center;}
+  .ob-jj b{color:#fff; text-align:right; font-weight:700; font-variant-numeric:tabular-nums;}
+  .os-hero-add-btn{height:34px; border-radius:9px; width:100%; background:#fff; color:var(--blue); border:1px solid #fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .os-hero-add-btn:hover{background:var(--blue-tint);}
+  .os-hero-add-btn:active{transform:scale(.97);}
+  .os-hero-add-btn i{font-size:14px;}
+  @media (max-width:899px){
+    .os-hero-sec{grid-template-columns:1fr;}
+    .ob-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .ob-num{font-size:28px;}
+  }
+
+  /* Tab switcher: dock + glider, sama dengan Gaji/Presensi */
   .os-dock{
     position:relative;
     display:flex; align-items:center; height:38px;
@@ -120,203 +78,126 @@
   }
   .os-dock-btn.os-dock-active{ color:var(--ink); font-weight:600; }
 
-  .os-status-badge{
-    display:inline-flex; align-items:center; gap:5px;
-    font-size:10px; font-weight:600; padding:0 9px; height:24px;
-    border-radius:999px; box-sizing:border-box; flex:none;
+  #os-filterCount[hidden]{display:none !important;}
+  #os-searchInput{height:34px !important; border-radius:10px !important; font-size:12px !important;}
+  #os-searchInput:focus{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .os-tool-btn{position:relative; width:34px; height:34px; border-radius:10px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; padding:0; transition:background .15s ease;}
+  .os-tool-btn:hover{background:var(--surface);}
+  .os-tool-btn:active{transform:scale(.9);}
+  @keyframes osPop{0%{transform:scale(1);} 35%{transform:scale(1.18);} 100%{transform:scale(1);}}
+  .os-btn-pop{animation:osPop .32s cubic-bezier(.34,1.56,.64,1);}
+
+  /* ===== Kartu ===== */
+  .os-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:12px; min-width:0; box-sizing:border-box; transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .os-card:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12); transform:translateY(-1px);}
+  .oc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .oc-av{width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:11.5px; flex:none;}
+  .oc-who{min-width:0; flex:1;}
+  .oc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .oc-who p{font-size:10.5px; color:var(--ink-soft); margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .oc-status{display:inline-flex; align-items:center; gap:5px; flex:none; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .oc-status i{width:6px; height:6px; border-radius:50%;}
+  .oc-status.is-on{background:#E9F7EF; color:#1E8E5A;} .oc-status.is-on i{background:#1E8E5A;}
+  .oc-status.is-off{background:var(--surface); color:var(--ink-soft);} .oc-status.is-off i{background:#A9ADC0;}
+  .oc-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .oc-chip{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:var(--ink); background:var(--surface); border-radius:8px; padding:4px 8px; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;}
+  .oc-chip i{font-size:12px; color:var(--ink-soft); flex:none;}
+  .oc-kids{margin-top:10px; border-top:1px dashed var(--border); padding-top:4px;}
+  .oc-kid{display:grid; grid-template-columns:24px minmax(0,1fr) auto; gap:9px; align-items:center; padding:6px 0;}
+  .oc-kid + .oc-kid{border-top:1px solid #F1F2F7;}
+  .oc-ki{width:24px; height:24px; border-radius:7px; font-size:9.5px; font-weight:600; display:flex; align-items:center; justify-content:center; background:#EEF1FF; color:#3B4BD8;}
+  .oc-ki.is-p{background:#FFEFF3; color:#C2366A;}
+  .oc-kid.is-off .oc-kn{color:var(--ink-soft);}
+  .oc-kn{font-size:11.5px; font-weight:500; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .oc-ks{font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;}
+  .oc-kr{display:flex; align-items:center; gap:6px;}
+  .os-jb{display:inline-block; font-size:9.5px; font-weight:600; color:var(--blue); background:var(--blue-tint); border-radius:6px; padding:2px 6px; white-space:nowrap;}
+  .os-jb.is-other{color:var(--ink-soft); background:var(--surface);}
+  .oc-off{font-size:9.5px; color:var(--ink-soft); background:var(--surface); border-radius:6px; padding:2px 6px;}
+  .oc-empty{font-size:10.5px; color:var(--ink-soft); margin:10px 0 0;}
+  .oc-foot{display:flex; align-items:center; gap:8px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);}
+  .oc-wa{min-width:0; flex:1;}
+  .oc-wa span{display:block; font-size:10px; color:var(--ink-soft);}
+  .oc-wa b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .os-icon{width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; padding:0; flex:none; text-decoration:none; box-sizing:border-box; transition:background .15s ease, color .15s ease, transform .1s ease;}
+  .os-icon:hover{background:var(--surface); color:var(--ink);}
+  .os-icon.is-wa{color:#14A44D;}
+  .os-icon.is-wa:hover{background:#E9F7EF; color:#14A44D;}
+  .os-icon:active{transform:scale(.94);}
+  .os-edit-btn{height:30px; border-radius:8px; border:none; background:var(--blue); color:#fff; font-family:var(--font); font-size:11px; font-weight:600; padding:0 12px; cursor:pointer; flex:none; transition:transform .1s ease, filter .15s ease;}
+  .os-edit-btn:hover{filter:brightness(1.08);}
+  .os-edit-btn:active{transform:scale(.96);}
+
+  /* ===== Tabel: satu siswa satu baris ===== */
+  .os-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden;}
+  .os-table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .os-table{border-collapse:separate; border-spacing:0; width:100%; min-width:900px; font-size:11px;}
+  .os-table th{font-size:10.5px; font-weight:500; color:var(--ink-soft); text-align:left; padding:11px 12px; border-bottom:1px solid var(--border); background:#fff; white-space:nowrap;}
+  .os-table th.os-sort-th{cursor:pointer; user-select:none;}
+  .os-table th.os-sort-th:hover{color:var(--ink);}
+  .os-table th .os-sort-ico{font-size:10px; margin-left:3px; opacity:.45;}
+  .os-table th.is-sorted{color:var(--ink);} .os-table th.is-sorted .os-sort-ico{opacity:1; color:var(--blue);}
+  .os-table td{padding:7px 12px; border-bottom:1px solid #EEF0F6; vertical-align:middle; white-space:nowrap; color:var(--ink);}
+  .os-table tbody tr:last-child td{border-bottom:none;}
+  .os-table tbody tr:hover td{background:#F8F9FD;}
+  .os-table .os-stk{position:sticky; left:0; z-index:1; background:#fff; box-shadow:1px 0 0 var(--border);}
+  .os-table th.os-stk{z-index:2;}
+  .os-table td.os-no{color:var(--ink-soft); width:34px; font-variant-numeric:tabular-nums;}
+  .os-table td.os-nm{font-weight:600; max-width:200px; overflow:hidden; text-overflow:ellipsis;}
+  .os-table td.os-soft{color:var(--ink-soft);}
+  .os-table td.os-num{font-variant-numeric:tabular-nums;}
+  .os-table td.os-c{text-align:center;}
+  .os-table td.os-act{text-align:right;}
+  .os-table td.os-act .os-icon{width:28px; height:28px; font-size:13px; vertical-align:middle; margin-left:4px;}
+  .os-table-empty{padding:28px 12px; text-align:center; font-size:11.5px; color:var(--ink-soft);}
+
+  /* ===== Animasi ===== */
+  @keyframes osIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes osFade{from{opacity:0;} to{opacity:1;}}
+  @keyframes osDot{from{opacity:0; transform:scale(.3);} to{opacity:1; transform:none;}}
+  @keyframes osGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  #os-list > .os-card.os-in{animation:osIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #os-list .os-table tbody tr.os-in td{animation:osFade .35s ease both; animation-delay:calc(var(--i) * 30ms);}
+  .ob-dots.os-anim i{animation:osDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 12ms);}
+  .ob-jj.os-anim .t i{animation:osGrow .8s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 60ms);}
+  @media (prefers-reduced-motion: reduce){
+    #os-list > .os-card.os-in, #os-list .os-table tbody tr.os-in td, .ob-dots.os-anim i, .ob-jj.os-anim .t i, .os-btn-pop{animation:none !important;}
+    .os-card:hover{transform:none;}
   }
 
-  #os-addBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
-  #os-addBtn:active{ transform:scale(.85); }
-
+  /* ===== Popup ===== */
   #os-modal, #os-editModal, #os-editOrtuBiodataModal, #os-editSiswaModal, #os-filterModal, #os-pickerModal, #os-ortuPickerModal{ align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease; }
   #os-modal.show, #os-editModal.show, #os-editOrtuBiodataModal.show, #os-editSiswaModal.show, #os-filterModal.show, #os-pickerModal.show, #os-ortuPickerModal.show{ opacity:1; }
-  #os-modal .modal-sheet, #os-editModal .modal-sheet, #os-editOrtuBiodataModal .modal-sheet, #os-editSiswaModal .modal-sheet, #os-filterModal .modal-sheet, #os-pickerModal .modal-sheet, #os-ortuPickerModal .modal-sheet{ border-radius:16px; width:100%; max-width:400px; margin:0 auto; transform:scale(.88) translateY(10px); transition:transform .32s cubic-bezier(.34,1.56,.64,1); max-height:88vh; overflow-y:auto; padding:16px 18px 18px; box-sizing:border-box; }
-  #os-modal.show .modal-sheet, #os-editModal.show .modal-sheet, #os-editOrtuBiodataModal.show .modal-sheet, #os-editSiswaModal.show .modal-sheet, #os-filterModal.show .modal-sheet, #os-pickerModal.show .modal-sheet, #os-ortuPickerModal.show .modal-sheet{ transform:scale(1) translateY(0); }
-  #os-modal .field label{ font-size:10px; }
-
-  #os-modal .modal-actions .btn, #os-editModal .modal-actions .btn, #os-editOrtuBiodataModal .modal-actions .btn, #os-editSiswaModal .modal-actions .btn, #os-filterModal .modal-actions .btn, #os-pickerModal .modal-actions .btn, #os-ortuPickerModal .modal-actions .btn{
-    height: 36px !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    border-radius: 9px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
-  }
-
-  .os-group-title{ font-size:10px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
-  .os-group-title:first-of-type{ margin-top:0; }
-  .os-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-  .os-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
-  .os-row:last-child{ border-bottom:none; }
-  .os-row label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:2px; }
-  .os-row input, .os-row select{
-    width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
-    background:none; color:var(--ink); outline:none;
-  }
-
-  .os-siswa-toggle-icon{ transition:transform .25s ease; }
-
-  /* Hero Ortu Siswa */
-  .os-hero-sec{
-    background: var(--ink);
-    color: #fff;
-    border-radius: 14px;
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
-  }
-  .os-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .os-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .os-hero-badge-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 3px 8px;
-    border-radius: 999px;
-  }
-  .os-hero-unit-badge{
-    background: rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 500;
-    padding: 3px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .os-hero-sublabel{
-    font-size: 10.5px;
-    opacity: .65;
-    margin-top: 8px;
-  }
-  .os-hero-num-wrap{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 2px;
-  }
-  .os-hero-num{
-    font-size: 21px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-  .os-hero-unit{
-    font-size: 11.5px;
-    opacity: .6;
-    font-weight: 500;
-  }
-  .os-hero-add-btn{
-    background: #fff;
-    color: var(--ink);
-    border: none;
-    border-radius: 8px;
-    height: 28px;
-    padding: 0 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 500;
-    font-family: var(--font);
-    flex: none;
-    white-space: nowrap;
-  }
-  .os-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.14);
-  }
-  .os-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .os-hero-stat-icon{
-    width: 22px;
-    height: 22px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .os-hero-stat-label{
-    font-size: 9.5px;
-    opacity: .65;
-  }
-  .os-hero-stat-val{
-    font-size: 12px;
-    font-weight: 600;
-    margin-top: 1px;
-  }
+  #os-form{display:flex; flex-direction:column; min-height:0; flex:1;}
+  .os-kid-row{display:grid; grid-template-columns:24px minmax(0,1fr) auto; gap:9px; align-items:center; padding:8px 0; border-bottom:1px solid #EEF0F6;}
+  .os-kid-row:last-child{border-bottom:none;}
+  .os-kid-row b{display:block; font-size:11.5px; font-weight:500; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .os-kid-row span.s{display:flex; align-items:center; gap:5px; font-size:10px; color:var(--ink-soft); margin-top:1px;}
+  .os-kid-row span.s i{width:6px; height:6px; border-radius:50%; background:#1E8E5A;}
+  .os-kid-row span.s i.is-off{background:#A9ADC0;}
+  .os-kid-row .os-edit-siswa-btn{height:28px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:10.5px; font-weight:600; padding:0 11px; cursor:pointer;}
+  .os-kid-row .os-edit-siswa-btn:hover{background:var(--surface);}
+  .os-sec-btn{width:100%; height:32px; margin-top:8px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;}
+  .os-sec-btn:hover{background:var(--surface);}
+  .os-sec-btn i{font-size:13px; color:var(--ink-soft);}
 </style>
 
-  <!-- Hero -->
+  <!-- Highlight -->
   <div class="os-hero-sec">
-    <div class="os-hero-main-col">
-      <div class="os-hero-badges">
-        <span class="os-hero-badge-pill">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
-          DATABASE WALI MURID
-        </span>
-        <span class="os-hero-unit-badge" id="os-heroUnitBadge">-</span>
+    <div class="ob-main">
+      <div class="ob-top">
+        <span class="ob-label"><i></i>Siswa terdaftar</span>
+        <span class="ob-pill" id="os-heroUnitBadge">-</span>
       </div>
-      <div class="os-hero-counter">
-        <div class="os-hero-sublabel">Total Orang Tua Terdaftar</div>
-        <div class="os-hero-num-wrap">
-          <div style="display:flex; align-items:baseline; gap:6px;">
-            <span class="os-hero-num" id="os-heroTotal">0</span>
-            <span class="os-hero-unit">Orang Tua</span>
-          </div>
-          <button id="os-addBtn" aria-label="Tambah siswa" class="os-hero-add-btn">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Tambah Siswa
-          </button>
-        </div>
-      </div>
+      <div class="ob-num"><span id="os-heroTotal">0</span><span class="ob-unit">siswa</span></div>
+      <div class="ob-sub"><span class="is-on" id="os-heroSiswaAktif">0 aktif</span> · <span id="os-heroSiswaNonaktif">0 nonaktif</span></div>
+      <div class="ob-dots" id="os-heroDots" aria-hidden="true"></div>
+      <div class="ob-dots-note" id="os-heroDotsNote" hidden></div>
     </div>
-
-    <div class="os-hero-stats-row">
-      <div class="os-hero-stat-card">
-        <span class="os-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="os-hero-stat-label">Siswa Aktif</div>
-          <div class="os-hero-stat-val" id="os-heroSiswaAktif">0 Siswa</div>
-        </div>
-      </div>
-      <div class="os-hero-stat-card">
-        <span class="os-hero-stat-icon" style="background:rgba(255,59,48,.2); color:#ff9c94;">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="os-hero-stat-label">Siswa Nonaktif</div>
-          <div class="os-hero-stat-val" id="os-heroSiswaNonaktif">0 Siswa</div>
-        </div>
-      </div>
+    <div class="ob-side">
+      <div class="ob-side-l">Per jenjang (aktif)</div>
+      <div class="ob-jj" id="os-heroJenjang"></div>
+      <button id="os-addBtn" type="button" aria-label="Tambah siswa" class="os-hero-add-btn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah siswa</button>
     </div>
   </div>
 
@@ -335,207 +216,173 @@
     </button>
   </div>
 
-  <!-- Search + Filter -->
+  <!-- Search + Filter + Ganti tampilan -->
   <div class="os-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
     <div style="flex:1; position:relative;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="os-searchInput" placeholder="Cari nama orang tua, anak, sekolah, nomor WA, unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+      <input type="text" id="os-searchInput" placeholder="Cari nama siswa, orang tua, sekolah, nomor WA, unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
     </div>
-    <button id="os-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
+    <button id="os-filterBtn" class="os-tool-btn" type="button" aria-label="Filter">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
       <span id="os-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
     </button>
+    <button id="os-viewToggleBtn" class="os-tool-btn" type="button" aria-label="Tampilkan sebagai tabel" title="Tampilkan sebagai tabel"></button>
   </div>
 
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-    <div id="os-sectionLabel" style="font-size:11.5px; color:var(--ink-soft); font-weight:500;">Data Orang Tua Aktif</div>
-    <span id="os-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Orang Tua</span>
+    <div id="os-sectionLabel" style="font-size:12px; color:var(--ink); font-weight:600;">Orang tua aktif</div>
+    <span id="os-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 orang tua</span>
   </div>
 
   <div id="os-list">
     <div class="empty-state">Memuat data...</div>
   </div>
 
-  <!-- Modal Filter -->
+  <!-- Popup filter -->
   <div class="modal-overlay" id="os-filterModal" hidden>
-    <div class="modal-sheet" style="max-height:88vh; overflow-y:auto;">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Filter</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar orang tua berdasarkan unit atau jenjang anaknya.</p>
-
-      <div class="os-group-title">Unit / Cabang</div>
-      <div class="os-group" style="margin-bottom:4px;">
-        <button type="button" class="os-filter-row-btn" data-picker="unit" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="os-filterUnitSummary">Semua Unit</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-funnel-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Filter</h3>
+          <p class="gx-sub">Saring berdasarkan unit atau jenjang siswa.</p>
+        </div>
+        <button type="button" class="gx-close" id="os-filterCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="os-group-title">Jenjang</div>
-      <div class="os-group">
-        <button type="button" class="os-filter-row-btn" data-picker="jenjang" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="os-filterJenjangSummary">Semua Jenjang</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+      <div class="gx-body">
+        <div class="gx-step-title"><span class="gx-step">1</span>Unit</div>
+        <div class="gx-row">
+          <button type="button" class="os-filter-row-btn gx-field" data-picker="unit"><span id="os-filterUnitSummary">Semua unit</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+        </div>
+        <div class="gx-step-title"><span class="gx-step">2</span>Jenjang</div>
+        <div class="gx-row">
+          <button type="button" class="os-filter-row-btn gx-field" data-picker="jenjang"><span id="os-filterJenjangSummary">Semua jenjang</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+        </div>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="os-filterResetBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Reset</button>
-        <button type="button" class="btn btn-primary" id="os-filterApplyBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Terapkan Filter</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="os-filterResetBtn">Reset</button>
+        <button type="button" class="btn btn-primary" id="os-filterApplyBtn">Terapkan filter</button>
       </div>
     </div>
   </div>
 
-  <!-- Popup Picker -->
+  <!-- Popup pilih opsi filter -->
   <div class="modal-overlay" id="os-pickerModal" hidden style="z-index:70;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="os-pickerTitle" style="font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih</h3>
-      <div id="os-pickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
-        <button type="button" class="btn btn-outline" id="os-pickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="os-pickerDoneBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Selesai</button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-list-checks" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="os-pickerTitle">Pilih</h3></div>
+      </div>
+      <div class="gx-body"><div id="os-pickerList" style="padding:6px 0;"></div></div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="os-pickerCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="os-pickerDoneBtn">Selesai</button>
       </div>
     </div>
   </div>
 
-  <!-- Popup Pilih Orang Tua (dengan search bar) -->
+  <!-- Popup pilih orang tua (dengan pencarian) -->
   <div class="modal-overlay" id="os-ortuPickerModal" hidden style="z-index:75;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 8px;">Pilih Orang Tua</h3>
-      <div style="position:relative; margin-bottom:8px;">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="os-ortuPickerSearchInput" placeholder="Cari nama orang tua..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Pilih orang tua</h3>
+          <p class="gx-sub">Ketik untuk mencari lebih cepat.</p>
+        </div>
+        <button type="button" class="gx-close" id="os-ortuPickerCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-      <div id="os-ortuPickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions" style="margin-top:10px;">
-        <button type="button" class="btn btn-outline" id="os-ortuPickerCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Batal</button>
+      <div class="gx-body">
+        <div class="gx-search"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input type="text" id="os-ortuPickerSearchInput" placeholder="Cari nama orang tua..."></div>
+        <div id="os-ortuPickerList"></div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="os-ortuPickerCancelBtn">Batal</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Edit Orang Tua -->
+  <!-- Popup kelola orang tua -->
   <div class="modal-overlay" id="os-editModal" hidden>
-    <div class="modal-sheet" style="max-height:88vh; overflow-y:auto;">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Edit Orang Tua</h3>
-      <div id="os-editOrtuAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-
-      <div class="os-group-title">Biodata Orang Tua</div>
-      <div class="os-group" style="margin-bottom:8px;">
-        <div class="os-row"><span style="font-size:10px; font-weight:500; color:var(--ink-soft);">Nama Orang Tua</span><div id="os-viewOrtuNama" style="font-size:12.5px; font-weight:500; color:var(--ink); margin-top:1px;">-</div></div>
-        <div class="os-row"><span style="font-size:10px; font-weight:500; color:var(--ink-soft);">Nomor WhatsApp</span><div id="os-viewOrtuHp" style="font-size:12.5px; font-weight:500; color:var(--ink); margin-top:1px;">-</div></div>
-        <div class="os-row"><span style="font-size:10px; font-weight:500; color:var(--ink-soft);">Alamat</span><div id="os-viewOrtuAlamat" style="font-size:12.5px; font-weight:500; color:var(--ink); margin-top:1px;">-</div></div>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-users-three" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Kelola orang tua</h3>
+          <p class="gx-sub">Biodata wali dan daftar anaknya.</p>
+        </div>
+        <button type="button" class="gx-close" id="os-editCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-      <button type="button" id="os-editOrtuBiodataBtn" style="width:100%; margin-bottom:14px; background:var(--blue); color:#fff; border:none; border-radius:8px; height:32px; font-size:11.5px; font-weight:500; cursor:pointer;">Edit Biodata</button>
-
-      <div class="os-group-title">Daftar Anak</div>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 8px;">Status aktif/nonaktif diubah lewat Edit Siswa.</p>
-      <div id="os-editList"></div>
-      <div class="modal-actions" style="margin-top:12px;">
-        <button type="button" class="btn btn-outline" id="os-editCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; width:100%;">Tutup</button>
+      <div class="gx-body">
+        <div id="os-editOrtuAlert" class="alert alert-error" hidden></div>
+        <div class="gx-step-title"><span class="gx-step">1</span>Biodata</div>
+        <div class="gx-info">
+          <div><span>Nama</span><b id="os-viewOrtuNama">-</b></div>
+          <div><span>WhatsApp</span><b id="os-viewOrtuHp">-</b></div>
+          <div><span>Alamat</span><b id="os-viewOrtuAlamat">-</b></div>
+        </div>
+        <button type="button" class="os-sec-btn" id="os-editOrtuBiodataBtn"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit biodata</button>
+        <div class="gx-step-title"><span class="gx-step">2</span>Daftar anak</div>
+        <div id="os-editList"></div>
+        <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span>Status aktif atau nonaktif diubah lewat edit siswa.</span></div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="os-editCancelBtn">Tutup</button>
       </div>
     </div>
   </div>
 
-  <!-- Popup Edit Biodata Orang Tua -->
+  <!-- Popup edit biodata orang tua -->
   <div class="modal-overlay" id="os-editOrtuBiodataModal" hidden>
-    <div class="modal-sheet">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Edit Biodata Orang Tua</h3>
-      <div id="os-editOrtuBiodataAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-
-      <div class="os-group-title">Data Orang Tua</div>
-      <div class="os-group">
-        <div class="os-row"><label for="os-editOrtuNama">Nama Orang Tua</label><input type="text" id="os-editOrtuNama"></div>
-        <div class="os-row"><label for="os-editOrtuHp">Nomor WhatsApp</label><input type="tel" id="os-editOrtuHp"></div>
-        <div class="os-row"><label for="os-editOrtuAlamat">Alamat</label><input type="text" id="os-editOrtuAlamat" placeholder="Opsional"></div>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-identification-card" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Edit biodata orang tua</h3>
+          <p class="gx-sub">Nomor WhatsApp dipakai untuk menghubungi wali.</p>
+        </div>
+        <button type="button" class="gx-close" id="os-editOrtuBiodataCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="os-editOrtuBiodataCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="os-editOrtuSaveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      <div class="gx-body">
+        <div id="os-editOrtuBiodataAlert" class="alert alert-error" hidden></div>
+        <div class="gx-step-title"><span class="gx-step">1</span>Data orang tua</div>
+        <div class="gx-row"><label for="os-editOrtuNama">Nama orang tua <em class="gx-req">wajib</em></label><input type="text" id="os-editOrtuNama"></div>
+        <div class="gx-row"><label for="os-editOrtuHp">Nomor WhatsApp <em class="gx-req">wajib</em></label><input type="tel" id="os-editOrtuHp"></div>
+        <div class="gx-row"><label for="os-editOrtuAlamat">Alamat <em class="gx-opt">opsional</em></label><input type="text" id="os-editOrtuAlamat" placeholder="mis. Jl. Kaliurang km 7"></div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="os-editOrtuBiodataCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="os-editOrtuSaveBtn">Simpan</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Edit Siswa -->
+  <!-- Popup edit siswa -->
   <div class="modal-overlay" id="os-editSiswaModal" hidden>
-    <div class="modal-sheet">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Edit Data Siswa</h3>
-      <div id="os-editSiswaAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-      <input type="hidden" id="os-editSiswaId">
-      <input type="hidden" id="os-editSiswaOrtuId">
-
-      <div class="os-group-title">Data Siswa</div>
-      <div class="os-group">
-        <div class="os-row"><label for="os-editSiswaNama">Nama Siswa</label><input type="text" id="os-editSiswaNama"></div>
-        <div class="os-row"><label for="os-editSiswaKelas">Kelas</label><input type="text" id="os-editSiswaKelas"></div>
-        <div class="os-row"><label for="os-editSiswaSekolah">Sekolah</label><input type="text" id="os-editSiswaSekolah"></div>
-        <div class="os-row"><label for="os-editSiswaJenjang">Jenjang</label>
-          <select id="os-editSiswaJenjang">
-            <option value="">Pilih jenjang...</option>
-            <option value="SD">SD</option>
-            <option value="SMP">SMP</option>
-            <option value="SMA">SMA</option>
-            <option value="Lainnya">Lainnya</option>
-          </select>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-student" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Edit siswa</h3>
+          <p class="gx-sub" id="os-editSiswaSub">Perbarui data dan status siswa.</p>
         </div>
-        <div class="os-row"><label>Jenis Kelamin</label>
-          <div style="display:flex; gap:6px; margin-top:2px;">
-            <label class="os-gender-opt" data-val="L" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-editSiswaGender" value="L" style="display:none;"> Laki-laki</label>
-            <label class="os-gender-opt" data-val="P" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-editSiswaGender" value="P" style="display:none;"> Perempuan</label>
-          </div>
-        </div>
-        <div class="os-row"><label>Status</label>
-          <div style="display:flex; gap:6px; margin-top:2px;">
-            <label class="os-editstatus-opt" data-val="aktif" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-editSiswaStatus" value="aktif" style="display:none;"> Aktif</label>
-            <label class="os-editstatus-opt" data-val="nonaktif" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-editSiswaStatus" value="nonaktif" style="display:none;"> Nonaktif</label>
-          </div>
-        </div>
+        <button type="button" class="gx-close" id="os-editSiswaCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="os-editSiswaCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="os-editSiswaSaveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Tambah Orang Tua & Siswa -->
-  <div class="modal-overlay" id="os-modal" hidden>
-    <div class="modal-sheet">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Tambah Siswa</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Pilih apakah siswa ini anak dari orang tua yang sudah terdaftar atau orang tua baru.</p>
-      <div id="os-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-
-      <div class="field">
-        <div style="display:flex; gap:6px;">
-          <button type="button" class="os-ortu-mode-btn" data-mode="baru" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--blue); background:var(--blue-tint); color:var(--blue); font-size:11px; font-weight:500; cursor:pointer;">Orang Tua Baru</button>
-          <button type="button" class="os-ortu-mode-btn" data-mode="lama" style="flex:1; padding:7px 4px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-size:11px; font-weight:500; cursor:pointer;">Orang Tua Lama</button>
+      <div class="gx-body">
+        <div id="os-editSiswaAlert" class="alert alert-error" hidden></div>
+        <input type="hidden" id="os-editSiswaId">
+        <input type="hidden" id="os-editSiswaOrtuId">
+        <div class="gx-step-title"><span class="gx-step">1</span>Status</div>
+        <div class="gx-seg">
+          <label class="os-editstatus-opt" data-val="aktif"><input type="radio" name="os-editSiswaStatus" value="aktif"><i></i>Aktif</label>
+          <label class="os-editstatus-opt" data-val="nonaktif"><input type="radio" name="os-editSiswaStatus" value="nonaktif"><i></i>Nonaktif</label>
         </div>
-      </div>
-
-      <form id="os-form">
-        <div class="os-group-title">Data Orang Tua</div>
-        <div class="os-group" id="os-ortuBaruGroup" style="margin-bottom:4px;">
-          <div class="os-row"><label for="os-ortuNama">Nama Orang Tua</label><input type="text" id="os-ortuNama" placeholder="mis. Ridwan Fathir"></div>
-          <div class="os-row"><label for="os-ortuHp">Nomor WhatsApp</label><input type="tel" id="os-ortuHp" placeholder="08xxxxxxxxxx"></div>
-          <div class="os-row"><label for="os-ortuAlamat">Alamat</label><input type="text" id="os-ortuAlamat" placeholder="Opsional"></div>
-        </div>
-        <div class="os-group" id="os-ortuLamaGroup" style="margin-bottom:4px; display:none;">
-          <div class="os-row"><label for="os-ortuExistingBtn">Pilih Orang Tua</label>
-            <button type="button" id="os-ortuExistingBtn" style="width:100%; text-align:left; background:none; border:none; padding:0; font-family:var(--font); font-size:12px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:space-between;">
-              <span id="os-ortuExistingLabel">Pilih orang tua...</span>
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-            </button>
-            <input type="hidden" id="os-ortuExisting">
-          </div>
-        </div>
-
-        <div class="os-group-title">Data Siswa</div>
-        <div class="os-group">
-          <div class="os-row"><label for="os-siswaNama">Nama Siswa</label><input type="text" id="os-siswaNama" required placeholder="mis. Almer Fathir"></div>
-          <div class="os-row"><label for="os-siswaKelas">Kelas</label><input type="text" id="os-siswaKelas" placeholder="mis. 9"></div>
-          <div class="os-row"><label for="os-siswaSekolah">Sekolah</label><input type="text" id="os-siswaSekolah" placeholder="mis. SMAN 8 Jakarta"></div>
-          <div class="os-row"><label for="os-siswaJenjang">Jenjang</label>
-            <select id="os-siswaJenjang" required style="font-weight:500;">
+        <div class="gx-step-title"><span class="gx-step">2</span>Data siswa</div>
+        <div class="gx-row"><label for="os-editSiswaNama">Nama siswa <em class="gx-req">wajib</em></label><input type="text" id="os-editSiswaNama"></div>
+        <div class="gx-2col">
+          <div class="gx-row"><label for="os-editSiswaKelas">Kelas</label><input type="text" id="os-editSiswaKelas" placeholder="mis. 9"></div>
+          <div class="gx-row"><label for="os-editSiswaJenjang">Jenjang</label>
+            <select id="os-editSiswaJenjang">
               <option value="">Pilih jenjang...</option>
               <option value="SD">SD</option>
               <option value="SMP">SMP</option>
@@ -543,22 +390,85 @@
               <option value="Lainnya">Lainnya</option>
             </select>
           </div>
-          <div class="os-row"><label>Jenis Kelamin</label>
-            <div style="display:flex; gap:6px; margin-top:2px;">
-              <label class="os-gender-opt" data-val="L" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-siswaGender" value="L" style="display:none;"> Laki-laki</label>
-              <label class="os-gender-opt" data-val="P" style="flex:1; text-align:center; padding:7px 4px; border-radius:8px; border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;"><input type="radio" name="os-siswaGender" value="P" style="display:none;"> Perempuan</label>
+        </div>
+        <div class="gx-row"><label for="os-editSiswaSekolah">Sekolah</label><input type="text" id="os-editSiswaSekolah" placeholder="mis. SMP N 1 Yogyakarta"></div>
+        <div class="gx-row"><label>Jenis kelamin</label>
+          <div class="gx-seg">
+            <label class="os-gender-opt" data-val="L"><input type="radio" name="os-editSiswaGender" value="L">Laki-laki</label>
+            <label class="os-gender-opt" data-val="P"><input type="radio" name="os-editSiswaGender" value="P">Perempuan</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="os-editSiswaCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="os-editSiswaSaveBtn">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup tambah siswa -->
+  <div class="modal-overlay" id="os-modal" hidden>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-user-plus" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Tambah siswa</h3>
+          <p class="gx-sub">Daftarkan siswa baru beserta orang tuanya.</p>
+        </div>
+        <button type="button" class="gx-close" id="os-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <form id="os-form">
+        <div class="gx-body">
+          <div id="os-modalAlert" class="alert alert-error" hidden></div>
+          <div class="gx-step-title"><span class="gx-step">1</span>Orang tua</div>
+          <div class="gx-seg" style="margin-bottom:10px;">
+            <button type="button" class="os-ortu-mode-btn is-on" data-mode="baru">Orang tua baru</button>
+            <button type="button" class="os-ortu-mode-btn" data-mode="lama">Sudah terdaftar</button>
+          </div>
+          <div id="os-ortuBaruGroup">
+            <div class="gx-row"><label for="os-ortuNama">Nama orang tua <em class="gx-req">wajib</em></label><input type="text" id="os-ortuNama" placeholder="mis. Ridwan Fathir"></div>
+            <div class="gx-2col">
+              <div class="gx-row"><label for="os-ortuHp">WhatsApp <em class="gx-req">wajib</em></label><input type="tel" id="os-ortuHp" placeholder="08xxxxxxxxxx"></div>
+              <div class="gx-row"><label for="os-ortuAlamat">Alamat <em class="gx-opt">opsional</em></label><input type="text" id="os-ortuAlamat" placeholder="mis. Jl. Kaliurang"></div>
             </div>
           </div>
-          <div class="os-row"><label for="os-siswaUnit">Unit / Cabang</label>
-            <select id="os-siswaUnit" required style="font-weight:500;">
+          <div id="os-ortuLamaGroup" style="display:none;">
+            <div class="gx-row"><label for="os-ortuExistingBtn">Pilih orang tua <em class="gx-req">wajib</em></label>
+              <button type="button" id="os-ortuExistingBtn" class="gx-field"><span id="os-ortuExistingLabel">Pilih orang tua...</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+              <input type="hidden" id="os-ortuExisting">
+            </div>
+          </div>
+
+          <div class="gx-step-title"><span class="gx-step">2</span>Data siswa</div>
+          <div class="gx-row"><label for="os-siswaNama">Nama siswa <em class="gx-req">wajib</em></label><input type="text" id="os-siswaNama" required placeholder="mis. Almer Fathir"></div>
+          <div class="gx-2col">
+            <div class="gx-row"><label for="os-siswaKelas">Kelas</label><input type="text" id="os-siswaKelas" placeholder="mis. 9"></div>
+            <div class="gx-row"><label for="os-siswaJenjang">Jenjang <em class="gx-req">wajib</em></label>
+              <select id="os-siswaJenjang" required>
+                <option value="">Pilih...</option>
+                <option value="SD">SD</option>
+                <option value="SMP">SMP</option>
+                <option value="SMA">SMA</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+          </div>
+          <div class="gx-row"><label for="os-siswaSekolah">Sekolah</label><input type="text" id="os-siswaSekolah" placeholder="mis. SMP N 1 Yogyakarta"></div>
+          <div class="gx-row"><label for="os-siswaUnit">Unit <em class="gx-req">wajib</em></label>
+            <select id="os-siswaUnit" required>
               <option value="">Pilih unit...</option>
             </select>
           </div>
+          <div class="gx-row"><label>Jenis kelamin</label>
+            <div class="gx-seg">
+              <label class="os-gender-opt" data-val="L"><input type="radio" name="os-siswaGender" value="L">Laki-laki</label>
+              <label class="os-gender-opt" data-val="P"><input type="radio" name="os-siswaGender" value="P">Perempuan</label>
+            </div>
+          </div>
         </div>
-
-        <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-          <button type="button" class="btn btn-outline" id="os-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-          <button type="submit" class="btn btn-primary" id="os-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+        <div class="modal-actions gx-foot">
+          <button type="button" class="btn btn-outline" id="os-cancelBtn">Batal</button>
+          <button type="submit" class="btn btn-primary" id="os-saveBtn">Simpan siswa</button>
         </div>
       </form>
     </div>
@@ -578,7 +488,9 @@
     initialized: false,
     ortuMode: 'baru',
     filterUnit: '',
-    filterJenjang: ''
+    filterJenjang: '',
+    viewMode: (function () { try { return localStorage.getItem('genio_os_view_mode') || 'cards'; } catch (e) { return 'cards'; } })(),
+    sort: { key: 'nama', dir: 'asc' }
   };
 
   function osEscape(str) {
@@ -633,27 +545,30 @@
 
       document.getElementById('os-searchInput').addEventListener('input', function (e) {
         osState.search = e.target.value.toLowerCase();
-        osRenderList();
+        osRenderList(false);
       });
       document.getElementById('os-addBtn').addEventListener('click', osOpenModal);
       document.getElementById('os-cancelBtn').addEventListener('click', osCloseModal);
       document.getElementById('os-form').addEventListener('submit', osSubmitForm);
       document.getElementById('os-editCancelBtn').addEventListener('click', osCloseEditModal);
       document.getElementById('os-filterBtn').addEventListener('click', osOpenFilterModal);
+      document.getElementById('os-viewToggleBtn').addEventListener('click', osToggleViewMode);
+      osUpdateViewToggleUI();
+      document.getElementById('os-modalCloseX').addEventListener('click', osCloseModal);
+      document.getElementById('os-editCloseX').addEventListener('click', osCloseEditModal);
+      document.getElementById('os-editOrtuBiodataCloseX').addEventListener('click', osCloseOrtuBiodataModal);
+      document.getElementById('os-editSiswaCloseX').addEventListener('click', osCloseEditSiswaModal);
+      document.getElementById('os-filterCloseX').addEventListener('click', osCloseFilterModal);
+      document.getElementById('os-ortuPickerCloseX').addEventListener('click', osCloseOrtuPicker);
 
       document.querySelectorAll('.os-ortu-mode-btn').forEach(function (btn) {
         btn.addEventListener('click', function () { osSetOrtuMode(btn.dataset.mode); });
       });
 
       document.querySelectorAll('#os-modal .os-gender-opt').forEach(function (opt) {
-        opt.addEventListener('click', function () {
-          document.querySelectorAll('#os-modal .os-gender-opt').forEach(function (o) {
-            o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
-          });
-          opt.style.background = opt.dataset.val === 'P' ? 'rgba(255,59,48,.1)' : 'var(--blue-tint)';
-          opt.style.color = opt.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)';
-          opt.style.borderColor = opt.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)';
-          opt.querySelector('input').checked = true;
+        opt.addEventListener('click', function (e) {
+          e.preventDefault();
+          osSetSegOn('#os-modal .os-gender-opt', opt.dataset.val);
         });
       });
 
@@ -698,19 +613,8 @@
         };
       });
 
-      var totalSiswaAktif = siswaRows.filter(function (sw) { return sw.status === 'aktif'; }).length;
-      var totalSiswaNonaktif = siswaRows.length - totalSiswaAktif;
-      var aktifOrtuCount = osState.ortuList.filter(function (o) { return o.status === 'aktif'; }).length;
-      var nonaktifOrtuCount = osState.ortuList.length - aktifOrtuCount;
-
-      document.getElementById('os-heroUnitBadge').textContent = unitCount + ' Unit';
-      document.getElementById('os-heroTotal').textContent = osState.ortuList.length;
-      document.getElementById('os-heroSiswaAktif').textContent = totalSiswaAktif + ' Siswa';
-      document.getElementById('os-heroSiswaNonaktif').textContent = totalSiswaNonaktif + ' Siswa';
-      document.getElementById('os-aktifCount').textContent = aktifOrtuCount;
-      document.getElementById('os-nonaktifCount').textContent = nonaktifOrtuCount;
-
-      osRenderList();
+      osRenderHero(siswaRows);
+      osRenderList(true);
     } catch (err) {
       listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + osEscape(err.message) + '</div>';
     }
@@ -736,136 +640,277 @@
     });
   }
 
-  function osRenderList() {
-    var listEl = document.getElementById('os-list');
-    var rows = osState.ortuList.filter(function (o) { return o.status === osState.tab; }).filter(osMatchesSearch).filter(osMatchesFilters);
+  var OS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var OS_JENJANG = ['SD', 'SMP', 'SMA', 'Lainnya'];
+  var OS_ICON_TABLE = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+  var OS_ICON_CARDS = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
 
-    document.getElementById('os-sectionLabel').textContent = osState.tab === 'aktif' ? 'Data Orang Tua Aktif' : 'Data Orang Tua Nonaktif';
-    document.getElementById('os-resultCount').textContent = rows.length + ' Orang Tua';
-
-    if (!rows.length) {
-      listEl.innerHTML = '<div class="os-card os-full-width empty-state">Tidak ada data orang tua yang cocok.</div>';
-      return;
+  function osCountUp(el, to) {
+    if (!el) return;
+    if (OS_REDUCED_MOTION || !to) { el.textContent = to; return; }
+    var start = null, dur = 700;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
     }
+    requestAnimationFrame(step);
+  }
 
-    listEl.innerHTML = rows.map(osRenderCard).join('');
+  function osRenderHero(siswaRows) {
+    var total = siswaRows.length;
+    var aktif = siswaRows.filter(function (sw) { return sw.status === 'aktif'; }).length;
+    var nonaktif = total - aktif;
+    osCountUp(document.getElementById('os-heroTotal'), total);
+    document.getElementById('os-heroUnitBadge').textContent = osState.ortuList.length + ' orang tua';
+    document.getElementById('os-heroSiswaAktif').textContent = aktif + ' aktif';
+    document.getElementById('os-heroSiswaNonaktif').textContent = nonaktif + ' nonaktif';
+
+    // Satu titik = satu siswa. Kalau siswanya banyak, satu titik mewakili beberapa siswa.
+    var per = Math.max(1, Math.ceil(total / 120));
+    var dotsOn = Math.ceil(aktif / per), dotsOff = Math.ceil(nonaktif / per);
+    var dotsEl = document.getElementById('os-heroDots');
+    var html = '';
+    for (var i = 0; i < dotsOn + dotsOff; i++) {
+      html += '<i' + (i >= dotsOn ? ' class="is-off"' : '') + ' style="--i:' + Math.min(i, 60) + '"></i>';
+    }
+    dotsEl.innerHTML = html;
+    var noteEl = document.getElementById('os-heroDotsNote');
+    noteEl.hidden = per === 1;
+    noteEl.textContent = '1 titik = ' + per + ' siswa';
+
+    var byJ = {};
+    siswaRows.forEach(function (sw) {
+      if (sw.status !== 'aktif') return;
+      var j = OS_JENJANG.indexOf(sw.jenjang) !== -1 ? sw.jenjang : 'Lainnya';
+      byJ[j] = (byJ[j] || 0) + 1;
+    });
+    var max = Math.max.apply(null, OS_JENJANG.map(function (j) { return byJ[j] || 0; }).concat([1]));
+    var jjEl = document.getElementById('os-heroJenjang');
+    jjEl.innerHTML = OS_JENJANG.map(function (j, idx) {
+      var n = byJ[j] || 0;
+      return '<div>' + j + '<span class="t"><i style="width:' + Math.round(n / max * 100) + '%; --i:' + idx + '"></i></span><b>' + n + '</b></div>';
+    }).join('');
+
+    if (!OS_REDUCED_MOTION) {
+      [dotsEl, jjEl].forEach(function (el) {
+        el.classList.remove('os-anim'); void el.offsetWidth; el.classList.add('os-anim');
+      });
+    }
+  }
+
+  function osUpdateViewToggleUI() {
+    var btn = document.getElementById('os-viewToggleBtn');
+    if (!btn) return;
+    var isTable = osState.viewMode === 'table';
+    var label = isTable ? 'Tampilkan sebagai kartu' : 'Tampilkan sebagai tabel';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
+    btn.innerHTML = isTable ? OS_ICON_CARDS : OS_ICON_TABLE;
+  }
+
+  function osToggleViewMode() {
+    var btn = document.getElementById('os-viewToggleBtn');
+    if (btn) { btn.classList.remove('os-btn-pop'); void btn.offsetWidth; btn.classList.add('os-btn-pop'); }
+    osState.viewMode = osState.viewMode === 'table' ? 'cards' : 'table';
+    try { localStorage.setItem('genio_os_view_mode', osState.viewMode); } catch (e) {}
+    osUpdateViewToggleUI();
+    osRenderList(true);
+  }
+
+  function osSiswaMatchesSearch(r) {
+    if (!osState.search) return true;
+    var q = osState.search;
+    return [r.nama, r.sekolah, r.kelas, r.ortu.nama, r.ortu.no_hp, r.unitNama].some(function (v) {
+      return (v || '').toLowerCase().indexOf(q) !== -1;
+    });
+  }
+  function osSiswaMatchesFilters(r) {
+    if (osState.filterUnit && r.unit_id !== osState.filterUnit) return false;
+    if (osState.filterJenjang && r.jenjang !== osState.filterJenjang) return false;
+    return true;
+  }
+
+  function osGetSiswaRows() {
+    var rows = [];
+    osState.ortuList.forEach(function (o) {
+      o.anak.forEach(function (a) {
+        rows.push(Object.assign({}, a, { ortu: o, unitNama: (a.units && a.units.nama_unit) || '' }));
+      });
+    });
+    return rows;
+  }
+
+  function osSortRows(rows) {
+    var key = osState.sort.key, dir = osState.sort.dir === 'desc' ? -1 : 1;
+    function val(r) {
+      if (key === 'ortu') return r.ortu.nama || '';
+      if (key === 'unit') return r.unitNama || '';
+      if (key === 'jenjang') { var i = OS_JENJANG.indexOf(r.jenjang); return i === -1 ? 9 : i; }
+      if (key === 'kelas') { var n = parseInt(r.kelas, 10); return isNaN(n) ? -1 : n; }
+      return r[key] || '';
+    }
+    return rows.slice().sort(function (a, b) {
+      var va = val(a), vb = val(b);
+      var c = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb), 'id');
+      return c * dir || String(a.nama || '').localeCompare(String(b.nama || ''), 'id');
+    });
+  }
+
+  function osRenderList(animate) {
+    var listEl = document.getElementById('os-list');
+    var isTable = osState.viewMode === 'table';
+    listEl.classList.toggle('os-view-table', isTable);
+    var siswaAll = osGetSiswaRows();
+
+    if (isTable) {
+      var sAktif = siswaAll.filter(function (r) { return r.status === 'aktif'; }).length;
+      document.getElementById('os-aktifCount').textContent = sAktif;
+      document.getElementById('os-nonaktifCount').textContent = siswaAll.length - sAktif;
+      var srows = osSortRows(siswaAll.filter(function (r) { return r.status === osState.tab; }).filter(osSiswaMatchesSearch).filter(osSiswaMatchesFilters));
+      document.getElementById('os-sectionLabel').textContent = osState.tab === 'aktif' ? 'Siswa aktif' : 'Siswa nonaktif';
+      document.getElementById('os-resultCount').textContent = srows.length + ' siswa';
+      listEl.innerHTML = osRenderTable(srows);
+    } else {
+      var oAktif = osState.ortuList.filter(function (o) { return o.status === 'aktif'; }).length;
+      document.getElementById('os-aktifCount').textContent = oAktif;
+      document.getElementById('os-nonaktifCount').textContent = osState.ortuList.length - oAktif;
+      var rows = osState.ortuList.filter(function (o) { return o.status === osState.tab; }).filter(osMatchesSearch).filter(osMatchesFilters);
+      document.getElementById('os-sectionLabel').textContent = osState.tab === 'aktif' ? 'Orang tua aktif' : 'Orang tua nonaktif';
+      document.getElementById('os-resultCount').textContent = rows.length + ' orang tua';
+      listEl.innerHTML = rows.length
+        ? rows.map(osRenderCard).join('')
+        : '<div class="os-card os-full-width empty-state">Tidak ada data orang tua yang cocok.</div>';
+    }
     osBindCardEvents();
+
+    if (animate && !OS_REDUCED_MOTION) {
+      var items = isTable ? listEl.querySelectorAll('.os-table tbody tr') : listEl.querySelectorAll(':scope > .os-card');
+      items.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('os-in'); });
+      clearTimeout(listEl._osAnimT);
+      listEl._osAnimT = setTimeout(function () { items.forEach(function (el) { el.classList.remove('os-in'); }); }, 1200);
+    }
+  }
+
+  function osWaLink(hp) {
+    return 'https://wa.me/' + String(hp || '').replace(/\D/g, '').replace(/^0/, '62');
+  }
+  function osJenjangBadge(j) {
+    if (!j) return '<span class="os-jb is-other">-</span>';
+    return '<span class="os-jb' + (j === 'Lainnya' ? ' is-other' : '') + '">' + osEscape(j) + '</span>';
+  }
+  function osInitials(nama) {
+    return (nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
   }
 
   function osRenderCard(o) {
     var isAktif = o.status === 'aktif';
-    var initials = (o.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
-    var statusBadge = isAktif
-      ? '<span class="os-status-badge" style="background:rgba(52,199,89,.14); color:#28a745;"><span style="width:14px; height:14px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
-      : '<span class="os-status-badge" style="background:rgba(255,59,48,.12); color:#ff3b30;"><span style="width:14px; height:14px; border-radius:50%; background:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
+    var meta;
+    if (!o.anak.length) meta = 'Belum ada siswa terdaftar';
+    else if (o.anak.length === 1) meta = 'Wali dari 1 siswa · ' + (o.anak[0].status === 'aktif' ? 'aktif' : 'nonaktif');
+    else meta = 'Wali dari ' + o.anak.length + ' siswa · ' + o.aktifCount + ' aktif';
 
-    var unitBadge = o.unitNama
-      ? '<span style="background:var(--blue); color:#fff; font-size:10px; font-weight:500; padding:3px 9px; border-radius:999px; white-space:nowrap;">' + osEscape(o.unitNama) + '</span>'
-      : '';
+    var chips = '';
+    if (o.unitNama) chips += '<span class="oc-chip"><i class="ph ph-buildings" aria-hidden="true"></i>' + osEscape(o.unitNama) + '</span>';
+    if (o.alamat) chips += '<span class="oc-chip"><i class="ph ph-map-pin" aria-hidden="true"></i>' + osEscape(o.alamat) + '</span>';
 
-    var subtitleParts = [];
-    if (o.anak.length === 1) {
-      subtitleParts.push('Wali dari 1 Siswa ' + (o.anak[0].status === 'aktif' ? 'Aktif' : 'Nonaktif'));
-    } else if (o.anak.length > 1) {
-      subtitleParts.push('Wali dari ' + o.anak.length + ' Siswa (' + o.aktifCount + ' Aktif &bull; ' + o.nonaktifCount + ' Nonaktif)');
-    } else {
-      subtitleParts.push('Belum ada siswa terdaftar');
-    }
-
-    var isOpen = osState.openCard === o.id;
-    var waLink = 'https://wa.me/' + (o.no_hp || '').replace(/\D/g, '').replace(/^0/, '62');
-
-    var visibleAnak = o.anak;
-    var anakRows = visibleAnak.map(function (a, idx) {
-      var aAktif = a.status === 'aktif';
-      var isPerempuan = a.jenis_kelamin === 'P';
-      var numBg = isPerempuan ? 'rgba(255,59,48,.12)' : 'rgba(0,122,255,.12)';
-      var numColor = isPerempuan ? '#ff3b30' : '#007aff';
-      var aBadge = aAktif
-        ? '<span class="os-status-badge" style="background:rgba(52,199,89,.14); color:#28a745; height:20px; font-size:9.5px;"><span style="width:10px; height:10px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="6" height="6" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
-        : '<span class="os-status-badge" style="background:rgba(255,59,48,.12); color:#ff3b30; height:20px; font-size:9.5px;"><span style="width:10px; height:10px; border-radius:50%; background:#ff3b30; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="6" height="6" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
-      var sekolahLine = [a.kelas, a.sekolah].filter(Boolean).join(' &bull; ') || 'Kelas &amp; sekolah belum diisi';
-      return '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:7px 0; ' + (idx > 0 ? 'border-top:1px solid var(--border);' : '') + '">' +
-        '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
-          '<span style="width:22px; height:22px; border-radius:6px; background:' + numBg + '; color:' + numColor + '; font-weight:600; font-size:10.5px; display:flex; align-items:center; justify-content:center; flex:none;">' + (idx + 1) + '</span>' +
-          '<div style="min-width:0;">' +
-            '<div style="font-size:11.5px; font-weight:500; color:#1c1c1e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + osEscape(a.nama) + '</div>' +
-            '<div style="font-size:10px; color:#8e8e93; margin-top:1px;">' + sekolahLine + '</div>' +
-          '</div>' +
-        '</div>' +
-        aBadge +
+    var kids = o.anak.map(function (a) {
+      var sub = [a.kelas ? 'Kelas ' + a.kelas : '', a.sekolah].filter(Boolean).join(' · ') || 'Kelas dan sekolah belum diisi';
+      var off = a.status !== 'aktif';
+      return '<div class="oc-kid' + (off ? ' is-off' : '') + '">' +
+        '<span class="oc-ki' + (a.jenis_kelamin === 'P' ? ' is-p' : '') + '">' + osEscape(osInitials(a.nama)) + '</span>' +
+        '<div style="min-width:0;"><div class="oc-kn">' + osEscape(a.nama) + '</div><div class="oc-ks">' + osEscape(sub) + '</div></div>' +
+        '<div class="oc-kr">' + (off ? '<span class="oc-off">Nonaktif</span>' : '') + osJenjangBadge(a.jenjang) + '</div>' +
       '</div>';
     }).join('');
 
-    return '' +
-      '<div class="card os-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
-            '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex:none;">' + osEscape(initials) + '</div>' +
-            '<div style="min-width:0;">' +
-              '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
-                '<h4 style="font-size:12.5px; font-weight:600; color:#1c1c1e; margin:0; line-height:1.3;">' + osEscape(o.nama) + '</h4>' +
-                unitBadge +
-              '</div>' +
-              '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:2px 0 0;">' + subtitleParts.join('') + '</p>' +
-            '</div>' +
-          '</div>' +
-          '<div style="display:flex; align-items:center; gap:6px; flex:none;">' +
-            '<button class="os-edit-btn" data-id="' + o.id + '" style="background:var(--blue); color:#fff; border:none; border-radius:7px; padding:0 10px; height:26px; font-size:10.5px; font-weight:500; cursor:pointer; flex:none; font-family:var(--font);">Edit</button>' +
-            statusBadge +
-          '</div>' +
-        '</div>' +
+    return '<div class="os-card">' +
+      '<div class="oc-head">' +
+        '<div class="oc-av">' + osEscape(osInitials(o.nama)) + '</div>' +
+        '<div class="oc-who"><h4>' + osEscape(o.nama) + '</h4><p>' + meta + '</p></div>' +
+        '<span class="oc-status ' + (isAktif ? 'is-on' : 'is-off') + '"><i></i>' + (isAktif ? 'Aktif' : 'Nonaktif') + '</span>' +
+      '</div>' +
+      (chips ? '<div class="oc-chips">' + chips + '</div>' : '') +
+      (kids ? '<div class="oc-kids">' + kids + '</div>' : '<p class="oc-empty">Belum ada siswa terdaftar.</p>') +
+      '<div class="oc-foot">' +
+        '<div class="oc-wa"><span>WhatsApp</span><b>' + osEscape(o.no_hp || '-') + '</b></div>' +
+        (o.no_hp ? '<a class="os-icon is-wa" href="' + osWaLink(o.no_hp) + '" target="_blank" rel="noopener noreferrer" aria-label="Hubungi lewat WhatsApp" title="Hubungi lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' : '') +
+        '<button type="button" class="os-edit-btn" data-id="' + o.id + '">Kelola</button>' +
+      '</div>' +
+    '</div>';
+  }
 
-        '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:9px; padding:8px 10px; margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">' +
-          '<div>' +
-            '<div style="font-size:9px; color:#8e8e93; text-transform:uppercase; letter-spacing:.02em; font-weight:500;">Nomor WhatsApp</div>' +
-            '<div style="font-size:11.5px; font-weight:500; color:#1c1c1e; margin-top:1px;">' + osEscape(o.no_hp || '-') + '</div>' +
-          '</div>' +
-          (o.no_hp
-            ? '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="background:rgba(52,199,89,.12); color:#1DB954; border-radius:7px; height:28px; padding:0 10px; font-size:11px; font-weight:500; text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-family:var(--font);"><span style="width:16px; height:16px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="9" height="9" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.5 13.4c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-1.3-.6-2.1-1.2-2.9-2.6-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4 1.4.6 1.9.6 2.6.5.4-.1 1.1-.5 1.3-.9.2-.4.2-.8.1-.9-.1-.1-.2-.2-.4-.3z"/></svg></span>Hubungi WhatsApp</a>'
-            : '') +
-        '</div>' +
+  function osRenderTable(rows) {
+    var cols = [
+      { key: null, label: 'No' },
+      { key: 'nama', label: 'Siswa', cls: 'os-stk' },
+      { key: 'ortu', label: 'Orang tua' },
+      { key: null, label: 'WhatsApp' },
+      { key: 'kelas', label: 'Kelas', style: 'text-align:center;' },
+      { key: 'sekolah', label: 'Sekolah' },
+      { key: 'jenjang', label: 'Jenjang' },
+      { key: 'unit', label: 'Unit' },
+      { key: null, label: 'Status' },
+      { key: null, label: 'Aksi', style: 'text-align:right;' }
+    ];
+    var head = cols.map(function (c) {
+      var cls = [c.cls || ''];
+      var ico = '';
+      if (c.key) {
+        cls.push('os-sort-th');
+        var on = osState.sort.key === c.key;
+        if (on) cls.push('is-sorted');
+        ico = '<i class="ph ' + (on && osState.sort.dir === 'desc' ? 'ph-caret-down' : 'ph-caret-up') + ' os-sort-ico" aria-hidden="true"></i>';
+      }
+      return '<th class="' + cls.join(' ').trim() + '"' + (c.key ? ' data-sort="' + c.key + '"' : '') + (c.style ? ' style="' + c.style + '"' : '') + '>' + c.label + ico + '</th>';
+    }).join('');
 
-        (visibleAnak.length ? '' +
-          '<button class="os-siswa-toggle" data-id="' + o.id + '" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,.04); border:none; border-radius:8px; padding:7px 10px; font-size:11px; font-weight:500; color:#3a3a3c; cursor:pointer; margin-top:8px; font-family:var(--font);">' +
-            'Daftar Siswa Terdaftar (' + visibleAnak.length + ' Anak)' +
-            '<svg class="os-siswa-toggle-icon" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (isOpen ? '180' : '0') + 'deg);"><polyline points="6 9 12 15 18 9"/></svg>' +
-          '</button>' +
-          '<div class="os-siswa-wrap" data-id="' + o.id + '" style="max-height:' + (isOpen ? '600px' : '0') + 'px; opacity:' + (isOpen ? '1' : '0') + '; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease; padding:0 2px;">' +
-            anakRows +
-          '</div>'
-        : '') +
-      '</div>';
+    var body = rows.length ? rows.map(function (r, i) {
+      var on = r.status === 'aktif';
+      return '<tr>' +
+        '<td class="os-no">' + (i + 1) + '</td>' +
+        '<td class="os-stk os-nm">' + osEscape(r.nama) + '</td>' +
+        '<td>' + osEscape(r.ortu.nama || '-') + '</td>' +
+        '<td class="os-num">' + osEscape(r.ortu.no_hp || '-') + '</td>' +
+        '<td class="os-c os-num">' + osEscape(r.kelas || '-') + '</td>' +
+        '<td' + (r.sekolah ? '' : ' class="os-soft"') + '>' + osEscape(r.sekolah || '-') + '</td>' +
+        '<td>' + osJenjangBadge(r.jenjang) + '</td>' +
+        '<td>' + osEscape(r.unitNama || '-') + '</td>' +
+        '<td><span class="oc-status ' + (on ? 'is-on' : 'is-off') + '"><i></i>' + (on ? 'Aktif' : 'Nonaktif') + '</span></td>' +
+        '<td class="os-act">' +
+          (r.ortu.no_hp ? '<a class="os-icon is-wa" href="' + osWaLink(r.ortu.no_hp) + '" target="_blank" rel="noopener noreferrer" aria-label="Hubungi orang tua lewat WhatsApp" title="Hubungi orang tua"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' : '') +
+          '<button type="button" class="os-icon os-table-edit-btn" data-siswa-id="' + r.id + '" data-ortu-id="' + r.ortu.id + '" aria-label="Edit siswa" title="Edit siswa"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button>' +
+        '</td>' +
+      '</tr>';
+    }).join('') : '<tr><td colspan="10" class="os-table-empty">Tidak ada siswa yang cocok.</td></tr>';
+
+    return '<div class="os-table-card"><div class="os-table-wrap"><table class="os-table"><thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody></table></div></div>';
   }
 
   function osBindCardEvents() {
-    document.querySelectorAll('.os-siswa-toggle').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var id = btn.dataset.id;
-        var wrap = document.querySelector('.os-siswa-wrap[data-id="' + id + '"]');
-        var chevron = btn.querySelector('svg');
-        var isOpen = osState.openCard === id;
-        if (isOpen) {
-          osState.openCard = null;
-          wrap.style.maxHeight = '0px';
-          wrap.style.opacity = '0';
-          chevron.style.transform = 'rotate(0deg)';
-        } else {
-          if (osState.openCard) {
-            var prevWrap = document.querySelector('.os-siswa-wrap[data-id="' + osState.openCard + '"]');
-            var prevBtn = document.querySelector('.os-siswa-toggle[data-id="' + osState.openCard + '"]');
-            if (prevWrap) { prevWrap.style.maxHeight = '0px'; prevWrap.style.opacity = '0'; }
-            if (prevBtn) prevBtn.querySelector('svg').style.transform = 'rotate(0deg)';
-          }
-          osState.openCard = id;
-          wrap.style.maxHeight = '600px';
-          wrap.style.opacity = '1';
-          chevron.style.transform = 'rotate(180deg)';
-        }
+    document.querySelectorAll('#os-list .os-edit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { osOpenEditModal(btn.dataset.id); });
+    });
+    document.querySelectorAll('#os-list .os-table-edit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { osOpenEditSiswaModal(btn.dataset.siswaId, btn.dataset.ortuId); });
+    });
+    document.querySelectorAll('#os-list .os-sort-th').forEach(function (th) {
+      th.addEventListener('click', function () {
+        var key = th.dataset.sort;
+        if (osState.sort.key === key) osState.sort.dir = osState.sort.dir === 'asc' ? 'desc' : 'asc';
+        else { osState.sort.key = key; osState.sort.dir = 'asc'; }
+        osRenderList(false);
       });
     });
-    document.querySelectorAll('.os-edit-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () { osOpenEditModal(btn.dataset.id); });
+  }
+
+  function osSetSegOn(selector, val) {
+    document.querySelectorAll(selector).forEach(function (o) {
+      var on = o.dataset.val === val;
+      o.classList.toggle('is-on', on);
+      var input = o.querySelector('input');
+      if (input) input.checked = on;
     });
   }
 
@@ -912,7 +957,7 @@
     var nama = document.getElementById('os-editOrtuNama').value.trim();
     var hp = document.getElementById('os-editOrtuHp').value.trim();
     var alamat = document.getElementById('os-editOrtuAlamat').value.trim();
-    if (!nama || !hp) { alertEl.textContent = 'Nama dan Nomor WhatsApp wajib diisi.'; alertEl.hidden = false; return; }
+    if (!nama || !hp) { alertEl.textContent = 'Nama dan nomor WhatsApp wajib diisi.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
     var btn = this;
@@ -942,17 +987,16 @@
   function osRenderEditList(ortu) {
     var listEl = document.getElementById('os-editList');
     if (!ortu.anak.length) {
-      listEl.innerHTML = '<p style="font-size:12.5px; color:var(--ink-soft); text-align:center; padding:20px 0;">Orang tua ini belum punya siswa terdaftar.</p>';
+      listEl.innerHTML = '<p style="font-size:11px; color:var(--ink-soft); text-align:center; padding:14px 0; margin:0;">Orang tua ini belum punya siswa terdaftar.</p>';
       return;
     }
     listEl.innerHTML = ortu.anak.map(function (a) {
       var aAktif = a.status === 'aktif';
-      return '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 0; border-bottom:1px solid var(--border);">' +
-        '<div style="min-width:0;">' +
-          '<div style="font-size:13px; font-weight:500; color:#1c1c1e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + osEscape(a.nama) + '</div>' +
-          '<div style="font-size:11px; color:#8e8e93; margin-top:1px;">' + (aAktif ? 'Sedang Aktif' : 'Sedang Nonaktif') + '</div>' +
-        '</div>' +
-        '<button class="os-edit-siswa-btn" data-siswa-id="' + a.id + '" style="background:var(--blue); color:#fff; border:none; border-radius:10px; padding:0 14px; height:30px; font-size:11.5px; font-weight:500; cursor:pointer; flex:none;">Edit</button>' +
+      var sub = [a.kelas ? 'Kelas ' + a.kelas : '', a.jenjang].filter(Boolean).join(' · ');
+      return '<div class="os-kid-row">' +
+        '<span class="oc-ki' + (a.jenis_kelamin === 'P' ? ' is-p' : '') + '">' + osEscape(osInitials(a.nama)) + '</span>' +
+        '<div style="min-width:0;"><b>' + osEscape(a.nama) + '</b><span class="s"><i' + (aAktif ? '' : ' class="is-off"') + '></i>' + (aAktif ? 'Aktif' : 'Nonaktif') + (sub ? ' · ' + osEscape(sub) : '') + '</span></div>' +
+        '<button type="button" class="os-edit-siswa-btn" data-siswa-id="' + a.id + '">Edit</button>' +
       '</div>';
     }).join('');
 
@@ -977,22 +1021,9 @@
     document.getElementById('os-editSiswaSekolah').value = siswa.sekolah || '';
     document.getElementById('os-editSiswaJenjang').value = siswa.jenjang || '';
 
-    document.querySelectorAll('#os-editSiswaModal .os-gender-opt').forEach(function (o) {
-      var active = o.dataset.val === siswa.jenis_kelamin;
-      o.style.background = active ? (o.dataset.val === 'P' ? 'rgba(255,59,48,.1)' : 'var(--blue-tint)') : '#fff';
-      o.style.color = active ? (o.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)') : 'var(--ink-soft)';
-      o.style.borderColor = active ? (o.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)') : 'var(--border)';
-      o.querySelector('input').checked = active;
-    });
-
-    document.querySelectorAll('.os-editstatus-opt').forEach(function (o) {
-      var active = o.dataset.val === siswa.status;
-      var isNonaktif = o.dataset.val === 'nonaktif';
-      o.style.background = active ? (isNonaktif ? 'rgba(255,59,48,.1)' : 'rgba(52,199,89,.14)') : '#fff';
-      o.style.color = active ? (isNonaktif ? '#ff3b30' : '#28a745') : 'var(--ink-soft)';
-      o.style.borderColor = active ? (isNonaktif ? '#ff3b30' : '#28a745') : 'var(--border)';
-      o.querySelector('input').checked = active;
-    });
+    osSetSegOn('#os-editSiswaModal .os-gender-opt', siswa.jenis_kelamin);
+    osSetSegOn('.os-editstatus-opt', siswa.status);
+    document.getElementById('os-editSiswaSub').textContent = (siswa.nama || 'Siswa') + ' · wali ' + (ortu.nama || '-');
 
     osEditSiswaModal.hidden = false;
     requestAnimationFrame(function () { osEditSiswaModal.classList.add('show'); });
@@ -1003,28 +1034,10 @@
   }
 
   document.querySelectorAll('#os-editSiswaModal .os-gender-opt').forEach(function (opt) {
-    opt.addEventListener('click', function () {
-      document.querySelectorAll('#os-editSiswaModal .os-gender-opt').forEach(function (o) {
-        o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
-      });
-      opt.style.background = opt.dataset.val === 'P' ? 'rgba(255,59,48,.1)' : 'var(--blue-tint)';
-      opt.style.color = opt.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)';
-      opt.style.borderColor = opt.dataset.val === 'P' ? '#ff3b30' : 'var(--blue)';
-      opt.querySelector('input').checked = true;
-    });
+    opt.addEventListener('click', function (e) { e.preventDefault(); osSetSegOn('#os-editSiswaModal .os-gender-opt', opt.dataset.val); });
   });
-
   document.querySelectorAll('.os-editstatus-opt').forEach(function (opt) {
-    opt.addEventListener('click', function () {
-      var isNonaktif = opt.dataset.val === 'nonaktif';
-      document.querySelectorAll('.os-editstatus-opt').forEach(function (o) {
-        o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
-      });
-      opt.style.background = isNonaktif ? 'rgba(255,59,48,.1)' : 'rgba(52,199,89,.14)';
-      opt.style.color = isNonaktif ? '#ff3b30' : '#28a745';
-      opt.style.borderColor = isNonaktif ? '#ff3b30' : '#28a745';
-      opt.querySelector('input').checked = true;
-    });
+    opt.addEventListener('click', function (e) { e.preventDefault(); osSetSegOn('.os-editstatus-opt', opt.dataset.val); });
   });
 
   document.getElementById('os-editSiswaCancelBtn').addEventListener('click', function () { osCloseEditSiswaModal(); });
@@ -1073,8 +1086,8 @@
 
   /* ===== Filter (Unit & Jenjang) — pola picker-popup sama seperti Presensi ===== */
   var OS_FILTER_DEFS = {
-    unit: { title: 'Pilih Unit / Cabang', allLabel: 'Semua Unit' },
-    jenjang: { title: 'Pilih Jenjang', allLabel: 'Semua Jenjang' }
+    unit: { title: 'Pilih unit', allLabel: 'Semua unit' },
+    jenjang: { title: 'Pilih jenjang', allLabel: 'Semua jenjang' }
   };
   var osFilterUnitOptions = [];
   var osUnitsLoadedForFilter = false;
@@ -1144,16 +1157,16 @@
     var def = OS_FILTER_DEFS[type];
     var options = osGetFilterOptions(type);
     var listEl = document.getElementById('os-pickerList');
-    var allRow = '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
-      '<input type="radio" name="os-picker-opt" class="os-picker-opt" value="" ' + (!osPickerTempSelected ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+    var allRow = '<label class="gx-opt-row">' +
+      '<input type="radio" name="os-picker-opt" class="os-picker-opt" value="" ' + (!osPickerTempSelected ? 'checked' : '') + '>' +
       def.allLabel +
     '</label>';
     var rows = !options.length
-      ? '<div style="font-size:12.5px; color:var(--ink-soft); padding:14px 4px; text-align:center;">Belum ada data.</div>'
+      ? '<div style="font-size:11px; color:var(--ink-soft); padding:14px 4px; text-align:center;">Belum ada data.</div>'
       : options.map(function (opt) {
           var checked = osPickerTempSelected === opt.value;
-          return '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
-            '<input type="radio" name="os-picker-opt" class="os-picker-opt" value="' + osEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+          return '<label class="gx-opt-row">' +
+            '<input type="radio" name="os-picker-opt" class="os-picker-opt" value="' + osEscape(opt.value) + '" ' + (checked ? 'checked' : '') + '>' +
             osEscape(opt.label) +
           '</label>';
         }).join('');
@@ -1179,14 +1192,14 @@
   document.getElementById('os-filterApplyBtn').addEventListener('click', function () {
     osUpdateFilterBadge();
     osCloseFilterModal();
-    osRenderList();
+    osRenderList(true);
   });
   document.getElementById('os-filterResetBtn').addEventListener('click', function () {
     osState.filterUnit = ''; osState.filterJenjang = '';
     osUpdateFilterSummary('unit'); osUpdateFilterSummary('jenjang');
     osUpdateFilterBadge();
     osCloseFilterModal();
-    osRenderList();
+    osRenderList(true);
   });
 
   document.querySelectorAll('.os-tab-btn').forEach(function (btn) {
@@ -1199,7 +1212,7 @@
       b.classList.toggle('os-dock-active', b.dataset.tab === tab);
     });
     osUpdateDockGlider();
-    osRenderList();
+    osRenderList(true);
   }
 
   function osUpdateDockGlider() {
@@ -1288,10 +1301,7 @@
   function osSetOrtuMode(mode) {
     osState.ortuMode = mode;
     document.querySelectorAll('.os-ortu-mode-btn').forEach(function (b) {
-      var active = b.dataset.mode === mode;
-      b.style.background = active ? 'var(--blue-tint)' : '#fff';
-      b.style.color = active ? 'var(--blue)' : 'var(--ink)';
-      b.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
+      b.classList.toggle('is-on', b.dataset.mode === mode);
     });
     document.getElementById('os-ortuBaruGroup').style.display = mode === 'baru' ? 'block' : 'none';
     document.getElementById('os-ortuLamaGroup').style.display = mode === 'lama' ? 'block' : 'none';
@@ -1324,11 +1334,12 @@
     var listEl = document.getElementById('os-ortuPickerList');
 
     if (!options.length) {
-      listEl.innerHTML = '<div style="font-size:12.5px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data orang tua.') + '</div>';
+      listEl.innerHTML = '<div style="font-size:11px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data orang tua.') + '</div>';
       return;
     }
     listEl.innerHTML = options.map(function (o) {
-      return '<button type="button" class="os-ortu-picker-opt" data-id="' + o.id + '" style="width:100%; text-align:left; display:block; background:none; border:none; padding:12px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' + osEscape(o.nama) + '</button>';
+      var n = o.anak.length;
+      return '<button type="button" class="os-ortu-picker-opt gx-opt-row" data-id="' + o.id + '"><span class="oc-ki" style="width:24px; height:24px;">' + osEscape(osInitials(o.nama)) + '</span><span style="min-width:0; flex:1;">' + osEscape(o.nama) + '<span style="display:block; font-size:10px; color:var(--ink-soft);">' + osEscape(o.no_hp || '-') + ' · ' + n + ' anak</span></span></button>';
     }).join('');
     listEl.querySelectorAll('.os-ortu-picker-opt').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -1355,9 +1366,7 @@
   async function osOpenModal() {
     document.getElementById('os-modalAlert').hidden = true;
     document.getElementById('os-form').reset();
-    document.querySelectorAll('#os-modal .os-gender-opt').forEach(function (o) {
-      o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
-    });
+    osSetSegOn('#os-modal .os-gender-opt', null);
     osSetOrtuMode('baru');
     osResetOrtuExistingField();
     if (!osUnitsLoaded) {
@@ -1390,7 +1399,7 @@
     var siswaGender = siswaGenderEl ? siswaGenderEl.value : null;
     var siswaUnit = document.getElementById('os-siswaUnit').value;
 
-    if (!siswaNama || !siswaUnit) { alertEl.textContent = 'Nama siswa dan Unit wajib diisi.'; alertEl.hidden = false; return; }
+    if (!siswaNama || !siswaUnit) { alertEl.textContent = 'Nama siswa dan unit wajib diisi.'; alertEl.hidden = false; return; }
     if (!siswaJenjang) { alertEl.textContent = 'Jenjang wajib dipilih.'; alertEl.hidden = false; return; }
 
     var ortuId = null;
@@ -1403,7 +1412,7 @@
       ortuNama = document.getElementById('os-ortuNama').value.trim();
       ortuHp = document.getElementById('os-ortuHp').value.trim();
       ortuAlamat = document.getElementById('os-ortuAlamat').value.trim();
-      if (!ortuNama || !ortuHp) { alertEl.textContent = 'Nama dan Nomor WhatsApp orang tua wajib diisi.'; alertEl.hidden = false; return; }
+      if (!ortuNama || !ortuHp) { alertEl.textContent = 'Nama dan nomor WhatsApp orang tua wajib diisi.'; alertEl.hidden = false; return; }
     }
 
     var saveBtn = document.getElementById('os-saveBtn');
@@ -1435,7 +1444,7 @@
       alertEl.textContent = err.message || 'Gagal menyimpan data.'; alertEl.hidden = false;
     } finally {
       saveBtn.disabled = false;
-      saveBtn.textContent = 'Simpan';
+      saveBtn.textContent = 'Simpan siswa';
     }
   }
 </script>
