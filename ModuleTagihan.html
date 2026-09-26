@@ -1,605 +1,180 @@
 <div class="module-panel" data-module="tagihan" hidden>
 <style>
-  /* =========================================================
-     MODUL TAGIHAN & KUITANSI (GENIO 2.0)
-     Standardized high-density typography, desktop density,
-     split-view responsiveness, and universal compact table.
-     ========================================================= */
-
-  .tg-card{
-    border-radius: 12px;
-  }
-  .tg-periode-sec{
-    margin-bottom: 12px;
-    padding: 10px 14px;
-    border-radius: 12px;
-  }
-
-  .tg-hero-sec{
-    background: var(--ink);
-    color: #fff;
-    border-radius: 14px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
-  }
-  .tg-dock-sec{
-    margin-bottom: 12px !important;
-  }
-  .tg-search-sec{
-    margin-bottom: 12px;
-  }
-  #tg-filterBtn, #tg-viewToggleBtn{
-    transition: transform .15s ease, background .15s ease, border-color .15s ease;
-  }
-  #tg-filterBtn:active, #tg-viewToggleBtn:active{
-    transform: scale(.9);
-  }
-
-  .tg-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .tg-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .tg-hero-total-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .tg-hero-unit-pill{
-    background: rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 9.5px;
-    font-weight: 500;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .tg-hero-counter{
-    margin-top: 4px;
-  }
-  .tg-hero-sublabel{
-    display: block;
-    font-size: 9.5px;
-    opacity: .65;
-  }
-  .tg-hero-num-wrap{
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    margin-top: 1px;
-  }
-  .tg-hero-num{
-    font-size: 20px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.1;
-  }
-  .tg-hero-unit{
-    font-size: 11px;
-    opacity: .65;
-    font-weight: 500;
-  }
-  .tg-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255,255,255,.14);
-  }
-  .tg-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-  .tg-hero-stat-icon{
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .tg-hero-stat-label{
-    font-size: 9px;
-    opacity: .65;
-    white-space: nowrap;
-  }
-  .tg-hero-stat-val{
-    font-size: 12px;
-    font-weight: 600;
-    margin-top: 1px;
-    font-variant-numeric: tabular-nums;
-  }
-  .tg-hero-actions{
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .tg-hero-action-btn{
-    width: 100%;
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.22);
-    color: #fff;
-    border-radius: 8px;
-    padding: 0 10px;
-    height: 28px;
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    white-space: nowrap;
-    transition: background .15s ease, border-color .15s ease, transform .1s ease;
-  }
-  .tg-hero-action-btn:hover{
-    background: rgba(255,255,255,.2);
-    border-color: rgba(255,255,255,.35);
-  }
-  .tg-hero-action-btn:active{ transform: scale(.97); }
-  .tg-hero-action-btn.tg-primary-btn{
-    background: #fff !important;
-    color: var(--ink) !important;
-    font-weight: 500 !important;
-    border: none !important;
-  }
-  .tg-hero-action-btn.tg-primary-btn:hover{
-    background: #f2f2f7 !important;
-  }
-
-  /* Desktop Density Optimizations */
+  /* ===== Modul tagihan dan kuitansi ===== */
+  .tg-card{border-radius:14px;}
+  .tg-periode-sec{margin-bottom:12px; padding:10px 14px; border-radius:12px;}
   @media (min-width: 900px){
-    .module-panel[data-module="tagihan"][hidden]{ display:none !important; }
-    .module-panel[data-module="tagihan"]:not([hidden]){
-      width: 100% !important; max-width: 100% !important; min-width: 0 !important; margin: 0 auto;
-      box-sizing: border-box !important;
-    }
-    .tg-periode-sec{
-      margin-bottom: 12px !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-    }
-    .tg-hero-sec{
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-    }
-    .tg-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-    }
-    .tg-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .tg-hero-total-pill,
-    .tg-hero-unit-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .tg-hero-sublabel{ display: none !important; }
-    .tg-hero-counter{ margin-top: 1px !important; }
-    .tg-hero-num{ font-size: 18px !important; }
-    .tg-hero-stats-row{
-      flex: 1 !important;
-      max-width: 580px;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 14px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .tg-hero-stat-card{
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-    }
+    .module-panel[data-module="tagihan"][hidden]{display:none !important;}
+    .module-panel[data-module="tagihan"]:not([hidden]){width:94%; max-width:1500px; margin:0 auto; box-sizing:border-box;}
   }
 
-  /* Toolbar Row: Desktop dock di kiri search bar; Mobile full-width stacked */
-  .tg-toolbar-row{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    margin-bottom: 10px;
-    box-sizing: border-box;
+  /* ===== Highlight: total per unit | ring pelunasan ===== */
+  .tg-hb{position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .tgb-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
+  .tgb-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
+  .tgb-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .tgb-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .tgb-label i{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .tgb-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .tgb-row{display:flex; align-items:flex-end; gap:32px; flex-wrap:wrap; margin-top:8px;}
+  .tgb-row > div:first-child{min-width:0;}
+  .tgb-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .tgb-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tgb-units{display:grid; gap:9px; flex:1; min-width:240px; max-width:460px;}
+  .tgb-units:empty{display:none;}
+  .tgb-un{display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:10px; font-size:10.5px; color:rgba(255,255,255,.8);}
+  .tgb-un span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;}
+  .tgb-un b{color:#fff; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .tgb-un b small{font-weight:500; color:rgba(255,255,255,.55); margin-left:5px;}
+  .tgb-un .bar{grid-column:1/-1; height:6px; border-radius:99px; background:rgba(255,255,255,.08); margin-top:5px; overflow:hidden;}
+  .tgb-un .bar i{display:block; height:100%; border-radius:99px; background:#7CF0C3; transform-origin:left center;}
+  .tgb-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:260px;}
+  .tgb-ringwrap{display:flex; align-items:center; gap:14px;}
+  .tgb-ring{width:64px; height:64px; flex:none; overflow:visible;}
+  .tgb-ring circle{fill:none; stroke-width:7;}
+  .tgb-ring .tr{stroke:rgba(255,255,255,.1);}
+  .tgb-ring .arc{transform:rotate(-90deg); transform-origin:32px 32px; transition:stroke-dasharray .9s cubic-bezier(.16,1,.3,1);}
+  .tgb-ring text{fill:#fff; font-family:var(--font); font-size:13px; font-weight:800;}
+  .tgb-list{display:grid; gap:6px; flex:1; min-width:170px;}
+  .tgb-list div{display:flex; align-items:center; gap:7px; font-size:10.5px; color:rgba(255,255,255,.75); white-space:nowrap;}
+  .tgb-list em{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
+  .tgb-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  @media (max-width: 899px){
+    .tg-hb{grid-template-columns:1fr;}
+    .tgb-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .tgb-row{flex-direction:column; align-items:stretch; gap:14px;}
+    .tgb-units{min-width:0; max-width:none;}
+    .tgb-num{font-size:28px;}
   }
+
+  /* ===== Toolbar ===== */
+  .tg-toolbar-row{display:flex; flex-direction:column; gap:8px; width:100%; margin-bottom:12px; box-sizing:border-box;}
   @media (min-width: 900px){
-    .tg-toolbar-row{
-      flex-direction: row !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 12px !important;
-      margin-bottom: 8px !important;
-    }
-    .tg-toolbar-row .tg-dock-sec{
-      margin-bottom: 0 !important;
-      flex: none !important;
-    }
-    .tg-toolbar-row .tg-search-sec{
-      margin-bottom: 0 !important;
-      flex: 1 !important;
-      max-width: 520px !important;
-    }
+    .tg-toolbar-row{flex-direction:row; align-items:center; gap:10px;}
+    .tg-toolbar-row .tg-dock-sec{flex:none; width:260px;}
+    .tg-toolbar-row .tg-search-sec{flex:1;}
+  }
+  .tg-dock{position:relative; display:flex; align-items:center; height:38px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; box-sizing:border-box; width:100%;}
+  .tg-dock-glider{position:absolute; top:3px; bottom:3px; border-radius:8px; background:#fff; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:0; pointer-events:none;}
+  .tg-dock-btn{position:relative; z-index:1; flex:1; height:32px; border:none; background:transparent; font-family:var(--font); font-size:11.5px; font-weight:500; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; padding:0 10px; white-space:nowrap; transition:color .18s ease;}
+  .tg-dock-btn.tg-dock-active{color:var(--ink); font-weight:600;}
+  #tg-searchInput{height:34px !important; border-radius:10px !important; font-size:12px !important;}
+  #tg-searchInput:focus{border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #tg-filterBtn, #tg-viewToggleBtn{width:34px !important; height:34px !important; border-radius:10px !important; transition:transform .15s ease, background .15s ease;}
+  #tg-filterBtn:hover, #tg-viewToggleBtn:hover{background:var(--surface) !important;}
+  #tg-filterBtn:active, #tg-viewToggleBtn:active{transform:scale(.9);}
+  #tg-filterCount[hidden]{display:none !important;}
+  @keyframes tgPop{0%{transform:scale(1);} 35%{transform:scale(1.18);} 100%{transform:scale(1);}}
+  .tg-btn-pop{animation:tgPop .32s cubic-bezier(.34,1.56,.64,1);}
+  .tg-list-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;}
+  #tg-sectionLabel{font-size:12px; font-weight:600; color:var(--ink);}
+  #tg-resultCount{display:inline-flex; align-items:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;}
+
+  /* ===== Status, chip, tombol ikon ===== */
+  .tg-status-pill{display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .tg-status-pill i{width:6px; height:6px; border-radius:50%;}
+  .tg-status-pill.is-lunas{background:#E9F7EF; color:#1E8E5A;} .tg-status-pill.is-lunas i{background:#1E8E5A;}
+  .tg-status-pill.is-belum{background:#FFF4E0; color:#B86E00;} .tg-status-pill.is-belum i{background:#E89A1C;}
+  .tg-doc{display:inline-flex; align-items:center; gap:4px; font-size:10px; color:var(--ink-soft); white-space:nowrap;}
+  .tg-doc i{font-size:12px;} .tg-doc.is-ok{color:var(--blue);}
+  .tg-table-icon-btn{width:28px; height:28px; padding:0; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex:none; background:#fff; color:var(--ink-soft); border:1px solid var(--border); box-sizing:border-box; transition:background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease; text-decoration:none; font-size:13px; vertical-align:middle;}
+  .tg-table-icon-btn:hover{background:var(--surface); color:var(--ink);}
+  .tg-table-icon-btn:active{transform:scale(.94);}
+  .tg-table-icon-btn.is-wa{color:#14A44D;} .tg-table-icon-btn.is-wa:hover{background:#E9F7EF;}
+  .tg-table-icon-btn.tg-has-pdf{color:var(--blue); border-color:#C9CCF0;}
+  .tg-table-icon-btn.tg-lunas-btn{color:#1E8E5A;} .tg-table-icon-btn.tg-lunas-btn:hover{background:#E9F7EF;}
+  .tg-table-icon-btn.tg-del-btn:hover{background:var(--red-soft); color:var(--red); border-color:rgba(212,7,15,.25);}
+  .tg-siswa-pill{display:inline-flex; align-items:center; gap:4px; background:var(--surface); border-radius:6px; padding:2px 7px; font-size:10.5px; color:var(--ink); white-space:nowrap;}
+  .tg-siswa-sesi-tag{font-size:9.5px; font-weight:600; color:var(--ink-soft);}
+
+  /* ===== Tabel ===== */
+  #tg-list.tg-view-table{display:block;}
+  .tg-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:16px;}
+  .tg-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .tg-table{width:100%; min-width:860px; border-collapse:separate; border-spacing:0; text-align:left; font-family:var(--font); font-size:11px;}
+  .tg-table th{padding:11px 12px; background:#fff; border-bottom:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
+  .tg-table th.tg-sort-th{cursor:pointer; user-select:none;}
+  .tg-table th.tg-sort-th:hover{color:var(--ink);}
+  .tg-table td{padding:8px 12px; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle; font-size:11px;}
+  .tg-table tbody tr:last-child td{border-bottom:none;}
+  .tg-table tbody tr:hover td{background:#F8F9FD;}
+  .tg-table .tg-no{width:40px; min-width:40px; max-width:40px; box-sizing:border-box; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  .tg-table .tg-stk{position:sticky; z-index:1; background:#fff;}
+  .tg-table th.tg-stk{z-index:2;}
+  .tg-table .tg-stk-no{left:0;}
+  .tg-table .tg-stk-ortu{left:40px; box-shadow:1px 0 0 var(--border); white-space:nowrap; font-weight:600; max-width:200px; overflow:hidden; text-overflow:ellipsis;}
+  .tg-table tbody tr:hover td.tg-stk{background:#F8F9FD;}
+  .tg-table .tg-money{text-align:right; white-space:nowrap; font-weight:700; font-variant-numeric:tabular-nums;}
+  .tg-table .tg-act{text-align:right; white-space:nowrap;}
+  .tg-table .tg-act .tg-table-icon-btn{margin-left:4px;}
+
+  /* ===== Kartu ===== */
+  #tg-list.tg-view-cards{display:grid; grid-template-columns:minmax(0,1fr); gap:12px;}
+  @media (min-width: 900px){ #tg-list.tg-view-cards{grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); align-items:start;} }
+  .tg-card-item{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; box-sizing:border-box; min-width:0; transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .tg-card-item:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12); transform:translateY(-1px);}
+  .tgc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .tgc-av{width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:11.5px; flex:none;}
+  .tgc-who{min-width:0; flex:1;}
+  .tgc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .tgc-who p{font-size:10.5px; color:var(--ink-soft); margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tgc-kids{margin-top:12px; padding:4px 11px; border-radius:10px; background:var(--surface);}
+  .tgc-kid{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:7px 0;}
+  .tgc-kid + .tgc-kid{border-top:1px solid #E7E9F2;}
+  .tgc-kid b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tgc-kid span{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tgc-kid .r{text-align:right;}
+  .tgc-kid .r b{font-variant-numeric:tabular-nums;}
+  .tgc-total{display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-top:12px;}
+  .tgc-total span{font-size:10.5px; color:var(--ink-soft);}
+  .tgc-total b{font-size:15px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .tgc-foot{display:flex; align-items:center; gap:6px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .tgc-foot .note{font-size:10px; color:var(--ink-soft); margin-right:auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tgc-foot .tg-table-icon-btn{width:30px; height:30px; font-size:14px;}
+  .tgc-btn{height:30px; border-radius:8px; font-family:var(--font); font-size:11px; font-weight:600; padding:0 12px; cursor:pointer; flex:none; transition:transform .1s ease, filter .15s ease, background .15s ease;}
+  .tgc-btn.is-primary{background:var(--blue); color:#fff; border:none;}
+  .tgc-btn.is-primary:hover{filter:brightness(1.08);}
+  .tgc-btn.is-ghost{background:#fff; color:var(--ink); border:1px solid var(--border);}
+  .tgc-btn.is-ghost:hover{background:var(--surface);}
+  .tgc-btn:active{transform:scale(.96);}
+
+  /* ===== Popup ===== */
+  #tg-filterModal, #tg-pickerModal, #tg-lunasModal, #tg-previewModal, #tg-confirmModal{position:fixed !important; inset:0 !important; background:rgba(20,22,43,.45) !important; z-index:9999 !important; display:flex !important; align-items:center !important; justify-content:center !important; padding:16px !important; backdrop-filter:blur(6px) !important; -webkit-backdrop-filter:blur(6px) !important; opacity:0; pointer-events:none; transition:opacity .28s ease; box-sizing:border-box !important;}
+  #tg-filterModal.show, #tg-pickerModal.show, #tg-lunasModal.show, #tg-previewModal.show, #tg-confirmModal.show{opacity:1 !important; pointer-events:auto !important;}
+  #tg-filterModal[hidden], #tg-pickerModal[hidden], #tg-lunasModal[hidden], #tg-previewModal[hidden], #tg-confirmModal[hidden]{display:none !important;}
+  #tg-pickerModal{z-index:10000 !important;}
+  #tg-previewModal .modal-sheet.gx-sheet{max-width:580px !important;}
+  #tg-previewContainer{padding:12px 0 6px;}
+  .tg-sum{background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:10px 12px; margin-top:12px;}
+  .tg-sum-h{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;}
+  .tg-sum-h b{font-size:12.5px; font-weight:600; color:var(--ink);}
+  .tg-sum-h span{font-size:10.5px; color:var(--ink-soft);}
+  .tg-sum-row{display:flex; justify-content:space-between; gap:10px; font-size:11px; color:var(--ink); padding:6px 0; border-top:1px solid var(--border);}
+  .tg-sum-row span:last-child{font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .tg-sum-tot{display:flex; justify-content:space-between; align-items:center; gap:10px; padding-top:8px; border-top:1px solid var(--border);}
+  .tg-sum-tot span{font-size:10.5px; color:var(--ink-soft);}
+  .tg-sum-tot b{font-size:15px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums;}
+  .gx-foot .btn.is-wa i{color:#14A44D;}
+  .gx-foot .btn i{font-size:14px;}
+  .gx-foot.is-wrap{flex-wrap:wrap;}
+  .gx-foot.is-wrap .btn{min-width:130px;}
+
+  /* ===== Animasi ===== */
+  @keyframes tgIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes tgFade{from{opacity:0;} to{opacity:1;}}
+  @keyframes tgGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  #tg-list > .tg-card-item.tg-in{animation:tgIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #tg-list .tg-table tbody tr.tg-in td{animation:tgFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
+  .tgb-units.tg-anim .bar i{animation:tgGrow .8s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 70ms);}
+  @keyframes tgRowFlash{0%{background-color:rgba(28,26,175,.14);} 100%{background-color:transparent;}}
+  @media (prefers-reduced-motion: reduce){
+    #tg-list > .tg-card-item.tg-in, #tg-list .tg-table tbody tr.tg-in td, .tgb-units.tg-anim .bar i, .tg-btn-pop{animation:none !important;}
+    .tgb-ring .arc{transition:none;}
+    .tg-card-item:hover{transform:none;}
   }
 
-  /* Status Dock Switcher (Pill Glider) */
-  .tg-dock{
-    position: relative;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 2.5px;
-    display: inline-flex;
-    align-items: center;
-    width: 100%;
-    box-sizing: border-box;
-    height: 32px;
-  }
-  @media (min-width: 900px){
-    .tg-dock{
-      width: auto !important;
-      min-width: 240px;
-    }
-  }
-  .tg-dock-glider{
-    position: absolute;
-    top: 2.5px;
-    bottom: 2.5px;
-    border-radius: 999px;
-    background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
-    transition: all .25s cubic-bezier(.34,1.56,.64,1);
-    z-index: 0;
-  }
-  .tg-dock-btn{
-    position: relative;
-    z-index: 1;
-    flex: 1;
-    height: 27px;
-    border: none;
-    background: transparent;
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    cursor: pointer;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 0 12px;
-    white-space: nowrap;
-    transition: color .2s ease;
-  }
-  .tg-dock-btn.tg-dock-active{
-    color: var(--ink) !important;
-    font-weight: 500 !important;
-  }
-
-  /* Table Styles */
-  .tg-table-card{
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,.03);
-    margin-bottom: 16px;
-  }
-  .tg-table-wrap{
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .tg-table{
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-family: var(--font);
-    font-size: 11.5px;
-    box-sizing: border-box !important;
-  }
-  .tg-table th{
-    padding: 6px 8px;
-    background: rgba(0,0,0,.025);
-    border-bottom: 1px solid var(--border);
-    font-size: 10.5px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    letter-spacing: .02em;
-    white-space: nowrap;
-    vertical-align: top !important;
-  }
-  .tg-table th.tg-sort-th{
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    transition: color .15s ease, background .15s ease;
-  }
-  .tg-table th.tg-sort-th:hover{
-    color: var(--ink);
-    background: rgba(0,0,0,.04);
-  }
-  .tg-table td{
-    padding: 5px 8px;
-    border-bottom: 1px solid rgba(0,0,0,.05);
-    color: var(--ink);
-    vertical-align: top !important;
-    font-size: 11.5px;
-    font-weight: 400;
-    line-height: 1.3;
-  }
-  .tg-table tbody tr:last-child td{
-    border-bottom: none;
-  }
-  .tg-table tbody tr{
-    transition: background .12s ease;
-  }
-  .tg-table tbody tr:hover{
-    background: rgba(0,122,255,.03);
-  }
-
-  .tg-table-icon-btn{
-    width: 24px !important;
-    height: 24px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-radius: 6px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer;
-    flex: none;
-    background: var(--surface) !important;
-    color: var(--ink-soft) !important;
-    border: 1px solid var(--border) !important;
-    box-sizing: border-box !important;
-    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
-    text-decoration: none;
-  }
-  .tg-table-icon-btn:hover{
-    background: #fff !important;
-    color: var(--ink) !important;
-    border-color: rgba(20, 22, 43, 0.22) !important;
-  }
-  .tg-table-icon-btn:active{
-    transform: scale(.9);
-  }
-  .tg-table-icon-btn.tg-has-pdf{
-    color: var(--blue) !important;
-    border-color: rgba(0,122,255,.3) !important;
-    background: rgba(0,122,255,.06) !important;
-  }
-
-  /* Siswa Pill Tag */
-  .tg-siswa-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 1px 5px;
-    border-radius: 4px;
-    font-size: 10.5px;
-    color: var(--ink);
-    font-weight: 400;
-    margin: 1px 2px;
-    white-space: nowrap;
-  }
-  .tg-siswa-sesi-tag{
-    color: var(--ink-soft);
-    font-size: 9.5px;
-    font-weight: 500;
-  }
-
-  /* Status Badge */
-  .tg-status-pill{
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    height: 20px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0 7px;
-    font-family: var(--font);
-    font-size: 9.5px;
-    font-weight: 500;
-    white-space: nowrap;
-    box-sizing: border-box;
-  }
-  .tg-status-dot{
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    flex: none;
-    margin-right: 4px;
-  }
-
-  /* Card Item */
-  .tg-card-item{
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.03);
-    transition: transform .15s ease, box-shadow .15s ease;
-  }
-  .tg-card-item:hover{
-    box-shadow: 0 4px 12px rgba(0,0,0,.06);
-  }
-
-
-  /* =========================================================
-     MODAL OVERLAY & POPUP SHEET (STANDAR KONTRAK & PRESENSI)
-     Centered horizontally and vertically with backdrop blur
-     ========================================================= */
-  #tg-filterModal, #tg-pickerModal, #tg-lunasModal, #tg-previewModal, #tg-confirmModal{
-    position: fixed !important;
-    inset: 0 !important;
-    background: rgba(20,22,43,.45) !important;
-    z-index: 9999 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 16px !important;
-    backdrop-filter: blur(6px) !important;
-    -webkit-backdrop-filter: blur(6px) !important;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .28s ease;
-    box-sizing: border-box !important;
-  }
-  #tg-filterModal.show, #tg-pickerModal.show, #tg-lunasModal.show, #tg-previewModal.show, #tg-confirmModal.show{
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-  #tg-filterModal[hidden], #tg-pickerModal[hidden], #tg-lunasModal[hidden], #tg-previewModal[hidden], #tg-confirmModal[hidden]{
-    display: none !important;
-  }
-  #tg-filterModal .modal-sheet, #tg-pickerModal .modal-sheet, #tg-lunasModal .modal-sheet, #tg-confirmModal .modal-sheet{
-    border-radius: 16px !important;
-    width: 100% !important;
-    max-width: 400px !important;
-    margin: 0 auto !important;
-    max-height: 88vh !important;
-    overflow-y: auto !important;
-    padding: 16px 18px 18px !important;
-    box-sizing: border-box !important;
-    background: #fff !important;
-    box-shadow: 0 16px 40px -10px rgba(20,22,43,.18) !important;
-    transform: scale(.88) translateY(10px);
-    transition: transform .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #tg-previewModal .modal-sheet{
-    border-radius: 16px !important;
-    width: 100% !important;
-    max-width: 540px !important;
-    margin: 0 auto !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
-    padding: 16px 18px 18px !important;
-    box-sizing: border-box !important;
-    background: #fff !important;
-    box-shadow: 0 16px 40px -10px rgba(20,22,43,.18) !important;
-    transform: scale(.88) translateY(10px);
-    transition: transform .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #tg-confirmModal .modal-sheet{
-    max-width: 360px !important;
-    text-align: center !important;
-  }
-  #tg-filterModal.show .modal-sheet, #tg-pickerModal.show .modal-sheet, #tg-lunasModal.show .modal-sheet, #tg-previewModal.show .modal-sheet, #tg-confirmModal.show .modal-sheet{
-    transform: scale(1) translateY(0) !important;
-  }
-
-  #tg-filterModal .modal-actions .btn,
-  #tg-pickerModal .modal-actions .btn,
-  #tg-lunasModal .modal-actions .btn,
-  #tg-previewModal .modal-actions .btn,
-  #tg-confirmModal .modal-actions .btn{
-    height: 36px !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    border-radius: 9px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-sizing: border-box !important;
-  }
-  .modal-actions .btn-primary{
-    background: var(--blue) !important;
-    border-color: var(--blue) !important;
-    color: #fff !important;
-  }
-
-  /* Form iOS Groups */
-  .tg-group-title{
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: .03em;
-    margin: 8px 0 4px 4px;
-  }
-  .tg-group{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .tg-row{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 12px;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px;
-  }
-  .tg-row:last-child{
-    border-bottom: none;
-  }
-  .tg-row input[type="date"]{
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-family: var(--font);
-    font-size: 11.5px;
-    color: var(--ink);
-  }
-
-  /* Print Preview Sheet */
-  .tg-print-sheet{
-    background: #fff;
-    border: 1px solid #e1e4e8;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 16px rgba(0,0,0,.06);
-    color: #24292f;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
+  /* Lembar cetak */
+  .tg-print-sheet{background:#fff; border:1px solid #e1e4e8; border-radius:10px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,.06); color:#24292f; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;}
 </style>
 
   <!-- Periode Selector (Sama Persis seperti Gaji & Presensi) -->
@@ -620,210 +195,166 @@
     </div>
   </div>
 
-  <!-- Hero Section -->
-  <div class="tg-hero-sec">
-    <div class="tg-hero-main-col">
-      <div class="tg-hero-badges">
-        <span class="tg-hero-total-pill">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
-          TAGIHAN &amp; KUITANSI
-        </span>
-        <span class="tg-hero-unit-pill" id="tg-heroUnitBadge">Semua Unit</span>
+  <!-- Highlight -->
+  <div class="tg-hb">
+    <div class="tgb-main">
+      <div class="tgb-top">
+        <span class="tgb-label"><i></i><span id="tg-heroPeriode">Total tagihan</span></span>
+        <span class="tgb-pill" id="tg-heroUnitBadge">Semua unit</span>
       </div>
-      <div class="tg-hero-counter">
-        <span class="tg-hero-sublabel">Total Tagihan Periode Ini</span>
-        <div class="tg-hero-num-wrap">
-          <span class="tg-hero-num" id="tg-heroTotal">Rp 0</span>
-          <span class="tg-hero-unit" id="tg-heroCount">0 Siswa</span>
+      <div class="tgb-row">
+        <div>
+          <div class="tgb-num" id="tg-heroTotal">Rp 0</div>
+          <div class="tgb-sub" id="tg-heroCount">0 orang tua</div>
         </div>
+        <div class="tgb-units" id="tg-heroUnits"></div>
       </div>
     </div>
-
-    <div class="tg-hero-stats-row">
-      <div class="tg-hero-stat-card">
-        <div class="tg-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#34c759;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div style="min-width:0;">
-          <div class="tg-hero-stat-label">Lunas Diterima</div>
-          <div class="tg-hero-stat-val" id="tg-heroLunas">Rp 0</div>
-        </div>
-      </div>
-      <div class="tg-hero-stat-card">
-        <div class="tg-hero-stat-icon" style="background:rgba(255,149,0,.2); color:#ff9500;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-        <div style="min-width:0;">
-          <div class="tg-hero-stat-label">Menunggu Pembayaran</div>
-          <div class="tg-hero-stat-val" id="tg-heroBelum">Rp 0</div>
+    <div class="tgb-side">
+      <div class="tgb-ringwrap">
+        <svg class="tgb-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="tr" cx="32" cy="32" r="25"/>
+          <circle class="arc" id="tg-heroRingBelum" cx="32" cy="32" r="25" stroke="#FFC46B" stroke-dasharray="0 157.08"/>
+          <circle class="arc" id="tg-heroRingLunas" cx="32" cy="32" r="25" stroke="#7CF0C3" stroke-dasharray="0 157.08" stroke-linecap="round"/>
+          <text id="tg-heroRingPct" x="32" y="36.5" text-anchor="middle">0%</text>
+        </svg>
+        <div class="tgb-list">
+          <div><em style="background:#7CF0C3;"></em>Lunas<b id="tg-heroLunas">Rp 0</b></div>
+          <div><em style="background:#FFC46B;"></em>Belum lunas<b id="tg-heroBelum">Rp 0</b></div>
+          <div><em style="background:rgba(255,255,255,.4);"></em>Orang tua belum<b id="tg-heroOrtuBelum">0</b></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Toolbar Row: Status Dock (Belum Lunas & Sudah Lunas) + Search, Filter, View Toggle -->
+  <!-- Toolbar: status + pencarian, filter, ganti tampilan -->
   <div id="tg-toolbarRow" class="tg-toolbar-row">
-    <!-- Status Dock Switcher -->
     <div class="tg-dock tg-dock-sec" id="tg-dock">
       <div class="tg-dock-glider" id="tg-dockGlider"></div>
       <button type="button" class="tg-dock-btn tg-dock-active" data-tab="belum_lunas">
-        <span>Belum Lunas</span>
-        <span id="tg-tabCountBelum" style="background:rgba(255,149,0,.15); color:#c06400; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
+        <span>Belum lunas</span>
+        <span id="tg-tabCountBelum" style="background:#FFF4E0; color:#B86E00; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
       </button>
       <button type="button" class="tg-dock-btn" data-tab="lunas">
-        <span>Sudah Lunas</span>
-        <span id="tg-tabCountLunas" style="background:rgba(52,199,89,.15); color:#28a745; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
+        <span>Sudah lunas</span>
+        <span id="tg-tabCountLunas" style="background:#E9F7EF; color:#1E8E5A; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
       </button>
     </div>
-
-    <!-- Search + Filter + View Toggle (Sama persis seperti di Kontrak) -->
     <div class="tg-search-sec" style="display:flex; gap:8px;">
       <div style="flex:1; position:relative;">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="tg-searchInput" placeholder="Cari nama orang tua, siswa, atau unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box; outline:none; color:var(--ink);">
       </div>
-
-      <!-- Button Filter (Popup iOS Grouped Picker) -->
       <button id="tg-filterBtn" type="button" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
         <span id="tg-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
       </button>
-
-      <!-- View Toggle: Kartu vs Tabel -->
-      <button id="tg-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
-      </button>
+      <button id="tg-viewToggleBtn" type="button" aria-label="Tampilkan sebagai tabel" title="Tampilkan sebagai tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;"></button>
     </div>
   </div>
 
-  <!-- Content List (Cards or Table) -->
+  <div class="tg-list-head">
+    <div id="tg-sectionLabel">Belum lunas</div>
+    <div id="tg-resultCount">0 orang tua</div>
+  </div>
+
   <div id="tg-list" class="tg-view-table">
     <div style="padding:28px 14px; text-align:center; color:var(--ink-soft); font-size:12px;">Memuat tagihan...</div>
   </div>
 
-  <!-- =========================================================
-       MODALS
-       ========================================================= -->
-
-  <!-- Modal 1: Tandai Lunas & Buat Kuitansi -->
+  <!-- Popup tandai lunas -->
   <div class="modal-overlay" id="tg-lunasModal" hidden>
-    <div class="modal-sheet">
-      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px;">
-        <div>
-          <h3 style="font-size:13.5px; font-weight:500; margin:0 0 2px;">Konfirmasi Pembayaran Lunas</h3>
-          <p id="tg-lunasModalSub" style="font-size:11px; color:var(--ink-soft); margin:0;">Menerbitkan tanda terima kuitansi otomatis</p>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico" style="background:#E9F7EF; color:#1E8E5A;"><i class="ph ph-check-circle" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Tandai lunas</h3>
+          <p class="gx-sub" id="tg-lunasModalSub">Kuitansi dibuat otomatis setelah disimpan.</p>
         </div>
-        <button type="button" id="tg-lunasCloseX" aria-label="Tutup" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:2px;">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <button type="button" class="gx-close" id="tg-lunasCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="tg-group-title">Rincian Tagihan</div>
-      <div class="tg-group" id="tg-lunasInfoBox" style="margin-bottom:10px; padding:10px 12px;">
-        <!-- Filled by JS -->
+      <div class="gx-body">
+        <div id="tg-lunasInfoBox"></div>
+        <div class="gx-step-title"><span class="gx-step">1</span>Pembayaran</div>
+        <div class="gx-row"><label for="tg-lunasTanggalInput">Tanggal pembayaran diterima <em class="gx-req">wajib</em></label><input type="date" id="tg-lunasTanggalInput"></div>
       </div>
-
-      <div class="tg-group-title">Tanggal Pembayaran</div>
-      <div class="tg-group" style="margin-bottom:4px;">
-        <div class="tg-row">
-          <label for="tg-lunasTanggalInput">Tanggal Pembayaran Diterima</label>
-          <input type="date" id="tg-lunasTanggalInput">
-        </div>
-      </div>
-
-      <div class="modal-actions" style="margin-top:14px; display:flex; gap:8px;">
-        <button type="button" class="btn btn-outline" id="tg-lunasCancelBtn" style="flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="tg-lunasSubmitBtn" style="flex:1; background:#28a745 !important; border-color:#28a745 !important;">Tandai Lunas</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="tg-lunasCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="tg-lunasSubmitBtn">Tandai lunas</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal 2: Preview Dokumen (Invoice / Kuitansi Printable) -->
+  <!-- Popup pratinjau dokumen -->
   <div class="modal-overlay" id="tg-previewModal" hidden>
-    <div class="modal-sheet">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-        <div>
-          <h3 id="tg-previewDocTitle" style="font-size:13.5px; font-weight:500; margin:0 0 2px;">Dokumen Tagihan</h3>
-          <p id="tg-previewDocSub" style="font-size:11px; color:var(--ink-soft); margin:0;">Pratinjau &amp; cetak dokumen resmi</p>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-file-text" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3 id="tg-previewDocTitle">Dokumen tagihan</h3>
+          <p class="gx-sub" id="tg-previewDocSub">Pratinjau dan cetak dokumen resmi</p>
         </div>
-        <button type="button" id="tg-previewCloseX" aria-label="Tutup" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:2px;">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <button type="button" class="gx-close" id="tg-previewCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div id="tg-previewContainer" style="max-height:62vh; overflow-y:auto; padding-right:2px;">
-        <!-- Injected by JS -->
-      </div>
-
-      <div class="modal-actions" style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
-        <button type="button" class="btn btn-primary" id="tg-previewPrintBtn" style="flex:1; min-width:140px; display:inline-flex; align-items:center; justify-content:center; gap:5px; cursor:pointer;">
+      <div class="gx-body"><div id="tg-previewContainer"></div></div>
+      <div class="modal-actions gx-foot is-wrap">
+        <button type="button" class="btn btn-outline is-wa" id="tg-previewWaBtn"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Kirim lewat WA</button>
+        <a id="tg-previewDriveBtn" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="display:none; align-items:center; justify-content:center; gap:6px; text-decoration:none;"><i class="ph ph-arrow-square-out" aria-hidden="true"></i><span>Buka di Drive</span></a>
+        <button type="button" class="btn btn-primary" id="tg-previewPrintBtn" style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          <span id="tg-previewPrintBtnText">Cetak Dokumen (PDF)</span>
-        </button>
-        <a id="tg-previewDriveBtn" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="flex:1; min-width:125px; display:none; align-items:center; justify-content:center; gap:5px; color:var(--blue); border-color:rgba(0,122,255,.3); text-decoration:none; box-sizing:border-box;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          <span>Buka di Drive</span>
-        </a>
-        <button type="button" class="btn" id="tg-previewWaBtn" style="flex:1; min-width:115px; background:#25D366; color:#fff; display:inline-flex; align-items:center; justify-content:center; gap:5px; border:none; cursor:pointer;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>
-          Kirim via WA
+          <span id="tg-previewPrintBtnText">Cetak PDF</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Modal 4: Konfirmasi Tindakan (Hapus / Batal Lunas) -->
+  <!-- Popup konfirmasi -->
   <div class="modal-overlay" id="tg-confirmModal" hidden>
-    <div class="modal-sheet" style="max-width:360px; text-align:center;">
-      <div id="tg-confirmIcon" style="width:38px; height:38px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:16px;">
-        &#9888;&#65039;
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-confirm">
+        <span class="gx-head-ico is-danger" id="tg-confirmIcon"><i class="ph ph-warning" aria-hidden="true"></i></span>
+        <h3 id="tg-confirmTitle">Konfirmasi</h3>
+        <p id="tg-confirmDesc">Apakah Anda yakin?</p>
       </div>
-      <h3 id="tg-confirmTitle" style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Konfirmasi</h3>
-      <p id="tg-confirmDesc" style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; line-height:1.45;">Apakah Anda yakin?</p>
-      <div class="modal-actions" style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-outline" id="tg-confirmCancelBtn" style="flex:1;">Batal</button>
-        <button type="button" class="btn" id="tg-confirmOkBtn" style="flex:1; background:var(--red); color:#fff;">Lanjutkan</button>
+      <div class="modal-actions gx-foot" style="border-top:none;">
+        <button type="button" class="btn btn-outline" id="tg-confirmCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="tg-confirmOkBtn">Lanjutkan</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal 5: Filter Tagihan (Unit & Status Cetak Dokumen PDF) -->
+  <!-- Popup filter -->
   <div class="modal-overlay" id="tg-filterModal" hidden>
-    <div class="modal-sheet" style="max-height:88vh; overflow-y:auto;">
-      <h3 style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Filter</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 12px;">Saring daftar tagihan sesuai kebutuhan.</p>
-
-      <div class="tg-group-title">Unit / Cabang</div>
-      <div class="tg-group" style="margin-bottom:4px;">
-        <button type="button" class="tg-filter-row-btn" data-picker="unit" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="tg-filterUnitSummary">Semua Unit</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-funnel-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Filter tagihan</h3><p class="gx-sub">Bisa dikombinasikan dengan pencarian.</p></div>
+        <button type="button" class="gx-close" id="tg-filterCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="tg-group-title">Status Cetak Dokumen</div>
-      <div class="tg-group">
-        <button type="button" class="tg-filter-row-btn" data-picker="cetak" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="tg-filterCetakSummary">Semua Dokumen</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+      <div class="gx-body">
+        <div class="gx-step-title"><span class="gx-step">1</span>Unit</div>
+        <div class="gx-row"><button type="button" class="tg-filter-row-btn gx-field" data-picker="unit"><span id="tg-filterUnitSummary">Semua unit</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button></div>
+        <div class="gx-step-title"><span class="gx-step">2</span>Dokumen PDF</div>
+        <div class="gx-row"><button type="button" class="tg-filter-row-btn gx-field" data-picker="cetak"><span id="tg-filterCetakSummary">Semua dokumen</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button></div>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="tg-filterResetBtn" style="flex:1;">Reset</button>
-        <button type="button" class="btn btn-primary" id="tg-filterApplyBtn" style="flex:1;">Terapkan Filter</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="tg-filterResetBtn">Reset</button>
+        <button type="button" class="btn btn-primary" id="tg-filterApplyBtn">Terapkan filter</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal 6: Popup Picker (Pilih Unit / Status Dokumen) -->
-  <div class="modal-overlay" id="tg-pickerModal" hidden style="z-index:70;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="tg-pickerTitle" style="font-size:13.5px; font-weight:500; margin:0 0 10px;">Pilih</h3>
-      <div id="tg-pickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:12px;">
-        <button type="button" class="btn btn-outline" id="tg-pickerCancelBtn" style="flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="tg-pickerDoneBtn" style="flex:1;">Selesai</button>
+  <!-- Popup pilih opsi filter -->
+  <div class="modal-overlay" id="tg-pickerModal" hidden>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-list-checks" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="tg-pickerTitle">Pilih</h3></div>
+      </div>
+      <div class="gx-body"><div id="tg-pickerList" style="padding:6px 0;"></div></div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="tg-pickerCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="tg-pickerDoneBtn">Selesai</button>
       </div>
     </div>
   </div>
@@ -942,20 +473,21 @@
     var btn = document.getElementById('tg-viewToggleBtn');
     if (!btn) return;
     var isTable = tgState.viewMode === 'table';
-    if (isTable) {
-      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>';
-    } else {
-      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
-    }
+    var label = isTable ? 'Tampilkan sebagai kartu' : 'Tampilkan sebagai tabel';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
+    btn.innerHTML = isTable
+      ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
   }
 
   function tgToggleViewMode() {
+    var btn = document.getElementById('tg-viewToggleBtn');
+    if (btn) { btn.classList.remove('tg-btn-pop'); void btn.offsetWidth; btn.classList.add('tg-btn-pop'); }
     tgState.viewMode = (tgState.viewMode === 'table') ? 'cards' : 'table';
     try { localStorage.setItem('genio_tg_view_mode', tgState.viewMode); } catch (e) {}
     tgUpdateViewToggleUI();
-    tgRenderList();
+    tgRenderList(true);
   }
 
   // =========================================================
@@ -984,7 +516,7 @@
         tgState.tab = tab;
         buttons.forEach(function (b) { b.classList.toggle('tg-dock-active', b === btn); });
         tgUpdateGlider();
-        tgRenderList();
+        tgRenderList(true);
       });
     });
 
@@ -1158,21 +690,12 @@
       var belumGroups = tgGroupRowsByOrtu(allBelumInvoices);
       var lunasGroups = tgGroupRowsByOrtu(allLunasInvoices);
 
-      var totalNominal = tgState.rows.reduce(function (acc, r) { return acc + parseFloat(r.nominal || 0); }, 0);
-      var totalLunas = allLunasInvoices.reduce(function (acc, r) { return acc + parseFloat(r.nominal || 0); }, 0);
-      var totalBelum = allBelumInvoices.reduce(function (acc, r) { return acc + parseFloat(r.nominal || 0); }, 0);
-
-      var totalOrtu = belumGroups.length + lunasGroups.length;
-
-      document.getElementById('tg-heroTotal').textContent = tgFormatRp(totalNominal);
-      document.getElementById('tg-heroCount').textContent = totalOrtu + ' Ortu (' + tgState.rows.length + ' Tagihan)';
-      document.getElementById('tg-heroLunas').textContent = tgFormatRp(totalLunas);
-      document.getElementById('tg-heroBelum').textContent = tgFormatRp(totalBelum);
+      tgRenderHero(tgState.rows, belumGroups, lunasGroups);
 
       document.getElementById('tg-tabCountBelum').textContent = belumGroups.length;
       document.getElementById('tg-tabCountLunas').textContent = lunasGroups.length;
 
-      tgRenderList();
+      tgRenderList(true);
     } catch (err) {
       listEl.innerHTML = '<div class="card tg-card" style="padding:24px; text-align:center; color:var(--red); font-size:12px;">Gagal memuat tagihan: ' + tgEscape(err.message) + '</div>';
     }
@@ -1184,22 +707,22 @@
 
   var TG_FILTER_DEFS = {
     unit: {
-      title: 'Pilih Unit / Cabang',
-      allLabel: 'Semua Unit',
+      title: 'Pilih unit',
+      allLabel: 'Semua unit',
       getOptions: function () {
-        return [{ value: '', label: 'Semua Unit' }].concat(
+        return [{ value: '', label: 'Semua unit' }].concat(
           (tgState.unitList || []).map(function (u) { return { value: u.id, label: u.nama_unit }; })
         );
       }
     },
     cetak: {
-      title: 'Status Cetak Dokumen PDF',
-      allLabel: 'Semua Dokumen',
+      title: 'Status dokumen PDF',
+      allLabel: 'Semua dokumen',
       getOptions: function () {
         return [
-          { value: '', label: 'Semua Dokumen' },
-          { value: 'sudah_dicetak', label: 'Sudah Dicetak (Ada di Drive)' },
-          { value: 'belum_dicetak', label: 'Belum Dicetak (Belum ada PDF)' }
+          { value: '', label: 'Semua dokumen' },
+          { value: 'sudah_dicetak', label: 'Sudah dicetak (ada di Drive)' },
+          { value: 'belum_dicetak', label: 'Belum dicetak' }
         ];
       }
     }
@@ -1274,8 +797,8 @@
     if (!listEl) return;
     listEl.innerHTML = options.map(function (opt) {
       var checked = tgPickerTempSelected === opt.value;
-      return '<label style="display:flex; align-items:center; gap:10px; padding:11px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
-        '<input type="radio" name="tg-picker-opt" class="tg-picker-opt" value="' + tgEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:18px; height:18px; accent-color:var(--blue); flex:none;">' +
+      return '<label class="gx-opt-row">' +
+        '<input type="radio" name="tg-picker-opt" class="tg-picker-opt" value="' + tgEscape(opt.value) + '" ' + (checked ? 'checked' : '') + '>' +
         tgEscape(opt.label) +
       '</label>';
     }).join('');
@@ -1311,7 +834,7 @@
       }
     }
     tgCloseFilterModal();
-    tgRenderList();
+    tgRenderList(true);
   }
 
   function tgResetFilter() {
@@ -1326,7 +849,7 @@
     tgUpdateFilterSummary('cetak');
     tgUpdateFilterBadge();
     tgCloseFilterModal();
-    tgRenderList();
+    tgRenderList(true);
   }
 
   function tgGetFilteredGroups() {
@@ -1480,198 +1003,195 @@
   }
 
   // =========================================================
-  // RENDERING (TABLE VIEW & CARDS VIEW)
+  // RENDERING (HIGHLIGHT, TABEL, KARTU)
   // =========================================================
+
+  var TG_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var TG_RING_LEN = 2 * Math.PI * 25;
+
+  function tgFormatShort(n) {
+    n = Math.round(parseFloat(n) || 0);
+    var abs = Math.abs(n);
+    function fmt(v) { return (Math.round(v * 10) / 10).toLocaleString('id-ID', { maximumFractionDigits: 1 }); }
+    if (abs >= 1e9) return 'Rp ' + fmt(n / 1e9) + ' M';
+    if (abs >= 1e6) return 'Rp ' + fmt(n / 1e6) + ' Jt';
+    if (abs >= 1e3) return 'Rp ' + fmt(n / 1e3) + ' rb';
+    return 'Rp ' + n.toLocaleString('id-ID');
+  }
+  function tgCountUpRp(el, to) {
+    if (!el) return;
+    if (TG_REDUCED_MOTION || !to) { el.textContent = tgFormatShort(to); return; }
+    var start = null, dur = 800;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = tgFormatShort(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step); else el.textContent = tgFormatShort(to);
+    }
+    requestAnimationFrame(step);
+  }
+  function tgInitials(nama) {
+    return (nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+  }
+
+  function tgRenderHero(rows, belumGroups, lunasGroups) {
+    var total = 0, lunas = 0;
+    var units = {};
+    rows.forEach(function (r) {
+      var nom = parseFloat(r.nominal || 0);
+      total += nom;
+      if (r.status === 'lunas') lunas += nom;
+      var ks = r.kontrak_siswa || {};
+      var un = (r.units && r.units.nama_unit) || (ks.units && ks.units.nama_unit) || 'Tanpa unit';
+      if (!units[un]) units[un] = { nama: un, total: 0, lunas: 0 };
+      units[un].total += nom;
+      if (r.status === 'lunas') units[un].lunas += nom;
+    });
+    var belum = total - lunas;
+    var pct = total ? Math.round(lunas / total * 100) : 0;
+
+    document.getElementById('tg-heroPeriode').textContent = 'Total tagihan ' + tgFormatPeriodeLabel(tgState.periode);
+    tgCountUpRp(document.getElementById('tg-heroTotal'), total);
+    document.getElementById('tg-heroCount').textContent = (belumGroups.length + lunasGroups.length) + ' orang tua · ' + rows.length + ' tagihan';
+    document.getElementById('tg-heroLunas').textContent = tgFormatShort(lunas);
+    document.getElementById('tg-heroBelum').textContent = tgFormatShort(belum);
+    document.getElementById('tg-heroOrtuBelum').textContent = belumGroups.length;
+    document.getElementById('tg-heroRingPct').textContent = pct + '%';
+
+    var arcL = document.getElementById('tg-heroRingLunas');
+    var arcB = document.getElementById('tg-heroRingBelum');
+    var lenL = total ? (lunas / total) * TG_RING_LEN : 0;
+    var lenB = total ? TG_RING_LEN : 0;
+    arcL.setAttribute('stroke-dasharray', '0 ' + TG_RING_LEN);
+    arcB.setAttribute('stroke-dasharray', '0 ' + TG_RING_LEN);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        arcB.setAttribute('stroke-dasharray', lenB.toFixed(2) + ' ' + TG_RING_LEN.toFixed(2));
+        arcL.setAttribute('stroke-dasharray', lenL.toFixed(2) + ' ' + TG_RING_LEN.toFixed(2));
+      });
+    });
+
+    var list = Object.keys(units).map(function (k) { return units[k]; }).sort(function (a, b) { return b.total - a.total; }).slice(0, 4);
+    var max = list.length ? list[0].total : 1;
+    var unitsEl = document.getElementById('tg-heroUnits');
+    unitsEl.innerHTML = list.map(function (u, i) {
+      var up = u.total ? Math.round(u.lunas / u.total * 100) : 0;
+      var w = max ? Math.max(6, Math.round(u.total / max * 100)) : 0;
+      return '<div class="tgb-un"><span>' + tgEscape(u.nama) + '</span><b>' + tgFormatShort(u.total) + '<small>' + up + '% lunas</small></b>' +
+        '<div class="bar" style="width:' + w + '%;"><i style="width:' + up + '%; --i:' + i + ';"></i></div></div>';
+    }).join('');
+    if (!TG_REDUCED_MOTION) { unitsEl.classList.remove('tg-anim'); void unitsEl.offsetWidth; unitsEl.classList.add('tg-anim'); }
+  }
+
+  function tgStatusPill(isLunas) {
+    return isLunas
+      ? '<span class="tg-status-pill is-lunas"><i></i>Lunas</span>'
+      : '<span class="tg-status-pill is-belum"><i></i>Belum lunas</span>';
+  }
+
+  function tgActionIcons(g, withLunasIcon) {
+    var isLunas = g.status === 'lunas';
+    var cleanHp = (g.ortuHp || '').replace(/\D/g, '').replace(/^0/, '62');
+    var hasPdf = g.invoices.some(function (inv) { return !!inv.pdf_url; });
+    var html = '';
+    if (cleanHp) {
+      html += '<a href="' + tgBuildWaLink(g, cleanHp) + '" target="_blank" rel="noopener noreferrer" class="tg-table-icon-btn is-wa" title="Kirim lewat WhatsApp" aria-label="Kirim lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>';
+    }
+    html += '<button type="button" class="tg-table-icon-btn tg-preview-btn' + (hasPdf ? ' tg-has-pdf' : '') + '" data-key="' + tgEscape(g.key) + '" title="' + (hasPdf ? 'Lihat dokumen (tersimpan di Drive)' : 'Lihat dan cetak dokumen') + '" aria-label="Lihat dokumen"><i class="ph ph-file-text" aria-hidden="true"></i></button>';
+    if (withLunasIcon) {
+      html += isLunas
+        ? '<button type="button" class="tg-table-icon-btn tg-batal-lunas-btn" data-key="' + tgEscape(g.key) + '" title="Batalkan status lunas" aria-label="Batalkan lunas"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i></button>'
+        : '<button type="button" class="tg-table-icon-btn tg-lunas-btn" data-key="' + tgEscape(g.key) + '" title="Tandai lunas" aria-label="Tandai lunas"><i class="ph ph-check" aria-hidden="true"></i></button>';
+    }
+    if (!isLunas) {
+      html += '<button type="button" class="tg-table-icon-btn tg-del-btn" data-key="' + tgEscape(g.key) + '" data-nama="' + tgEscape(g.ortuNama) + '" title="Hapus tagihan" aria-label="Hapus tagihan"><i class="ph ph-trash" aria-hidden="true"></i></button>';
+    }
+    return html;
+  }
+
+  function tgSortTh(field, label, extraClass, align) {
+    return '<th class="tg-sort-th' + (extraClass ? ' ' + extraClass : '') + '" data-sort="' + field + '"' + (align ? ' style="text-align:' + align + ';"' : '') + '>' +
+      '<span style="display:inline-flex; align-items:center;">' + label + tgGetSortIcon(field) + '</span></th>';
+  }
 
   function tgRenderTable(groups) {
     var trs = groups.map(function (g, idx) {
       var isLunas = g.status === 'lunas';
-      var statusBadge = isLunas
-        ? '<span class="tg-status-pill"><span class="tg-status-dot" style="background:#34c759;"></span><span style="color:#28a745;">Lunas</span></span>'
-        : '<span class="tg-status-pill"><span class="tg-status-dot" style="background:#ff9500;"></span><span style="color:#ff9500;">Belum Lunas</span></span>';
-
-      var cleanHp = (g.ortuHp || '').replace(/\D/g, '').replace(/^0/, '62');
-      var waBtn = cleanHp
-        ? '<a href="' + tgBuildWaLink(g, cleanHp) + '" target="_blank" rel="noopener noreferrer" class="tg-table-icon-btn" title="Hubungi Ortu WA" style="color:#25D366 !important;">' +
-            '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>' +
-          '</a>'
-        : '';
-
       var hasPdf = g.invoices.some(function (inv) { return !!inv.pdf_url; });
-      var previewBtn = '<button type="button" class="tg-table-icon-btn tg-preview-btn' + (hasPdf ? ' tg-has-pdf' : '') + '" data-key="' + tgEscape(g.key) + '" title="' + (hasPdf ? 'Lihat Dokumen (Tersimpan di Drive)' : 'Lihat &amp; Cetak Dokumen') + '">' +
-          '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
-        '</button>';
-
-      var lunasBtn = isLunas
-        ? '<button type="button" class="tg-table-icon-btn tg-batal-lunas-btn" data-key="' + tgEscape(g.key) + '" title="Batalkan status lunas" aria-label="Batal Lunas" style="color:var(--ink-soft);">' +
-            '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>' +
-          '</button>'
-        : '<button type="button" class="tg-table-icon-btn tg-lunas-btn" data-key="' + tgEscape(g.key) + '" title="Tandai pembayaran lunas" aria-label="Tandai Lunas" style="color:#28a745 !important;">' +
-            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="20 6 9 17 4 12"/></svg>' +
-          '</button>';
-
-      var delBtn = (!isLunas)
-        ? '<button type="button" class="tg-table-icon-btn tg-del-btn" data-key="' + tgEscape(g.key) + '" data-nama="' + tgEscape(g.ortuNama) + '" title="Hapus Tagihan" aria-label="Hapus">' +
-            '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
-          '</button>'
-        : '';
-
       var siswaBadges = g.children.map(function (c) {
-        return '<span class="tg-siswa-pill" title="' + tgEscape(c.nama + ' (' + c.pakets.join(', ') + ') • ' + c.sesi + ' Sesi • ' + tgFormatRp(c.nominal)) + '">' +
-          tgEscape(c.nama) +
-          '<span class="tg-siswa-sesi-tag">[' + c.sesi + ']</span>' +
-        '</span>';
-      }).join('');
-
-      return '' +
-        '<tr class="tg-table-row" data-key="' + tgEscape(g.key) + '">' +
-          '<td style="text-align:center; width:32px; color:var(--ink-soft); font-size:10.5px;">' + (idx + 1) + '</td>' +
-          '<td>' +
-            '<div style="font-weight:400; color:var(--ink); font-size:11.5px;">' + tgEscape(g.ortuNama) + '</div>' +
-          '</td>' +
-          '<td>' +
-            '<div style="display:flex; align-items:center; flex-wrap:wrap; gap:2px;">' +
-              siswaBadges +
-            '</div>' +
-          '</td>' +
-          '<td style="text-align:center; white-space:nowrap; font-size:11.5px; font-weight:400; color:var(--ink);">' + g.totalSesi + ' Sesi</td>' +
-          '<td style="white-space:nowrap;"><span style="background:var(--surface); border:1px solid var(--border); padding:1.5px 6px; border-radius:4px; font-size:10px; color:var(--ink); font-weight:400;">' + tgEscape(g.unitNama) + '</span></td>' +
-          '<td style="text-align:right; white-space:nowrap; font-weight:400; font-size:11.5px; color:var(--ink); font-variant-numeric:tabular-nums;">' + tgFormatRp(g.totalNominal) + '</td>' +
-          '<td style="text-align:center; white-space:nowrap;">' + statusBadge + '</td>' +
-          '<td style="text-align:center; white-space:nowrap; width:84px;">' +
-            '<div style="display:inline-flex; align-items:center; gap:3px;">' +
-              waBtn +
-              previewBtn +
-              lunasBtn +
-              delBtn +
-            '</div>' +
-          '</td>' +
-        '</tr>';
+        return '<span class="tg-siswa-pill" title="' + tgEscape(c.nama + (c.pakets.length ? ' (' + c.pakets.join(', ') + ')' : '') + ' · ' + c.sesi + ' sesi · ' + tgFormatRp(c.nominal)) + '">' +
+          tgEscape(c.nama) + '<span class="tg-siswa-sesi-tag">' + c.sesi + '</span></span>';
+      }).join(' ');
+      return '<tr class="tg-table-row" data-key="' + tgEscape(g.key) + '">' +
+        '<td class="tg-no tg-stk tg-stk-no">' + (idx + 1) + '</td>' +
+        '<td class="tg-stk tg-stk-ortu">' + tgEscape(g.ortuNama) + '</td>' +
+        '<td><div style="display:flex; flex-wrap:nowrap; gap:4px;">' + siswaBadges + '</div></td>' +
+        '<td style="text-align:center; white-space:nowrap;">' + g.totalSesi + '</td>' +
+        '<td style="white-space:nowrap;">' + tgEscape(g.unitNama) + '</td>' +
+        '<td class="tg-money">' + tgFormatRp(g.totalNominal) + '</td>' +
+        '<td style="white-space:nowrap;">' + tgStatusPill(isLunas) + '</td>' +
+        '<td style="white-space:nowrap;"><span class="tg-doc' + (hasPdf ? ' is-ok' : '') + '"><i class="ph ' + (hasPdf ? 'ph-cloud-check' : 'ph-cloud-slash') + '" aria-hidden="true"></i>' + (hasPdf ? 'Tersimpan' : 'Belum') + '</span></td>' +
+        '<td class="tg-act">' + tgActionIcons(g, true) + '</td>' +
+      '</tr>';
     }).join('');
 
-    return '' +
-      '<div class="tg-table-card">' +
-        '<div class="tg-table-wrap">' +
-          '<table class="tg-table">' +
-            '<thead>' +
-              '<tr>' +
-                '<th style="width:32px; text-align:center;">No</th>' +
-                '<th class="tg-sort-th" data-sort="ortu">' +
-                  '<span style="display:inline-flex; align-items:center;">Orang Tua' + tgGetSortIcon('ortu') + '</span>' +
-                '</th>' +
-                '<th style="text-align:left;">Siswa</th>' +
-                '<th class="tg-sort-th" data-sort="sesi" style="text-align:center;">' +
-                  '<span style="display:inline-flex; align-items:center; justify-content:center;">Total Sesi' + tgGetSortIcon('sesi') + '</span>' +
-                '</th>' +
-                '<th class="tg-sort-th" data-sort="unit">' +
-                  '<span style="display:inline-flex; align-items:center;">Unit' + tgGetSortIcon('unit') + '</span>' +
-                '</th>' +
-                '<th class="tg-sort-th" data-sort="nominal" style="text-align:right;">' +
-                  '<span style="display:inline-flex; align-items:center; justify-content:flex-end;">Total Tagihan' + tgGetSortIcon('nominal') + '</span>' +
-                '</th>' +
-                '<th class="tg-sort-th" data-sort="status" style="text-align:center;">' +
-                  '<span style="display:inline-flex; align-items:center; justify-content:center;">Status' + tgGetSortIcon('status') + '</span>' +
-                '</th>' +
-                '<th style="text-align:center; width:84px;">Aksi</th>' +
-              '</tr>' +
-            '</thead>' +
-            '<tbody>' +
-              trs +
-            '</tbody>' +
-          '</table>' +
-        '</div>' +
-      '</div>';
+    return '<div class="tg-table-card"><div class="tg-table-wrap"><table class="tg-table">' +
+      '<thead><tr>' +
+        '<th class="tg-no tg-stk tg-stk-no">No</th>' +
+        tgSortTh('ortu', 'Orang tua', 'tg-stk tg-stk-ortu') +
+        '<th>Siswa dan sesi</th>' +
+        tgSortTh('sesi', 'Sesi', '', 'center') +
+        tgSortTh('unit', 'Unit') +
+        tgSortTh('nominal', 'Total tagihan', '', 'right') +
+        tgSortTh('status', 'Status') +
+        '<th>PDF</th>' +
+        '<th style="text-align:right;">Aksi</th>' +
+      '</tr></thead><tbody>' + trs + '</tbody></table></div></div>';
   }
 
   function tgRenderCard(g) {
     var isLunas = g.status === 'lunas';
-    var statusBadge = isLunas
-      ? '<span class="tg-status-pill" style="background:rgba(52,199,89,.12); color:#28a745;"><span class="tg-status-dot" style="background:#34c759;"></span>Lunas</span>'
-      : '<span class="tg-status-pill" style="background:rgba(255,149,0,.12); color:#ff9500;"><span class="tg-status-dot" style="background:#ff9500;"></span>Belum Lunas</span>';
-
-    var cleanHp = (g.ortuHp || '').replace(/\D/g, '').replace(/^0/, '62');
-    var waBtn = cleanHp
-      ? '<a href="' + tgBuildWaLink(g, cleanHp) + '" target="_blank" rel="noopener noreferrer" class="tg-table-icon-btn" title="Hubungi Ortu WA" style="color:#25D366 !important;">' +
-          '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>' +
-        '</a>'
-      : '';
-
-    var actionBtn = isLunas
-      ? '<button type="button" class="tg-batal-lunas-btn" data-key="' + tgEscape(g.key) + '" style="background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); font-size:10.5px; font-weight:500; padding:0 8px; height:24px; border-radius:6px; cursor:pointer;">Batalkan</button>'
-      : '<button type="button" class="tg-lunas-btn" data-key="' + tgEscape(g.key) + '" style="background:#28a745; border:none; color:#fff; font-size:10.5px; font-weight:500; padding:0 10px; height:24px; border-radius:6px; cursor:pointer;">Tandai Lunas</button>';
-
-    var delBtn = (!isLunas)
-      ? '<button type="button" class="tg-table-icon-btn tg-del-btn" data-key="' + tgEscape(g.key) + '" data-nama="' + tgEscape(g.ortuNama) + '" title="Hapus Tagihan">' +
-          '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
-        '</button>'
-      : '';
-
-    var hasPdf = g.invoices.some(function (inv) { return !!inv.pdf_url; });
-    var previewBtnCard = '<button type="button" class="tg-table-icon-btn tg-preview-btn' + (hasPdf ? ' tg-has-pdf' : '') + '" data-key="' + tgEscape(g.key) + '" title="' + (hasPdf ? 'Lihat Dokumen (Tersimpan di Drive)' : 'Lihat &amp; Cetak Dokumen') + '"' + (hasPdf ? ' style="color:var(--blue) !important; border-color:rgba(0,122,255,.3) !important;"' : '') + '>' +
-        '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
-      '</button>';
-
-    var childrenItems = g.children.map(function (c) {
-      return '' +
-        '<div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px dashed rgba(0,0,0,.06); font-size:11px;">' +
-          '<div style="min-width:0; padding-right:8px;">' +
-            '<span style="font-weight:400; color:var(--ink);">' + tgEscape(c.nama) + '</span>' +
-            (c.pakets.length ? ' <span style="font-size:10px; color:var(--ink-soft);">(' + tgEscape(c.pakets.join(', ')) + ')</span>' : '') +
-          '</div>' +
-          '<div style="text-align:right; white-space:nowrap; flex:none;">' +
-            '<span style="background:#fff; border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:9.5px; font-weight:400; color:var(--ink); margin-right:6px;">' + c.sesi + ' Sesi</span>' +
-            '<span style="font-weight:400; color:var(--ink); font-size:11px; font-variant-numeric:tabular-nums;">' + tgFormatRp(c.nominal) + '</span>' +
-          '</div>' +
-        '</div>';
+    var kids = g.children.map(function (c) {
+      var sub = [c.pakets.join(', '), c.sesi + ' sesi'].filter(Boolean).join(' · ');
+      return '<div class="tgc-kid"><div style="min-width:0;"><b>' + tgEscape(c.nama) + '</b><span>' + tgEscape(sub) + '</span></div>' +
+        '<div class="r"><b>' + tgFormatRp(c.nominal) + '</b></div></div>';
     }).join('');
+    var actionBtn = isLunas
+      ? '<button type="button" class="tgc-btn is-ghost tg-batal-lunas-btn" data-key="' + tgEscape(g.key) + '">Batalkan</button>'
+      : '<button type="button" class="tgc-btn is-primary tg-lunas-btn" data-key="' + tgEscape(g.key) + '">Tandai lunas</button>';
 
-    return '' +
-      '<div class="tg-card-item" data-key="' + tgEscape(g.key) + '">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px;">' +
-          '<div>' +
-            '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
-              '<span style="font-weight:400; color:var(--ink); font-size:12.5px;">' + tgEscape(g.ortuNama) + '</span>' +
-              (g.unitNama ? '<span style="background:var(--surface); border:1px solid var(--border); padding:1px 5px; border-radius:4px; font-size:9px; color:var(--ink-soft); font-weight:400;">' + tgEscape(g.unitNama) + '</span>' : '') +
-            '</div>' +
-          '</div>' +
-          '<div>' + statusBadge + '</div>' +
-        '</div>' +
-
-        '<div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:9px;">' +
-          '<div style="font-size:9.5px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:4px;">Daftar Siswa &amp; Sesi</div>' +
-          childrenItems +
-          '<div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px; padding-top:4px; font-size:11.5px;">' +
-            '<span style="color:var(--ink-soft); font-size:10px; font-weight:400;">Total ' + g.children.length + ' Siswa (' + g.totalSesi + ' Sesi)</span>' +
-            '<span style="font-weight:400; font-size:13px; color:var(--ink); font-variant-numeric:tabular-nums;">' + tgFormatRp(g.totalNominal) + '</span>' +
-          '</div>' +
-        '</div>' +
-
-        '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">' +
-          '<div style="font-size:10px; color:var(--ink-soft);">' +
-            (isLunas ? 'Lunas: ' + tgFormatTgl(g.tanggalLunas) : 'Menunggu pembayaran') +
-          '</div>' +
-          '<div style="display:flex; align-items:center; gap:5px;">' +
-            waBtn +
-            previewBtnCard +
-            delBtn +
-            actionBtn +
-          '</div>' +
-        '</div>' +
-      '</div>';
+    return '<div class="tg-card-item" data-key="' + tgEscape(g.key) + '">' +
+      '<div class="tgc-head">' +
+        '<div class="tgc-av">' + tgEscape(tgInitials(g.ortuNama)) + '</div>' +
+        '<div class="tgc-who"><h4>' + tgEscape(g.ortuNama) + '</h4><p>' + tgEscape(g.unitNama) + ' · ' + g.children.length + ' siswa</p></div>' +
+        tgStatusPill(isLunas) +
+      '</div>' +
+      '<div class="tgc-kids">' + kids + '</div>' +
+      '<div class="tgc-total"><span>Total ' + g.totalSesi + ' sesi</span><b>' + tgFormatRp(g.totalNominal) + '</b></div>' +
+      '<div class="tgc-foot">' +
+        '<span class="note">' + (isLunas ? 'Lunas ' + tgFormatTgl(g.tanggalLunas) : 'Menunggu pembayaran') + '</span>' +
+        tgActionIcons(g, false) +
+        actionBtn +
+      '</div>' +
+    '</div>';
   }
 
-  function tgRenderList() {
+  function tgRenderList(animate) {
     var listEl = document.getElementById('tg-list');
     var filtered = tgGetFilteredGroups();
     var sorted = tgSortGroups(filtered);
 
     tgUpdateViewToggleUI();
     tgUpdateGlider();
+    document.getElementById('tg-sectionLabel').textContent = tgState.tab === 'lunas' ? 'Sudah lunas' : 'Belum lunas';
+    document.getElementById('tg-resultCount').textContent = sorted.length + ' orang tua';
 
     if (!sorted.length) {
       listEl.className = '';
-      listEl.innerHTML = '<div class="card tg-card" style="padding:28px 14px; text-align:center; color:var(--ink-soft); font-size:12px;">' +
-        (tgState.rows.length ? 'Tidak ada data tagihan yang cocok dengan filter atau pencarian.' : 'Belum ada tagihan di periode ' + tgFormatPeriodeLabel(tgState.periode) + ' (tidak ada sesi presensi siswa yang diterima/visit).') +
+      listEl.innerHTML = '<div class="card tg-card" style="padding:28px 14px; text-align:center; color:var(--ink-soft); font-size:11.5px;">' +
+        '<i class="ph ph-receipt" aria-hidden="true" style="font-size:26px; opacity:.6;"></i>' +
+        '<div style="font-size:12px; font-weight:600; color:var(--ink); margin-top:6px;">' + (tgState.rows.length ? 'Tidak ada tagihan yang cocok' : 'Belum ada tagihan di periode ini') + '</div>' +
+        '<div style="margin-top:2px;">' + (tgState.rows.length ? 'Ubah filter atau kata kunci pencarian.' : 'Tagihan muncul otomatis dari presensi siswa yang sudah diterima di ' + tgFormatPeriodeLabel(tgState.periode) + '.') + '</div>' +
       '</div>';
       return;
     }
@@ -1680,11 +1200,17 @@
       listEl.className = 'tg-view-table';
       listEl.innerHTML = tgRenderTable(sorted);
     } else {
-      listEl.className = '';
+      listEl.className = 'tg-view-cards';
       listEl.innerHTML = sorted.map(tgRenderCard).join('');
     }
-
     tgBindEvents();
+
+    if (animate && !TG_REDUCED_MOTION) {
+      var items = tgState.viewMode === 'table' ? listEl.querySelectorAll('.tg-table tbody tr') : listEl.querySelectorAll(':scope > .tg-card-item');
+      items.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('tg-in'); });
+      clearTimeout(listEl._tgAnimT);
+      listEl._tgAnimT = setTimeout(function () { items.forEach(function (el) { el.classList.remove('tg-in'); }); }, 1200);
+    }
   }
 
   // =========================================================
@@ -1749,23 +1275,16 @@
     tgState.selectedKey = key;
 
     var childListHtml = g.children.map(function (c) {
-      return '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">' +
-        '<span>' + tgEscape(c.nama) + ' (' + c.sesi + ' Sesi)</span>' +
-        '<span style="font-weight:500;">' + tgFormatRp(c.nominal) + '</span>' +
-      '</div>';
+      return '<div class="tg-sum-row"><span>' + tgEscape(c.nama) + ' · ' + c.sesi + ' sesi</span><span>' + tgFormatRp(c.nominal) + '</span></div>';
     }).join('');
 
     var infoBox = document.getElementById('tg-lunasInfoBox');
-    infoBox.innerHTML = '' +
-      '<div style="font-weight:500; color:var(--ink); font-size:13px; margin-bottom:2px;">' + tgEscape(g.ortuNama) + '</div>' +
-      '<div style="color:var(--ink-soft); font-size:10.5px; margin-bottom:6px;">Unit: ' + tgEscape(g.unitNama) + '</div>' +
-      '<div style="border-top:1px solid var(--border); padding-top:6px; margin-bottom:6px;">' +
-        childListHtml +
-      '</div>' +
-      '<div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:6px;">' +
-        '<span style="color:var(--ink-soft); font-size:11px;">Total Pembayaran (' + g.totalSesi + ' Sesi):</span>' +
-        '<span style="font-weight:600; font-size:13.5px; color:var(--ink);">' + tgFormatRp(g.totalNominal) + '</span>' +
-      '</div>';
+    infoBox.innerHTML = '<div class="tg-sum">' +
+      '<div class="tg-sum-h"><b>' + tgEscape(g.ortuNama) + '</b><span>' + tgEscape(g.unitNama) + '</span></div>' +
+      childListHtml +
+      '<div class="tg-sum-tot"><span>Total ' + g.totalSesi + ' sesi</span><b>' + tgFormatRp(g.totalNominal) + '</b></div>' +
+    '</div>';
+    document.getElementById('tg-lunasModalSub').textContent = g.invoices.length + ' tagihan, kuitansi dibuat otomatis.';
 
     var dateInput = document.getElementById('tg-lunasTanggalInput');
     dateInput.value = new Date().toISOString().slice(0, 10);
@@ -1809,8 +1328,10 @@
         });
       }
 
-      genioToast('Pembayaran ' + g.ortuNama + ' (' + g.invoices.length + ' tagihan) berhasil ditandai LUNAS!', 'success');
+      genioToast('Pembayaran ' + g.ortuNama + ' (' + g.invoices.length + ' tagihan) ditandai lunas', 'success');
       tgCloseModal('tg-lunasModal');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Tandai lunas';
       tgLoadAll();
 
       // Offer preview receipt
@@ -1820,7 +1341,7 @@
     } catch (err) {
       genioToast('Gagal menandai lunas: ' + err.message, 'error');
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Tandai Lunas';
+      submitBtn.textContent = 'Tandai lunas';
     }
   }
 
@@ -1829,10 +1350,11 @@
     if (!g) return;
 
     tgOpenConfirmModal({
-      title: 'Batalkan Status Lunas?',
-      desc: 'Status tagihan siswa dari orang tua ' + tgEscape(g.ortuNama) + ' (' + g.invoices.length + ' tagihan) akan dikembalikan menjadi Belum Lunas dan berkas kuitansi di Drive akan dibersihkan.',
-      okText: 'Batalkan Lunas',
+      title: 'Batalkan status lunas?',
+      desc: 'Tagihan ' + g.ortuNama + ' (' + g.invoices.length + ' tagihan) kembali menjadi belum lunas dan kuitansi di Drive dihapus.',
+      okText: 'Ya, batalkan',
       isDanger: true,
+      icon: 'ph-arrow-counter-clockwise',
       onConfirm: async function () {
         var s = genioGetSession();
 
@@ -1858,7 +1380,7 @@
           });
           inv.pdf_url = null;
         }
-        genioToast('Status tagihan ' + g.ortuNama + ' dikembalikan menjadi Belum Lunas.', 'info');
+        genioToast('Tagihan ' + g.ortuNama + ' kembali menjadi belum lunas', 'info');
         tgLoadAll();
       }
     });
@@ -1869,10 +1391,11 @@
     if (!g) return;
 
     tgOpenConfirmModal({
-      title: 'Hapus Tagihan?',
-      desc: 'Apakah Anda yakin ingin menghapus seluruh tagihan dari orang tua ' + tgEscape(nama) + ' (' + g.invoices.length + ' tagihan)? Tindakan ini tidak dapat dibatalkan.',
-      okText: 'Hapus Tagihan',
+      title: 'Hapus tagihan?',
+      desc: 'Semua tagihan ' + nama + ' (' + g.invoices.length + ' tagihan) akan dihapus. Tagihan dibuat ulang otomatis selama presensinya masih ada.',
+      okText: 'Ya, hapus',
       isDanger: true,
+      icon: 'ph-trash',
       onConfirm: async function () {
         var s = genioGetSession();
 
@@ -1903,7 +1426,12 @@
     document.getElementById('tg-confirmDesc').textContent = opts.desc || 'Apakah Anda yakin?';
     var okBtn = document.getElementById('tg-confirmOkBtn');
     okBtn.textContent = opts.okText || 'Lanjutkan';
-    okBtn.style.background = opts.isDanger ? 'var(--red)' : 'var(--blue)';
+    okBtn.classList.toggle('is-danger', !!opts.isDanger);
+    var icon = document.getElementById('tg-confirmIcon');
+    if (icon) {
+      icon.classList.toggle('is-danger', !!opts.isDanger);
+      icon.innerHTML = '<i class="ph ' + (opts.icon || (opts.isDanger ? 'ph-warning' : 'ph-question')) + '" aria-hidden="true"></i>';
+    }
 
     tgOpenModal('tg-confirmModal');
 
@@ -2012,7 +1540,7 @@
         }
       }
 
-      genioToast('Dokumen ' + (g.status === 'lunas' ? 'Kuitansi' : 'Invoice') + ' berhasil dicetak ke Google Drive!', 'success');
+      genioToast((g.status === 'lunas' ? 'Kuitansi' : 'Invoice') + ' tersimpan di Google Drive', 'success');
 
       if (driveBtn) {
         driveBtn.href = result.url;
@@ -2033,7 +1561,7 @@
         btn.disabled = false;
         btn.style.opacity = '';
         var hasPdfNow = g.invoices.some(function (inv) { return !!inv.pdf_url; });
-        btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span id="tg-previewPrintBtnText">' + (hasPdfNow ? 'Cetak Ulang Dokumen (PDF)' : 'Cetak Dokumen (PDF)') + '</span>';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span id="tg-previewPrintBtnText">' + (hasPdfNow ? 'Cetak ulang PDF' : 'Cetak PDF') + '</span>';
       }
     }
   }
@@ -2045,13 +1573,14 @@
 
     var isLunas = g.status === 'lunas';
     var docTitle = isLunas ? 'KUITANSI PEMBAYARAN RESMI' : 'INVOICE TAGIHAN BIMBEL';
+    var popupTitle = isLunas ? 'Kuitansi pembayaran' : 'Invoice tagihan';
     var firstInv = g.invoices[0] || {};
     var docNo = isLunas
       ? 'REC-' + (firstInv.receipt && firstInv.receipt.id ? firstInv.receipt.id.slice(0, 8).toUpperCase() : firstInv.id.slice(0, 8).toUpperCase())
       : 'INV-' + firstInv.id.slice(0, 8).toUpperCase();
 
-    document.getElementById('tg-previewDocTitle').textContent = docTitle;
-    document.getElementById('tg-previewDocSub').textContent = g.ortuNama + ' &bull; Periode ' + tgFormatPeriodeLabel(tgState.periode);
+    document.getElementById('tg-previewDocTitle').textContent = popupTitle;
+    document.getElementById('tg-previewDocSub').textContent = g.ortuNama + ' · periode ' + tgFormatPeriodeLabel(tgState.periode);
 
     var stampColor = isLunas ? '#28a745' : '#ff9500';
     var stampText = isLunas ? 'LUNAS' : 'TAGIHAN';
@@ -2177,7 +1706,7 @@
     var printBtn = document.getElementById('tg-previewPrintBtn');
     var printBtnText = document.getElementById('tg-previewPrintBtnText');
     if (printBtnText) {
-      printBtnText.textContent = existingPdf ? 'Cetak Ulang Dokumen (PDF)' : 'Cetak Dokumen (PDF)';
+      printBtnText.textContent = existingPdf ? 'Cetak ulang PDF' : 'Cetak PDF';
     }
     if (printBtn) {
       printBtn.onclick = function () {
@@ -2299,6 +1828,9 @@
     var filterApplyBtn = document.getElementById('tg-filterApplyBtn');
     if (filterApplyBtn) filterApplyBtn.onclick = tgApplyFilter;
 
+    var filterCloseX = document.getElementById('tg-filterCloseX');
+    if (filterCloseX) filterCloseX.onclick = tgCloseFilterModal;
+
     var filterResetBtn = document.getElementById('tg-filterResetBtn');
     if (filterResetBtn) filterResetBtn.onclick = tgResetFilter;
 
@@ -2340,7 +1872,7 @@
     if (searchInput) {
       searchInput.oninput = function (e) {
         tgState.search = e.target.value;
-        tgRenderList();
+        tgRenderList(false);
       };
     }
 
