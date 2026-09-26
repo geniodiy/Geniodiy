@@ -170,12 +170,12 @@
   @keyframes tgIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
   @keyframes tgFade{from{opacity:0;} to{opacity:1;}}
   @keyframes tgGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
-  #tg-list > .tg-card-item.tg-in{animation:tgIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #tg-list .tg-card-item.tg-in{animation:tgIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
   #tg-list .tg-table tbody tr.tg-in td{animation:tgFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
   .tgb-units.tg-anim .bar i{animation:tgGrow .8s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 70ms);}
   @keyframes tgRowFlash{0%{background-color:rgba(28,26,175,.14);} 100%{background-color:transparent;}}
   @media (prefers-reduced-motion: reduce){
-    #tg-list > .tg-card-item.tg-in, #tg-list .tg-table tbody tr.tg-in td, .tgb-units.tg-anim .bar i, .tg-btn-pop{animation:none !important;}
+    #tg-list .tg-card-item.tg-in, #tg-list .tg-table tbody tr.tg-in td, .tgb-units.tg-anim .bar i, .tg-btn-pop{animation:none !important;}
     .tgb-ring .arc{transition:none;}
     .tg-card-item:hover{transform:none;}
   }
@@ -265,7 +265,7 @@
     <div id="tg-resultCount">0 orang tua</div>
   </div>
 
-  <div id="tg-list" class="tg-view-table">
+  <div id="tg-list" class="tg-view-table" data-genio-masonry>
     <div style="padding:28px 14px; text-align:center; color:var(--ink-soft); font-size:12px;">Memuat tagihan...</div>
   </div>
 
@@ -1220,11 +1220,12 @@
     tgBindEvents();
 
     if (animate && !TG_REDUCED_MOTION) {
-      var items = tgState.viewMode === 'table' ? listEl.querySelectorAll('.tg-table tbody tr') : listEl.querySelectorAll(':scope > .tg-card-item');
+      var items = tgState.viewMode === 'table' ? listEl.querySelectorAll('.tg-table tbody tr') : listEl.querySelectorAll('.tg-card-item');
       items.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('tg-in'); });
       clearTimeout(listEl._tgAnimT);
       listEl._tgAnimT = setTimeout(function () { items.forEach(function (el) { el.classList.remove('tg-in'); }); }, 1200);
     }
+    genioMasonry(listEl, { item: '.tg-card-item', min: 340, gap: 12 });
   }
 
   // =========================================================

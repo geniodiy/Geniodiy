@@ -199,6 +199,9 @@
   .gx-seg .is-on[data-val="P"]{background:#FFEFF3 !important; color:#C2366A !important; border-color:#C2366A !important;}
   .gx-seg .is-on[data-val="aktif"] i{background:#1E8E5A;} .gx-seg .is-on[data-val="nonaktif"] i{background:#D4070F;}
   .gx-seg + .gx-row, .gx-row + .gx-seg{margin-top:10px;}
+  .genio-mwrap{grid-column:1/-1; display:flex; align-items:flex-start; width:100%; min-width:0;}
+  .genio-mcol{flex:1 1 0; min-width:0; display:flex; flex-direction:column;}
+  .genio-mcol > *{margin-bottom:0 !important;}
   .gx-gender{display:grid; grid-template-columns:1fr 1fr; gap:3px; padding:3px; background:var(--surface); border:1px solid var(--border); border-radius:10px;}
   .gx-gender label{height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:7px; margin:0; font-family:var(--font); font-size:11px; font-weight:500; color:var(--ink-soft); cursor:pointer; transition:background .18s ease, color .18s ease, box-shadow .18s ease;}
   .gx-gender label:hover{color:var(--ink);}
@@ -636,6 +639,58 @@
     var el = document.querySelector('.module-panel[data-module="' + name + '"]');
     return !!(el && !el.hidden);
   }
+
+  // Tata letak kartu per kolom (masonry): saat satu kartu dibuka, hanya kartu di bawahnya
+  // dalam kolom yang sama yang turun. Kartu dibagi bergiliran ke kolom (kiri ke kanan),
+  // jadi urutan bacanya sama dengan grid biasa. Di layar kecil tetap satu kolom.
+  // opts: { item: selector kartu, min: lebar minimum kolom (px), cols: function(lebarLayar) -> jumlah kolom, gap: px }
+  function genioMasonry(listEl, opts) {
+    if (!listEl) return;
+    listEl._genioMasonry = opts;
+    var old = listEl.querySelector(':scope > .genio-mwrap');
+    var items = Array.prototype.slice.call(listEl.querySelectorAll(opts.item));
+    if (old) {
+      items.sort(function (a, b) { return (a._gmIdx || 0) - (b._gmIdx || 0); });
+      items.forEach(function (el) { listEl.insertBefore(el, old); });
+      old.remove();
+    } else {
+      items.forEach(function (el, i) { el._gmIdx = i; });
+    }
+    if (!items.length || window.innerWidth < 900) return;
+    var gap = opts.gap || 12;
+    var cols = opts.cols ? opts.cols(window.innerWidth) : Math.floor((listEl.clientWidth + gap) / ((opts.min || 340) + gap));
+    cols = Math.max(1, Math.min(cols, items.length));
+    if (cols < 2) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'genio-mwrap';
+    wrap.style.gap = gap + 'px';
+    var colEls = [];
+    for (var c = 0; c < cols; c++) {
+      var col = document.createElement('div');
+      col.className = 'genio-mcol';
+      col.style.gap = gap + 'px';
+      wrap.appendChild(col);
+      colEls.push(col);
+    }
+    listEl.insertBefore(wrap, items[0]);
+    items.forEach(function (el, i) { colEls[i % cols].appendChild(el); });
+  }
+  (function () {
+    var t;
+    window.addEventListener('resize', function () {
+      clearTimeout(t);
+      t = setTimeout(function () {
+        document.querySelectorAll('.genio-mwrap').forEach(function (w) {
+          var list = w.parentNode;
+          if (list && list._genioMasonry) genioMasonry(list, list._genioMasonry);
+        });
+        // Daftar yang tadinya satu kolom bisa perlu dipecah setelah layar melebar
+        document.querySelectorAll('[data-genio-masonry]').forEach(function (list) {
+          if (list._genioMasonry && !list.querySelector(':scope > .genio-mwrap')) genioMasonry(list, list._genioMasonry);
+        });
+      }, 150);
+    });
+  })();
 
   // Putar ikon tombol refresh (ikon Phosphor <i> atau <svg>).
   function genioSpinRefresh(btn) {

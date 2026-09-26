@@ -311,7 +311,7 @@
   @keyframes psIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
   @keyframes psRowIn{from{opacity:0;} to{opacity:1;}}
   @keyframes psPopIn{0%{transform:scale(.6);} 60%{transform:scale(1.12);} 100%{transform:scale(1);}}
-  #ps-list > .pc2-card.ps-in{animation:psIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #ps-list .pc2-card.ps-in{animation:psIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
   #ps-list .ps-table tbody tr.ps-in td{animation:psRowIn .35s ease both; animation-delay:calc(var(--i) * 30ms);}
   .pc2-card{transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
   .pc2-card:hover{transform:translateY(-1px);}
@@ -323,7 +323,7 @@
   #ps-editStatusModal .ps-editstatus-opt.is-active .ps-editstatus-icon{animation:psPopIn .3s cubic-bezier(.34,1.56,.64,1);}
   .ps-table-status-btn{transition:border-color .15s ease, transform .1s ease !important;}
   @media (prefers-reduced-motion: reduce){
-    #ps-list > .pc2-card.ps-in, #ps-list .ps-table tbody tr.ps-in td, #ps-editStatusModal .ps-editstatus-icon{animation:none !important;}
+    #ps-list .pc2-card.ps-in, #ps-list .ps-table tbody tr.ps-in td, #ps-editStatusModal .ps-editstatus-icon{animation:none !important;}
     .pc2-card:hover{transform:none;}
   }
 
@@ -849,7 +849,7 @@
     </div>
   </div>
 
-  <div id="ps-list">
+  <div id="ps-list" data-genio-masonry>
     <div class="empty-state ps-full-width">Memuat presensi...</div>
   </div>
 
@@ -2128,13 +2128,14 @@
     }
     psBindCardEvents();
     if (animate && !PS_REDUCED_MOTION) psAnimateList(listEl);
+    genioMasonry(listEl, { item: '.pc2-card', cols: function (w) { return w >= 1280 ? 3 : 2; }, gap: 14 });
   }
 
   // Kartu/baris muncul bergantian (fade + geser halus), hanya saat data baru dimuat atau tampilan diganti.
   function psAnimateList(listEl) {
     var items = listEl.classList.contains('ps-view-table')
       ? listEl.querySelectorAll('.ps-table tbody tr')
-      : listEl.querySelectorAll(':scope > .pc2-card');
+      : listEl.querySelectorAll('.pc2-card');
     items.forEach(function (el, i) {
       el.style.setProperty('--i', Math.min(i, 12));
       el.classList.remove('ps-in');

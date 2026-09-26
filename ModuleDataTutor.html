@@ -463,7 +463,7 @@
     </button>
   </div>
 
-  <div id="dt-list">
+  <div id="dt-list" data-genio-masonry>
     <div class="empty-state">Memuat data tutor...</div>
   </div>
 
@@ -1158,6 +1158,7 @@
       listEl.innerHTML = rows.map(dtRenderCard).join('');
       dtBindCardEvents();
     }
+    genioMasonry(listEl, { item: '.dt-card:not(.dt-full-width)', cols: function () { return 2; }, gap: 10 });
   }
 
   function dtRenderCard(u) {
