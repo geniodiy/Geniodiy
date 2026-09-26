@@ -367,6 +367,14 @@
   #ktr-searchInput:focus{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
   #ktr-filterBtn, #ktr-viewToggleBtn{width:34px !important; height:34px !important; border-radius:10px !important;}
   /* ===== Tabel ===== */
+  .ktr-table{border-collapse:separate !important; border-spacing:0; min-width:880px !important;}
+  .ktr-table .ktr-stk{position:sticky; z-index:1; background:#fff;}
+  .ktr-table th.ktr-stk{z-index:2;}
+  .ktr-table .ktr-stk-no{left:0; width:112px; min-width:112px; max-width:112px; box-sizing:border-box;}
+  .ktr-table .ktr-stk-siswa{left:112px; box-shadow:1px 0 0 var(--border); max-width:180px; overflow:hidden; text-overflow:ellipsis;}
+  .ktr-table tbody tr:hover td{background:#F8F9FD;}
+  .ktr-table td > div[style*="flex-wrap:wrap"]{flex-wrap:nowrap !important;}
+  .ktr-table td{vertical-align:middle !important;}
   .ktr-table-card{border-radius:14px !important;}
   .ktr-table th{background:#fff !important; text-transform:none !important; letter-spacing:0 !important; font-size:10.5px !important; padding:11px 12px !important;}
   .ktr-table td{padding:10px 12px !important; font-size:11px !important; border-bottom:1px solid #EEF0F6 !important;}
@@ -1113,6 +1121,13 @@
         if (sA > sB) return dir === 'asc' ? 1 : -1;
         return 0;
       }
+      if (field === 'unit') {
+        var uA = (a.units && a.units.nama_unit ? a.units.nama_unit : '').toLowerCase();
+        var uB = (b.units && b.units.nama_unit ? b.units.nama_unit : '').toLowerCase();
+        if (uA < uB) return dir === 'asc' ? -1 : 1;
+        if (uA > uB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
       if (field === 'paket') {
         var pA = (a.paket_belajar && a.paket_belajar.nama_paket ? a.paket_belajar.nama_paket : '').toLowerCase();
         var pB = (b.paket_belajar && b.paket_belajar.nama_paket ? b.paket_belajar.nama_paket : '').toLowerCase();
@@ -1168,12 +1183,6 @@
         ? '<span class="ktr-status-badge" style="background:rgba(52,199,89,.12); color:#28a745; height:18px; font-size:9px; font-weight:500; padding:0 6px;"><span style="width:5px; height:5px; border-radius:50%; background:#34c759; display:inline-block; flex:none; margin-right:3px;"></span>' + statusLabel + '</span>'
         : '<span class="ktr-status-badge" style="background:rgba(255,59,48,.1); color:#ff3b30; height:18px; font-size:9px; font-weight:500; padding:0 6px;"><span style="width:5px; height:5px; border-radius:50%; background:#ff3b30; display:inline-block; flex:none; margin-right:3px;"></span>' + statusLabel + '</span>';
 
-      var unitBadge = k.units && k.units.nama_unit
-        ? '<span style="background:var(--surface); border:1px solid var(--border); color:var(--ink-soft); font-size:9px; font-weight:400; padding:1px 5px; border-radius:4px; margin-left:4px; white-space:nowrap;">' + ktrEscape(k.units.nama_unit) + '</span>'
-        : '';
-
-      var sekolahLine = [siswa.kelas, siswa.sekolah].filter(Boolean).join(' • ');
-
       var tutorList = k.kontrak_tutor || [];
       var tutorHtml = '';
       if (!tutorList.length) {
@@ -1214,14 +1223,9 @@
       return '' +
         '<tr class="ktr-table-row" data-kontrak-id="' + k.id + '">' +
           '<td style="text-align:center; width:32px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink-soft); font-variant-numeric:tabular-nums;">' + ktrEscape(k.nomor_kontrak || '-') + '</td>' +
-          '<td>' +
-            '<div style="display:flex; align-items:center; flex-wrap:wrap; gap:2px;">' +
-              '<span style="font-weight:600; color:var(--ink);">' + ktrEscape(siswa.nama || '-') + '</span>' +
-              unitBadge +
-            '</div>' +
-            (sekolahLine ? '<div style="color:var(--ink-soft); font-size:10px; font-weight:400; margin-top:2px;">' + ktrEscape(sekolahLine) + '</div>' : '') +
-          '</td>' +
+          '<td class="ktr-stk ktr-stk-no" style="white-space:nowrap; color:var(--ink-soft); font-variant-numeric:tabular-nums;">' + ktrEscape(k.nomor_kontrak || '-') + '</td>' +
+          '<td class="ktr-stk ktr-stk-siswa" style="white-space:nowrap; font-weight:600; color:var(--ink);">' + ktrEscape(siswa.nama || '-') + '</td>' +
+          '<td style="white-space:nowrap; color:var(--ink);">' + ktrEscape((k.units && k.units.nama_unit) || '-') + '</td>' +
           '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' +
             ktrEscape(k.paket_belajar && k.paket_belajar.nama_paket || '-') +
           '</td>' +
@@ -1250,11 +1254,14 @@
             '<thead>' +
               '<tr>' +
                 '<th style="width:32px; text-align:center;">No</th>' +
-                '<th class="ktr-sort-th" data-sort="nomor_kontrak" title="Urutkan No. Kontrak">' +
+                '<th class="ktr-sort-th ktr-stk ktr-stk-no" data-sort="nomor_kontrak" title="Urutkan No. Kontrak">' +
                   '<span style="display:inline-flex; align-items:center;">No. kontrak' + ktrGetSortIcon('nomor_kontrak') + '</span>' +
                 '</th>' +
-                '<th class="ktr-sort-th" data-sort="siswa" title="Urutkan Siswa (A - Z)">' +
+                '<th class="ktr-sort-th ktr-stk ktr-stk-siswa" data-sort="siswa" title="Urutkan siswa (A - Z)">' +
                   '<span style="display:inline-flex; align-items:center;">Siswa' + ktrGetSortIcon('siswa') + '</span>' +
+                '</th>' +
+                '<th class="ktr-sort-th" data-sort="unit" title="Urutkan unit">' +
+                  '<span style="display:inline-flex; align-items:center;">Unit' + ktrGetSortIcon('unit') + '</span>' +
                 '</th>' +
                 '<th class="ktr-sort-th" data-sort="paket" title="Urutkan Paket Belajar">' +
                   '<span style="display:inline-flex; align-items:center;">Paket belajar' + ktrGetSortIcon('paket') + '</span>' +
