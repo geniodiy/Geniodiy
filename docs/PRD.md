@@ -677,7 +677,14 @@ Gunakan kolom `role` dan `unit_id` di tabel `users` (via `auth.uid()`) sebagai b
 
 > **[v5] Implementasi:**
 > - Mode lihat sudah ada: highlight putih berisi avatar, nama, role, status, unit, dan tanggal bergabung, lalu kartu Kontak (email dengan tombol salin, tautan WhatsApp) dan kartu Akun.
-> - Tombol **Edit** masih bertanda "segera": form edit, upload foto dengan kompresi canvas, dan ganti password belum dibuat.
+>
+> **Edit profil (satu popup, semua role):**
+> - **Foto profil:** dikompres di browser (lebar maks. 800px, JPEG ~400KB), diunggah ke Drive `Foto Profil` lewat `uploadProfilFile`, disimpan sebagai link gambar langsung. Foto lama dipindah ke sampah.
+> - **Data diri:** nama, jenis kelamin, no WhatsApp (`users.no_hp`).
+> - **Khusus tutor:** keahlian, pendidikan terakhir, bank, rekening (`tutor_profile`). No WA ikut disimpan ke `tutor_profile.no_wa`.
+> - **Ganti password:** di bagian yang bisa dibuka-tutup. Wajib isi password saat ini (dicek ulang lewat login), password baru minimal 8 karakter, ada indikator kekuatan.
+> - **Email:** hanya ditampilkan. Mengubah email login butuh konfirmasi Supabase, jadi belum dibuka.
+> - Role, status, dan unit tidak bisa diubah sendiri. Ini dijaga trigger `prevent_self_privilege_escalation`.
 
 **Khusus Tutor** — tambahan field yang ditampilkan & bisa diedit: keterampilan/keahlian mengajar, nomor rekening (+ nama bank). Field `pendidikan_terakhir` dan `no_wa` (diisi saat pendaftaran) juga ditampilkan di sini dan bisa diedit.
 
@@ -780,14 +787,14 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 | 10 | Penggajian | Selesai (dengan generate otomatis) | Pengeluaran gaji di Home membaca `slip_gaji`, jadi baru terisi setelah menu Gaji bulan itu dibuka. |
 | 11 | Home & Progres | Sebagian | Genio News dipindah ke paling atas. Tambah siswa aktif dan jumlah pertemuan di highlight, pie chart siswa aktif per unit, shortcut tagihan belum lunas. Menu Progres belum ada. |
 | 12 | Genio News | Belum | Menu penuh dengan daftar, detail, dan editor (upload gambar dengan kompresi). |
-| + | Profil | Sebagian | Form edit, foto profil dengan kompresi, dan ganti password. |
+| + | Profil | Selesai | Ubah email login belum dibuka. |
 | + | Login | Sebagian | Redesign tampilan (ditunda), Google Sign-In. |
 
 Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) membuka Kontrak, seharusnya Jadwal Mengajar.
 
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
 1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
-2. **Profil: Edit.** Dibutuhkan semua role. Isinya:
+2. ~~Profil: Edit~~ (selesai). Dibutuhkan semua role. Isinya:
    - nama, jenis kelamin, no HP
    - foto profil dengan kompresi canvas
    - ganti password

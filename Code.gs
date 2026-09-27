@@ -106,6 +106,35 @@ function uploadOperasionalFile(base64Data, fileName, mimeType) {
 }
 
 /**
+ * ID folder Google Drive untuk foto profil (semua role). Kosongkan untuk folder
+ * otomatis "Genio Institute - Uploads/Foto Profil".
+ * Foto sudah dikompres di browser (maks. lebar 800px) sebelum dikirim ke sini.
+ * URL yang dikembalikan adalah link gambar langsung supaya bisa dipakai di <img src>.
+ */
+var PROFIL_FOLDER_ID = '';
+
+function uploadProfilFile(base64Data, fileName, mimeType) {
+  try {
+    var subfolder;
+    if (PROFIL_FOLDER_ID) {
+      subfolder = DriveApp.getFolderById(PROFIL_FOLDER_ID);
+    } else {
+      var rootFolder = getOrCreateDriveFolder_(DriveApp.getRootFolder(), 'Genio Institute - Uploads');
+      subfolder = getOrCreateDriveFolder_(rootFolder, 'Foto Profil');
+    }
+
+    var bytes = Utilities.base64Decode(base64Data);
+    var blob = Utilities.newBlob(bytes, mimeType, fileName);
+    var file = subfolder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+    return { success: true, url: 'https://lh3.googleusercontent.com/d/' + file.getId(), fileId: file.getId(), name: file.getName() };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
  * ID folder Google Drive khusus untuk menyimpan file PDF Slip Gaji Tutor (pdf-slip-gaji).
  * Cara ambil ID: buka folder tujuan di Google Drive, lihat URL-nya:
  *   https://drive.google.com/drive/folders/INI_ID_FOLDERNYA

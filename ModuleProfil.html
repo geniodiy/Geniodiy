@@ -44,6 +44,39 @@
   .prf-act.is-wa{color:#14A44D;} .prf-act.is-wa:hover{background:#E9F7EF;}
   .prf-act[hidden]{display:none;}
 
+  /* ===== Popup edit profil (gaya Genio UI) ===== */
+  #prfEditModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
+  #prfEditModal.show{opacity:1;}
+  @media (prefers-reduced-motion: reduce){ #prfEditModal{transition:none;} }
+  .prf-pe-photo{display:flex; align-items:center; gap:14px; padding:2px 0 4px;}
+  .prf-pe-av{position:relative; width:60px; height:60px; flex:none;}
+  #prfEditPhoto{display:none; width:60px; height:60px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 3px #fff, 0 0 0 4px var(--border);}
+  #prfEditPhotoFallback{width:60px; height:60px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:19px; box-shadow:0 0 0 3px #fff, 0 0 0 4px var(--border);}
+  .prf-pe-cam{position:absolute; right:-3px; bottom:-3px; width:24px; height:24px; border-radius:50%; border:none; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; box-shadow:0 0 0 2px #fff; cursor:pointer; padding:0;}
+  .prf-pe-photo .tx{min-width:0;}
+  .prf-pe-photo .tx b{display:block; font-size:12px; font-weight:600; color:var(--ink);}
+  .prf-pe-photo .tx span{display:block; font-size:10.5px; color:var(--ink-soft); margin-top:2px;}
+  .prf-pe-acts{display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;}
+  .prf-pe-btn{height:30px; padding:0 11px; border-radius:8px; border:1px solid var(--border); background:#fff; font-family:var(--font); font-size:11px; font-weight:600; color:var(--ink); display:inline-flex; align-items:center; gap:5px; cursor:pointer;}
+  .prf-pe-btn.is-link{border-color:transparent; background:none; color:var(--red); padding:0 6px;}
+  .prf-pe-btn[hidden]{display:none;}
+  .prf-pe-coll{width:100%; display:flex; align-items:center; gap:10px; border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:#fff; font-family:var(--font); text-align:left; cursor:pointer;}
+  .prf-pe-coll.is-open{border-radius:10px 10px 0 0;}
+  .prf-pe-coll .ic{width:28px; height:28px; border-radius:8px; background:var(--surface); display:flex; align-items:center; justify-content:center; color:var(--ink-soft); flex:none;}
+  .prf-pe-coll .tx{flex:1; min-width:0;}
+  .prf-pe-coll .tx b{display:block; font-size:11.5px; font-weight:600; color:var(--ink);}
+  .prf-pe-coll .tx span{display:block; font-size:10px; color:var(--ink-soft);}
+  .prf-pe-coll > i{color:var(--ink-soft); transition:transform .2s ease;}
+  .prf-pe-coll.is-open > i{transform:rotate(180deg);}
+  #prfPwWrap{border:1px solid var(--border); border-top:none; border-radius:0 0 10px 10px; padding:12px 12px 2px;}
+  #prfPwWrap[hidden], #prfTutorSec[hidden]{display:none !important;}
+  .prf-pe-meter{display:flex; gap:4px; margin:-3px 0 10px;}
+  .prf-pe-meter i{flex:1; height:4px; border-radius:4px; background:#E4E6EE; transition:background .2s ease;}
+  .prf-pe-meter.lv1 i:nth-child(-n+1){background:#FF9C94;}
+  .prf-pe-meter.lv2 i:nth-child(-n+2){background:#FFC46B;}
+  .prf-pe-meter.lv3 i:nth-child(-n+3), .prf-pe-meter.lv4 i{background:#1E8E5A;}
+  .prf-pe-hint{font-size:10px; color:var(--ink-soft); margin:-4px 0 10px;}
+
   @keyframes prfIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
   .prf-anim .prf-hb, .prf-anim .prf-grid > div{animation:prfIn .45s cubic-bezier(.16,1,.3,1) both;}
   .prf-anim .prf-grid > div:nth-child(1){animation-delay:.06s;} .prf-anim .prf-grid > div:nth-child(2){animation-delay:.12s;}
@@ -81,7 +114,7 @@
           <div>Unit<b id="prfDetailUnitSide">-</b></div>
           <div>Bergabung<b id="prfDetailSinceSide">-</b></div>
         </div>
-        <button type="button" id="prfEditProfileBtn"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit profil <span class="soon">segera</span></button>
+        <button type="button" id="prfEditProfileBtn"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit profil</button>
       </div>
     </div>
 
@@ -103,6 +136,86 @@
           <div class="prf-row" id="prfRowSince" hidden><span class="ic"><i class="ph ph-calendar-check" aria-hidden="true"></i></span><span class="tx"><span>Bergabung</span><b id="prfDetailSince">-</b></span></div>
         </div>
       </div>
+      <div id="prfTutorCard" hidden>
+        <div class="prf-sec">Data mengajar</div>
+        <div class="prf-card">
+          <div class="prf-row"><span class="ic"><i class="ph ph-books" aria-hidden="true"></i></span><span class="tx"><span>Keahlian</span><b id="prfDetailKeahlian">-</b></span></div>
+          <div class="prf-row"><span class="ic"><i class="ph ph-graduation-cap" aria-hidden="true"></i></span><span class="tx"><span>Pendidikan terakhir</span><b id="prfDetailPendidikan">-</b></span></div>
+          <div class="prf-row"><span class="ic"><i class="ph ph-bank" aria-hidden="true"></i></span><span class="tx"><span>Bank</span><b id="prfDetailBank">-</b></span></div>
+          <div class="prf-row"><span class="ic"><i class="ph ph-credit-card" aria-hidden="true"></i></span><span class="tx"><span>Nomor rekening</span><b id="prfDetailRek">-</b></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup edit profil -->
+  <div class="modal-overlay" id="prfEditModal" hidden>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-pencil-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Edit profil</h3>
+          <p class="gx-sub">Perbarui foto, data diri, dan password.</p>
+        </div>
+        <button type="button" class="gx-close" id="prfEditCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="gx-body">
+        <div id="prfEditAlert" class="alert alert-error" hidden></div>
+
+        <div class="prf-pe-photo">
+          <div class="prf-pe-av">
+            <img id="prfEditPhoto" alt="Foto profil">
+            <div id="prfEditPhotoFallback">-</div>
+            <button type="button" class="prf-pe-cam" id="prfFotoCam" aria-label="Ganti foto"><i class="ph ph-camera" aria-hidden="true"></i></button>
+          </div>
+          <div class="tx">
+            <b>Foto profil</b>
+            <span id="prfFotoHint">JPG atau PNG. Dikompres otomatis sebelum diunggah.</span>
+            <div class="prf-pe-acts">
+              <button type="button" class="prf-pe-btn" id="prfFotoPick"><i class="ph ph-upload-simple" aria-hidden="true"></i>Ganti foto</button>
+              <button type="button" class="prf-pe-btn is-link" id="prfFotoRemove">Hapus</button>
+            </div>
+          </div>
+          <input type="file" id="prfFotoInput" accept="image/*" hidden>
+        </div>
+
+        <div class="gx-step-title"><span class="gx-step">1</span>Data diri</div>
+        <div class="gx-row"><label for="prfEditNama">Nama lengkap <em class="gx-req">wajib</em></label><input type="text" id="prfEditNama" autocomplete="name"></div>
+        <div class="gx-row"><label>Jenis kelamin</label>
+          <div class="gx-seg" id="prfEditJk">
+            <label data-val="L"><input type="radio" name="prf-jk" value="L">Laki-laki</label>
+            <label data-val="P"><input type="radio" name="prf-jk" value="P">Perempuan</label>
+          </div>
+        </div>
+        <div class="gx-row"><label for="prfEditHp">Nomor WhatsApp</label><input type="tel" id="prfEditHp" inputmode="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></div>
+        <div class="gx-row"><label for="prfEditEmail">Email <em class="gx-opt">untuk masuk</em></label><input type="email" id="prfEditEmail" disabled></div>
+
+        <div id="prfTutorSec" hidden>
+          <div class="gx-step-title"><span class="gx-step">2</span>Data mengajar</div>
+          <div class="gx-row"><label for="prfEditKeahlian">Keahlian <em class="gx-opt">pisahkan dengan koma</em></label><input type="text" id="prfEditKeahlian" placeholder="Matematika, Fisika"></div>
+          <div class="gx-row"><label for="prfEditPendidikan">Pendidikan terakhir</label><input type="text" id="prfEditPendidikan" placeholder="S1 Pendidikan Matematika"></div>
+          <div class="gx-row"><label for="prfEditBank">Nama bank</label><input type="text" id="prfEditBank" placeholder="BCA"></div>
+          <div class="gx-row"><label for="prfEditRek">Nomor rekening</label><input type="text" id="prfEditRek" inputmode="numeric"></div>
+        </div>
+
+        <div class="gx-step-title"><span class="gx-step" id="prfPwStep">2</span>Keamanan</div>
+        <button type="button" class="prf-pe-coll" id="prfPwToggle" aria-expanded="false" aria-controls="prfPwWrap">
+          <span class="ic"><i class="ph ph-lock-key" aria-hidden="true"></i></span>
+          <span class="tx"><b>Ganti password</b><span>Biarkan tertutup jika tidak ingin mengubah</span></span>
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div id="prfPwWrap" hidden>
+          <div class="gx-row"><label for="prfPwNow">Password saat ini</label><input type="password" id="prfPwNow" autocomplete="current-password"></div>
+          <div class="gx-row"><label for="prfPwNew">Password baru</label><input type="password" id="prfPwNew" autocomplete="new-password"></div>
+          <div class="prf-pe-meter" id="prfPwMeter" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="prf-pe-hint">Minimal 8 karakter. Campur huruf dan angka supaya lebih aman.</div>
+          <div class="gx-row"><label for="prfPwNew2">Ulangi password baru</label><input type="password" id="prfPwNew2" autocomplete="new-password"></div>
+        </div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="prfEditCancel">Batal</button>
+        <button type="button" class="btn btn-primary" id="prfEditSave">Simpan perubahan</button>
+      </div>
     </div>
   </div>
 </div>
@@ -111,7 +224,8 @@
   window.genioModuleHandlers = window.genioModuleHandlers || {};
   window.genioModuleHandlers['profile-detail'] = prfLoadDetail;
 
-  var LAINNYA_ROLE_LABELS_PRF = { manajer: 'Manajer', kepala_unit: 'Kepala unit', hrd: 'HRD', super_admin: 'Super admin' };
+  var LAINNYA_ROLE_LABELS_PRF = { manajer: 'Manajer', kepala_unit: 'Kepala unit', hrd: 'HRD', super_admin: 'Super admin', tutor: 'Tutor' };
+  var prfMe = null; // data profil terakhir dari database, dipakai untuk mengisi popup edit
   var PRF_BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
   function prfInitials(nama) {
@@ -145,17 +259,35 @@
     document.getElementById('prfDetailPhotoFallback').textContent = prfInitials(session.nama);
 
     try {
-      var rows = await supaRest('users?id=eq.' + session.user_id + '&select=no_hp,foto_profil_url,status,created_at,units(nama_unit)', session.access_token);
+      var rows = await supaRest('users?id=eq.' + session.user_id + '&select=nama,jenis_kelamin,no_hp,foto_profil_url,status,created_at,units(nama_unit),tutor_profile(keahlian,pendidikan_terakhir,no_wa,nama_bank,no_rekening)', session.access_token);
       var me = rows && rows[0];
+      prfMe = me || null;
+      if (me) {
+        if (me.nama) {
+          document.getElementById('prfDetailNamaHero').textContent = me.nama;
+          document.getElementById('prfDetailNama').textContent = me.nama;
+          document.getElementById('prfDetailPhotoFallback').textContent = prfInitials(me.nama);
+        }
+        document.getElementById('prfDetailGender').textContent = me.jenis_kelamin === 'L' ? 'Laki-laki' : (me.jenis_kelamin === 'P' ? 'Perempuan' : '-');
+      }
+      var tp = prfTutorProfile(me);
+      var isTutor = session.role === 'tutor';
+      document.getElementById('prfTutorCard').hidden = !isTutor;
+      if (isTutor) {
+        document.getElementById('prfDetailKeahlian').textContent = prfKeahlianText(tp && tp.keahlian) || '-';
+        document.getElementById('prfDetailPendidikan').textContent = (tp && tp.pendidikan_terakhir) || '-';
+        document.getElementById('prfDetailBank').textContent = (tp && tp.nama_bank) || '-';
+        document.getElementById('prfDetailRek').textContent = (tp && tp.no_rekening) || '-';
+      }
 
-      var hp = me && me.no_hp;
+      var hp = (me && me.no_hp) || (tp && tp.no_wa);
       document.getElementById('prfDetailHp').textContent = hp || '-';
       var wa = prfWaLink(hp);
       var waEl = document.getElementById('prfWaLink');
       waEl.hidden = !wa;
       if (wa) waEl.href = wa;
 
-      var unit = (me && me.units && me.units.nama_unit) || (session.role === 'kepala_unit' ? '' : 'Semua unit');
+      var unit = (me && me.units && me.units.nama_unit) || (session.role === 'kepala_unit' ? '' : (session.role === 'tutor' ? 'Lintas unit' : 'Semua unit'));
       document.getElementById('prfDetailUnitSide').textContent = unit || '-';
       document.getElementById('prfDetailUnit').textContent = unit || '-';
       document.getElementById('prfRowUnit').hidden = !unit;
@@ -191,8 +323,307 @@
     }
   }
 
-  document.getElementById('prfEditProfileBtn').addEventListener('click', function () {
-    genioToast('Fitur edit profil segera hadir', 'loading');
+  // ===== Edit profil =====
+  var PRF_FOTO_MAX_W = 800;          // lebar maksimum foto setelah dikompres
+  var PRF_FOTO_TARGET = 400 * 1024;  // target ukuran file (byte)
+  var prfEdit = { file: null, removePhoto: false, previewUrl: null, saving: false };
+
+  function prfTutorProfile(me) {
+    var tp = me && me.tutor_profile;
+    if (Array.isArray(tp)) tp = tp[0];
+    return tp || null;
+  }
+  function prfKeahlianText(k) {
+    if (!k) return '';
+    return Array.isArray(k) ? k.filter(Boolean).join(', ') : String(k);
+  }
+  function prfShowModal(el) {
+    el.hidden = false; el.removeAttribute('hidden'); el.style.display = 'flex';
+    requestAnimationFrame(function () { el.classList.add('show'); });
+  }
+  function prfHideModal(el) {
+    el.classList.remove('show');
+    setTimeout(function () { el.hidden = true; el.setAttribute('hidden', ''); el.style.display = 'none'; }, 280);
+  }
+  function prfSetEditPhoto(url, nama) {
+    var img = document.getElementById('prfEditPhoto');
+    var fb = document.getElementById('prfEditPhotoFallback');
+    fb.textContent = prfInitials(nama);
+    if (url) {
+      img.onerror = function () { img.style.display = 'none'; fb.style.display = 'flex'; };
+      img.src = url; img.style.display = 'block'; fb.style.display = 'none';
+    } else {
+      img.removeAttribute('src'); img.style.display = 'none'; fb.style.display = 'flex';
+    }
+    document.getElementById('prfFotoRemove').hidden = !url;
+  }
+  function prfSetJk(val) {
+    document.querySelectorAll('#prfEditJk label').forEach(function (l) {
+      var on = l.dataset.val === val;
+      l.classList.toggle('is-on', on);
+      l.querySelector('input').checked = on;
+    });
+  }
+  function prfGetJk() {
+    var on = document.querySelector('#prfEditJk label.is-on');
+    return on ? on.dataset.val : null;
+  }
+  function prfSetPwOpen(open) {
+    var btn = document.getElementById('prfPwToggle');
+    btn.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.getElementById('prfPwWrap').hidden = !open;
+    if (!open) {
+      ['prfPwNow', 'prfPwNew', 'prfPwNew2'].forEach(function (id) { document.getElementById(id).value = ''; });
+      prfUpdateMeter();
+    }
+  }
+  function prfUpdateMeter() {
+    var v = document.getElementById('prfPwNew').value;
+    var lv = 0;
+    if (v.length >= 8) lv++;
+    if (/[a-zA-Z]/.test(v) && /\d/.test(v)) lv++;
+    if (v.length >= 12) lv++;
+    if (/[^a-zA-Z0-9]/.test(v) || (/[a-z]/.test(v) && /[A-Z]/.test(v))) lv++;
+    if (v && !lv) lv = 1;
+    document.getElementById('prfPwMeter').className = 'prf-pe-meter' + (lv ? ' lv' + lv : '');
+  }
+  function prfEditFail(msg) {
+    var el = document.getElementById('prfEditAlert');
+    el.textContent = msg; el.hidden = false;
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function prfOpenEdit() {
+    var session = genioGetSession();
+    if (!session) return;
+    var me = prfMe || {};
+    var tp = prfTutorProfile(me) || {};
+    var isTutor = session.role === 'tutor';
+    var nama = me.nama || session.nama || '';
+
+    if (prfEdit.previewUrl) { URL.revokeObjectURL(prfEdit.previewUrl); prfEdit.previewUrl = null; }
+    prfEdit.file = null; prfEdit.removePhoto = false;
+    document.getElementById('prfFotoInput').value = '';
+    document.getElementById('prfFotoHint').textContent = 'JPG atau PNG. Dikompres otomatis sebelum diunggah.';
+    document.getElementById('prfEditAlert').hidden = true;
+
+    prfSetEditPhoto(me.foto_profil_url || '', nama);
+    document.getElementById('prfEditNama').value = nama;
+    prfSetJk(me.jenis_kelamin || session.jenis_kelamin || null);
+    document.getElementById('prfEditHp').value = me.no_hp || (isTutor ? (tp.no_wa || '') : '');
+    document.getElementById('prfEditEmail').value = session.email || '';
+
+    document.getElementById('prfTutorSec').hidden = !isTutor;
+    document.getElementById('prfPwStep').textContent = isTutor ? '3' : '2';
+    if (isTutor) {
+      document.getElementById('prfEditKeahlian').value = prfKeahlianText(tp.keahlian);
+      document.getElementById('prfEditPendidikan').value = tp.pendidikan_terakhir || '';
+      document.getElementById('prfEditBank').value = tp.nama_bank || '';
+      document.getElementById('prfEditRek').value = tp.no_rekening || '';
+    }
+    prfSetPwOpen(false);
+    prfShowModal(document.getElementById('prfEditModal'));
+  }
+  function prfCloseEdit() {
+    if (prfEdit.saving) return;
+    prfHideModal(document.getElementById('prfEditModal'));
+  }
+
+  // Kompres foto di browser: resize ke lebar maks. 800px lalu turunkan kualitas JPEG sampai ~400KB
+  function prfCompressImage(file) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var scale = Math.min(1, PRF_FOTO_MAX_W / img.naturalWidth);
+        var w = Math.max(1, Math.round(img.naturalWidth * scale));
+        var h = Math.max(1, Math.round(img.naturalHeight * scale));
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        var q = 0.86;
+        (function attempt() {
+          canvas.toBlob(function (blob) {
+            if (!blob) { reject(new Error('Foto tidak bisa diproses')); return; }
+            if (blob.size > PRF_FOTO_TARGET && q > 0.5) { q -= 0.08; attempt(); return; }
+            resolve(blob);
+          }, 'image/jpeg', q);
+        })();
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('File bukan gambar yang valid')); };
+      img.src = url;
+    });
+  }
+  function prfBlobToBase64(blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(String(reader.result).split(',')[1]); };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+  function prfUploadFoto(blob, userId) {
+    return prfBlobToBase64(blob).then(function (base64) {
+      return new Promise(function (resolve, reject) {
+        google.script.run
+          .withSuccessHandler(function (result) {
+            if (result && result.success) resolve(result.url);
+            else reject(new Error((result && result.error) || 'Upload foto gagal'));
+          })
+          .withFailureHandler(function (err) { reject(err); })
+          .uploadProfilFile(base64, userId + '_' + Date.now() + '.jpg', 'image/jpeg');
+      });
+    });
+  }
+  function prfDeleteOldFoto(url) {
+    if (!url || !/google/.test(url) || !(window.google && google.script && google.script.run)) return;
+    google.script.run.withFailureHandler(function () {}).deleteDriveFiles([url]);
+  }
+
+  async function prfPickFoto(file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { prfEditFail('Pilih file gambar (JPG atau PNG).'); return; }
+    try {
+      var blob = await prfCompressImage(file);
+      prfEdit.file = blob; prfEdit.removePhoto = false;
+      if (prfEdit.previewUrl) URL.revokeObjectURL(prfEdit.previewUrl);
+      prfEdit.previewUrl = URL.createObjectURL(blob);
+      prfSetEditPhoto(prfEdit.previewUrl, document.getElementById('prfEditNama').value);
+      document.getElementById('prfFotoHint').textContent = 'Foto baru siap diunggah (' + Math.max(1, Math.round(blob.size / 1024)) + ' KB).';
+      document.getElementById('prfEditAlert').hidden = true;
+    } catch (err) {
+      prfEditFail(err.message);
+    }
+  }
+
+  async function prfSaveEdit() {
+    if (prfEdit.saving) return;
+    var session = genioGetSession();
+    if (!session) return;
+    var me = prfMe || {};
+    var isTutor = session.role === 'tutor';
+    document.getElementById('prfEditAlert').hidden = true;
+
+    var nama = document.getElementById('prfEditNama').value.trim().replace(/\s+/g, ' ');
+    var jk = prfGetJk();
+    var hp = document.getElementById('prfEditHp').value.trim();
+    if (!nama) { prfEditFail('Nama lengkap wajib diisi.'); return; }
+    if (hp && !/^\+?[\d\s-]{8,16}$/.test(hp)) { prfEditFail('Nomor WhatsApp tidak valid.'); return; }
+
+    var pwOpen = !document.getElementById('prfPwWrap').hidden;
+    var pwNow = document.getElementById('prfPwNow').value;
+    var pwNew = document.getElementById('prfPwNew').value;
+    var pwNew2 = document.getElementById('prfPwNew2').value;
+    var gantiPw = pwOpen && (pwNow || pwNew || pwNew2);
+    if (gantiPw) {
+      if (!pwNow) { prfEditFail('Isi password saat ini.'); return; }
+      if (pwNew.length < 8) { prfEditFail('Password baru minimal 8 karakter.'); return; }
+      if (pwNew !== pwNew2) { prfEditFail('Ulangi password baru belum sama.'); return; }
+      if (pwNew === pwNow) { prfEditFail('Password baru sama dengan password saat ini.'); return; }
+    }
+
+    var btn = document.getElementById('prfEditSave');
+    prfEdit.saving = true; btn.disabled = true; btn.textContent = 'Menyimpan...';
+    try {
+      // 1. Password: cek password saat ini dulu (sekaligus dapat sesi baru), lalu ganti
+      if (gantiPw) {
+        var auth;
+        try {
+          auth = await supaAuth('token?grant_type=password', { email: session.email, password: pwNow });
+        } catch (e) {
+          throw new Error('Password saat ini salah.');
+        }
+        session.access_token = auth.access_token;
+        session.refresh_token = auth.refresh_token || session.refresh_token;
+        genioSaveSession(session);
+        var res = await fetch(SUPABASE_URL + '/auth/v1/user', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + session.access_token },
+          body: JSON.stringify({ password: pwNew })
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (!res.ok) throw new Error((data && (data.msg || data.error_description || data.message)) || 'Gagal mengganti password.');
+      }
+
+      // 2. Foto: unggah yang baru ke Google Drive
+      var oldFoto = me.foto_profil_url || '';
+      var patch = { nama: nama, jenis_kelamin: jk, no_hp: hp || null };
+      if (prfEdit.file) {
+        btn.textContent = 'Mengunggah foto...';
+        patch.foto_profil_url = await prfUploadFoto(prfEdit.file, session.user_id);
+      } else if (prfEdit.removePhoto) {
+        patch.foto_profil_url = null;
+      }
+
+      // 3. Data diri
+      btn.textContent = 'Menyimpan...';
+      await supaRest('users?id=eq.' + session.user_id, session.access_token, {
+        method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify(patch)
+      });
+
+      // 4. Data mengajar (khusus tutor)
+      if (isTutor) {
+        var keahlian = document.getElementById('prfEditKeahlian').value.split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+        await supaRest('tutor_profile?user_id=eq.' + session.user_id, session.access_token, {
+          method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({
+            keahlian: keahlian,
+            pendidikan_terakhir: document.getElementById('prfEditPendidikan').value.trim() || null,
+            no_wa: hp || null,
+            nama_bank: document.getElementById('prfEditBank').value.trim() || null,
+            no_rekening: document.getElementById('prfEditRek').value.replace(/\s+/g, '') || null
+          })
+        });
+      }
+
+      if ('foto_profil_url' in patch && oldFoto && oldFoto !== patch.foto_profil_url) prfDeleteOldFoto(oldFoto);
+
+      session.nama = nama;
+      session.jenis_kelamin = jk;
+      genioSaveSession(session);
+      prfEdit.saving = false;
+      prfCloseEdit();
+      genioToast(gantiPw ? 'Profil dan password diperbarui' : 'Profil diperbarui', 'success');
+      await prfLoadDetail();
+      if (typeof loadLainnyaData === 'function') { try { loadLainnyaData(); } catch (e) {} }
+    } catch (err) {
+      prfEditFail(err.message || 'Gagal menyimpan profil.');
+    } finally {
+      prfEdit.saving = false; btn.disabled = false; btn.textContent = 'Simpan perubahan';
+    }
+  }
+
+  document.getElementById('prfEditProfileBtn').addEventListener('click', prfOpenEdit);
+  document.getElementById('prfEditCloseX').addEventListener('click', prfCloseEdit);
+  document.getElementById('prfEditCancel').addEventListener('click', prfCloseEdit);
+  document.getElementById('prfEditSave').addEventListener('click', prfSaveEdit);
+  document.getElementById('prfEditModal').addEventListener('click', function (e) { if (e.target === this) prfCloseEdit(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !document.getElementById('prfEditModal').hidden) prfCloseEdit();
+  });
+  document.getElementById('prfPwToggle').addEventListener('click', function () {
+    prfSetPwOpen(document.getElementById('prfPwWrap').hidden);
+    if (!document.getElementById('prfPwWrap').hidden) document.getElementById('prfPwNow').focus();
+  });
+  document.getElementById('prfPwNew').addEventListener('input', prfUpdateMeter);
+  document.querySelectorAll('#prfEditJk label').forEach(function (l) {
+    l.addEventListener('click', function (e) { e.preventDefault(); prfSetJk(l.dataset.val); });
+  });
+  function prfOpenPicker() { document.getElementById('prfFotoInput').click(); }
+  document.getElementById('prfFotoPick').addEventListener('click', prfOpenPicker);
+  document.getElementById('prfFotoCam').addEventListener('click', prfOpenPicker);
+  document.getElementById('prfFotoInput').addEventListener('change', function () { prfPickFoto(this.files[0]); });
+  document.getElementById('prfFotoRemove').addEventListener('click', function () {
+    if (prfEdit.previewUrl) { URL.revokeObjectURL(prfEdit.previewUrl); prfEdit.previewUrl = null; }
+    prfEdit.file = null; prfEdit.removePhoto = true;
+    document.getElementById('prfFotoInput').value = '';
+    prfSetEditPhoto('', document.getElementById('prfEditNama').value);
+    document.getElementById('prfFotoHint').textContent = 'Foto akan dihapus saat disimpan.';
   });
   document.getElementById('prfCopyEmail').addEventListener('click', function () {
     var email = document.getElementById('prfDetailEmail').textContent;
