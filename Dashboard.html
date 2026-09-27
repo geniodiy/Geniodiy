@@ -469,13 +469,29 @@
     // ===== Role: menu & tab dock menyesuaikan role (lihat docs/PRD.md Section 6) =====
     var GENIO_ROLE = session.role;
     var IS_KU = GENIO_ROLE === 'kepala_unit';
+    var IS_HRD = GENIO_ROLE === 'hrd';
     window.GENIO_ROLE = GENIO_ROLE;
     document.body.classList.add('role-' + GENIO_ROLE); // dipakai CSS untuk menyembunyikan tombol per role (lihat Config.html)
     if (typeof genioEnsureSessionProfile === 'function') genioEnsureSessionProfile();
     // Menu Lainnya yang boleh dilihat per role (role yang tidak tercantum melihat semua menu)
     var ROLE_MENU = {
-      kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'data-tutor', 'operasional', 'genio-news']
+      kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'data-tutor', 'operasional', 'genio-news'],
+      hrd: ['ortu-siswa', 'kontrak', 'presensi', 'genio-news']
     };
+    function genioRetab(btnId, newTab, label, icon) {
+      var b = document.getElementById(btnId);
+      if (!b) return;
+      b.id = 'nav-' + newTab;
+      b.dataset.tab = newTab;
+      b.setAttribute('aria-label', label);
+      b.querySelector('.dock-icon').innerHTML = '<i class="ph ph-' + icon + ' icon-outline" aria-hidden="true"></i><i class="ph-fill ph-' + icon + ' icon-filled hidden" aria-hidden="true"></i>';
+      b.querySelector('.dock-label').textContent = label;
+    }
+    if (IS_HRD) {
+      // HRD: dock Home, Tutor, Jadwal, Lainnya (Presensi hanya lihat, ada di Lainnya)
+      genioRetab('nav-presensi', 'data-tutor', 'Tutor', 'chalkboard-teacher');
+      genioRetab('nav-gaji', 'jadwal', 'Jadwal', 'calendar-blank');
+    }
     if (IS_KU) {
       // Kepala unit: posisi ke-3 dock = Jadwal mengajar (tidak punya menu Gaji)
       var navGaji = document.getElementById('nav-gaji');
@@ -496,6 +512,7 @@
       person: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/></svg>',
       monitor: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>',
       home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 3.5l8 7V19.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-9z"/></svg>',
+      check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>',
       calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
       layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>',
       shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.5 3 7 7 8 4-1 7-3.5 7-8V6l-7-3z"/></svg>',
@@ -527,6 +544,10 @@
       // Kepala unit hanya melihat data tutor (tanpa tambah, edit, hapus)
       MENU_SECTIONS.forEach(function (sec) { sec.items.forEach(function (it) { if (it.key === 'data-tutor') it.label = 'Data Tutor'; }); });
     }
+    if (IS_HRD) {
+      // HRD melihat presensi (hanya lihat) dari menu Lainnya
+      MENU_SECTIONS[0].items.splice(3, 0, { key: 'presensi', icon: 'check', label: 'Presensi' });
+    }
     if (ROLE_MENU[GENIO_ROLE]) {
       MENU_SECTIONS.forEach(function (sec) {
         sec.items = sec.items.filter(function (it) { return ROLE_MENU[GENIO_ROLE].indexOf(it.key) !== -1; });
@@ -540,7 +561,7 @@
     });
 
     var MODULE_TITLES = {
-      'home': ['Home', IS_KU ? 'Dashboard Kepala unit' : 'Dashboard Manajer'],
+      'home': ['Home', IS_KU ? 'Dashboard Kepala unit' : IS_HRD ? 'Dashboard HRD' : 'Dashboard Manajer'],
       'presensi': ['Presensi', 'Approval & riwayat'],
       'gaji': ['Gaji', 'Slip gaji tutor'],
       'lainnya': ['Lainnya', 'Menu & pengaturan'],
@@ -683,6 +704,7 @@
         lainnyaSetInfo('paket-belajar', paketRows.length + ' Program');
         lainnyaSetInfo('kelola-pengguna', userRows2.length + ' User');
         lainnyaSetInfo('pengaturan', '');
+        lainnyaSetInfo('presensi', '');
       } catch (e) {
         genioToast('Gagal memuat sebagian data: ' + e.message, 'error');
       }
@@ -709,7 +731,9 @@
     });
 
     // ===== Dock glider & Header zoom animation engine =====
-    var PRIMARY_TABS = IS_KU ? ['home', 'presensi', 'jadwal', 'lainnya'] : ['home', 'presensi', 'gaji', 'lainnya'];
+    var PRIMARY_TABS = IS_KU ? ['home', 'presensi', 'jadwal', 'lainnya']
+      : IS_HRD ? ['home', 'data-tutor', 'jadwal', 'lainnya']
+      : ['home', 'presensi', 'gaji', 'lainnya'];
     var currentBottomTab = 'home';
     var currentActiveModule = 'home';
 
