@@ -85,7 +85,25 @@
   .kuh-tut .bar{grid-column:1/-1; height:4px; border-radius:4px; background:#EEF0F6;}
   .kuh-tut .bar i{display:block; height:100%; border-radius:4px; background:#9DB6FF; transform-origin:left; animation:kuhGrow .7s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 60ms);}
 
-  #kuhSesiList{max-height:360px; overflow-y:auto; overscroll-behavior:contain; margin-right:-8px; padding-right:8px; scrollbar-width:thin;}
+  /* Sesi hari ini: gaya jadwal mingguan, baris = hari ini + fleksibel, kolom = jam */
+  .kuh-jm-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:thin; padding-bottom:2px;}
+  .kuh-jm-grid{display:grid; gap:3px; align-items:stretch; min-width:min-content;}
+  .kuh-jm-grid .home-jm-head{white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .kuh-jm-row{font-size:10.5px; font-weight:600; color:var(--ink); padding:0 8px 0 2px; align-self:center; white-space:nowrap;}
+  .kuh-jm-row small{display:block; font-size:9.5px; font-weight:500; color:var(--ink-soft);}
+  .kuh-jm-row.is-today{color:var(--blue);}
+  .kuh-jm-grid .home-jm-cell{min-height:34px; min-width:40px;}
+  .kuh-jm-grid .home-jm-dot.is-late{box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #FFC46B;}
+  .kuh-jm-grid .home-jm-dot.is-done{box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #7CD9A8;}
+  #kuhSesiList.kuh-jm-anim .home-jm-dot{animation:homeJmDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 15ms);}
+  @media (prefers-reduced-motion: reduce){ #kuhSesiList.kuh-jm-anim .home-jm-dot{animation:none;} }
+  .kuh-jm-legend{display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);}
+  .kuh-jm-legend .st{display:inline-flex; align-items:center; gap:6px; font-size:10.5px; color:var(--ink-soft); white-space:nowrap;}
+  .kuh-jm-legend .st i{width:8px; height:8px; border-radius:50%; background:#C9CCDA; flex:none;}
+  .kuh-jm-legend .st i.late{box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #FFC46B;} .kuh-jm-legend .st i.done{box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #7CD9A8;}
+  .kuh-seemore{display:block; margin:10px auto 0; background:none; border:none; font-family:var(--font); font-size:11px; font-weight:600; color:var(--blue); cursor:pointer; padding:4px 8px;}
+  .kuh-seemore:hover{text-decoration:underline;}
+  .kuh-slot-st{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; font-size:10.5px; color:var(--ink-soft);}
   .kuh-grp{font-size:10px; font-weight:600; color:var(--ink-soft); margin:10px 0 2px; padding-top:8px; border-top:1px dashed var(--border);}
   .kuh-ses .jam.is-flex{font-size:10px; color:var(--ink-soft); font-weight:600;}
   .kuh-more{width:100%; height:32px; margin-top:10px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--blue); font-family:var(--font); font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;}
@@ -166,9 +184,16 @@
 
     <div class="kuh-2">
       <div class="kuh-card">
-        <div class="kuh-sec"><h4>Sesi hari ini</h4><span id="kuhSesiSub">-</span></div>
-        <div id="kuhSesiList"><div class="kuh-empty">Memuat jadwal...</div></div>
-        <button type="button" class="kuh-more" id="kuhSesiMore"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Lihat selengkapnya di jadwal mingguan</button>
+        <div class="kuh-sec" style="margin-bottom:10px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;"><h4>Sesi Hari ini</h4><span id="kuhSesiBadge" style="background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px;">-</span></div>
+            <div class="home-jm-sub" id="kuhSesiSub">Ketuk titik untuk detail sesi</div>
+          </div>
+        </div>
+        <div class="kuh-jm-wrap"><div id="kuhSesiList"><div class="kuh-empty">Memuat jadwal...</div></div></div>
+        <div class="kuh-jm-legend" id="kuhSesiLegend"></div>
+        <button type="button" class="kuh-seemore" id="kuhSesiMore">Lihat selengkapnya</button>
+        <div class="genio-pop" id="kuh-slotModal" hidden role="dialog" aria-label="Detail sesi"></div>
       </div>
       <div class="kuh-card">
         <div class="kuh-sec"><h4>Tutor di unit ini</h4><span id="kuhTutorSub">-</span></div>
@@ -330,7 +355,7 @@
         q('kontrak_siswa?select=id,siswa_id,status,tanggal_mulai,tanggal_selesai,kontrak_tutor(id,status)' + u),
         q('presensi?select=id,created_at&status=eq.pending' + u + '&order=created_at.asc'),
         q('invoice?select=nominal&status=eq.belum_lunas' + u),
-        q('kontrak_tutor?select=id,tutor_id,mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),kontrak_siswa!inner(status,siswa(nama)),jadwal(hari,jam_mulai,jam_selesai)&status=eq.aktif&kontrak_siswa.status=eq.aktif' + u),
+        q('kontrak_tutor?select=id,tutor_id,mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),kontrak_siswa!inner(status,siswa(nama,orangtua(no_hp)),paket_belajar(nama_paket)),jadwal(id,hari,jam_mulai,jam_selesai)&status=eq.aktif&kontrak_siswa.status=eq.aktif' + u),
         q('presensi?select=kontrak_tutor_id,jam,status' + u + '&tanggal=eq.' + todayKey),
         q('genio_news?select=id,judul,gambar_url,tanggal_publish,tombol_kontak_url&status=eq.aktif&tanggal_publish=lte.' + nowIso + '&or=(tanggal_expire.gte.' + nowIso + ',tanggal_expire.is.null)&order=tanggal_publish.desc&limit=3')
       ]);
@@ -411,61 +436,47 @@
       ktAktif.forEach(function (kt) {
         (kt.jadwal || []).forEach(function (j) {
           var h = String(j.hari || '').toLowerCase().trim();
-          var item = { kt: kt, mulai: String(j.jam_mulai || '').slice(0, 5), selesai: String(j.jam_selesai || '').slice(0, 5) };
+          var item = { kt: kt, jadwalId: j.id, mulai: String(j.jam_mulai || '').slice(0, 5), selesai: String(j.jam_selesai || '').slice(0, 5) };
           if (h === hariKode) sesi.push(item);
           else if (!h || h === 'fleksibel') fleks.push(item); // jadwal fleksibel: bisa dilaksanakan kapan saja
         });
       });
-      sesi.sort(function (a, b) { return a.mulai < b.mulai ? -1 : 1; });
-      var belumLapor = 0;
       var toMin = function (hm) { var p = String(hm || '').split(':'); return (+p[0] || 0) * 60 + (+p[1] || 0); };
-      var sesiHtml = sesi.map(function (x, i) {
+      var belumLapor = 0, sudahLapor = 0;
+      // Status tiap sesi (dipakai titik di grid dan popup)
+      function sesiItem(x, isFleks) {
         var kt = x.kt, user = kt.users || {}, tp = Array.isArray(user.tutor_profile) ? user.tutor_profile[0] : user.tutor_profile;
+        var ks = kt.kontrak_siswa || {}, siswa = (ks.siswa && ks.siswa.nama) || '-';
+        var ortuHp = ks.siswa && ks.siswa.orangtua && ks.siswa.orangtua.no_hp;
         var lapor = presToday.filter(function (p) { return p.kontrak_tutor_id === kt.id; });
-        var sesiKtHariIni = sesi.filter(function (y) { return y.kt.id === kt.id; }).length;
-        var match = lapor.find(function (p) { return String(p.jam || '').slice(0, 5) === x.mulai; }) || (sesiKtHariIni === 1 ? lapor[0] : null);
+        var sameKt = (isFleks ? fleks : sesi).filter(function (y) { return y.kt.id === kt.id; }).length;
+        var match = lapor.find(function (p) { return String(p.jam || '').slice(0, 5) === x.mulai; }) || (sameKt === 1 ? lapor[0] : null);
         var endMin = x.selesai ? toMin(x.selesai) : toMin(x.mulai) + (kt.durasi_menit || 90);
-        var chip, extra = '';
-        if (match) {
-          chip = match.status === 'pending' ? '<span class="kuh-chip wait">Menunggu verifikasi</span>'
-            : match.status === 'ditolak' ? '<span class="kuh-chip no">Ditolak</span>'
-            : '<span class="kuh-chip ok">Sudah lapor</span>';
-        } else if (nowMin >= endMin) {
-          belumLapor++;
-          chip = '<span class="kuh-chip late">Belum lapor</span>';
-          var siswaNm = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || 'siswa';
-          var wa = waLink(user.no_hp || (tp && tp.no_wa), 'Halo ' + (user.nama || '') + ', mohon isi presensi sesi ' + x.mulai + ' dengan ' + siswaNm + ' hari ini. Terima kasih.');
-          if (wa) extra = '<a class="kuh-wa" href="' + esc(wa) + '" target="_blank" rel="noopener noreferrer" title="Ingatkan lewat WhatsApp" aria-label="Ingatkan lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>';
-        } else if (nowMin >= toMin(x.mulai)) {
-          chip = '<span class="kuh-chip live">Berlangsung</span>';
-        } else {
-          chip = '<span class="kuh-chip next">Akan datang</span>';
-        }
-        var siswa = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || '-';
-        return '<div class="kuh-ses" style="--i:' + i + '"><div class="jam">' + esc(x.mulai) + '<small>' + esc(x.selesai || '') + '</small></div>' +
-          '<span class="av" style="background:' + colorFor(kt.tutor_id) + '">' + genioAvatarInner(user.nama, user.foto_profil_url, genioInitials(user.nama)) + '</span>' +
-          '<div class="who"><b>' + esc(user.nama || 'Tutor') + '</b><span>' + esc(siswa) + ' · ' + esc(kt.mapel || 'Bimbel') + '</span></div>' + chip + extra + '</div>';
-      }).join('');
-      // Jadwal fleksibel: tampil terpisah, status dari presensi hari ini (kalau ada)
-      var fleksHtml = fleks.map(function (x, i) {
-        var kt = x.kt, user = kt.users || {};
-        var lapor = presToday.filter(function (p) { return p.kontrak_tutor_id === kt.id; })[0];
-        var chip = lapor
-          ? (lapor.status === 'pending' ? '<span class="kuh-chip wait">Menunggu verifikasi</span>' : lapor.status === 'ditolak' ? '<span class="kuh-chip no">Ditolak</span>' : '<span class="kuh-chip ok">Sudah lapor</span>')
-          : '<span class="kuh-chip next">Fleksibel</span>';
-        var siswa = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || '-';
-        return '<div class="kuh-ses" style="--i:' + (sesi.length + i) + '"><div class="jam is-flex">' + (x.mulai && x.mulai !== '00:00' ? esc(x.mulai) + '<small>fleksibel</small>' : 'Bebas<small>kapan saja</small>') + '</div>' +
-          '<span class="av" style="background:' + colorFor(kt.tutor_id) + '">' + genioAvatarInner(user.nama, user.foto_profil_url, genioInitials(user.nama)) + '</span>' +
-          '<div class="who"><b>' + esc(user.nama || 'Tutor') + '</b><span>' + esc(siswa) + ' · ' + esc(kt.mapel || 'Bimbel') + '</span></div>' + chip + '</div>';
-      }).join('');
-      document.getElementById('kuhSesiList').innerHTML =
-        (sesiHtml || '<div class="kuh-empty">Tidak ada sesi terjadwal hari ini.</div>') +
-        (fleksHtml ? '<div class="kuh-grp">Jadwal fleksibel</div>' + fleksHtml : '');
+        var st;
+        if (match) st = match.status === 'pending' ? 'wait' : match.status === 'ditolak' ? 'no' : 'ok';
+        else if (isFleks) st = 'flex';
+        else if (nowMin >= endMin) st = 'late';
+        else if (nowMin >= toMin(x.mulai)) st = 'live';
+        else st = 'next';
+        if (st === 'late') belumLapor++;
+        if (st === 'ok' || st === 'wait') sudahLapor++;
+        var jamKey = isFleks && (!x.mulai || x.mulai === '00:00') ? 'Bebas' : (x.mulai || '-');
+        return {
+          id: x.jadwalId, row: isFleks ? 'fleks' : 'today', jam: jamKey, mulai: x.mulai, selesai: x.selesai, st: st,
+          tutorId: kt.tutor_id, tutorNama: user.nama || 'Tutor', tutorFoto: user.foto_profil_url, tutorHp: user.no_hp || (tp && tp.no_wa),
+          ortuHp: ortuHp, siswa: siswa, mapel: kt.mapel || 'Bimbel', durasi: kt.durasi_menit,
+          paket: ks.paket_belajar && ks.paket_belajar.nama_paket
+        };
+      }
+      var items = sesi.map(function (x) { return sesiItem(x, false); }).concat(fleks.map(function (x) { return sesiItem(x, true); }));
+      kuhState.sesiItems = items;
+      kuhRenderSesiGrid(items, KUH_HARI[today.getDay()]);
       var subParts = [];
-      if (sesi.length) subParts.push(sesi.length + ' sesi');
+      subParts.push(sesi.length + ' sesi hari ini');
       if (fleks.length) subParts.push(fleks.length + ' fleksibel');
       if (belumLapor) subParts.push(belumLapor + ' belum lapor');
-      document.getElementById('kuhSesiSub').textContent = subParts.length ? subParts.join(' · ') : KUH_HARI[today.getDay()];
+      document.getElementById('kuhSesiBadge').textContent = items.length + ' sesi';
+      document.getElementById('kuhSesiSub').textContent = subParts.join(' · ') + ' · ketuk titik untuk detail';
 
       // ===== Tutor di unit ini (bulan terpilih) =====
       var tutors = {};
@@ -499,6 +510,110 @@
         var tag = n.tombol_kontak_url ? 'a href="' + esc(n.tombol_kontak_url) + '" target="_top"' : 'div';
         return '<' + tag + ' class="kuh-nw"><div class="img"' + img + '></div><div class="tx"><b title="' + esc(n.judul || '') + '">' + esc(n.judul || 'Genio News') + '</b><small>' + esc(tgl) + '</small></div></' + tag.split(' ')[0] + '>';
       }).join('');
+    }
+
+    var KUH_ST = {
+      ok: ['Sudah lapor', 'ok'], wait: ['Menunggu verifikasi', 'wait'], no: ['Ditolak', 'no'],
+      late: ['Belum lapor', 'late'], live: ['Berlangsung', 'live'], next: ['Akan datang', 'next'], flex: ['Fleksibel', 'next']
+    };
+    function kuhRenderSesiGrid(items, hariLabel) {
+      var el = document.getElementById('kuhSesiList'), legend = document.getElementById('kuhSesiLegend');
+      if (!items.length) {
+        el.innerHTML = '<div class="kuh-empty">Tidak ada sesi hari ini maupun jadwal fleksibel.</div>';
+        legend.innerHTML = '';
+        return;
+      }
+      var jamSet = {};
+      items.forEach(function (it) { jamSet[it.jam] = true; });
+      var jams = Object.keys(jamSet).sort(function (a, b) { if (a === 'Bebas') return 1; if (b === 'Bebas') return -1; return a < b ? -1 : 1; });
+      var rows = [{ key: 'today', label: 'Hari ini', sub: hariLabel }];
+      if (items.some(function (it) { return it.row === 'fleks'; })) rows.push({ key: 'fleks', label: 'Fleksibel', sub: 'kapan saja' });
+      var dotN = 0;
+      var html = '<div class="kuh-jm-grid" style="grid-template-columns:auto repeat(' + jams.length + ', minmax(40px, 1fr));"><div></div>';
+      jams.forEach(function (j) { html += '<div class="home-jm-head">' + esc(j) + '</div>'; });
+      rows.forEach(function (r) {
+        html += '<div class="kuh-jm-row' + (r.key === 'today' ? ' is-today' : '') + '">' + r.label + '<small>' + esc(r.sub) + '</small></div>';
+        jams.forEach(function (j) {
+          var m = items.filter(function (it) { return it.row === r.key && it.jam === j; });
+          var dots = m.map(function (it) {
+            var ring = it.st === 'late' ? ' is-late' : (it.st === 'ok' || it.st === 'wait') ? ' is-done' : '';
+            return '<span class="home-jm-dot genio-pop-dot' + ring + '" data-idx="' + items.indexOf(it) + '" style="background:' + colorFor(it.tutorId) + '; --i:' + Math.min(dotN++, 60) + ';"></span>';
+          }).join('');
+          html += m.length
+            ? '<div class="home-jm-cell has-dots' + (r.key === 'today' ? ' is-today' : '') + '" data-genio-pop-trigger role="button" tabindex="0" data-row="' + r.key + '" data-jam="' + esc(j) + '" aria-label="' + esc(r.label + ' ' + j + ', ' + m.length + ' sesi') + '">' + dots + '</div>'
+            : '<div class="home-jm-cell' + (r.key === 'today' ? ' is-today' : '') + '"></div>';
+        });
+      });
+      el.innerHTML = html + '</div>';
+      if (!KUH_REDUCED) { el.classList.remove('kuh-jm-anim'); void el.offsetWidth; el.classList.add('kuh-jm-anim'); }
+
+      el.querySelectorAll('.home-jm-cell.has-dots').forEach(function (cell) {
+        function open(e) {
+          if (e) e.stopPropagation();
+          var dot = e && e.target.closest && e.target.closest('.home-jm-dot');
+          var dots = cell.querySelectorAll('.home-jm-dot');
+          if (!dot && dots.length === 1) dot = dots[0];
+          if (dot) kuhOpenSlot([items[+dot.dataset.idx]], dot);
+          else kuhOpenSlot(items.filter(function (it) { return it.row === cell.dataset.row && it.jam === cell.dataset.jam; }), cell);
+        }
+        cell.addEventListener('click', open);
+        cell.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(e); } });
+      });
+
+      var tutorMap = {};
+      items.forEach(function (it) { tutorMap[it.tutorId] = it.tutorNama; });
+      legend.innerHTML = Object.keys(tutorMap).map(function (id) {
+        return '<span class="home-jm-leg"><i style="background:' + colorFor(id) + ';"></i>' + esc(tutorMap[id]) + '</span>';
+      }).join('') +
+        '<span class="st"><i class="done"></i>Sudah lapor</span><span class="st"><i class="late"></i>Belum lapor</span>';
+    }
+
+    var kuhSlotModal = document.getElementById('kuh-slotModal');
+    if (kuhSlotModal && kuhSlotModal.parentNode !== document.body) document.body.appendChild(kuhSlotModal);
+    function kuhOpenSlot(rows, anchor) {
+      rows = (rows || []).filter(Boolean);
+      if (!rows.length || !kuhSlotModal) return;
+      var s = genioGetSession() || {};
+      kuhSlotModal.innerHTML = rows.map(function (r) {
+        var st = KUH_ST[r.st] || KUH_ST.next;
+        var remind = r.st === 'late' ? 'Halo ' + r.tutorNama + ', mohon isi presensi sesi ' + r.mulai + ' dengan ' + r.siswa + ' hari ini. Terima kasih.' : '';
+        var tutorWa = waLink(r.tutorHp, remind), ortuWa = waLink(r.ortuHp);
+        var extra = [s.unit_nama, r.paket].filter(Boolean).map(esc).join(' · ');
+        var jamTxt = r.jam === 'Bebas' ? 'Fleksibel' : (r.mulai + (r.selesai ? ' - ' + r.selesai : ''));
+        return '<div class="home-slot-item">' +
+          '<div class="home-slot-top">' +
+            '<span class="home-slot-av" style="background:' + colorFor(r.tutorId) + ';">' + genioAvatarInner(r.tutorNama, r.tutorFoto, genioInitials(r.tutorNama)) + '</span>' +
+            '<div class="home-slot-who"><b>' + esc(r.tutorNama) + '</b><span>' + esc(r.mapel) + (r.durasi ? ' · ' + r.durasi + ' menit' : '') + '</span></div>' +
+            '<span class="home-slot-time">' + esc(jamTxt) + '</span>' +
+          '</div>' +
+          '<div class="home-slot-siswa"><i class="ph ph-student" aria-hidden="true"></i><span><b>' + esc(r.siswa) + '</b>' + (extra ? ' · ' + extra : '') + '</span></div>' +
+          '<div class="kuh-slot-st"><span>Status hari ini</span><span class="kuh-chip ' + st[1] + '">' + st[0] + '</span></div>' +
+          '<div class="home-slot-act">' +
+            '<a class="home-slot-wa" data-has="' + (tutorWa ? 1 : 0) + '" data-who="tutor" href="' + (tutorWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>' + (r.st === 'late' ? 'Ingatkan tutor' : 'Chat tutor') + '</a>' +
+            '<a class="home-slot-wa" data-has="' + (ortuWa ? 1 : 0) + '" data-who="orang tua" href="' + (ortuWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Chat ortu</a>' +
+            '<button type="button" class="home-slot-goto" data-id="' + esc(r.id || '') + '" title="Buka di halaman jadwal" aria-label="Buka di halaman jadwal"><i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+      kuhSlotModal.querySelectorAll('.home-slot-wa').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          if (a.dataset.has !== '1') { e.preventDefault(); genioToast('Nomor WhatsApp ' + a.dataset.who + ' belum tersedia', 'error'); }
+        });
+      });
+      kuhSlotModal.querySelectorAll('.home-slot-goto').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.dataset.id;
+          genioClosePop(kuhSlotModal);
+          goto('jadwal');
+          var tries = 0;
+          (function waitRow() {
+            var el = id && document.querySelector('#jdw-list [data-schedule-id="' + id + '"]');
+            if (el && typeof jdwScrollToSchedule === 'function') { jdwScrollToSchedule(id); return; }
+            if (id && ++tries < 20) setTimeout(waitRow, 250);
+          })();
+        });
+      });
+      genioOpenPop(kuhSlotModal, anchor);
     }
 
     function kuhRenderSpark(periode) {
