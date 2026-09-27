@@ -1207,7 +1207,7 @@
     if (opsState.unitOptions && opsState.unitOptions.length) return opsState.unitOptions;
     try {
       var s = genioGetSession();
-      opsState.unitOptions = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+      opsState.unitOptions = genioScopeUnits(await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token));
     } catch (e) {
       opsState.unitOptions = [];
     }

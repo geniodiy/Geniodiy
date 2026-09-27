@@ -2365,7 +2365,7 @@
   async function psLoadFilterUnits() {
     try {
       var s = genioGetSession();
-      var units = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+      var units = genioScopeUnits(await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token));
       psFilterUnitOptions = units.map(function (u) { return { value: u.id, label: u.nama_unit }; });
       psUnitMap = {};
       units.forEach(function (u) { psUnitMap[u.id] = u.nama_unit; });
@@ -2637,7 +2637,7 @@
 
     var editDeleteBtns = '';
     if (psState.tab === 'riwayat' && row.status !== 'pending') {
-      var canEdit = psState.role === 'manajer';
+      var canEdit = psState.role === 'manajer' || psState.role === 'kepala_unit' || psState.role === 'super_admin';
       var canDelete = row.status === 'ditolak' && (psState.role === 'manajer' || psState.role === 'kepala_unit');
       editDeleteBtns =
         (canEdit ? '<button class="ps-edit-status-btn pc2-icon-btn" data-id="' + row.id + '" aria-label="Ubah status" title="Ubah status"><i class="ph ph-pencil-simple" aria-hidden="true" style="pointer-events:none;"></i></button>' : '') +
@@ -3071,7 +3071,17 @@
   async function psLoadWakilTutors() {
     try {
       var s = genioGetSession();
-      psWakilTutorList = await supaRest('users?role=eq.tutor&status=eq.aktif&select=id,nama&order=nama.asc', s.access_token);
+      if (s.role === 'kepala_unit') {
+        // Kepala unit: hanya tutor aktif yang punya kontrak aktif di unitnya (RLS sudah membatasi kontrak_tutor ke unitnya)
+        var ktRows = await supaRest('kontrak_tutor?status=eq.aktif&select=tutor_id,users!kontrak_tutor_tutor_id_fkey(id,nama,status)', s.access_token);
+        var seen = {};
+        psWakilTutorList = ktRows.map(function (r) { return r.users; }).filter(function (u) {
+          if (!u || u.status !== 'aktif' || seen[u.id]) return false;
+          seen[u.id] = true; return true;
+        }).sort(function (a, b) { return String(a.nama).localeCompare(String(b.nama)); });
+      } else {
+        psWakilTutorList = await supaRest('users?role=eq.tutor&status=eq.aktif&select=id,nama&order=nama.asc', s.access_token);
+      }
       document.getElementById('ps-wakilTutorLabel').textContent = 'Pilih tutor...';
       psWakilTutorsLoaded = true;
     } catch (err) {

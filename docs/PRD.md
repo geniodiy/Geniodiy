@@ -801,6 +801,27 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 
 Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) membuka Kontrak, seharusnya Jadwal Mengajar.
 
+### [v5] Fase 3a: Dashboard Kepala Unit (dikerjakan 27 Sep 2026)
+- **Dock:** Home, Presensi, **Jadwal mengajar**, Lainnya. Gaji tidak tampil.
+- **Lainnya:** Data ortu & siswa, Kontrak, Tagihan, Data tutor (hanya lihat), Operasional, Genio News, Profil.
+- **Home (`ModuleHomeUnit.html`, opsi B):**
+  - Sapaan dengan foto dan nama.
+  - Highlight unit: omset sebagai angka utama dengan tren 6 bulan. Kartu putih berisi siswa aktif, pertemuan, pengeluaran (honor dari presensi + operasional), dan laba dengan margin.
+  - Perlu tindakan: presensi menunggu, tagihan belum lunas, presensi telat, siswa belum ada tutor.
+  - Sesi hari ini dengan status lapor dan tombol WA.
+  - Tutor di unit ini (sesi, telat, ditolak).
+  - Tren 3/6/12 bulan dengan garis periode sebelumnya.
+  - Genio News di paling bawah.
+- **Hak per halaman:**
+  - Presensi: ubah status dan hapus (yang ditolak), sama seperti manajer.
+  - Tagihan: tandai lunas, batalkan lunas, kirim WA. Tombol "Hapus tagihan" dihapus untuk semua role.
+  - Operasional: tambah, edit, hapus.
+  - Kontrak: hapus kontrak tutor disembunyikan.
+  - Semua pilihan unit terkunci ke unitnya.
+- **Database:** policy baru `receipt_delete_kepala_unit` dan `operasional_delete_kepala_unit`.
+- **Sesi:** menyimpan `unit_id` dan `unit_nama` (`genioEnsureSessionProfile`).
+- **Belum diuji dengan akun kepala unit asli.**
+
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
 1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
 2. ~~Profil: Edit~~ (selesai). Dibutuhkan semua role. Isinya:
@@ -811,7 +832,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 3. ~~Kelola User / Tutor~~ (selesai, Edge Function `admin-users`):
    - Tambah akun dari admin.
    - Tolak pendaftar dan hapus user sekalian menghapus akun Supabase Auth. Ini butuh proses sisi server.
-4. **Fase 3: Dashboard Kepala Unit & HRD.** Prasyaratnya:
+4. **Fase 3: Dashboard Kepala Unit (sudah, lihat di atas) & HRD (berikutnya).** Prasyaratnya:
    - Simpan `unit_id` di sesi.
    - Buat konfigurasi menu per role (dock + Lainnya).
    - Terapkan flag akses per modul (unit-scoped, read-only).

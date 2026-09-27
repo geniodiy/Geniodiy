@@ -965,7 +965,7 @@
       var aktifCount = ktrState.kontrakList.filter(function (k) { return k.status === 'aktif'; }).length;
       var nonaktifCount = ktrState.kontrakList.length - aktifCount;
 
-      document.getElementById('ktr-heroUnitBadge').textContent = unitCount + ' unit cabang';
+      document.getElementById('ktr-heroUnitBadge').textContent = genioIsKepalaUnit() ? ((genioGetSession() || {}).unit_nama || 'Unit saya') : unitCount + ' unit cabang';
       ktrRenderHero(ktrState.kontrakList, aktifCount, nonaktifCount);
       document.getElementById('ktr-aktifCount').textContent = aktifCount;
       document.getElementById('ktr-nonaktifCount').textContent = nonaktifCount;

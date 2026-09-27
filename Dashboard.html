@@ -339,6 +339,7 @@
 
     <!-- ===== Tab: Home ===== -->
     <?!= include('ModuleHome'); ?>
+    <?!= include('ModuleHomeUnit'); ?>
 
     <!-- ===== Tab: Presensi ===== -->
     <?!= include('ModulePresensi'); ?>
@@ -465,6 +466,28 @@
 
     function initDashboard(session) {
 
+    // ===== Role: menu & tab dock menyesuaikan role (lihat docs/PRD.md Section 6) =====
+    var GENIO_ROLE = session.role;
+    var IS_KU = GENIO_ROLE === 'kepala_unit';
+    window.GENIO_ROLE = GENIO_ROLE;
+    document.body.classList.add('role-' + GENIO_ROLE); // dipakai CSS untuk menyembunyikan tombol per role (lihat Config.html)
+    if (typeof genioEnsureSessionProfile === 'function') genioEnsureSessionProfile();
+    // Menu Lainnya yang boleh dilihat per role (role yang tidak tercantum melihat semua menu)
+    var ROLE_MENU = {
+      kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'data-tutor', 'operasional', 'genio-news']
+    };
+    if (IS_KU) {
+      // Kepala unit: posisi ke-3 dock = Jadwal mengajar (tidak punya menu Gaji)
+      var navGaji = document.getElementById('nav-gaji');
+      if (navGaji) {
+        navGaji.id = 'nav-jadwal';
+        navGaji.dataset.tab = 'jadwal';
+        navGaji.setAttribute('aria-label', 'Jadwal');
+        navGaji.querySelector('.dock-icon').innerHTML = '<i class="ph ph-calendar-blank icon-outline" aria-hidden="true"></i><i class="ph-fill ph-calendar-blank icon-filled hidden" aria-hidden="true"></i>';
+        navGaji.querySelector('.dock-label').textContent = 'Jadwal';
+      }
+    }
+
     // ===== Ikon minimalis untuk tiap item menu (line-icon, konsisten gaya bottom nav) =====
     var MENU_ICONS = {
       people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7.5" r="3.2"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><path d="M16 4.8a3.2 3.2 0 0 1 0 6.2"/><path d="M20 20c0-2.8-1.8-5-4-5.8"/></svg>',
@@ -500,13 +523,24 @@
       ]}
     ];
 
+    if (IS_KU) {
+      // Kepala unit hanya melihat data tutor (tanpa tambah, edit, hapus)
+      MENU_SECTIONS.forEach(function (sec) { sec.items.forEach(function (it) { if (it.key === 'data-tutor') it.label = 'Data Tutor'; }); });
+    }
+    if (ROLE_MENU[GENIO_ROLE]) {
+      MENU_SECTIONS.forEach(function (sec) {
+        sec.items = sec.items.filter(function (it) { return ROLE_MENU[GENIO_ROLE].indexOf(it.key) !== -1; });
+      });
+      MENU_SECTIONS = MENU_SECTIONS.filter(function (sec) { return sec.items.length; });
+    }
+
     var SUB_MODULES = ['profile-detail'];
     MENU_SECTIONS.forEach(function (sec) {
       sec.items.forEach(function (it) { SUB_MODULES.push(it.key); });
     });
 
     var MODULE_TITLES = {
-      'home': ['Home', 'Dashboard Manajer'],
+      'home': ['Home', IS_KU ? 'Dashboard Kepala unit' : 'Dashboard Manajer'],
       'presensi': ['Presensi', 'Approval & riwayat'],
       'gaji': ['Gaji', 'Slip gaji tutor'],
       'lainnya': ['Lainnya', 'Menu & pengaturan'],
@@ -515,7 +549,7 @@
       'kontrak': ['Kontrak', 'Kontrak siswa & tutor'],
       'jadwal': ['Jadwal', 'Jadwal sesi belajar'],
       'tagihan': ['Tagihan', 'Invoice & receipt'],
-      'data-tutor': ['Kelola Tutor', 'Kelola akun tutor'],
+      'data-tutor': IS_KU ? ['Data Tutor', 'Daftar tutor'] : ['Kelola Tutor', 'Kelola akun tutor'],
       'operasional': ['Operasional', 'Pengeluaran unit'],
       'kelola-unit': ['Kelola Unit', 'Unit / cabang Genio Institute'],
       'paket-belajar': ['Paket Belajar', 'Master paket belajar'],
@@ -675,7 +709,7 @@
     });
 
     // ===== Dock glider & Header zoom animation engine =====
-    var PRIMARY_TABS = ['home', 'presensi', 'gaji', 'lainnya'];
+    var PRIMARY_TABS = IS_KU ? ['home', 'presensi', 'jadwal', 'lainnya'] : ['home', 'presensi', 'gaji', 'lainnya'];
     var currentBottomTab = 'home';
     var currentActiveModule = 'home';
 
@@ -811,8 +845,10 @@
       var wasSplitView = content.classList.contains('lainnya-split-view'); // baca status SEBELUM ditimpa
       content.classList.toggle('lainnya-split-view', splitView);
 
+      // Home kepala unit memakai panel tersendiri (ModuleHomeUnit.html)
+      var panelName = (name === 'home' && IS_KU) ? 'home-unit' : name;
       document.querySelectorAll('.module-panel').forEach(function (panel) {
-        var isTarget = panel.dataset.module === name;
+        var isTarget = panel.dataset.module === panelName;
         var isSidebar = splitView && panel.dataset.module === 'lainnya';
         panel.hidden = !(isTarget || isSidebar);
       });
@@ -822,7 +858,7 @@
 
       var title = MODULE_TITLES[name] || [name, ''];
 
-      var builtPanel = content.querySelector('.module-panel[data-module="' + name + '"]');
+      var builtPanel = content.querySelector('.module-panel[data-module="' + panelName + '"]');
       var isEmptyPlaceholder = builtPanel && builtPanel.children.length === 0;
       content.querySelectorAll('.soon-panel-wrap').forEach(function (n) { n.remove(); });
       if (isEmptyPlaceholder) {
@@ -840,8 +876,8 @@
       // Konten baru selalu mulai dari atas. Sidebar menempel (sticky) di posisi yang sama,
       // jadi di desktop sidebar tidak ikut bergerak saat pindah menu.
       window.scrollTo({ top: 0, behavior: 'instant' });
-      if (window.genioModuleHandlers && window.genioModuleHandlers[name]) {
-        window.genioModuleHandlers[name]();
+      if (window.genioModuleHandlers && window.genioModuleHandlers[panelName]) {
+        window.genioModuleHandlers[panelName]();
       }
       // Data sidebar (profil & angka di tiap menu) cukup dimuat saat pertama kali masuk Lainnya,
       // tidak dimuat ulang setiap pindah sub-menu supaya sidebar tidak berkedip.
@@ -1245,7 +1281,7 @@
           }
 
           // 3. Ambil Pendaftaran Tutor Menunggu Approval
-          try {
+          if (!IS_KU) try {
             var tutorRes = await supaRest('users?role=eq.tutor&status=eq.pending_approval&select=id,nama,created_at&order=created_at.desc&limit=30', s.access_token);
             if (Array.isArray(tutorRes)) pendingTutor = tutorRes;
           } catch (errTutor) {

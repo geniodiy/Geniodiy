@@ -1160,7 +1160,7 @@
   async function osLoadFilterUnits() {
     try {
       var s = genioGetSession();
-      var units = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+      var units = genioScopeUnits(await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token));
       osFilterUnitOptions = units.map(function (u) { return { value: u.id, label: u.nama_unit }; });
       osUnitsLoadedForFilter = true;
     } catch (err) { osFilterUnitOptions = []; }
@@ -1421,12 +1421,15 @@
     if (!osUnitsLoaded) {
       try {
         var s = genioGetSession();
-        var units = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+        var units = genioScopeUnits(await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token));
         var select = document.getElementById('os-siswaUnit');
         select.innerHTML = '<option value="">Pilih unit...</option>' + units.map(function (u) { return '<option value="' + u.id + '">' + osEscape(u.nama_unit) + '</option>'; }).join('');
         osUnitsLoaded = true;
       } catch (err) { /* biarkan tetap kosong kalau gagal */ }
     }
+    // Kepala unit: unit siswa otomatis unitnya sendiri (form.reset() di atas mengosongkannya)
+    var unitSel = document.getElementById('os-siswaUnit');
+    if (genioIsKepalaUnit() && unitSel.options.length === 2) { unitSel.selectedIndex = 1; unitSel.disabled = true; }
     osModal.hidden = false;
     requestAnimationFrame(function () { osModal.classList.add('show'); });
   }

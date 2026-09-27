@@ -1156,7 +1156,7 @@
   function jdwRenderHero(unitCount, todayCount, tutorCount, flexCount) {
     var rows = jdwState.scheduleRows;
     jdwCountUp(document.getElementById('jdw-heroTotal'), rows.length);
-    document.getElementById('jdw-heroUnitBadge').textContent = unitCount + ' unit cabang';
+    document.getElementById('jdw-heroUnitBadge').textContent = genioIsKepalaUnit() ? ((genioGetSession() || {}).unit_nama || 'Unit saya') : unitCount + ' unit cabang';
     var siswaSet = {};
     rows.forEach(function (r) { siswaSet[r.kontrakId] = true; });
     document.getElementById('jdw-heroSub').textContent = tutorCount + ' tutor mengajar ' + Object.keys(siswaSet).length + ' kontrak siswa';

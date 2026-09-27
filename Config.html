@@ -518,6 +518,12 @@
   .modal-overlay.gx-typing{align-items:flex-start !important; justify-content:center !important; padding:8px 8px 0 !important;}
   .modal-overlay.gx-typing .modal-sheet{max-height:calc(var(--gx-vh, 50vh) - 16px) !important; border-radius:18px !important; margin:0 auto !important;}
 
+  /* ===== Tombol yang disembunyikan per role (class role-<role> di body, dipasang Dashboard.html) ===== */
+  /* Kepala unit: Data tutor hanya lihat; kontrak tutor tidak bisa dihapus (RLS) */
+  .role-kepala_unit .dt-hero-btns, .role-kepala_unit .dt-edit-btn, .role-kepala_unit .dt-delete-btn,
+  .role-kepala_unit .dt-table-edit-btn, .role-kepala_unit .dt-del-btn, .role-kepala_unit .dt-approve-btn, .role-kepala_unit .dt-reject-btn,
+  .role-kepala_unit .ktr-del-tutor-btn{display:none !important;}
+
   /* ===== Avatar pengguna: foto profil kalau ada, huruf inisial kalau belum ===== */
   .genio-av-img{width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block; flex:none;}
   .genio-av-img.is-fill{position:absolute; inset:0; border-radius:50%;}
@@ -630,6 +636,32 @@
     d.textContent = s == null ? '' : s;
     return d.innerHTML;
   }
+  // ===== Profil sesi: unit, nama unit, dan foto disimpan di sesi supaya modul bisa membatasi tampilan per role =====
+  // Dipanggil sekali saat dashboard dibuka; modul yang butuh unit_id cukup `await genioSessionReady`.
+  var genioSessionReady = Promise.resolve(null);
+  function genioEnsureSessionProfile() {
+    var s = genioGetSession();
+    if (!s) return genioSessionReady;
+    if (s.unit_id !== undefined && s.unit_nama !== undefined) { genioSessionReady = Promise.resolve(s); return genioSessionReady; }
+    genioSessionReady = supaRest('users?id=eq.' + s.user_id + '&select=unit_id,foto_profil_url,units(nama_unit)', s.access_token).then(function (rows) {
+      var me = rows && rows[0];
+      var cur = genioGetSession() || s;
+      cur.unit_id = (me && me.unit_id) || null;
+      cur.unit_nama = (me && me.units && me.units.nama_unit) || null;
+      if (me && me.foto_profil_url !== undefined) cur.foto_profil_url = me.foto_profil_url || null;
+      genioSaveSession(cur);
+      return cur;
+    }).catch(function () { return s; });
+    return genioSessionReady;
+  }
+  // Kepala unit hanya melihat unitnya sendiri di pilihan unit (form & filter)
+  function genioScopeUnits(units) {
+    var s = genioGetSession();
+    if (!s || s.role !== 'kepala_unit' || !Array.isArray(units)) return units;
+    return units.filter(function (u) { return u.id === s.unit_id; });
+  }
+  function genioIsKepalaUnit() { var s = genioGetSession(); return !!(s && s.role === 'kepala_unit'); }
+
   // ===== Kelola akun lewat Edge Function "admin-users" (kunci admin Supabase tidak ada di browser) =====
   // payload: { action: 'create', nama, email, password, role, unit_id, jenis_kelamin, no_hp, tutor_profile }
   //       atau { action: 'delete', user_id }

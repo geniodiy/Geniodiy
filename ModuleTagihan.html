@@ -539,7 +539,7 @@
   async function tgLoadUnits() {
     try {
       var s = genioGetSession();
-      var res = await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token);
+      var res = genioScopeUnits(await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token));
       tgState.unitList = res || [];
     } catch (e) {
       console.warn('Gagal memuat list unit tagihan:', e.message);
@@ -636,10 +636,12 @@
             }
             finalInvoices.push(inv);
           } else {
-            // Sesi presensi 0 pada invoice belum lunas -> bersihkan
-            syncPromises.push(
-              supaRest('invoice?id=eq.' + inv.id, s.access_token, { method: 'DELETE' })
-            );
+            // Sesi presensi 0 pada invoice belum lunas -> bersihkan (kepala unit tidak boleh hapus invoice: cukup disembunyikan)
+            if (s.role !== 'kepala_unit') {
+              syncPromises.push(
+                supaRest('invoice?id=eq.' + inv.id, s.access_token, { method: 'DELETE' })
+              );
+            }
           }
         }
       }
@@ -1112,7 +1114,7 @@
         : '<button type="button" class="tg-table-icon-btn tg-lunas-btn" data-key="' + tgEscape(g.key) + '" title="Tandai lunas" aria-label="Tandai lunas"><i class="ph ph-check" aria-hidden="true"></i></button>';
     }
     if (!isLunas) {
-      html += '<button type="button" class="tg-table-icon-btn tg-del-btn" data-key="' + tgEscape(g.key) + '" data-nama="' + tgEscape(g.ortuNama) + '" title="Hapus tagihan" aria-label="Hapus tagihan"><i class="ph ph-trash" aria-hidden="true"></i></button>';
+      // Tombol hapus tagihan dihapus: tagihan dibuat ulang otomatis dari presensi, jadi hapus tidak berguna
     }
     return html;
   }

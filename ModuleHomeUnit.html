@@ -1,0 +1,559 @@
+<style>
+  /* ===== Home kepala unit (opsi B): sapaan, highlight unit + kartu putih, perlu tindakan, sesi hari ini, tutor, tren, Genio News ===== */
+  .module-panel[data-module="home-unit"][hidden]{display:none !important;}
+  @media (min-width:900px){ .module-panel[data-module="home-unit"]{width:94%; max-width:1500px; margin:0 auto;} }
+  .kuh{display:flex; flex-direction:column; gap:14px; min-width:0;}
+  .kuh-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; min-width:0;}
+  .kuh-sec{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap;}
+  .kuh-sec h4{margin:0; font-size:12px; font-weight:600; color:var(--ink); white-space:nowrap;}
+  .kuh-sec > span{font-size:10.5px; color:var(--ink-soft);}
+  .kuh-link{font-size:10.5px; font-weight:600; color:var(--blue); background:none; border:none; font-family:var(--font); cursor:pointer; padding:0;}
+  .kuh-empty{font-size:11px; color:var(--ink-soft); text-align:center; padding:18px 8px;}
+
+  /* Sapaan */
+  .kuh-hi{display:flex; align-items:center; gap:12px;}
+  .kuh-av{width:38px; height:38px; border-radius:50%; overflow:hidden; flex:none; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; box-shadow:0 0 0 2px #fff, 0 0 0 3px var(--border);}
+  .kuh-hi small{display:block; font-size:10px; color:var(--ink-soft); font-weight:500;}
+  .kuh-hi b{display:block; font-size:12.5px; font-weight:600; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kuh-hi .who{min-width:0;}
+  .kuh-hi .date{margin-left:auto; text-align:right; font-size:10.5px; color:var(--ink-soft); flex:none;}
+  .kuh-hi .date b{font-size:11.5px; color:var(--ink);}
+
+  /* Highlight: panel gelap + kartu putih */
+  .kuh-hb{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,340px); border-radius:18px; overflow:hidden; color:#fff; background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .kuh-hm{padding:18px 20px; min-width:0;}
+  .kuh-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .kuh-lbl{display:flex; align-items:center; gap:6px; font-size:11px; color:rgba(255,255,255,.75);}
+  .kuh-lbl i{width:7px; height:7px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 3px rgba(124,240,195,.18);}
+  .kuh-pill{font-size:10px; font-weight:600; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.12); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .kuh-num{font-size:32px; font-weight:800; letter-spacing:-.03em; margin:10px 0 6px; line-height:1; white-space:nowrap;}
+  .kuh-deltarow{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:10.5px; color:rgba(255,255,255,.6);}
+  .kuh-delta{display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:999px; color:#7CF0C3; background:rgba(124,240,195,.12);}
+  .kuh-delta.is-down{color:#FF9C94; background:rgba(255,156,148,.12);}
+  .kuh-delta.is-flat{color:rgba(255,255,255,.75); background:rgba(255,255,255,.1);}
+  .kuh-spark{margin-top:12px; height:74px; width:100%; display:block; overflow:visible;}
+  .kuh-months{display:flex; justify-content:space-between; font-size:9.5px; color:rgba(255,255,255,.5); margin-top:2px;}
+  .kuh-hs{padding:12px; min-width:0;}
+  .kuh-wcard{background:#fff; border-radius:14px; padding:14px 16px; color:var(--ink); display:flex; flex-direction:column; gap:9px; height:100%; box-sizing:border-box; justify-content:center; box-shadow:0 10px 30px -18px rgba(0,0,0,.5);}
+  .kuh-wcard .r{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:11px; color:var(--ink-soft); min-width:0;}
+  .kuh-wcard .r > span{display:flex; align-items:center; min-width:0;}
+  .kuh-wcard .r b{color:var(--ink); font-weight:700; font-size:12px; white-space:nowrap;}
+  .kuh-wcard .r b.c{color:#D4070F;} .kuh-wcard .r b.m{color:#1E8E5A;} .kuh-wcard .r b.m.is-neg{color:#D4070F;}
+  .kuh-wcard .ic{display:inline-flex; width:22px; height:22px; border-radius:7px; align-items:center; justify-content:center; background:var(--surface); color:var(--ink-soft); font-size:12px; margin-right:7px; flex:none;}
+  .kuh-wcard hr{border:none; border-top:1px solid #EEF0F6; margin:2px 0;}
+  .kuh-mbar{height:6px; border-radius:6px; background:#EEF0F6; overflow:hidden;}
+  .kuh-mbar i{display:block; height:100%; width:0; background:#1E8E5A; border-radius:6px; transition:width .8s cubic-bezier(.16,1,.3,1);}
+  .kuh-wcard small{font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+  /* Perlu tindakan */
+  .kuh-acts{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px;}
+  .kuh-act{background:#fff; border:1px solid var(--border); border-radius:14px; padding:12px 14px; display:flex; gap:10px; align-items:flex-start; min-width:0; cursor:pointer; text-align:left; font-family:var(--font); color:var(--ink); transition:border-color .15s ease, transform .1s ease;}
+  .kuh-act:hover{border-color:#C9CCDA;}
+  .kuh-act:active{transform:scale(.98);}
+  .kuh-act .ic{width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex:none; font-size:16px; background:var(--blue-tint); color:var(--blue);}
+  .kuh-act .ic.a{background:#FFF4E0; color:#B26A00;} .kuh-act .ic.r{background:var(--red-soft); color:var(--red);}
+  .kuh-act .t{min-width:0;}
+  .kuh-act .t b{display:block; font-size:18px; font-weight:700; line-height:1.1;}
+  .kuh-act .t span{display:block; font-size:11px; font-weight:600; margin-top:2px;}
+  .kuh-act .t small{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kuh-act.is-zero{opacity:.55;}
+
+  /* Sesi hari ini + tutor */
+  .kuh-2{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:14px; align-items:start;}
+  .kuh-ses{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid #EEF0F6;}
+  .kuh-ses:first-of-type{border-top:none;}
+  .kuh-ses .jam{width:44px; flex:none; font-size:11px; font-weight:700;}
+  .kuh-ses .jam small{display:block; font-size:9.5px; font-weight:500; color:var(--ink-soft);}
+  .kuh-ses .av, .kuh-tut .av{border-radius:50%; flex:none; color:#fff; font-weight:600; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--blue);}
+  .kuh-ses .av{width:28px; height:28px; font-size:10px;}
+  .kuh-ses .who{min-width:0; flex:1;}
+  .kuh-ses .who b{display:block; font-size:11.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kuh-ses .who span{display:block; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kuh-chip{font-size:10px; font-weight:600; padding:3px 8px; border-radius:999px; white-space:nowrap; flex:none;}
+  .kuh-chip.ok{background:#E9F7EF; color:#1E8E5A;} .kuh-chip.late{background:#FFF4E0; color:#B26A00;}
+  .kuh-chip.next{background:var(--surface); color:var(--ink-soft);} .kuh-chip.live{background:var(--blue-tint); color:var(--blue);}
+  .kuh-chip.wait{background:var(--blue-tint); color:var(--blue);} .kuh-chip.no{background:var(--red-soft); color:var(--red);}
+  .kuh-wa{width:28px; height:28px; border-radius:8px; border:1px solid var(--border); background:#fff; color:#14A44D; display:flex; align-items:center; justify-content:center; flex:none; font-size:14px; text-decoration:none;}
+  .kuh-wa:hover{background:#E9F7EF;}
+  .kuh-tut{display:grid; grid-template-columns:minmax(0,1fr) 44px 44px 50px; gap:8px; align-items:center; padding:8px 0 4px; border-top:1px solid #EEF0F6; font-size:11px;}
+  .kuh-tut.h{border-top:none; font-size:10px; color:var(--ink-soft); padding-top:0;}
+  .kuh-tut.h span{text-align:right;} .kuh-tut.h span:first-child{text-align:left;}
+  .kuh-tut .n{display:flex; align-items:center; gap:8px; min-width:0;}
+  .kuh-tut .n b{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kuh-tut .av{width:24px; height:24px; font-size:9px;}
+  .kuh-tut .v{text-align:right; font-weight:700;} .kuh-tut .v.a{color:#B26A00;} .kuh-tut .v.r{color:var(--red);} .kuh-tut .v.z{color:#B5B8C8; font-weight:500;}
+  .kuh-tut .bar{grid-column:1/-1; height:4px; border-radius:4px; background:#EEF0F6;}
+  .kuh-tut .bar i{display:block; height:100%; border-radius:4px; background:#9DB6FF; transform-origin:left; animation:kuhGrow .7s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 60ms);}
+
+  /* Tren */
+  .kuh-tabs{display:flex; gap:4px; background:var(--surface); border-radius:9px; padding:3px;}
+  .kuh-tabs button{height:26px; padding:0 10px; border:none; background:none; border-radius:7px; font-family:var(--font); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer; white-space:nowrap;}
+  .kuh-tabs button.on{background:#fff; color:var(--blue); font-weight:600; box-shadow:0 1px 2px rgba(20,22,43,.08);}
+  .kuh-tabsrow{display:flex; gap:8px; flex-wrap:wrap;}
+  .kuh-chartwrap{position:relative;}
+  .kuh-chart{width:100%; height:190px; display:block; overflow:visible;}
+  .kuh-tip{position:absolute; top:0; pointer-events:none; background:#fff; border:1px solid var(--border); border-radius:10px; padding:7px 10px; font-size:10.5px; box-shadow:0 10px 24px -14px rgba(20,22,43,.35); white-space:nowrap; transform:translateX(-50%); opacity:0; transition:opacity .12s ease;}
+  .kuh-tip b{display:block; font-size:12px; font-weight:700;}
+  .kuh-tip span{color:var(--ink-soft);}
+  .kuh-legend{display:flex; gap:14px; font-size:10px; color:var(--ink-soft); margin-top:8px;}
+  .kuh-legend i{display:inline-block; width:12px; vertical-align:middle; margin-right:5px;}
+
+  /* Genio News */
+  .kuh-news{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px;}
+  .kuh-nw{border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#fff; min-width:0; text-decoration:none; color:var(--ink); display:block;}
+  .kuh-nw .img{height:86px; background:linear-gradient(135deg,#DDE3FF,#F3E7FF) center/cover no-repeat;}
+  .kuh-nw .tx{padding:9px 11px; min-width:0;}
+  .kuh-nw b{display:block; font-size:11.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kuh-nw small{font-size:10px; color:var(--ink-soft);}
+
+  /* Animasi masuk */
+  @keyframes kuhIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes kuhGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  .kuh-anim .kuh-ses, .kuh-anim .kuh-tut:not(.h), .kuh-anim .kuh-act{animation:kuhIn .45s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 50ms);}
+  /* Garis tergambar kiri ke kanan: klip persegi yang melebar (aman untuk garis non-scaling-stroke) */
+  .kuh-reveal{transform-box:fill-box; transform-origin:left center; animation:kuhReveal 1s cubic-bezier(.16,1,.3,1) both;}
+  @keyframes kuhReveal{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+
+  @media (max-width:899px){
+    .kuh-hb{grid-template-columns:1fr;} .kuh-hs{padding:0 12px 12px;}
+    .kuh-num{font-size:28px;}
+    .kuh-acts{grid-template-columns:repeat(2, minmax(0,1fr));}
+    .kuh-2{grid-template-columns:1fr;}
+    .kuh-news{grid-template-columns:1fr;} .kuh-nw{display:flex;} .kuh-nw .img{width:88px; height:auto; min-height:58px; flex:none;}
+    .kuh-hi .date{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .kuh-anim .kuh-ses, .kuh-anim .kuh-tut, .kuh-anim .kuh-act, .kuh-tut .bar i{animation:none;}
+    .kuh-reveal{animation:none;}
+    .kuh-mbar i{transition:none;}
+  }
+</style>
+
+<div class="module-panel" data-module="home-unit" hidden>
+  <div class="kuh" id="kuhWrap">
+    <div class="kuh-card kuh-hi">
+      <span class="kuh-av" id="kuhAvatar">-</span>
+      <div class="who"><small id="kuhRole">Kepala unit</small><b id="kuhGreeting">Selamat datang</b></div>
+      <div class="date"><span id="kuhDay">-</span><br><b id="kuhDate">-</b></div>
+    </div>
+
+    <div class="kuh-hb">
+      <div class="kuh-hm">
+        <div class="kuh-top"><span class="kuh-lbl"><i></i><span id="kuhOmsetLabel">Omset unit</span></span><span class="kuh-pill" id="kuhUnitPill">-</span></div>
+        <div class="kuh-num" id="kuhOmset">Rp 0</div>
+        <div class="kuh-deltarow" id="kuhDeltaRow"></div>
+        <svg class="kuh-spark" id="kuhSpark" viewBox="0 0 600 74" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="kuh-months" id="kuhSparkMonths"></div>
+      </div>
+      <div class="kuh-hs">
+        <div class="kuh-wcard">
+          <div class="r"><span><i class="ic ph ph-student" aria-hidden="true"></i>Siswa aktif</span><b id="kuhSiswa">0</b></div>
+          <div class="r"><span><i class="ic ph ph-calendar-check" aria-hidden="true"></i>Pertemuan</span><b id="kuhSesi">0 sesi</b></div>
+          <div class="r"><span><i class="ic ph ph-arrow-circle-down" aria-hidden="true"></i>Pengeluaran</span><b class="c" id="kuhPengeluaran">Rp 0</b></div>
+          <hr>
+          <div class="r"><span><i class="ic ph ph-wallet" aria-hidden="true"></i>Laba bersih</span><b class="m" id="kuhLaba">Rp 0</b></div>
+          <div class="kuh-mbar"><i id="kuhMarginBar"></i></div>
+          <small id="kuhMarginText">-</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="kuh-acts" id="kuhActs">
+      <button type="button" class="kuh-act" data-goto="presensi" style="--i:0"><span class="ic"><i class="ph ph-check-square" aria-hidden="true"></i></span><div class="t"><b id="kuhActPending">0</b><span>Presensi menunggu</span><small id="kuhActPendingSub">-</small></div></button>
+      <button type="button" class="kuh-act" data-goto="tagihan" style="--i:1"><span class="ic r"><i class="ph ph-receipt" aria-hidden="true"></i></span><div class="t"><b id="kuhActTagihan">0</b><span>Tagihan belum lunas</span><small id="kuhActTagihanSub">-</small></div></button>
+      <button type="button" class="kuh-act" data-goto="presensi" style="--i:2"><span class="ic a"><i class="ph ph-clock-countdown" aria-hidden="true"></i></span><div class="t"><b id="kuhActTelat">0</b><span>Presensi telat</span><small id="kuhActTelatSub">-</small></div></button>
+      <button type="button" class="kuh-act" data-goto="kontrak" style="--i:3"><span class="ic"><i class="ph ph-user-circle-plus" aria-hidden="true"></i></span><div class="t"><b id="kuhActNoTutor">0</b><span>Siswa belum ada tutor</span><small id="kuhActNoTutorSub">-</small></div></button>
+    </div>
+
+    <div class="kuh-2">
+      <div class="kuh-card">
+        <div class="kuh-sec"><h4>Sesi hari ini</h4><span id="kuhSesiSub">-</span></div>
+        <div id="kuhSesiList"><div class="kuh-empty">Memuat jadwal...</div></div>
+      </div>
+      <div class="kuh-card">
+        <div class="kuh-sec"><h4>Tutor di unit ini</h4><span id="kuhTutorSub">-</span></div>
+        <div id="kuhTutorList"><div class="kuh-empty">Memuat data tutor...</div></div>
+      </div>
+    </div>
+
+    <div class="kuh-card">
+      <div class="kuh-sec">
+        <h4>Tren unit</h4>
+        <div class="kuh-tabsrow">
+          <div class="kuh-tabs" id="kuhTrendMetric"><button type="button" data-v="omset" class="on">Omset</button><button type="button" data-v="laba">Laba</button><button type="button" data-v="sesi">Sesi</button></div>
+          <div class="kuh-tabs" id="kuhTrendRange"><button type="button" data-v="3">3 bln</button><button type="button" data-v="6" class="on">6 bln</button><button type="button" data-v="12">12 bln</button></div>
+        </div>
+      </div>
+      <div class="kuh-chartwrap" id="kuhChartWrap">
+        <svg class="kuh-chart" id="kuhChart" viewBox="0 0 900 190" preserveAspectRatio="none" aria-label="Grafik tren unit"></svg>
+        <div class="kuh-tip" id="kuhTip"></div>
+      </div>
+      <div class="kuh-months" id="kuhChartMonths" style="color:var(--ink-soft); padding:0 1%;"></div>
+      <div class="kuh-legend"><span><i style="height:2px; background:var(--blue);"></i>Periode ini</span><span id="kuhGhostLegend"><i style="border-top:2px dashed #B5B8C8;"></i>Periode sebelumnya</span></div>
+    </div>
+
+    <div class="kuh-card" id="kuhNewsCard" hidden>
+      <div class="kuh-sec"><h4>Genio News</h4><button type="button" class="kuh-link" id="kuhNewsAll">Lihat semua</button></div>
+      <div class="kuh-news" id="kuhNewsList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var KUH_REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var KUH_BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    var KUH_HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    var KUH_COLORS = ['#3B5BDB','#7048E8','#1098AD','#D6336C','#0CA678','#F76707','#5C7CFA','#AE3EC9'];
+    var kuhState = { months: [], metric: 'omset', range: 6, loading: 0 };
+
+    function esc(s) { return genioEscapeHtml(s); }
+    function rpShort(n) {
+      n = Math.round(n || 0);
+      var neg = n < 0; n = Math.abs(n);
+      var t;
+      if (n >= 1000000) t = (n / 1000000).toFixed(1).replace('.', ',').replace(',0', '') + ' Jt';
+      else if (n >= 1000) t = Math.round(n / 1000) + ' rb';
+      else t = String(n);
+      return (neg ? '-Rp ' : 'Rp ') + t;
+    }
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function monthKey(y, m) { return y + '-' + pad(m); } // m: 1..12
+    function shiftMonth(key, delta) {
+      var p = key.split('-'), y = +p[0], m = +p[1] - 1 + delta;
+      y += Math.floor(m / 12); m = ((m % 12) + 12) % 12;
+      return monthKey(y, m + 1);
+    }
+    function monthRange(key) {
+      var p = key.split('-'), y = +p[0], m = +p[1];
+      return { start: key + '-01', end: key + '-' + pad(new Date(y, m, 0).getDate()) };
+    }
+    function monthShort(key) { return KUH_BULAN[+key.split('-')[1] - 1].slice(0, 3); }
+    function colorFor(id) {
+      var h = 0; String(id || '').split('').forEach(function (c) { h = (h * 31 + c.charCodeAt(0)) >>> 0; });
+      return KUH_COLORS[h % KUH_COLORS.length];
+    }
+    function waLink(hp, text) {
+      var d = String(hp || '').replace(/\D/g, '');
+      if (!d) return '';
+      if (d.charAt(0) === '0') d = '62' + d.slice(1);
+      return 'https://wa.me/' + d + (text ? '?text=' + encodeURIComponent(text) : '');
+    }
+    function harga(r) {
+      var ks = r && r.kontrak_tutor && r.kontrak_tutor.kontrak_siswa;
+      return parseFloat((ks && ks.harga) || 0) || 0;
+    }
+    function reveal(el, text) {
+      if (typeof homeRevealValue === 'function') homeRevealValue(el, text); else el.textContent = text;
+    }
+    // Kurva monoton (Fritsch-Carlson) supaya garis tidak pernah melewati titik data
+    function monoPath(pts) {
+      var n = pts.length;
+      if (!n) return '';
+      if (n === 1) return 'M' + pts[0][0] + ',' + pts[0][1];
+      var d = [], m = [], i;
+      for (i = 0; i < n - 1; i++) d.push((pts[i + 1][1] - pts[i][1]) / (pts[i + 1][0] - pts[i][0]));
+      m[0] = d[0]; m[n - 1] = d[n - 2];
+      for (i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+      for (i = 0; i < n - 1; i++) {
+        if (d[i] === 0) { m[i] = m[i + 1] = 0; continue; }
+        var a = m[i] / d[i], b = m[i + 1] / d[i], s = a * a + b * b;
+        if (s > 9) { var t = 3 / Math.sqrt(s); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; }
+      }
+      var p = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+      for (i = 0; i < n - 1; i++) {
+        var h = (pts[i + 1][0] - pts[i][0]) / 3;
+        p += ' C' + (pts[i][0] + h).toFixed(1) + ',' + (pts[i][1] + m[i] * h).toFixed(1) + ' ' +
+             (pts[i + 1][0] - h).toFixed(1) + ',' + (pts[i + 1][1] - m[i + 1] * h).toFixed(1) + ' ' +
+             pts[i + 1][0].toFixed(1) + ',' + pts[i + 1][1].toFixed(1);
+      }
+      return p;
+    }
+    function goto(name) { if (window.genioDashboardShowModule) window.genioDashboardShowModule(name); }
+
+    async function kuhLoad() {
+      var token = ++kuhState.loading;
+      var s = await genioEnsureSessionProfile();
+      s = genioGetSession() || s;
+      if (!s || token !== kuhState.loading) return;
+      var unitId = s.unit_id;
+
+      // Sapaan
+      genioSetAvatar(document.getElementById('kuhAvatar'), s.nama, s.foto_profil_url, genioInitials(s.nama));
+      document.getElementById('kuhRole').textContent = 'Kepala unit' + (s.unit_nama ? ' · ' + s.unit_nama : '');
+      document.getElementById('kuhGreeting').textContent = 'Selamat datang, ' + (s.nama || '');
+      var today = new Date();
+      document.getElementById('kuhDay').textContent = KUH_HARI[today.getDay()];
+      document.getElementById('kuhDate').textContent = today.getDate() + ' ' + KUH_BULAN[today.getMonth()] + ' ' + today.getFullYear();
+      document.getElementById('kuhUnitPill').textContent = s.unit_nama || 'Unit';
+
+      if (!unitId) {
+        document.getElementById('kuhSesiList').innerHTML = '<div class="kuh-empty">Akun Anda belum terhubung ke unit. Hubungi manajer.</div>';
+        document.getElementById('kuhTutorList').innerHTML = '';
+        return;
+      }
+
+      var wrap = document.getElementById('kuhWrap');
+      if (!KUH_REDUCED) { wrap.classList.remove('kuh-anim'); void wrap.offsetWidth; wrap.classList.add('kuh-anim'); }
+
+      var periode = genioGetPeriode();
+      var range = monthRange(periode);
+      var first24 = shiftMonth(periode, -23);
+      var todayKey = today.getFullYear() + '-' + pad(today.getMonth() + 1) + '-' + pad(today.getDate());
+      var u = '&unit_id=eq.' + unitId;
+      document.getElementById('kuhOmsetLabel').textContent = 'Omset unit ' + KUH_BULAN[+periode.split('-')[1] - 1];
+
+      var q = function (path) { return supaRest(path, s.access_token).catch(function (e) { console.warn('Home unit:', path.split('?')[0], e.message); return []; }); };
+      var nowIso = new Date().toISOString();
+      var res = await Promise.all([
+        q('presensi?select=tanggal,nominal_dibayar,kontrak_tutor(kontrak_siswa(harga))&status=in.(diterima,visit)' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
+        q('operasional?select=tanggal,nominal' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
+        q('presensi?select=status,terlambat,denda,kontrak_tutor(tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url))' + u + '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end),
+        q('kontrak_siswa?select=id,siswa_id,status,tanggal_mulai,tanggal_selesai,kontrak_tutor(id,status)' + u),
+        q('presensi?select=id,created_at&status=eq.pending' + u + '&order=created_at.asc'),
+        q('invoice?select=nominal&status=eq.belum_lunas' + u),
+        q('kontrak_tutor?select=id,tutor_id,mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),kontrak_siswa!inner(status,siswa(nama)),jadwal(hari,jam_mulai,jam_selesai)&status=eq.aktif&kontrak_siswa.status=eq.aktif' + u),
+        q('presensi?select=kontrak_tutor_id,jam,status' + u + '&tanggal=eq.' + todayKey),
+        q('genio_news?select=id,judul,gambar_url,tanggal_publish,tombol_kontak_url&status=eq.aktif&tanggal_publish=lte.' + nowIso + '&or=(tanggal_expire.gte.' + nowIso + ',tanggal_expire.is.null)&order=tanggal_publish.desc&limit=3')
+      ]);
+      if (token !== kuhState.loading) return;
+      var presHist = res[0], opsHist = res[1], presMonth = res[2], kontrakSiswa = res[3], pending = res[4],
+          unpaid = res[5], ktAktif = res[6], presToday = res[7], news = res[8];
+
+      // ===== Agregat per bulan (24 bulan: 12 untuk tren + 12 untuk garis periode sebelumnya) =====
+      var byMonth = {};
+      for (var i = 0; i < 24; i++) { var k = shiftMonth(first24, i); byMonth[k] = { key: k, omset: 0, gaji: 0, ops: 0, sesi: 0 }; }
+      presHist.forEach(function (r) {
+        var b = byMonth[String(r.tanggal).slice(0, 7)]; if (!b) return;
+        b.omset += harga(r); b.gaji += parseFloat(r.nominal_dibayar || 0) || 0; b.sesi += 1;
+      });
+      opsHist.forEach(function (r) {
+        var b = byMonth[String(r.tanggal).slice(0, 7)]; if (!b) return;
+        b.ops += parseFloat(r.nominal || 0) || 0;
+      });
+      kuhState.months = Object.keys(byMonth).sort().map(function (k) { var b = byMonth[k]; b.laba = b.omset - b.gaji - b.ops; return b; });
+
+      // ===== Highlight =====
+      var cur = byMonth[periode], prev = byMonth[shiftMonth(periode, -1)];
+      reveal(document.getElementById('kuhOmset'), rpShort(cur.omset));
+      var deltaHtml;
+      if (prev.omset > 0) {
+        var pct = (cur.omset - prev.omset) / prev.omset * 100;
+        var cls = Math.abs(pct) < 0.05 ? 'is-flat' : (pct > 0 ? '' : 'is-down');
+        deltaHtml = '<span class="kuh-delta ' + cls + '"><i class="ph ph-trend-' + (pct >= 0 ? 'up' : 'down') + '" aria-hidden="true"></i>' + (pct >= 0 ? '+' : '') + pct.toFixed(1).replace('.', ',') + '%</span><span>dari ' + KUH_BULAN[+shiftMonth(periode, -1).split('-')[1] - 1] + ' (' + rpShort(prev.omset) + ')</span>';
+      } else {
+        deltaHtml = '<span class="kuh-delta is-flat">Belum ada pembanding</span><span>bulan lalu tanpa omset</span>';
+      }
+      document.getElementById('kuhDeltaRow').innerHTML = deltaHtml;
+
+      var mStart = range.start, mEnd = range.end, siswaSet = {};
+      kontrakSiswa.forEach(function (k) {
+        if (k.status === 'dibatalkan') return;
+        if (k.tanggal_mulai && k.tanggal_mulai > mEnd) return;
+        if (k.tanggal_selesai && k.tanggal_selesai < mStart) return;
+        if (k.status === 'selesai' && !k.tanggal_selesai) return;
+        siswaSet[k.siswa_id] = true;
+      });
+      reveal(document.getElementById('kuhSiswa'), String(Object.keys(siswaSet).length));
+      reveal(document.getElementById('kuhSesi'), cur.sesi + ' sesi');
+      var pengeluaran = cur.gaji + cur.ops;
+      reveal(document.getElementById('kuhPengeluaran'), rpShort(pengeluaran));
+      var labaEl = document.getElementById('kuhLaba');
+      labaEl.classList.toggle('is-neg', cur.laba < 0);
+      reveal(labaEl, rpShort(cur.laba));
+      var margin = cur.omset > 0 ? cur.laba / cur.omset * 100 : 0;
+      document.getElementById('kuhMarginBar').style.width = Math.max(0, Math.min(100, margin)).toFixed(1) + '%';
+      document.getElementById('kuhMarginText').textContent = (cur.omset > 0 ? 'Margin ' + margin.toFixed(0) + '%' : 'Margin -') + ' · honor tutor ' + rpShort(cur.gaji) + ' + operasional ' + rpShort(cur.ops);
+
+      kuhRenderSpark(periode);
+
+      // ===== Perlu tindakan =====
+      function setAct(id, n, sub) {
+        document.getElementById(id).textContent = n;
+        document.getElementById(id + 'Sub').textContent = sub;
+        document.getElementById(id).closest('.kuh-act').classList.toggle('is-zero', !n);
+      }
+      var oldest = pending[0] && pending[0].created_at ? Math.floor((Date.now() - new Date(pending[0].created_at).getTime()) / 86400000) : null;
+      setAct('kuhActPending', pending.length, pending.length ? (oldest > 0 ? 'Terlama ' + oldest + ' hari lalu' : 'Masuk hari ini') : 'Semua sudah diverifikasi');
+      var unpaidSum = unpaid.reduce(function (a, r) { return a + (parseFloat(r.nominal || 0) || 0); }, 0);
+      setAct('kuhActTagihan', unpaid.length, unpaid.length ? 'Total ' + rpShort(unpaidSum) : 'Semua sudah lunas');
+      var telat = presMonth.filter(function (r) { return r.terlambat; });
+      var dendaSum = telat.reduce(function (a, r) { return a + (parseFloat(r.denda || 0) || 0); }, 0);
+      setAct('kuhActTelat', telat.length, telat.length ? 'Bulan ini · denda ' + rpShort(dendaSum) : 'Tidak ada yang telat bulan ini');
+      var noTutor = kontrakSiswa.filter(function (k) { return k.status === 'aktif' && !(k.kontrak_tutor || []).some(function (kt) { return kt.status === 'aktif'; }); });
+      setAct('kuhActNoTutor', noTutor.length, noTutor.length ? 'Perlu dibuatkan kontrak tutor' : 'Semua sudah punya tutor');
+
+      var badge = document.getElementById('bnPresensiBadge');
+      if (badge) { badge.textContent = pending.length > 99 ? '99+' : pending.length; badge.hidden = !pending.length; }
+
+      // ===== Sesi hari ini =====
+      var hariKode = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][today.getDay()];
+      var nowMin = today.getHours() * 60 + today.getMinutes();
+      var sesi = [];
+      ktAktif.forEach(function (kt) {
+        (kt.jadwal || []).forEach(function (j) {
+          if (String(j.hari || '').toLowerCase().trim() !== hariKode) return;
+          sesi.push({ kt: kt, mulai: String(j.jam_mulai || '').slice(0, 5), selesai: String(j.jam_selesai || '').slice(0, 5) });
+        });
+      });
+      sesi.sort(function (a, b) { return a.mulai < b.mulai ? -1 : 1; });
+      var belumLapor = 0;
+      var toMin = function (hm) { var p = String(hm || '').split(':'); return (+p[0] || 0) * 60 + (+p[1] || 0); };
+      var sesiHtml = sesi.map(function (x, i) {
+        var kt = x.kt, user = kt.users || {}, tp = Array.isArray(user.tutor_profile) ? user.tutor_profile[0] : user.tutor_profile;
+        var lapor = presToday.filter(function (p) { return p.kontrak_tutor_id === kt.id; });
+        var sesiKtHariIni = sesi.filter(function (y) { return y.kt.id === kt.id; }).length;
+        var match = lapor.find(function (p) { return String(p.jam || '').slice(0, 5) === x.mulai; }) || (sesiKtHariIni === 1 ? lapor[0] : null);
+        var endMin = x.selesai ? toMin(x.selesai) : toMin(x.mulai) + (kt.durasi_menit || 90);
+        var chip, extra = '';
+        if (match) {
+          chip = match.status === 'pending' ? '<span class="kuh-chip wait">Menunggu verifikasi</span>'
+            : match.status === 'ditolak' ? '<span class="kuh-chip no">Ditolak</span>'
+            : '<span class="kuh-chip ok">Sudah lapor</span>';
+        } else if (nowMin >= endMin) {
+          belumLapor++;
+          chip = '<span class="kuh-chip late">Belum lapor</span>';
+          var siswaNm = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || 'siswa';
+          var wa = waLink(user.no_hp || (tp && tp.no_wa), 'Halo ' + (user.nama || '') + ', mohon isi presensi sesi ' + x.mulai + ' dengan ' + siswaNm + ' hari ini. Terima kasih.');
+          if (wa) extra = '<a class="kuh-wa" href="' + esc(wa) + '" target="_blank" rel="noopener noreferrer" title="Ingatkan lewat WhatsApp" aria-label="Ingatkan lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>';
+        } else if (nowMin >= toMin(x.mulai)) {
+          chip = '<span class="kuh-chip live">Berlangsung</span>';
+        } else {
+          chip = '<span class="kuh-chip next">Akan datang</span>';
+        }
+        var siswa = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || '-';
+        return '<div class="kuh-ses" style="--i:' + i + '"><div class="jam">' + esc(x.mulai) + '<small>' + esc(x.selesai || '') + '</small></div>' +
+          '<span class="av" style="background:' + colorFor(kt.tutor_id) + '">' + genioAvatarInner(user.nama, user.foto_profil_url, genioInitials(user.nama)) + '</span>' +
+          '<div class="who"><b>' + esc(user.nama || 'Tutor') + '</b><span>' + esc(siswa) + ' · ' + esc(kt.mapel || 'Bimbel') + '</span></div>' + chip + extra + '</div>';
+      }).join('');
+      document.getElementById('kuhSesiList').innerHTML = sesiHtml || '<div class="kuh-empty">Tidak ada sesi terjadwal hari ini.</div>';
+      document.getElementById('kuhSesiSub').textContent = sesi.length ? (sesi.length + ' sesi' + (belumLapor ? ' · ' + belumLapor + ' belum lapor' : '')) : KUH_HARI[today.getDay()];
+
+      // ===== Tutor di unit ini (bulan terpilih) =====
+      var tutors = {};
+      presMonth.forEach(function (r) {
+        var kt = r.kontrak_tutor; if (!kt || !kt.tutor_id) return;
+        var t = tutors[kt.tutor_id] = tutors[kt.tutor_id] || { id: kt.tutor_id, nama: (kt.users && kt.users.nama) || 'Tutor', foto: kt.users && kt.users.foto_profil_url, sesi: 0, telat: 0, tolak: 0 };
+        if (r.status === 'diterima' || r.status === 'visit') t.sesi++;
+        if (r.terlambat) t.telat++;
+        if (r.status === 'ditolak') t.tolak++;
+      });
+      var tList = Object.keys(tutors).map(function (k) { return tutors[k]; }).sort(function (a, b) { return b.sesi - a.sesi || a.nama.localeCompare(b.nama); });
+      var maxSesi = Math.max.apply(null, tList.map(function (t) { return t.sesi; }).concat([1]));
+      document.getElementById('kuhTutorSub').textContent = KUH_BULAN[+periode.split('-')[1] - 1];
+      document.getElementById('kuhTutorList').innerHTML = tList.length
+        ? '<div class="kuh-tut h"><span>Tutor</span><span>Sesi</span><span>Telat</span><span>Ditolak</span></div>' + tList.map(function (t, i) {
+            return '<div class="kuh-tut" style="--i:' + i + '"><div class="n"><span class="av" style="background:' + colorFor(t.id) + '">' + genioAvatarInner(t.nama, t.foto, genioInitials(t.nama)) + '</span><b title="' + esc(t.nama) + '">' + esc(t.nama) + '</b></div>' +
+              '<span class="v' + (t.sesi ? '' : ' z') + '">' + t.sesi + '</span><span class="v ' + (t.telat ? 'a' : 'z') + '">' + t.telat + '</span><span class="v ' + (t.tolak ? 'r' : 'z') + '">' + t.tolak + '</span>' +
+              '<div class="bar"><i style="--i:' + i + '; width:' + (t.sesi / maxSesi * 100).toFixed(1) + '%"></i></div></div>';
+          }).join('')
+        : '<div class="kuh-empty">Belum ada presensi bulan ini.</div>';
+
+      kuhRenderTrend();
+
+      // ===== Genio News (paling bawah) =====
+      var newsCard = document.getElementById('kuhNewsCard');
+      newsCard.hidden = !news.length;
+      document.getElementById('kuhNewsList').innerHTML = news.map(function (n) {
+        var d = n.tanggal_publish ? new Date(n.tanggal_publish) : null;
+        var tgl = d && !isNaN(d) ? d.getDate() + ' ' + KUH_BULAN[d.getMonth()].slice(0, 3) + ' ' + d.getFullYear() : '';
+        var img = n.gambar_url ? ' style="background-image:url(\'' + esc(n.gambar_url).replace(/'/g, '%27') + '\')"' : '';
+        var tag = n.tombol_kontak_url ? 'a href="' + esc(n.tombol_kontak_url) + '" target="_top"' : 'div';
+        return '<' + tag + ' class="kuh-nw"><div class="img"' + img + '></div><div class="tx"><b title="' + esc(n.judul || '') + '">' + esc(n.judul || 'Genio News') + '</b><small>' + esc(tgl) + '</small></div></' + tag.split(' ')[0] + '>';
+      }).join('');
+    }
+
+    function kuhRenderSpark(periode) {
+      var keys = []; for (var i = 5; i >= 0; i--) keys.push(shiftMonth(periode, -i));
+      var byKey = {}; kuhState.months.forEach(function (m) { byKey[m.key] = m; });
+      var vals = keys.map(function (k) { return (byKey[k] && byKey[k].omset) || 0; });
+      var W = 600, H = 74;
+      var vmax = Math.max.apply(null, vals), vmin = Math.min.apply(null, vals);
+      var mx = vmax > 0 ? vmax * 1.08 : 1, mn = vmax > 0 ? vmin * 0.8 : 0; // skala mengikuti rentang data supaya naik turunnya terlihat
+      if (mx <= mn) mx = mn + 1;
+      var pts = vals.map(function (v, i) { return [4 + i * (W - 8) / (vals.length - 1), H - 8 - ((v - mn) / (mx - mn)) * (H - 18)]; });
+      var d = monoPath(pts);
+      document.getElementById('kuhSpark').innerHTML =
+        '<defs><linearGradient id="kuhSparkFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9DB6FF" stop-opacity=".35"/><stop offset="1" stop-color="#9DB6FF" stop-opacity="0"/></linearGradient></defs>' +
+        '<path d="' + d + ' L' + pts[pts.length - 1][0] + ',' + H + ' L' + pts[0][0] + ',' + H + ' Z" fill="url(#kuhSparkFill)"/>' +
+        '<clipPath id="kuhSparkClip"><rect class="kuh-reveal" x="0" y="-10" width="' + W + '" height="' + (H + 20) + '"/></clipPath>' +
+        '<g clip-path="url(#kuhSparkClip)"><path d="' + d + '" fill="none" stroke="#C9D6FF" stroke-width="2" vector-effect="non-scaling-stroke"/></g>';
+      document.getElementById('kuhSparkMonths').innerHTML = keys.map(function (k) { return '<span>' + monthShort(k) + '</span>'; }).join('');
+    }
+
+    function kuhRenderTrend() {
+      var n = kuhState.range, metric = kuhState.metric;
+      var all = kuhState.months;
+      if (!all.length) return;
+      var curM = all.slice(-n), prevM = all.slice(-2 * n, -n);
+      var val = function (m) { return m[metric] || 0; };
+      var vals = curM.map(val), pvals = prevM.map(val);
+      var hasGhost = pvals.some(function (v) { return v !== 0; });
+      var allv = vals.concat(hasGhost ? pvals : []);
+      var mx = Math.max.apply(null, allv.concat([0])), mn = Math.min.apply(null, allv.concat([0]));
+      if (mx === mn) mx = mn + 1;
+      var W = 900, H = 190, px = 24, top = 16, bottom = 16;
+      var X = function (i) { return px + (n === 1 ? (W - 2 * px) / 2 : i * (W - 2 * px) / (n - 1)); };
+      var Y = function (v) { return top + (1 - (v - mn) / (mx - mn)) * (H - top - bottom); };
+      var pts = vals.map(function (v, i) { return [X(i), Y(v)]; });
+      var gpts = pvals.map(function (v, i) { return [X(i), Y(v)]; });
+      var grid = [0, 1, 2, 3].map(function (g) { var y = top + g * (H - top - bottom) / 3; return '<line x1="' + px + '" x2="' + (W - px) + '" y1="' + y + '" y2="' + y + '" stroke="#EEF0F6" vector-effect="non-scaling-stroke"/>'; }).join('');
+      var zero = mn < 0 ? '<line x1="' + px + '" x2="' + (W - px) + '" y1="' + Y(0) + '" y2="' + Y(0) + '" stroke="#DADDE8" vector-effect="non-scaling-stroke"/>' : '';
+      var svg = grid + zero +
+        (hasGhost ? '<path d="' + monoPath(gpts) + '" fill="none" stroke="#B5B8C8" stroke-width="1.5" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>' : '') +
+        '<clipPath id="kuhChartClip"><rect class="kuh-reveal" x="0" y="-10" width="' + W + '" height="' + (H + 20) + '"/></clipPath>' +
+        '<g clip-path="url(#kuhChartClip)"><path d="' + monoPath(pts) + '" fill="none" stroke="#1C1AAF" stroke-width="2.4" vector-effect="non-scaling-stroke"/></g>' +
+        '<line id="kuhCross" x1="0" x2="0" y1="' + top + '" y2="' + (H - bottom) + '" stroke="#C9CCDA" stroke-dasharray="3 3" vector-effect="non-scaling-stroke" style="opacity:0"/>' +
+        '<circle id="kuhDot" r="4" fill="#fff" stroke="#1C1AAF" stroke-width="2" vector-effect="non-scaling-stroke" style="opacity:0"/>';
+      var svgEl = document.getElementById('kuhChart');
+      svgEl.innerHTML = svg;
+      document.getElementById('kuhGhostLegend').style.display = hasGhost ? '' : 'none';
+      document.getElementById('kuhChartMonths').innerHTML = curM.map(function (m) { return '<span>' + monthShort(m.key) + '</span>'; }).join('');
+
+      // Crosshair + tooltip
+      var wrapEl = document.getElementById('kuhChartWrap'), tip = document.getElementById('kuhTip');
+      var fmt = function (v) { return metric === 'sesi' ? v + ' sesi' : rpShort(v); };
+      function show(clientX) {
+        var r = svgEl.getBoundingClientRect();
+        var xv = (clientX - r.left) / r.width * W;
+        var idx = Math.max(0, Math.min(n - 1, Math.round((xv - px) / ((W - 2 * px) / Math.max(1, n - 1)))));
+        var cx = X(idx), cy = Y(vals[idx]);
+        var cross = document.getElementById('kuhCross'), dot = document.getElementById('kuhDot');
+        cross.setAttribute('x1', cx); cross.setAttribute('x2', cx); cross.style.opacity = 1;
+        dot.setAttribute('cx', cx); dot.setAttribute('cy', cy); dot.style.opacity = 1;
+        var m = curM[idx];
+        tip.innerHTML = '<span>' + KUH_BULAN[+m.key.split('-')[1] - 1] + ' ' + m.key.split('-')[0] + '</span><b>' + fmt(vals[idx]) + '</b>' + (hasGhost ? '<span>Sebelumnya ' + fmt(pvals[idx] || 0) + '</span>' : '');
+        var left = cx / W * r.width;
+        tip.style.left = Math.max(60, Math.min(r.width - 60, left)) + 'px';
+        tip.style.opacity = 1;
+      }
+      function hide() {
+        tip.style.opacity = 0;
+        var cross = document.getElementById('kuhCross'), dot = document.getElementById('kuhDot');
+        if (cross) cross.style.opacity = 0; if (dot) dot.style.opacity = 0;
+      }
+      wrapEl.onpointermove = function (e) { show(e.clientX); };
+      wrapEl.onpointerdown = function (e) { show(e.clientX); };
+      wrapEl.onpointerleave = hide;
+    }
+
+    function bindTabs(id, key, parse) {
+      document.getElementById(id).addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        kuhState[key] = parse(b.dataset.v);
+        kuhRenderTrend();
+      });
+    }
+    bindTabs('kuhTrendMetric', 'metric', function (v) { return v; });
+    bindTabs('kuhTrendRange', 'range', function (v) { return parseInt(v, 10); });
+    document.getElementById('kuhActs').addEventListener('click', function (e) {
+      var b = e.target.closest('.kuh-act'); if (b) goto(b.dataset.goto);
+    });
+    document.getElementById('kuhNewsAll').addEventListener('click', function () { goto('genio-news'); });
+
+    window.genioModuleHandlers = window.genioModuleHandlers || {};
+    window.genioModuleHandlers['home-unit'] = kuhLoad;
+    window.addEventListener('genio:periode', function () { if (genioIsModuleVisible('home-unit')) kuhLoad(); });
+  })();
+</script>
