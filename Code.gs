@@ -50,7 +50,7 @@ function getOrCreateDriveFolder_(parentFolder, name) {
  */
 var PRESENSI_FOLDER_IDS = {
   foto: '1PkJicYsWzCgBQwdygLZ8Nz2kRR9KIjeR',     // <-- isi ID folder "Dokumentasi Presensi" di sini
-  catatan: '1LxOQPHfj6lVGmRgDtjmNwNPmFINhmbF4'   // <-- isi ID folder "Catatan Pembelajaran" di sini
+  catatan: '1PkJicYsWzCgBQwdygLZ8Nz2kRR9KIjeR'   // <-- ID folder "Catatan Pembelajaran" (PDF/gambar); sekarang satu folder dengan dokumentasi
 };
 
 function uploadPresensiFile(base64Data, fileName, mimeType, jenis) {
@@ -149,10 +149,11 @@ var SLIP_GAJI_FOLDER_ID = '175pC_l-tYbYXPruIHhsrxZI5Q3BAeZZO';
 var LAPORAN_BELAJAR_FOLDER_ID = '1SZ8BUZRq_G0d283Ku-vLR9PHm_u2pfWi';
 
 /**
- * ID Folder Google Drive untuk menyimpan PDF Tagihan & Kuitansi (Invoice & Receipt).
- * Kosongkan ('') jika ingin dibuatkan otomatis dalam folder "Genio Institute - Uploads/Tagihan".
+ * ID Folder Google Drive untuk PDF Invoice (belum lunas) dan Kuitansi (lunas), dipisah.
+ * Kosongkan ('') jika ingin dibuatkan otomatis dalam folder "Genio Institute - Uploads/Tagihan & Kuitansi".
  */
-var TAGIHAN_FOLDER_ID = '';
+var INVOICE_FOLDER_ID = '1GQicyee2sBrGzzdKVdGooB69kZuycoQJ';
+var KUITANSI_FOLDER_ID = '10E1hTgF-PHMTMUIrjQa4RHpk_BoUolGX';
 
 function generateLaporanBelajarPdf(laporanData) {
   try {
@@ -257,8 +258,9 @@ function batchGenerateSlipGajiPdf(slipList) {
 function generateInvoicePdf(invoiceData) {
   try {
     var subfolder;
-    if (TAGIHAN_FOLDER_ID) {
-      subfolder = DriveApp.getFolderById(TAGIHAN_FOLDER_ID);
+    var tagihanFolderId = invoiceData.status === 'lunas' ? KUITANSI_FOLDER_ID : INVOICE_FOLDER_ID;
+    if (tagihanFolderId) {
+      subfolder = DriveApp.getFolderById(tagihanFolderId);
     } else {
       var rootFolder = getOrCreateDriveFolder_(DriveApp.getRootFolder(), 'Genio Institute - Uploads');
       subfolder = getOrCreateDriveFolder_(rootFolder, 'Tagihan & Kuitansi');

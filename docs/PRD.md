@@ -38,7 +38,16 @@ Website manajemen bimbel untuk mengelola data ortu/siswa, kontrak belajar, kontr
 
 Supaya file tidak numpuk di satu folder, dipisah per jenis dan per konteks.
 
-> **[v5] Implementasi saat ini:** folder dipisah per jenis, belum per unit/periode. Folder yang ID-nya diisi di `Code.gs` dipakai langsung; kalau kosong, dibuat otomatis di `Genio Institute - Uploads/`: `Dokumentasi Presensi`, `Catatan Pembelajaran`, `Bukti Operasional`, `Laporan Belajar` (PDF presensi), `Tagihan & Kuitansi` (PDF invoice dan receipt), `Slip Gaji`. File dibagikan "siapa saja dengan link, lihat". File lama dengan nama sama dipindah ke sampah saat digenerate ulang. Struktur di bawah tetap jadi target jangka panjang.
+> **[v5] Implementasi saat ini:** folder dipisah per jenis, belum per unit/periode. ID folder diatur di bagian atas `Code.gs`:
+> - `PRESENSI_FOLDER_IDS.foto` dan `.catatan`: dokumentasi dan catatan pembelajaran presensi (satu folder).
+> - `OPERASIONAL_FOLDER_ID`: foto nota operasional.
+> - `PROFIL_FOLDER_ID`: foto profil.
+> - `SLIP_GAJI_FOLDER_ID`: PDF slip gaji.
+> - `LAPORAN_BELAJAR_FOLDER_ID`: PDF presensi (laporan belajar).
+> - `INVOICE_FOLDER_ID`: PDF invoice.
+> - `KUITANSI_FOLDER_ID`: PDF kuitansi.
+>
+> Kalau ID kosong, folder dibuat otomatis di `Genio Institute - Uploads/`. File dibagikan "siapa saja dengan link, lihat", dan file lama dengan nama sama dipindah ke sampah saat digenerate ulang. Struktur di bawah tetap jadi target jangka panjang.
 
 
 ```
