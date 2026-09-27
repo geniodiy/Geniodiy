@@ -168,6 +168,9 @@
     .menu-row:last-child{border-bottom:none;}
     .menu-row:hover{background:#FAFAFD;}
     .menu-row:active{background:var(--surface);}
+    #content.lainnya-split-view .menu-row.is-active{background:var(--blue-tint);}
+    #content.lainnya-split-view .menu-row.is-active .mr-label{color:var(--blue); font-weight:600;}
+    #content.lainnya-split-view .menu-row.is-active .mr-badge{background:var(--blue); color:#fff;}
     .menu-row .mr-badge{
       width:28px; height:28px; border-radius:8px; flex:none;
       display:flex; align-items:center; justify-content:center;
@@ -196,7 +199,7 @@
       }
       #content.lainnya-split-view .module-panel[data-module="lainnya"]{
         grid-column:1; width:100%; max-width:none; margin:0;
-        position:sticky; top:84px; max-height:calc(100vh - 100px); overflow-y:auto;
+        position:sticky; top:80px; max-height:calc(100vh - 96px); overflow-y:auto; overscroll-behavior:contain;
         min-width:0; box-sizing:border-box;
       }
       #content.lainnya-split-view #lainnyaMenuContainer{column-count:1 !important;}
@@ -374,9 +377,7 @@
       </div>
 
       <div id="lainnyaMenuContainer"></div>
-      <div class="menu-group">
-        <div class="menu-row" id="logoutRow"><span class="mr-badge" style="background:var(--red-soft);color:var(--red);"><i class="ph ph-sign-out" style="font-size:17px;" aria-hidden="true"></i></span><span class="mr-label" style="color:var(--red);">Keluar</span></div>
-      </div>
+      <!-- Tombol Keluar di bawah dihapus: sudah ada di kanan atas header -->
     </div>
 
     <!-- Empty-state kanan: muncul di split-view desktop saat belum ada sub-menu Lainnya dipilih -->
@@ -555,7 +556,8 @@
     }
     renderLainnyaMenu();
 
-    document.getElementById('logoutRow').addEventListener('click', genioConfirmLogout);
+    var genioLogoutRow = document.getElementById('logoutRow');
+    if (genioLogoutRow) genioLogoutRow.addEventListener('click', genioConfirmLogout);
 
     // ===== Kartu Profil & badge menu "Lainnya" — data asli dari Supabase =====
     var LAINNYA_ROLE_LABELS = { super_admin: 'Super Admin', manajer: 'Manajer', hrd: 'HRD', kepala_unit: 'Kepala Unit', tutor: 'Tutor' };
@@ -830,14 +832,21 @@
         builtPanel.appendChild(wrap);
       }
 
-      // Cuma reset scroll ke atas kalau BUKAN transisi antar sub-menu di dalam split-view
-      // (misal baru pertama kali masuk Lainnya, atau pindah ke tab utama lain).
-      if (!(splitView && wasSplitView)) window.scrollTo({ top: 0 });
+      // Tandai menu yang sedang dibuka di sidebar
+      document.querySelectorAll('#lainnyaMenuContainer .menu-row[data-goto]').forEach(function (row) {
+        row.classList.toggle('is-active', row.dataset.goto === name);
+      });
+
+      // Konten baru selalu mulai dari atas. Sidebar menempel (sticky) di posisi yang sama,
+      // jadi di desktop sidebar tidak ikut bergerak saat pindah menu.
+      window.scrollTo({ top: 0, behavior: 'instant' });
       if (window.genioModuleHandlers && window.genioModuleHandlers[name]) {
         window.genioModuleHandlers[name]();
       }
-      if (splitView && window.genioModuleHandlers && window.genioModuleHandlers['lainnya']) {
-        window.genioModuleHandlers['lainnya'](); // sidebar tetap perlu data profil/badge ter-update
+      // Data sidebar (profil & angka di tiap menu) cukup dimuat saat pertama kali masuk Lainnya,
+      // tidak dimuat ulang setiap pindah sub-menu supaya sidebar tidak berkedip.
+      if (splitView && !wasSplitView && name !== 'lainnya' && window.genioModuleHandlers && window.genioModuleHandlers['lainnya']) {
+        window.genioModuleHandlers['lainnya']();
       }
     }
 

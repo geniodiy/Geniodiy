@@ -676,7 +676,11 @@
     p.replaceChild(t, img);
   }
   function genioSetAvatar(el, nama, fotoUrl, initials, fill) {
-    if (el) el.innerHTML = genioAvatarInner(nama, fotoUrl, initials, fill);
+    if (!el) return;
+    var key = (fotoUrl || '') + '|' + (initials != null ? initials : genioInitials(nama));
+    if (el.getAttribute('data-av-key') === key) return; // sama seperti sebelumnya: jangan muat ulang fotonya
+    el.setAttribute('data-av-key', key);
+    el.innerHTML = genioAvatarInner(nama, fotoUrl, initials, fill);
   }
 
   // ===== Tutup popup lewat latar hanya kalau sentuhan memang dimulai di latar =====
