@@ -715,11 +715,14 @@
       if (el.tagName === 'INPUT') return TYPE_RE.test(el.getAttribute('type') || 'text');
       return !!el.isContentEditable;
     }
-    function visibleArea() {
+    // HP (sisi pendek layar < 600px): keyboard virtual hampir pasti muncul, jadi popup langsung dinaikkan.
+    // Tablet/iPad: bisa jadi pakai keyboard fisik, jadi popup hanya dinaikkan kalau tinggi keyboard terbaca.
+    var IS_PHONE = Math.min(screen.width || 9999, screen.height || 9999) < 600;
+    function measuredArea() {
       var vv = window.visualViewport;
       var h = vv ? vv.height : window.innerHeight;
-      if (h < baseH * 0.8) return { h: h, top: vv ? vv.offsetTop : 0 };                 // keyboard terbaca
-      return { h: Math.round(Math.max(260, baseH * 0.5)), top: vv ? vv.offsetTop : 0 };  // perkiraan
+      if (h < baseH * 0.8) return { h: h, top: vv ? vv.offsetTop : 0 }; // keyboard terbaca
+      return null;
     }
     function scrollParent(el, stop) {
       var n = el.parentElement;
@@ -732,14 +735,25 @@
     }
     function keepVisible() {
       if (!active || !overlay) return;
-      var area = visibleArea();
-      overlay.style.setProperty('--gx-vh', area.h + 'px');
-      overlay.style.paddingTop = (8 + area.top) + 'px';
+      var area = measuredArea() || (IS_PHONE ? { h: Math.round(Math.max(260, baseH * 0.5)), top: window.visualViewport ? window.visualViewport.offsetTop : 0 } : null);
+      if (area) {
+        if (!overlay.classList.contains('gx-typing')) genioOverlayGuard.shiftedAt = Date.now();
+        overlay.classList.add('gx-typing');
+        overlay.style.setProperty('--gx-vh', area.h + 'px');
+        overlay.style.paddingTop = (8 + area.top) + 'px';
+      } else if (overlay.classList.contains('gx-typing')) {
+        genioOverlayGuard.shiftedAt = Date.now();
+        overlay.classList.remove('gx-typing');
+        overlay.style.removeProperty('--gx-vh');
+        overlay.style.paddingTop = '';
+      }
+      // Kolom digulir ke tengah area popup (kalau popup dinaikkan) atau ke sepertiga atas (kalau tidak)
       var sc = scrollParent(active, overlay);
       if (sc) {
         var r = active.getBoundingClientRect(), sr = sc.getBoundingClientRect();
-        var target = sc.scrollTop + (r.top - sr.top) - (sc.clientHeight / 2 - r.height / 2);
-        sc.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+        var anchor = area ? (sc.clientHeight / 2 - r.height / 2) : Math.min(sc.clientHeight * 0.3, sc.clientHeight - r.height);
+        var target = sc.scrollTop + (r.top - sr.top) - anchor;
+        if (area || r.bottom > sr.top + sc.clientHeight * 0.6) sc.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
       }
     }
     function release() {
@@ -758,8 +772,6 @@
       clearTimeout(hideTimer);
       if (overlay && overlay !== ov) release();
       active = el; overlay = ov;
-      if (!ov.classList.contains('gx-typing')) genioOverlayGuard.shiftedAt = Date.now();
-      ov.classList.add('gx-typing');
       keepVisible();
       setTimeout(keepVisible, 120);
       setTimeout(keepVisible, 420); // setelah animasi keyboard selesai
