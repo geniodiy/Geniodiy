@@ -2,406 +2,175 @@
 <style>
   @media (min-width:900px){
     .module-panel[data-module="kelola-pengguna"][hidden]{ display:none !important; }
-    .module-panel[data-module="kelola-pengguna"]:not([hidden]){
-      width:94%; max-width:1500px; margin:0 auto;
-      box-sizing: border-box;
-      min-width: 0;
-    }
-    .kp-hero-sec{
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-    }
-    .kp-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 12px !important;
-    }
-    .kp-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .kp-hero-total-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .kp-hero-sublabel{
-      display: none !important;
-    }
-    .kp-hero-counter{
-      margin-top: 0 !important;
-    }
-    .kp-hero-num-wrap{
-      display: flex !important;
-      align-items: baseline !important;
-      gap: 6px !important;
-      margin-top: 0 !important;
-    }
-    .kp-hero-num{
-      font-size: 18px !important;
-      line-height: 1.1 !important;
-    }
-    .kp-hero-unit{
-      font-size: 10.5px !important;
-    }
-    .kp-hero-stats-row{
-      flex: none !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 16px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .kp-hero-stat-card{
-      flex: none !important;
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-      min-width: 0 !important;
-    }
-    .kp-hero-stat-icon{
-      width: 22px !important;
-      height: 22px !important;
-    }
-    #kp-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
-    #kp-list.kp-view-table{ display:block !important; width:100% !important; max-width:100% !important; min-width:0 !important; box-sizing:border-box !important; }
-    #kp-list > .kp-card{ margin-bottom:0 !important; }
+    .module-panel[data-module="kelola-pengguna"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; box-sizing:border-box; min-width:0; }
+    #kp-list:not(.kp-view-table){ display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:12px; align-items:start; }
     #kp-list > .kp-full-width{ grid-column:1/-1; }
-
     #kp-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:12px; }
-    #kp-toolbarRow .kp-dock-sec{ flex:none; width:220px; margin-bottom:0 !important; }
-    #kp-toolbarRow .kp-search-sec{ flex:1; margin-bottom:0 !important; }
+    #kp-toolbarRow .kp-dock-sec{ flex:none; width:260px !important; margin-bottom:0 !important; }
+    #kp-toolbarRow .kp-search-sec{ flex:1; min-width:0; margin-bottom:0 !important; }
   }
 
-  .kp-dock{
-    position:relative; display:flex; align-items:center; height:38px;
-    background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px;
-    margin-bottom:12px; touch-action:none; -webkit-user-select:none; user-select:none;
-    box-sizing:border-box;
-  }
-  .kp-dock-glider{
-    position:absolute; top:3px; bottom:3px; border-radius:8px; background:#fff;
-    border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08);
-    transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1);
-    z-index:1; pointer-events:none;
-  }
-  .kp-dock-btn{
-    position:relative; z-index:2; flex:1; height:32px; display:flex; align-items:center; justify-content:center; gap:5px;
-    background:none; border:none; cursor:pointer; padding:0 10px; font-size:11.5px; font-family:var(--font);
-    color:var(--ink-soft); font-weight:500; transition:color .18s ease; white-space:nowrap;
-  }
-  .kp-dock-btn.kp-dock-active{ color:var(--ink); font-weight:600; }
-
-  #kp-modal, #kp-confirmModal{ align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease; }
-  #kp-modal.show, #kp-confirmModal.show{ opacity:1; }
-  #kp-modal .modal-sheet, #kp-confirmModal .modal-sheet{ border-radius:16px; width:100%; max-width:400px; margin:0 auto; max-height:88vh; overflow-y:auto; padding:16px 18px 18px; box-sizing:border-box; transform:scale(.88) translateY(10px); transition:transform .32s cubic-bezier(.34,1.56,.64,1); }
-  #kp-modal.show .modal-sheet, #kp-confirmModal.show .modal-sheet{ transform:scale(1) translateY(0); }
-
-  #kp-modal .modal-actions .btn, #kp-confirmModal .modal-actions .btn{
-    height: 36px !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    border-radius: 9px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
-  }
-
-  .kp-group-title{ font-size:10px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin:10px 4px 4px; }
-  .kp-group-title:first-of-type{ margin-top:0; }
-  .kp-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-  .kp-row{ padding:9px 12px; border-bottom:1px solid var(--border); }
-  .kp-row:last-child{ border-bottom:none; }
-  .kp-row label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:2px; }
-  .kp-row input, .kp-row select{
-    width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
-    background:none; color:var(--ink); outline:none;
-  }
-  .kp-opt-row{ display:flex; gap:6px; flex-wrap:wrap; }
-  .kp-opt{
-    flex:1; min-width:65px; text-align:center; padding:7px 4px; border-radius:8px;
-    border:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer;
-  }
-  .kp-opt input{ display:none; }
-
-  /* Hero Kelola Pengguna — matching Presensi, Gaji, & Operasional (gepeng/slender) */
-  .kp-hero-sec{
-    background: var(--ink);
-    color: #fff;
-    border-radius: 14px;
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
-  }
-  .kp-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .kp-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .kp-hero-total-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 3px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .kp-hero-counter{
-    margin-top: 6px;
-  }
-  .kp-hero-sublabel{
-    display: block;
-    font-size: 10.5px;
-    opacity: .65;
-  }
-  .kp-hero-num-wrap{
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    margin-top: 2px;
-  }
-  .kp-hero-num{
-    font-size: 21px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.1;
-  }
-  .kp-hero-unit{
-    font-size: 11.5px;
-    opacity: .6;
-    font-weight: 500;
-  }
-  .kp-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.14);
-    align-items: center;
-  }
-  .kp-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-  .kp-hero-stat-icon{
-    width: 26px;
-    height: 26px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
+  /* ===== Highlight: jumlah akun + komposisi role | ring akun aktif ===== */
+  .kp-hb{position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .kpb-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
+  .kpb-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
+  .kpb-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .kpb-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .kpb-label i{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .kpb-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .kpb-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; margin-top:8px; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .kpb-unit{font-size:13px; font-weight:500; color:rgba(255,255,255,.65); margin-left:5px; letter-spacing:0;}
+  .kpb-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kpb-bar{display:flex; height:10px; border-radius:99px; overflow:hidden; gap:2px; margin-top:14px; max-width:560px; background:rgba(255,255,255,.08);}
+  .kpb-bar i{display:block; height:100%; transform-origin:left center;}
+  .kpb-leg{display:flex; gap:6px 16px; margin-top:9px; font-size:10.5px; color:rgba(255,255,255,.7); flex-wrap:wrap;}
+  .kpb-leg span{display:inline-flex; align-items:center; gap:6px; white-space:nowrap;}
+  .kpb-leg em{width:7px; height:7px; border-radius:2px; display:inline-block;}
+  .kpb-leg b{color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .kpb-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:250px;}
+  .kpb-ringwrap{display:flex; align-items:center; gap:14px;}
+  .kpb-ring{width:64px; height:64px; flex:none; overflow:visible;}
+  .kpb-ring circle{fill:none; stroke-width:7;}
+  .kpb-ring .tr{stroke:rgba(255,255,255,.1);}
+  .kpb-ring .arc{stroke:#7CF0C3; transform:rotate(-90deg); transform-origin:32px 32px; transition:stroke-dasharray .9s cubic-bezier(.16,1,.3,1);}
+  .kpb-ring text{fill:#fff; font-family:var(--font); font-size:13px; font-weight:800;}
+  .kpb-list{display:grid; gap:6px; flex:1; min-width:150px;}
+  .kpb-list div{display:flex; align-items:center; gap:7px; font-size:10.5px; color:rgba(255,255,255,.75); white-space:nowrap;}
+  .kpb-list em{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
+  .kpb-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  @keyframes kpGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  .kpb-bar.kp-anim i{animation:kpGrow .9s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 80ms);}
+  @media (max-width:899px){
+    .kp-hb{grid-template-columns:1fr;}
+    .kpb-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .kpb-num{font-size:28px;}
   }
 
-  /* Table View */
-  #kp-list.kp-view-table{
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-  .kp-table-card{
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,.03);
-    margin-bottom: 12px;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-  .kp-table-wrap{
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box !important;
-  }
-  .kp-table{
-    width: 100%;
-    min-width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-family: var(--font);
-    font-size: 11.5px;
-    box-sizing: border-box !important;
-  }
-  .kp-table th{
-    padding: 6px 8px;
-    background: rgba(0,0,0,.025);
-    border-bottom: 1px solid var(--border);
-    font-size: 10.5px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: .02em;
-    white-space: nowrap;
-  }
-  .kp-table td{
-    padding: 5px 8px;
-    border-bottom: 1px solid rgba(0,0,0,.05);
-    color: var(--ink);
-    vertical-align: middle;
-    font-size: 11.5px;
-    font-weight: 400;
-    line-height: 1.3;
-  }
-  .kp-table tbody tr:last-child td{
-    border-bottom: none;
-  }
-  .kp-table tbody tr{
-    transition: background .12s ease;
-  }
-  .kp-table tbody tr:hover{
-    background: rgba(0,122,255,.03);
+  /* ===== Tab dan toolbar ===== */
+  .kp-dock{position:relative; display:flex; align-items:center; height:38px; background:rgba(0,0,0,.04); border:1px solid var(--border); padding:3px; border-radius:10px; margin-bottom:12px; touch-action:none; -webkit-user-select:none; user-select:none; box-sizing:border-box;}
+  .kp-dock-glider{position:absolute; top:3px; bottom:3px; border-radius:8px; background:#fff; border:1px solid var(--border); box-shadow:0 1px 3px rgba(20,22,43,.08); transition:left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1); z-index:1; pointer-events:none;}
+  .kp-dock-btn{position:relative; z-index:2; flex:1; height:32px; display:flex; align-items:center; justify-content:center; gap:5px; background:none; border:none; cursor:pointer; padding:0 10px; font-size:11.5px; font-family:var(--font); color:var(--ink-soft); font-weight:500; transition:color .18s ease; white-space:nowrap;}
+  .kp-dock-btn.kp-dock-active{color:var(--ink); font-weight:600;}
+  #kp-searchInput{height:34px !important; border-radius:10px !important; font-size:12px !important;}
+  #kp-searchInput:focus{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #kp-viewToggleBtn{width:34px; height:34px; border-radius:10px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:transform .15s ease, background .15s ease;}
+  #kp-viewToggleBtn:hover{background:var(--surface);}
+  #kp-viewToggleBtn:active{transform:scale(.9);}
+  @keyframes kpPop{0%{transform:scale(1);} 35%{transform:scale(1.18);} 100%{transform:scale(1);}}
+  .kp-btn-pop{animation:kpPop .32s cubic-bezier(.34,1.56,.64,1);}
+  .kp-list-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;}
+  #kp-sectionLabel{font-size:12px; font-weight:600; color:var(--ink);}
+  #kp-resultCount{display:inline-flex; align-items:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;}
+
+  /* ===== Elemen bersama ===== */
+  .kp-av{width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:11.5px; flex:none;}
+  .kp-role{display:inline-flex; align-items:center; font-size:10px; font-weight:600; padding:3px 8px; border-radius:7px; white-space:nowrap;}
+  .kp-status{display:inline-flex; align-items:center; gap:5px; flex:none; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .kp-status i{width:6px; height:6px; border-radius:50%;}
+  .kp-status.is-on{background:#E9F7EF; color:#1E8E5A;} .kp-status.is-on i{background:#1E8E5A;}
+  .kp-status.is-off{background:var(--surface); color:var(--ink-soft);} .kp-status.is-off i{background:#A9ADC0;}
+  .kp-icon-btn{width:28px; height:28px; padding:0; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex:none; background:#fff; color:var(--ink-soft); border:1px solid var(--border); box-sizing:border-box; font-size:13px; transition:background .15s ease, color .15s ease, border-color .15s ease; vertical-align:middle;}
+  .kp-icon-btn:hover{background:var(--surface); color:var(--ink);}
+  .kp-icon-btn.is-del:hover{background:var(--red-soft); color:var(--red); border-color:rgba(212,7,15,.25);}
+  .kp-muted{color:var(--ink-soft); font-size:10.5px;}
+
+  /* ===== Kartu ===== */
+  .kp-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:12px; min-width:0; box-sizing:border-box; transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .kp-card:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12); transform:translateY(-1px);}
+  .kp-card.kp-full-width{text-align:center; color:var(--ink-soft); font-size:11.5px; padding:28px 14px;}
+  .kp-card.kp-full-width:hover{transform:none; box-shadow:none;}
+  .kpc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .kpc-who{min-width:0; flex:1;}
+  .kpc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .kpc-who p{font-size:10.5px; color:var(--ink-soft); margin:1px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kpc-chips{display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; align-items:center;}
+  .kpc-unit{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:var(--ink); background:var(--surface); border-radius:7px; padding:3px 8px; white-space:nowrap;}
+  .kpc-unit i{font-size:12px; color:var(--ink-soft);}
+  .kpc-foot{display:flex; align-items:center; gap:6px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .kpc-join{min-width:0; flex:1;}
+  .kpc-join span{display:block; font-size:10px; color:var(--ink-soft);}
+  .kpc-join b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); margin-top:1px;}
+  .kpc-foot .kp-edit-btn.is-text{height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:11px; font-weight:600; padding:0 12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; flex:none;}
+  .kpc-foot .kp-edit-btn.is-text:hover{background:var(--surface);}
+  .kpc-foot .kp-icon-btn{width:30px; height:30px;}
+
+  /* ===== Tabel ===== */
+  #kp-list.kp-view-table{display:block !important; width:100%; max-width:100%; min-width:0; box-sizing:border-box;}
+  .kp-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:12px; width:100%; box-sizing:border-box;}
+  .kp-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .kp-table{width:100%; border-collapse:separate; border-spacing:0; text-align:left; font-family:var(--font); font-size:11px;}
+  .kp-table th{padding:10px 10px; background:#fff; border-bottom:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
+  .kp-table th.kp-sort-th{cursor:pointer; user-select:none; -webkit-user-select:none;}
+  .kp-table th.kp-sort-th:hover{color:var(--ink);}
+  .kp-table td{padding:8px 10px; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle; white-space:nowrap;}
+  .kp-table tbody tr:last-child td{border-bottom:none;}
+  .kp-table tbody tr:hover td{background:#F8F9FD;}
+  /* Kolom selebar isinya; kolom email mengambil sisa ruang */
+  .kp-table th:not(.kp-col-email), .kp-table td:not(.kp-col-email){width:1%;}
+  .kp-table .kp-col-email{width:100%; max-width:0; min-width:140px; overflow:hidden; text-overflow:ellipsis; color:var(--ink-soft);}
+  .kp-table .kp-stk{position:sticky; z-index:1; background:#fff;}
+  .kp-table th.kp-stk{z-index:2;}
+  .kp-table .kp-stk-no{left:0; width:40px; min-width:40px; max-width:40px; box-sizing:border-box; text-align:center; color:var(--ink-soft);}
+  .kp-table .kp-stk-nama{left:40px; box-shadow:1px 0 0 var(--border); max-width:220px;}
+  .kp-table tbody tr:hover td.kp-stk{background:#F8F9FD;}
+  .kp-table .kp-who{display:flex; align-items:center; gap:8px; min-width:0;}
+  .kp-table .kp-who .kp-av{width:26px; height:26px; font-size:9.5px;}
+  .kp-table .kp-who b{font-weight:600; overflow:hidden; text-overflow:ellipsis; min-width:0;}
+  .kp-table .kp-act{text-align:right;}
+  .kp-table .kp-act .kp-icon-btn{margin-left:4px;}
+  @media (max-width:899px){
+    .kp-table .kp-stk-nama{max-width:124px; padding-left:8px; padding-right:10px;}
+    .kp-table .kp-who .kp-av{display:none;}
   }
 
-  /* Status Pill in Table — matching Gaji style */
-  .kp-table-status-pill{
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    height: 20px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0 7px;
-    font-family: var(--font);
-    font-size: 9.5px;
-    font-weight: 500;
-    color: var(--ink);
-    white-space: nowrap;
-    box-sizing: border-box;
-  }
-  .kp-table-status-pill .kp-status-dot{
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    flex: none;
-    margin-right: 4px;
-  }
+  /* ===== Popup ===== */
+  #kp-modal, #kp-confirmModal{align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;}
+  #kp-modal.show, #kp-confirmModal.show{opacity:1;}
+  .kp-opt-row{display:flex; gap:6px; flex-wrap:wrap;}
+  .kp-opt{flex:1 1 auto; min-width:70px; height:34px; padding:0 10px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; text-align:center; border-radius:9px; border:1px solid var(--border); background:#fff; font-family:var(--font); font-size:11px; font-weight:600; color:var(--ink); cursor:pointer; margin:0; transition:background .15s ease, border-color .15s ease, color .15s ease;}
+  .kp-opt:hover{border-color:#C9CCDA;}
+  .kp-opt input{display:none;}
+  .kp-opt.is-on{background:var(--blue-tint); color:var(--blue); border-color:var(--blue);}
+  #kp-statusOpts .kp-opt.is-on[data-val="aktif"]{background:#E9F7EF; color:#1E8E5A; border-color:#1E8E5A;}
+  #kp-statusOpts .kp-opt.is-on[data-val="nonaktif"]{background:#FDEAEA; color:#D4070F; border-color:#D4070F;}
+  #kp-unitFieldWrap[hidden]{display:none !important;}
+  #kp-unitFieldWrap{margin-top:10px;}
 
-  /* Table Icon Buttons — matching Presensi & Operasional .ps-table-icon-btn */
-  .kp-table-icon-btn{
-    width: 24px !important;
-    height: 24px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-radius: 6px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer;
-    flex: none;
-    background: var(--surface) !important;
-    color: var(--ink-soft) !important;
-    border: 1.5px solid var(--border) !important;
-    box-sizing: border-box !important;
-    transition: transform .1s ease, opacity .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .kp-table-icon-btn:hover{
-    background: #fff !important;
-    color: var(--ink) !important;
-    border-color: rgba(20, 22, 43, 0.22) !important;
-  }
-  .kp-table-icon-btn:active{
-    transform: scale(.9);
-  }
-
-  @keyframes kpPop{
-    0% { transform: scale(1); }
-    35% { transform: scale(1.18); }
-    70% { transform: scale(0.92); }
-    100% { transform: scale(1); }
-  }
-  .kp-btn-pop{
-    animation: kpPop .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #kp-viewToggleBtn:active{
-    transform: scale(.9);
-  }
-
-  .kp-sort-th{
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    transition: background .12s ease, color .12s ease;
-  }
-  .kp-sort-th:hover{
-    background: rgba(0,0,0,.045) !important;
-    color: var(--ink) !important;
-  }
-  .kp-sort-th:hover svg{
-    opacity: .75 !important;
+  /* ===== Animasi ===== */
+  @keyframes kpIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes kpFade{from{opacity:0;} to{opacity:1;}}
+  #kp-list .kp-card.kp-in{animation:kpIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #kp-list .kp-table tbody tr.kp-in td{animation:kpFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
+  @media (prefers-reduced-motion: reduce){
+    #kp-list .kp-card.kp-in, #kp-list .kp-table tbody tr.kp-in td, .kpb-bar.kp-anim i, .kp-btn-pop{animation:none !important;}
+    .kpb-ring .arc{transition:none;}
+    .kp-card:hover{transform:none;}
   }
 </style>
 
-  <!-- Hero -->
-  <div class="kp-hero-sec">
-    <div class="kp-hero-main-col">
-      <div class="kp-hero-badges">
-        <span class="kp-hero-total-pill">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--blue); display:inline-block; flex:none;"></span>
-          KELOLA PENGGUNA
-        </span>
+  <!-- Highlight -->
+  <div class="kp-hb">
+    <div class="kpb-main">
+      <div class="kpb-top">
+        <span class="kpb-label"><i></i>Akun pengelola</span>
+        <span class="kpb-pill" id="kp-heroRolePill">0 role</span>
       </div>
-      <div class="kp-hero-counter">
-        <div class="kp-hero-sublabel">Total Akun Staf Terdaftar</div>
-        <div class="kp-hero-num-wrap">
-          <span class="kp-hero-num" id="kp-heroTotal">0</span>
-          <span class="kp-hero-unit">Akun</span>
-        </div>
-      </div>
+      <div class="kpb-num"><span id="kp-heroTotal">0</span><span class="kpb-unit">akun</span></div>
+      <div class="kpb-sub" id="kp-heroSub">-</div>
+      <div class="kpb-bar" id="kp-heroBar" aria-hidden="true"></div>
+      <div class="kpb-leg" id="kp-heroLeg"></div>
     </div>
-
-    <div class="kp-hero-stats-row">
-      <div class="kp-hero-stat-card">
-        <span class="kp-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div style="font-size:9.5px; opacity:.65;">Aktif</div>
-          <div style="font-size:12.5px; font-weight:600; margin-top:1px;" id="kp-heroAktif">0 Akun</div>
-        </div>
-      </div>
-      <div class="kp-hero-stat-card">
-        <span class="kp-hero-stat-icon" style="background:rgba(142,142,147,.25); color:#c7c7cc;">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div style="font-size:9.5px; opacity:.65;">Nonaktif</div>
-          <div style="font-size:12.5px; font-weight:600; margin-top:1px;" id="kp-heroNonaktif">0 Akun</div>
+    <div class="kpb-side">
+      <div class="kpb-ringwrap">
+        <svg class="kpb-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="tr" cx="32" cy="32" r="25"/>
+          <circle class="arc" id="kp-heroRingArc" cx="32" cy="32" r="25" stroke-dasharray="0 157.08" stroke-linecap="round"/>
+          <text id="kp-heroRingPct" x="32" y="36.5" text-anchor="middle">0%</text>
+        </svg>
+        <div class="kpb-list">
+          <div><em style="background:#7CF0C3;"></em>Akun aktif<b id="kp-heroAktif">0</b></div>
+          <div><em style="background:rgba(255,255,255,.25);"></em>Nonaktif<b id="kp-heroNonaktif">0</b></div>
+          <div><em style="background:#FFC46B;"></em>Baru bulan ini<b id="kp-heroBaru">0</b></div>
         </div>
       </div>
     </div>
@@ -409,11 +178,11 @@
 
   <div id="kp-desktopAnchor"></div>
 
-  <!-- Tab switcher -->
+  <!-- Tab -->
   <div class="kp-dock kp-dock-sec" id="kp-dock">
     <div class="kp-dock-glider" id="kp-dockGlider"></div>
     <button class="kp-dock-btn kp-tab-btn kp-dock-active" data-tab="aktif">
-      <span>Aktif</span>
+      <span>Akun aktif</span>
       <span id="kp-aktifCount" style="background:var(--red); color:#fff; font-size:9px; font-weight:600; padding:1px 6px; border-radius:999px;">0</span>
     </button>
     <button class="kp-dock-btn kp-tab-btn" data-tab="nonaktif">
@@ -422,80 +191,81 @@
     </button>
   </div>
 
-  <!-- Search & Toggle -->
+  <!-- Pencarian dan ganti tampilan -->
   <div class="kp-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
     <div style="flex:1; position:relative;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="kp-searchInput" placeholder="Cari nama atau email..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+      <input type="text" id="kp-searchInput" placeholder="Cari nama, email, atau unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
     </div>
-    <button id="kp-viewToggleBtn" type="button" aria-label="Ubah Tampilan" title="Tampilkan sebagai Tabel" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:all .15s ease;">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
-    </button>
+    <button id="kp-viewToggleBtn" type="button" aria-label="Tampilkan sebagai tabel" title="Tampilkan sebagai tabel"></button>
   </div>
 
-  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-    <div id="kp-sectionLabel" style="font-size:11.5px; color:var(--ink-soft); font-weight:500;">Akun Aktif</div>
-    <span id="kp-resultCount" style="display:inline-flex; align-items:center; justify-content:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;">0 Akun</span>
+  <div class="kp-list-head">
+    <div id="kp-sectionLabel">Akun aktif</div>
+    <div id="kp-resultCount">0 akun</div>
   </div>
 
   <div id="kp-list">
     <div class="empty-state">Memuat data pengguna...</div>
   </div>
 
-  <!-- Modal Tambah/Edit -->
+  <!-- Popup edit pengguna -->
   <div class="modal-overlay" id="kp-modal" hidden>
-    <div class="modal-sheet">
-      <h3 id="kp-modalTitle" style="font-size:13.5px; font-weight:500; margin:0 0 4px;">Tambah Pengguna</h3>
-      <div id="kp-modalAlert" class="alert alert-error" hidden style="font-size:11px; padding:8px 10px; margin-bottom:10px; border-radius:8px;"></div>
-      <input type="hidden" id="kp-editId">
-
-      <div class="kp-group-title">Data Diri</div>
-      <div class="kp-group" style="margin-bottom:4px;">
-        <div class="kp-row"><label for="kp-nama">Nama Lengkap</label><input type="text" id="kp-nama"></div>
-        <div class="kp-row"><label for="kp-email">Email</label><input type="email" id="kp-email"></div>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-user-gear" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3 id="kp-modalTitle">Edit pengguna</h3>
+          <p class="gx-sub" id="kp-modalSub">Perbarui data diri, role, dan status akun.</p>
+        </div>
+        <button type="button" class="gx-close" id="kp-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
+      <div class="gx-body">
+        <div id="kp-modalAlert" class="alert alert-error" hidden></div>
+        <input type="hidden" id="kp-editId">
 
-      <div class="kp-group-title">Role</div>
-      <div class="kp-opt-row" id="kp-roleOpts" style="margin-bottom:4px;">
-        <label class="kp-opt" data-val="manajer"><input type="radio" name="kp-role" value="manajer">Manajer</label>
-        <label class="kp-opt" data-val="hrd"><input type="radio" name="kp-role" value="hrd">HRD</label>
-        <label class="kp-opt" data-val="kepala_unit"><input type="radio" name="kp-role" value="kepala_unit">Kepala Unit</label>
-        <label class="kp-opt" data-val="super_admin"><input type="radio" name="kp-role" value="super_admin">Super Admin</label>
-      </div>
+        <div class="gx-step-title"><span class="gx-step">1</span>Data diri</div>
+        <div class="gx-row"><label for="kp-nama">Nama lengkap <em class="gx-req">wajib</em></label><input type="text" id="kp-nama"></div>
+        <div class="gx-row"><label for="kp-email">Email <em class="gx-req">wajib</em></label><input type="email" id="kp-email"></div>
 
-      <div id="kp-unitFieldWrap" hidden>
-        <div class="kp-group-title">Unit (wajib untuk Kepala Unit)</div>
-        <div class="kp-group" style="margin-bottom:4px;">
-          <div class="kp-row"><label for="kp-unitSelect">Pilih Unit</label>
+        <div class="gx-step-title"><span class="gx-step">2</span>Role</div>
+        <div class="kp-opt-row" id="kp-roleOpts">
+          <label class="kp-opt" data-val="manajer"><input type="radio" name="kp-role" value="manajer">Manajer</label>
+          <label class="kp-opt" data-val="hrd"><input type="radio" name="kp-role" value="hrd">HRD</label>
+          <label class="kp-opt" data-val="kepala_unit"><input type="radio" name="kp-role" value="kepala_unit">Kepala unit</label>
+          <label class="kp-opt" data-val="super_admin"><input type="radio" name="kp-role" value="super_admin">Super admin</label>
+        </div>
+        <div id="kp-unitFieldWrap" hidden>
+          <div class="gx-row"><label for="kp-unitSelect">Unit yang dipegang <em class="gx-req">wajib</em></label>
             <select id="kp-unitSelect"><option value="">Pilih unit...</option></select>
           </div>
         </div>
-      </div>
 
-      <div class="kp-group-title">Status</div>
-      <div class="kp-opt-row" id="kp-statusOpts">
-        <label class="kp-opt" data-val="aktif"><input type="radio" name="kp-status" value="aktif">Aktif</label>
-        <label class="kp-opt" data-val="nonaktif"><input type="radio" name="kp-status" value="nonaktif">Nonaktif</label>
+        <div class="gx-step-title"><span class="gx-step">3</span>Status</div>
+        <div class="kp-opt-row" id="kp-statusOpts">
+          <label class="kp-opt" data-val="aktif"><input type="radio" name="kp-status" value="aktif">Aktif</label>
+          <label class="kp-opt" data-val="nonaktif"><input type="radio" name="kp-status" value="nonaktif">Nonaktif</label>
+        </div>
+        <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span>Akun nonaktif tidak bisa masuk ke aplikasi, tapi datanya tetap tersimpan.</span></div>
       </div>
-
-      <div class="modal-actions" style="display:flex; gap:8px; margin-top:14px;">
-        <button type="button" class="btn btn-outline" id="kp-cancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="kp-saveBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Simpan</button>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="kp-cancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary" id="kp-saveBtn">Simpan</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Konfirmasi Hapus -->
+  <!-- Popup konfirmasi hapus -->
   <div class="modal-overlay" id="kp-confirmModal" hidden>
-    <div class="modal-sheet" style="max-width:360px;">
-      <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-confirm">
+        <span class="gx-head-ico is-danger"><i class="ph ph-trash" aria-hidden="true"></i></span>
+        <h3>Hapus akun ini?</h3>
+        <p id="kp-confirmDesc">Akun akan dihapus permanen.</p>
       </div>
-      <h3 style="text-align:center; font-size:13.5px; font-weight:500; margin:0 0 4px;">Hapus Akun Ini?</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 14px; text-align:center;" id="kp-confirmDesc">Akun akan dihapus permanen.</p>
-      <div class="modal-actions" style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-outline" id="kp-confirmCancelBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1;">Batal</button>
-        <button type="button" class="btn btn-primary" id="kp-confirmOkBtn" style="height:32px; font-size:11.5px; border-radius:8px; flex:1; background:var(--red);">Ya, Hapus</button>
+      <div class="modal-actions gx-foot" style="border-top:none;">
+        <button type="button" class="btn btn-outline" id="kp-confirmCancelBtn">Batal</button>
+        <button type="button" class="btn btn-primary is-danger" id="kp-confirmOkBtn">Ya, hapus</button>
       </div>
     </div>
   </div>
@@ -523,17 +293,45 @@
     initialized: false
   };
 
+  var KP_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var KP_RING_LEN = 2 * Math.PI * 25;
+  // Urutan dan warna role: chip di kartu/tabel, dan nuansa biru di highlight
+  var KP_ROLE_ORDER = ['super_admin', 'manajer', 'hrd', 'kepala_unit'];
   var KP_ROLE_META = {
-    super_admin: { label: 'Super Admin', color: '#8b0000', bg: 'rgba(139,0,0,.08)' },
-    manajer: { label: 'Manajer', color: '#007aff', bg: 'rgba(0,122,255,.08)' },
-    hrd: { label: 'HRD', color: '#8e2fc9', bg: 'rgba(142,47,201,.08)' },
-    kepala_unit: { label: 'Kepala Unit', color: '#c06400', bg: 'rgba(192,100,0,.08)' }
+    super_admin: { label: 'Super admin', color: '#B42318', bg: '#FDECEA', shade: '#DCE5FF' },
+    manajer: { label: 'Manajer', color: '#1C1AAF', bg: '#EEEEFB', shade: '#9DB6FF' },
+    hrd: { label: 'HRD', color: '#8e2fc9', bg: 'rgba(142,47,201,.1)', shade: '#6B8CFF' },
+    kepala_unit: { label: 'Kepala unit', color: '#B25E00', bg: '#FFF1DE', shade: '#3F5BF0' }
   };
+  var KP_BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
   function kpEscape(str) {
     var d = document.createElement('div');
     d.textContent = str == null ? '' : str;
     return d.innerHTML;
+  }
+  function kpInitials(nama) {
+    return (nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+  }
+  function kpRoleChip(role) {
+    var m = KP_ROLE_META[role];
+    if (!m) return '<span class="kp-role" style="background:var(--surface); color:var(--ink-soft);">' + kpEscape(role || '-') + '</span>';
+    return '<span class="kp-role" style="background:' + m.bg + '; color:' + m.color + ';">' + m.label + '</span>';
+  }
+  function kpStatusPill(isAktif) {
+    return isAktif ? '<span class="kp-status is-on"><i></i>Aktif</span>' : '<span class="kp-status is-off"><i></i>Nonaktif</span>';
+  }
+  function kpCountUp(el, to) {
+    if (!el) return;
+    if (KP_REDUCED_MOTION || !to) { el.textContent = to; return; }
+    var start = null, dur = 700;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
 
   function kpInit() {
@@ -545,13 +343,11 @@
 
       document.getElementById('kp-searchInput').addEventListener('input', function (e) {
         kpState.search = e.target.value.toLowerCase();
-        kpRenderList();
+        kpRenderList(false);
       });
-      var viewToggleBtn = document.getElementById('kp-viewToggleBtn');
-      if (viewToggleBtn) {
-        viewToggleBtn.addEventListener('click', kpToggleViewMode);
-      }
+      document.getElementById('kp-viewToggleBtn').addEventListener('click', kpToggleViewMode);
       document.getElementById('kp-cancelBtn').addEventListener('click', kpCloseModal);
+      document.getElementById('kp-modalCloseX').addEventListener('click', kpCloseModal);
       document.getElementById('kp-saveBtn').addEventListener('click', kpSubmitEdit);
       document.getElementById('kp-confirmCancelBtn').addEventListener('click', kpCloseConfirm);
       document.getElementById('kp-confirmOkBtn').addEventListener('click', async function () {
@@ -559,19 +355,32 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Menghapus...';
         try { if (kpConfirmCallback) await kpConfirmCallback(); }
-        finally { btn.disabled = false; btn.textContent = 'Ya, Hapus'; kpCloseConfirm(); }
+        finally { btn.disabled = false; btn.textContent = 'Ya, hapus'; kpCloseConfirm(); }
+      });
+      [['kp-modal', kpCloseModal], ['kp-confirmModal', kpCloseConfirm]].forEach(function (m) {
+        document.getElementById(m[0]).addEventListener('click', function (e) { if (e.target === this) m[1](); });
       });
 
       document.querySelectorAll('.kp-opt').forEach(function (opt) {
-        opt.addEventListener('click', function () {
+        opt.addEventListener('click', function (e) {
+          e.preventDefault();
           var group = opt.closest('.kp-opt-row');
-          group.querySelectorAll('.kp-opt').forEach(function (o) {
-            o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
-          });
-          opt.style.background = 'var(--blue-tint)'; opt.style.color = 'var(--blue)'; opt.style.borderColor = 'var(--blue)';
-          opt.querySelector('input').checked = true;
+          kpSetOpt(group.id, opt.dataset.val);
           if (group.id === 'kp-roleOpts') kpUpdateUnitFieldVisibility(opt.dataset.val);
         });
+      });
+
+      // Satu listener untuk semua tombol di daftar (kartu dan tabel)
+      document.getElementById('kp-list').addEventListener('click', function (e) {
+        var th = e.target.closest('.kp-sort-th');
+        if (th) { kpHandleSort(th.dataset.sort); return; }
+        var edit = e.target.closest('.kp-edit-btn');
+        if (edit) { kpOpenModal(edit.dataset.id); return; }
+        var del = e.target.closest('.kp-delete-btn');
+        if (del) {
+          document.getElementById('kp-confirmDesc').textContent = del.dataset.nama + ' akan dihapus permanen dari sistem.';
+          kpOpenConfirm(function () { return kpDelete(del.dataset.id); });
+        }
       });
 
       document.querySelectorAll('#kp-modal input, #kp-modal select').forEach(function (el) {
@@ -598,32 +407,20 @@
     var btn = document.getElementById('kp-viewToggleBtn');
     if (!btn) return;
     var isTable = kpState.viewMode === 'table';
-    btn.style.borderColor = 'var(--border)';
-    btn.style.color = 'var(--ink)';
-    btn.style.background = '#fff';
-    if (isTable) {
-      btn.setAttribute('title', 'Tampilkan sebagai Kartu');
-      btn.setAttribute('aria-label', 'Tampilkan sebagai Kartu');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>';
-    } else {
-      btn.setAttribute('title', 'Tampilkan sebagai Tabel');
-      btn.setAttribute('aria-label', 'Tampilkan sebagai Tabel');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
-    }
+    var label = isTable ? 'Tampilkan sebagai kartu' : 'Tampilkan sebagai tabel';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
+    btn.innerHTML = isTable
+      ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
   }
 
   function kpToggleViewMode() {
     var btn = document.getElementById('kp-viewToggleBtn');
-    if (btn) {
-      btn.classList.remove('kp-btn-pop');
-      void btn.offsetWidth;
-      btn.classList.add('kp-btn-pop');
-    }
+    btn.classList.remove('kp-btn-pop'); void btn.offsetWidth; btn.classList.add('kp-btn-pop');
     kpState.viewMode = (kpState.viewMode === 'table') ? 'cards' : 'table';
-    try {
-      localStorage.setItem('genio_kp_view_mode', kpState.viewMode);
-    } catch (e) {}
-    kpRenderList();
+    try { localStorage.setItem('genio_kp_view_mode', kpState.viewMode); } catch (e) {}
+    kpRenderList(true);
   }
 
   var KP_MOBILE_ORDER = ['.kp-dock-sec', '.kp-search-sec'];
@@ -650,13 +447,14 @@
       });
       toolbarRow.remove();
     }
+    kpUpdateDockGlider();
   }
 
   function kpSwitchTab(tab) {
     kpState.tab = tab;
     document.querySelectorAll('.kp-dock-btn').forEach(function (b) { b.classList.toggle('kp-dock-active', b.dataset.tab === tab); });
     kpUpdateDockGlider();
-    kpRenderList();
+    kpRenderList(true);
   }
   function kpUpdateDockGlider() {
     var activeBtn = document.querySelector('.kp-dock-btn.kp-dock-active');
@@ -727,74 +525,97 @@
       kpState.userList = await supaRest('users?role=neq.tutor&select=id,nama,email,role,status,unit_id,created_at,units(nama_unit)&order=nama.asc', s.access_token);
 
       var aktifCount = kpState.userList.filter(function (u) { return u.status === 'aktif'; }).length;
-      document.getElementById('kp-heroTotal').textContent = kpState.userList.length;
-      document.getElementById('kp-heroAktif').textContent = aktifCount + ' Akun';
-      document.getElementById('kp-heroNonaktif').textContent = (kpState.userList.length - aktifCount) + ' Akun';
       document.getElementById('kp-aktifCount').textContent = aktifCount;
       document.getElementById('kp-nonaktifCount').textContent = kpState.userList.length - aktifCount;
 
-      kpRenderList();
+      kpRenderHero();
+      kpRenderList(true);
     } catch (err) {
-      listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + kpEscape(err.message) + '</div>';
+      listEl.classList.remove('kp-view-table');
+      listEl.innerHTML = '<div class="kp-card kp-full-width">Gagal memuat data: ' + kpEscape(err.message) + '</div>';
     }
   }
 
-  function kpFormatTgl(iso) {
+  function kpRenderHero() {
+    var list = kpState.userList;
+    var aktif = list.filter(function (u) { return u.status === 'aktif'; }).length;
+    var non = list.length - aktif;
+    var now = new Date();
+    var baru = list.filter(function (u) {
+      if (!u.created_at) return false;
+      var d = new Date(u.created_at);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    }).length;
+
+    var counts = {};
+    list.forEach(function (u) { counts[u.role] = (counts[u.role] || 0) + 1; });
+    var roles = KP_ROLE_ORDER.filter(function (r) { return counts[r]; });
+    Object.keys(counts).forEach(function (r) { if (roles.indexOf(r) === -1) roles.push(r); });
+
+    kpCountUp(document.getElementById('kp-heroTotal'), list.length);
+    document.getElementById('kp-heroRolePill').textContent = roles.length + ' role';
+    document.getElementById('kp-heroSub').textContent = list.length
+      ? aktif + ' aktif · ' + non + ' nonaktif' + (baru ? ' · ' + baru + ' bergabung bulan ini' : '')
+      : 'Belum ada akun pengelola';
+    document.getElementById('kp-heroAktif').textContent = aktif;
+    document.getElementById('kp-heroNonaktif').textContent = non;
+    document.getElementById('kp-heroBaru').textContent = baru;
+
+    var bar = document.getElementById('kp-heroBar');
+    bar.innerHTML = roles.map(function (r, i) {
+      var m = KP_ROLE_META[r];
+      return '<i style="flex:' + counts[r] + '; background:' + (m ? m.shade : 'rgba(255,255,255,.3)') + '; --i:' + i + ';" title="' + kpEscape(m ? m.label : r) + ': ' + counts[r] + '"></i>';
+    }).join('');
+    if (!KP_REDUCED_MOTION) { bar.classList.remove('kp-anim'); void bar.offsetWidth; bar.classList.add('kp-anim'); }
+    document.getElementById('kp-heroLeg').innerHTML = roles.map(function (r) {
+      var m = KP_ROLE_META[r];
+      return '<span><em style="background:' + (m ? m.shade : 'rgba(255,255,255,.3)') + ';"></em>' + kpEscape(m ? m.label : r) + ' <b>' + counts[r] + '</b></span>';
+    }).join('');
+
+    var pct = list.length ? Math.round(aktif / list.length * 100) : 0;
+    document.getElementById('kp-heroRingPct').textContent = pct + '%';
+    var arc = document.getElementById('kp-heroRingArc');
+    arc.setAttribute('stroke-dasharray', '0 ' + KP_RING_LEN);
+    var len = list.length ? aktif / list.length * KP_RING_LEN : 0;
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      arc.setAttribute('stroke-dasharray', len.toFixed(2) + ' ' + KP_RING_LEN.toFixed(2));
+    }); });
+  }
+
+  function kpFormatTgl(iso, withYear) {
     if (!iso) return '-';
     var d = new Date(iso);
-    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+    return d.getDate() + ' ' + KP_BULAN[d.getMonth()] + (withYear === false ? '' : ' ' + d.getFullYear());
   }
 
   function kpMatchesSearch(u) {
     if (!kpState.search) return true;
     var q = kpState.search;
-    return (u.nama || '').toLowerCase().indexOf(q) !== -1 || (u.email || '').toLowerCase().indexOf(q) !== -1;
+    return (u.nama || '').toLowerCase().indexOf(q) !== -1 || (u.email || '').toLowerCase().indexOf(q) !== -1 ||
+      ((u.units && u.units.nama_unit) || '').toLowerCase().indexOf(q) !== -1;
   }
 
   function kpGetSortIcon(field) {
     if (kpState.sortField === field) {
-      if (kpState.sortDir === 'asc') {
-        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
-      } else {
-        return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
-      }
+      return kpState.sortDir === 'asc'
+        ? '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>'
+        : '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; display:inline-block; flex:none;"><path d="M12 17l5.5-8h-11z"/></svg>';
     }
     return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="vertical-align:middle; margin-left:4px; opacity:.2; display:inline-block; flex:none;"><path d="M12 7l-5.5 8h11z"/></svg>';
   }
 
   function kpSortRows(rows) {
     var field = kpState.sortField || 'nama';
-    var dir = kpState.sortDir || 'asc';
-    var sorted = rows.slice();
-    sorted.sort(function (a, b) {
-      var valA = '';
-      var valB = '';
-      if (field === 'nama') {
-        valA = (a.nama || '').toLowerCase();
-        valB = (b.nama || '').toLowerCase();
-      } else if (field === 'email') {
-        valA = (a.email || '').toLowerCase();
-        valB = (b.email || '').toLowerCase();
-      } else if (field === 'role') {
-        var rA = KP_ROLE_META[a.role] ? KP_ROLE_META[a.role].label : (a.role || '');
-        var rB = KP_ROLE_META[b.role] ? KP_ROLE_META[b.role].label : (b.role || '');
-        valA = rA.toLowerCase();
-        valB = rB.toLowerCase();
-      } else if (field === 'unit') {
-        valA = (a.units && a.units.nama_unit || '').toLowerCase();
-        valB = (b.units && b.units.nama_unit || '').toLowerCase();
-      } else if (field === 'created_at') {
-        valA = a.created_at || '';
-        valB = b.created_at || '';
-      } else if (field === 'status') {
-        valA = (a.status || '').toLowerCase();
-        valB = (b.status || '').toLowerCase();
-      }
-      if (valA < valB) return dir === 'asc' ? -1 : 1;
-      if (valA > valB) return dir === 'asc' ? 1 : -1;
-      return 0;
-    });
-    return sorted;
+    var dir = kpState.sortDir === 'desc' ? -1 : 1;
+    function key(u) {
+      if (field === 'email') return (u.email || '').toLowerCase();
+      if (field === 'role') return String(KP_ROLE_ORDER.indexOf(u.role));
+      if (field === 'unit') return ((u.units && u.units.nama_unit) || '').toLowerCase();
+      if (field === 'created_at') return u.created_at || '';
+      if (field === 'status') return (u.status || '').toLowerCase();
+      return (u.nama || '').toLowerCase();
+    }
+    return rows.slice().sort(function (a, b) { var x = key(a), y = key(b); return x < y ? -dir : (x > y ? dir : 0); });
   }
 
   function kpHandleSort(field) {
@@ -804,21 +625,22 @@
       kpState.sortField = field;
       kpState.sortDir = (field === 'created_at') ? 'desc' : 'asc';
     }
-    kpRenderList();
+    kpRenderList(false);
   }
 
-  function kpRenderList() {
+  function kpRenderList(animate) {
     var listEl = document.getElementById('kp-list');
-    var rows = kpState.userList.filter(function (u) { return u.status === kpState.tab; }).filter(kpMatchesSearch);
-    rows = kpSortRows(rows);
+    var rows = kpSortRows(kpState.userList.filter(function (u) { return u.status === kpState.tab; }).filter(kpMatchesSearch));
 
-    document.getElementById('kp-sectionLabel').textContent = kpState.tab === 'aktif' ? 'Akun Aktif' : 'Akun Nonaktif';
-    document.getElementById('kp-resultCount').textContent = rows.length + ' Akun';
+    document.getElementById('kp-sectionLabel').textContent = kpState.tab === 'aktif' ? 'Akun aktif' : 'Akun nonaktif';
+    document.getElementById('kp-resultCount').textContent = rows.length + ' akun';
     kpUpdateViewToggleUI();
 
     if (!rows.length) {
       listEl.classList.remove('kp-view-table');
-      listEl.innerHTML = '<div class="kp-card kp-full-width empty-state">Tidak ada akun yang cocok.</div>';
+      listEl.innerHTML = '<div class="kp-card kp-full-width"><i class="ph ph-users-three" aria-hidden="true" style="font-size:26px; opacity:.6;"></i>' +
+        '<div style="font-size:12px; font-weight:600; color:var(--ink); margin-top:6px;">' + (kpState.search ? 'Tidak ada akun yang cocok' : (kpState.tab === 'aktif' ? 'Belum ada akun aktif' : 'Tidak ada akun nonaktif')) + '</div>' +
+        '<div style="margin-top:2px;">' + (kpState.search ? 'Ubah kata kunci pencarian.' : 'Akun baru muncul di sini setelah mendaftar.') + '</div></div>';
       return;
     }
 
@@ -829,125 +651,64 @@
       listEl.classList.remove('kp-view-table');
       listEl.innerHTML = rows.map(kpRenderCard).join('');
     }
-    kpBindCardEvents();
+
+    if (animate && !KP_REDUCED_MOTION) {
+      var items = kpState.viewMode === 'table' ? listEl.querySelectorAll('.kp-table tbody tr') : listEl.querySelectorAll('.kp-card:not(.kp-full-width)');
+      items.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('kp-in'); });
+      clearTimeout(listEl._kpAnimT);
+      listEl._kpAnimT = setTimeout(function () { items.forEach(function (el) { el.classList.remove('kp-in'); }); }, 1200);
+    }
   }
 
   function kpRenderTable(rows) {
+    function th(field, label, extra, style) {
+      return '<th class="kp-sort-th' + (extra || '') + '" data-sort="' + field + '"' + (style ? ' style="' + style + '"' : '') + '><span style="display:inline-flex; align-items:center;">' + label + kpGetSortIcon(field) + '</span></th>';
+    }
     var trs = rows.map(function (u, idx) {
-      var isAktif = u.status === 'aktif';
-      var roleMeta = KP_ROLE_META[u.role] || { label: u.role || '-' };
-      var roleText = roleMeta.label || u.role || '-';
-      var unitText = (u.units && u.units.nama_unit) ? kpEscape(u.units.nama_unit) : '-';
-      var dotColor = isAktif ? '#34c759' : '#8e8e93';
-      var statusLabel = isAktif ? 'Aktif' : 'Nonaktif';
-
-      var statusBadge = '<span class="kp-table-status-pill">' +
-        '<span class="kp-status-dot" style="background:' + dotColor + ';"></span>' +
-        '<span class="kp-status-label">' + statusLabel + '</span>' +
-      '</span>';
-
-      return '' +
-        '<tr>' +
-          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:500;">' + kpEscape(u.nama) + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + kpEscape(u.email || '-') + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + kpEscape(roleText) + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + unitText + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink); font-size:11.5px; font-weight:400;">' + kpFormatTgl(u.created_at) + '</td>' +
-          '<td style="text-align:center; white-space:nowrap;">' + statusBadge + '</td>' +
-          '<td style="text-align:center; white-space:nowrap; width:65px;">' +
-            '<div style="display:inline-flex; align-items:center; gap:4px;">' +
-              '<button type="button" class="kp-table-edit-btn kp-table-icon-btn kp-edit-btn" data-id="' + u.id + '" title="Edit Pengguna" aria-label="Edit">' +
-                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
-              '</button>' +
-              '<button type="button" class="kp-table-delete-btn kp-table-icon-btn kp-delete-btn" data-id="' + u.id + '" data-nama="' + kpEscape(u.nama) + '" title="Hapus Pengguna" aria-label="Hapus">' +
-                '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
-              '</button>' +
-            '</div>' +
-          '</td>' +
-        '</tr>';
+      var unit = u.units && u.units.nama_unit;
+      return '<tr>' +
+        '<td class="kp-stk kp-stk-no">' + (idx + 1) + '</td>' +
+        '<td class="kp-stk kp-stk-nama" title="' + kpEscape(u.nama) + '"><div class="kp-who"><span class="kp-av">' + kpEscape(kpInitials(u.nama)) + '</span><b>' + kpEscape(u.nama) + '</b></div></td>' +
+        '<td class="kp-col-email" title="' + kpEscape(u.email || '') + '">' + kpEscape(u.email || '-') + '</td>' +
+        '<td>' + kpRoleChip(u.role) + '</td>' +
+        '<td>' + (unit ? kpEscape(unit) : '<span class="kp-muted">-</span>') + '</td>' +
+        '<td>' + kpFormatTgl(u.created_at) + '</td>' +
+        '<td>' + kpStatusPill(u.status === 'aktif') + '</td>' +
+        '<td class="kp-act">' +
+          '<button type="button" class="kp-icon-btn kp-edit-btn" data-id="' + u.id + '" title="Edit pengguna" aria-label="Edit pengguna"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button>' +
+          '<button type="button" class="kp-icon-btn is-del kp-delete-btn" data-id="' + u.id + '" data-nama="' + kpEscape(u.nama) + '" title="Hapus pengguna" aria-label="Hapus pengguna"><i class="ph ph-trash" aria-hidden="true"></i></button>' +
+        '</td>' +
+      '</tr>';
     }).join('');
-
-    return '' +
-      '<div class="kp-table-card kp-full-width">' +
-        '<div class="kp-table-wrap">' +
-          '<table class="kp-table">' +
-            '<thead>' +
-              '<tr>' +
-                '<th style="width:38px; text-align:center;">No</th>' +
-                '<th class="kp-sort-th" data-sort="nama" title="Urutkan Nama (A - Z)">' +
-                  '<span style="display:inline-flex; align-items:center;">Nama Pengguna' + kpGetSortIcon('nama') + '</span>' +
-                '</th>' +
-                '<th class="kp-sort-th" data-sort="email" title="Urutkan Email">' +
-                  '<span style="display:inline-flex; align-items:center;">Email' + kpGetSortIcon('email') + '</span>' +
-                '</th>' +
-                '<th class="kp-sort-th" data-sort="role" title="Urutkan Role">' +
-                  '<span style="display:inline-flex; align-items:center;">Role' + kpGetSortIcon('role') + '</span>' +
-                '</th>' +
-                '<th class="kp-sort-th" data-sort="unit" title="Urutkan Unit">' +
-                  '<span style="display:inline-flex; align-items:center;">Unit / Cabang' + kpGetSortIcon('unit') + '</span>' +
-                '</th>' +
-                '<th class="kp-sort-th" data-sort="created_at" title="Urutkan Tanggal Bergabung">' +
-                  '<span style="display:inline-flex; align-items:center;">Bergabung' + kpGetSortIcon('created_at') + '</span>' +
-                '</th>' +
-                '<th class="kp-sort-th" data-sort="status" title="Urutkan Status" style="text-align:center;">' +
-                  '<span style="display:inline-flex; align-items:center; justify-content:center; width:100%;">Status' + kpGetSortIcon('status') + '</span>' +
-                '</th>' +
-                '<th style="text-align:center; width:68px;">Aksi</th>' +
-              '</tr>' +
-            '</thead>' +
-            '<tbody>' +
-              trs +
-            '</tbody>' +
-          '</table>' +
-        '</div>' +
-      '</div>';
+    return '<div class="kp-table-card kp-full-width"><div class="kp-table-wrap"><table class="kp-table"><thead><tr>' +
+      '<th class="kp-stk kp-stk-no">No</th>' +
+      th('nama', 'Nama', ' kp-stk kp-stk-nama') +
+      th('email', 'Email', ' kp-col-email') +
+      th('role', 'Role') +
+      th('unit', 'Unit') +
+      th('created_at', 'Bergabung') +
+      th('status', 'Status') +
+      '<th style="text-align:right;">Aksi</th>' +
+      '</tr></thead><tbody>' + trs + '</tbody></table></div></div>';
   }
 
   function kpRenderCard(u) {
-    var initials = (u.nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
-    var isAktif = u.status === 'aktif';
-    var statusBadge = isAktif
-      ? '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(52,199,89,.14); color:#28a745; font-size:9.5px; font-weight:600; padding:0 8px; height:22px; border-radius:999px; box-sizing:border-box; flex:none;"><span style="width:12px; height:12px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
-      : '<span style="display:inline-flex; align-items:center; gap:4px; background:rgba(142,142,147,.16); color:#8e8e93; font-size:9.5px; font-weight:600; padding:0 8px; height:22px; border-radius:999px; box-sizing:border-box; flex:none;"><span style="width:12px; height:12px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="7" height="7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
-
-    var roleMeta = KP_ROLE_META[u.role] || { label: u.role, color: 'var(--ink-soft)' };
-
-    return '' +
-      '<div class="card kp-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
-          '<div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">' +
-            '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex:none;">' + kpEscape(initials) + '</div>' +
-            '<div style="min-width:0;">' +
-              '<h4 style="font-size:12.5px; font-weight:600; color:#1c1c1e; margin:0; line-height:1.3;">' + kpEscape(u.nama) + '</h4>' +
-              '<p style="font-size:10.5px; font-weight:600; margin:1px 0 0; color:' + roleMeta.color + ';">' + kpEscape(roleMeta.label) + '</p>' +
-              '<p style="font-size:10px; color:#8e8e93; font-weight:500; margin:1px 0 0;">' + kpEscape(u.email) + (u.units ? ' &bull; ' + kpEscape(u.units.nama_unit) : '') + '</p>' +
-            '</div>' +
-          '</div>' +
-          statusBadge +
-        '</div>' +
-        '<div style="display:flex; gap:8px; margin-top:10px;">' +
-          '<button class="kp-edit-btn" data-id="' + u.id + '" style="flex:1; height:30px; background:var(--blue); color:#fff; border:none; border-radius:7px; padding:0 10px; font-size:11px; font-weight:500; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Edit</button>' +
-          '<button class="kp-delete-btn" data-id="' + u.id + '" data-nama="' + kpEscape(u.nama) + '" style="flex:1; height:30px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:7px; padding:0 10px; font-size:11px; font-weight:500; cursor:pointer; font-family:var(--font); display:inline-flex; align-items:center; justify-content:center;">Hapus</button>' +
-        '</div>' +
-      '</div>';
-  }
-
-  function kpBindCardEvents() {
-    document.querySelectorAll('.kp-edit-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () { kpOpenModal(btn.dataset.id); });
-    });
-    document.querySelectorAll('.kp-delete-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        document.getElementById('kp-confirmDesc').textContent = btn.dataset.nama + ' akan dihapus permanen dari sistem.';
-        kpOpenConfirm(function () { kpDelete(btn.dataset.id); });
-      });
-    });
-    document.querySelectorAll('.kp-sort-th').forEach(function (th) {
-      th.addEventListener('click', function () {
-        kpHandleSort(th.dataset.sort);
-      });
-    });
+    var unit = u.units && u.units.nama_unit;
+    return '<div class="kp-card">' +
+      '<div class="kpc-head">' +
+        '<span class="kp-av">' + kpEscape(kpInitials(u.nama)) + '</span>' +
+        '<div class="kpc-who"><h4 title="' + kpEscape(u.nama) + '">' + kpEscape(u.nama) + '</h4><p title="' + kpEscape(u.email || '') + '">' + kpEscape(u.email || '-') + '</p></div>' +
+        kpStatusPill(u.status === 'aktif') +
+      '</div>' +
+      '<div class="kpc-chips">' + kpRoleChip(u.role) +
+        (unit ? '<span class="kpc-unit"><i class="ph ph-buildings" aria-hidden="true"></i>' + kpEscape(unit) + '</span>' : '') +
+      '</div>' +
+      '<div class="kpc-foot">' +
+        '<div class="kpc-join"><span>Bergabung</span><b>' + kpFormatTgl(u.created_at) + '</b></div>' +
+        '<button type="button" class="kp-icon-btn is-del kp-delete-btn" data-id="' + u.id + '" data-nama="' + kpEscape(u.nama) + '" title="Hapus pengguna" aria-label="Hapus pengguna"><i class="ph ph-trash" aria-hidden="true"></i></button>' +
+        '<button type="button" class="kp-edit-btn is-text" data-id="' + u.id + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit</button>' +
+      '</div>' +
+    '</div>';
   }
 
   async function kpDelete(id) {
@@ -959,14 +720,12 @@
     } catch (err) { genioToast('Gagal menghapus: ' + err.message, 'error'); }
   }
 
-  /* ===== Modal Edit ===== */
+  /* ===== Popup edit ===== */
   var kpModal = document.getElementById('kp-modal');
   function kpSetOpt(groupId, val) {
     document.querySelectorAll('#' + groupId + ' .kp-opt').forEach(function (o) {
       var active = o.dataset.val === val;
-      o.style.background = active ? 'var(--blue-tint)' : '#fff';
-      o.style.color = active ? 'var(--blue)' : 'var(--ink-soft)';
-      o.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
+      o.classList.toggle('is-on', active);
       o.querySelector('input').checked = active;
     });
   }
@@ -975,13 +734,17 @@
     var u = kpState.userList.find(function (x) { return x.id === id; });
     if (!u) return;
     document.getElementById('kp-modalAlert').hidden = true;
-    document.getElementById('kp-modalTitle').textContent = 'Edit Pengguna';
+    document.getElementById('kp-modalTitle').textContent = 'Edit pengguna';
+    document.getElementById('kp-modalSub').textContent = 'Bergabung ' + kpFormatTgl(u.created_at) + '.';
     document.getElementById('kp-editId').value = id;
     document.getElementById('kp-nama').value = u.nama || '';
     document.getElementById('kp-email').value = u.email || '';
     kpSetOpt('kp-roleOpts', u.role);
     kpSetOpt('kp-statusOpts', u.status);
     kpUpdateUnitFieldVisibility(u.role);
+
+    kpModal.hidden = false;
+    requestAnimationFrame(function () { kpModal.classList.add('show'); });
 
     if (!kpState.unitOptions.length) {
       try {
@@ -994,9 +757,6 @@
       return '<option value="' + un.id + '">' + kpEscape(un.nama_unit) + '</option>';
     }).join('');
     unitSelect.value = u.unit_id || '';
-
-    kpModal.hidden = false;
-    requestAnimationFrame(function () { kpModal.classList.add('show'); });
   }
   function kpCloseModal() {
     kpModal.classList.remove('show');
@@ -1015,7 +775,7 @@
 
     if (!nama || !email) { alertEl.textContent = 'Nama dan email wajib diisi.'; alertEl.hidden = false; return; }
     if (!role) { alertEl.textContent = 'Role wajib dipilih.'; alertEl.hidden = false; return; }
-    if (role === 'kepala_unit' && !unitId) { alertEl.textContent = 'Kepala Unit wajib pilih unit.'; alertEl.hidden = false; return; }
+    if (role === 'kepala_unit' && !unitId) { alertEl.textContent = 'Kepala unit wajib memilih unit.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
     var btn = document.getElementById('kp-saveBtn');
@@ -1042,7 +802,7 @@
     }
   }
 
-  /* ===== Modal Konfirmasi ===== */
+  /* ===== Popup konfirmasi ===== */
   var kpConfirmModal = document.getElementById('kp-confirmModal');
   var kpConfirmCallback = null;
   function kpOpenConfirm(callback) {
