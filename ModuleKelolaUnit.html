@@ -2,280 +2,205 @@
 <style>
   @media (min-width:900px){
     .module-panel[data-module="kelola-unit"][hidden]{ display:none !important; }
-    .module-panel[data-module="kelola-unit"]:not([hidden]){
-      width:94%; max-width:1500px; margin:0 auto;
-    }
-    .ku-hero-box{
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-    }
-    .ku-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 12px !important;
-    }
-    .ku-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .ku-hero-badge-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .ku-hero-sublabel{
-      display: none !important;
-    }
-    .ku-hero-counter{
-      margin-top: 0 !important;
-    }
-    .ku-hero-num-wrap{
-      display: flex !important;
-      align-items: baseline !important;
-      gap: 6px !important;
-      margin-top: 0 !important;
-    }
-    .ku-hero-val{
-      font-size: 18px !important;
-      line-height: 1.1 !important;
-    }
-    .ku-hero-unit{
-      font-size: 10.5px !important;
-    }
-    .ku-hero-stats-row{
-      flex: none !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 16px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .ku-hero-stat-card{
-      flex: none !important;
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-      min-width: 0 !important;
-    }
-    #ku-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
-    #ku-list > .ku-card{ margin-bottom:0 !important; }
+    .module-panel[data-module="kelola-unit"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
+    #ku-list:not(.ku-view-table){ display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px; align-items:start; }
     #ku-list > .ku-full-width{ grid-column:1/-1; }
   }
 
-  .ku-hero-box{
-    background:var(--ink); color:#fff; border-radius:14px;
-    padding:12px 16px; margin-bottom:12px; box-sizing:border-box;
-  }
-  .ku-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .ku-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .ku-hero-badge-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-  }
-  .ku-hero-sublabel{
-    font-size: 10px;
-    opacity: .65;
-    margin-top: 8px;
-  }
-  .ku-hero-num-wrap{
-    display: flex;
-    align-items: baseline;
-    gap: 5px;
-    margin-top: 1px;
-  }
-  .ku-hero-val{
-    font-size: 21px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-  .ku-hero-unit{
-    font-size: 11.5px;
-    opacity: .6;
-    font-weight: 500;
-  }
-  .ku-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.14);
-  }
-  .ku-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .ku-hero-stat-icon{
-    width: 22px;
-    height: 22px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .ku-hero-stat-label{
-    font-size: 9px;
-    opacity: .65;
-  }
-  .ku-hero-stat-val{
-    font-size: 11.5px;
-    font-weight: 600;
-    margin-top: 1px;
+  /* ===== Highlight: jumlah unit + bar siswa per unit | ring unit aktif + tambah ===== */
+  .ku-hb{position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .kub-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
+  .kub-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
+  .kub-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .kub-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .kub-label i{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .kub-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .kub-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; margin-top:8px; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .kub-unit{font-size:13px; font-weight:500; color:rgba(255,255,255,.65); margin-left:5px; letter-spacing:0;}
+  .kub-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kub-bars{display:grid; gap:7px; margin-top:14px; max-width:560px;}
+  .kub-u{display:grid; grid-template-columns:minmax(0,110px) minmax(0,1fr) 56px; align-items:center; gap:10px; font-size:10.5px;}
+  .kub-u .n{color:rgba(255,255,255,.75); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kub-u .t{height:8px; border-radius:99px; background:rgba(255,255,255,.08); overflow:hidden; min-width:0;}
+  .kub-u .t i{display:block; height:100%; border-radius:99px; background:#9DB6FF; transform-origin:left center;}
+  .kub-u b{font-weight:700; color:#fff; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .kub-u.is-off .n{color:rgba(255,255,255,.4);} .kub-u.is-off .t i{background:rgba(255,255,255,.22);} .kub-u.is-off b{color:rgba(255,255,255,.5);}
+  .kub-more{font-size:10.5px; color:rgba(255,255,255,.55);}
+  .kub-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:250px;}
+  .kub-ringwrap{display:flex; align-items:center; gap:14px;}
+  .kub-ring{width:64px; height:64px; flex:none; overflow:visible;}
+  .kub-ring circle{fill:none; stroke-width:7;}
+  .kub-ring .tr{stroke:rgba(255,255,255,.1);}
+  .kub-ring .arc{stroke:#7CF0C3; transform:rotate(-90deg); transform-origin:32px 32px; transition:stroke-dasharray .9s cubic-bezier(.16,1,.3,1);}
+  .kub-ring text{fill:#fff; font-family:var(--font); font-size:13px; font-weight:800;}
+  .kub-list{display:grid; gap:6px; flex:1; min-width:150px;}
+  .kub-list div{display:flex; align-items:center; gap:7px; font-size:10.5px; color:rgba(255,255,255,.75); white-space:nowrap;}
+  .kub-list em{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
+  .kub-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .ku-hero-add-btn{height:34px; border-radius:9px; width:100%; background:#fff; color:var(--blue); border:1px solid #fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .ku-hero-add-btn:hover{background:var(--blue-tint);}
+  .ku-hero-add-btn:active{transform:scale(.97);}
+  .ku-hero-add-btn i{font-size:14px;}
+  @keyframes kuGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  .kub-bars.ku-anim .t i, .ku-share.ku-anim i{animation:kuGrow .9s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 70ms);}
+  @media (max-width:899px){
+    .ku-hb{grid-template-columns:1fr;}
+    .kub-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .kub-num{font-size:28px;}
+    .kub-u{grid-template-columns:minmax(0,86px) minmax(0,1fr) 52px; gap:8px;}
   }
 
-  .ku-status-badge{
-    display:inline-flex; align-items:center; gap:4px;
-    font-size:9.5px; font-weight:500; padding:0 8px; height:22px;
-    border-radius:999px; box-sizing:border-box; flex:none;
-  }
+  /* ===== Toolbar ===== */
+  #ku-searchInput{height:34px !important; border-radius:10px !important; font-size:12px !important;}
+  #ku-searchInput:focus{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #ku-viewToggleBtn{width:34px; height:34px; border-radius:10px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:transform .15s ease, background .15s ease;}
+  #ku-viewToggleBtn:hover{background:var(--surface);}
+  #ku-viewToggleBtn:active{transform:scale(.9);}
+  @keyframes kuPop{0%{transform:scale(1);} 35%{transform:scale(1.18);} 100%{transform:scale(1);}}
+  .ku-btn-pop{animation:kuPop .32s cubic-bezier(.34,1.56,.64,1);}
+  .ku-list-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;}
+  #ku-sectionLabel{font-size:12px; font-weight:600; color:var(--ink);}
+  #ku-resultCount{display:inline-flex; align-items:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;}
 
-  .radio-row{ display:flex; gap:8px; }
-  .radio-opt{
-    flex:1; text-align:center; padding:6px 10px; border-radius:8px;
-    border:1px solid var(--border); background:var(--surface);
-    font-size:11.5px; font-weight:500; color:var(--ink-soft); cursor:pointer; user-select:none;
-  }
-  .radio-opt input{ display:none; }
-  .radio-opt.checked{ border-color:var(--blue); background:var(--blue-tint); color:var(--blue); }
+  /* ===== Elemen bersama ===== */
+  .ku-ico{width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
+  .ku-card.is-off .ku-ico{background:var(--surface); color:var(--ink-soft);}
+  .ku-status{display:inline-flex; align-items:center; gap:5px; flex:none; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .ku-status i{width:6px; height:6px; border-radius:50%;}
+  .ku-status.is-on{background:#E9F7EF; color:#1E8E5A;} .ku-status.is-on i{background:#1E8E5A;}
+  .ku-status.is-off{background:var(--surface); color:var(--ink-soft);} .ku-status.is-off i{background:#A9ADC0;}
+  .ku-share{display:flex; align-items:center; gap:8px; min-width:0;}
+  .ku-share .t{flex:1; height:6px; border-radius:99px; background:var(--surface); overflow:hidden; min-width:40px;}
+  .ku-share .t i{display:block; height:100%; border-radius:99px; background:var(--blue); transform-origin:left center;}
+  .ku-share span{font-size:10.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums; flex:none; min-width:30px; text-align:right;}
+  .ku-icon-btn{width:28px; height:28px; padding:0; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; background:#fff; color:var(--ink-soft); border:1px solid var(--border); font-size:13px; transition:background .15s ease, color .15s ease;}
+  .ku-icon-btn:hover{background:var(--surface); color:var(--ink);}
 
-  #ku-modal{ align-items:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease; }
-  #ku-modal.show{ opacity:1; }
-  #ku-modal .modal-sheet{
-    border-radius:16px; width:100%; max-width:400px; margin:0 auto; padding:16px 18px 18px;
-    transform:scale(.92) translateY(8px); transition:transform .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #ku-modal.show .modal-sheet{ transform:scale(1) translateY(0); }
-  #ku-modal .modal-sheet h3{ font-size:13.5px; font-weight:600; margin:0 0 10px; }
-  #ku-modal .field{ margin-bottom:10px; }
-  #ku-modal .field label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:3px; }
-  #ku-modal .field input[type="text"]{
-    width:100%; height:32px; border:1px solid var(--border); border-radius:8px;
-    padding:0 10px; font-family:var(--font); font-size:11.5px; background:var(--surface);
-    color:var(--ink); box-sizing:border-box; outline:none;
-  }
-  #ku-modal .modal-actions{ margin-top:14px; gap:8px; }
-  #ku-modal .modal-actions .btn{
-    height: 36px !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    border-radius: 9px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
-  }
+  /* ===== Kartu ===== */
+  .ku-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:12px; min-width:0; box-sizing:border-box; transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .ku-card:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12); transform:translateY(-1px);}
+  .ku-card.ku-full-width{text-align:center; color:var(--ink-soft); font-size:11.5px; padding:28px 14px;}
+  .ku-card.ku-full-width:hover{transform:none; box-shadow:none;}
+  .kuc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .kuc-who{min-width:0; flex:1;}
+  .kuc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .kuc-who p{font-size:10.5px; color:var(--ink-soft); margin:1px 0 0;}
+  .kuc-who p b{color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums;}
+  .kuc-share{margin-top:12px;}
+  .kuc-share-l{font-size:10px; color:var(--ink-soft); margin-bottom:5px;}
+  .kuc-foot{margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .ku-edit-btn{width:100%; height:32px; border-radius:9px; background:#fff; color:var(--ink); border:1px solid var(--border); font-family:var(--font); font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease;}
+  .ku-edit-btn:hover{background:var(--surface);}
 
-  #ku-addBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
-  #ku-addBtn:active{ transform:scale(.92); }
+  /* ===== Tabel ===== */
+  #ku-list.ku-view-table{display:block !important;}
+  .ku-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:12px;}
+  .ku-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .ku-table{width:100%; border-collapse:separate; border-spacing:0; text-align:left; font-family:var(--font); font-size:11px;}
+  .ku-table th{padding:10px 10px; background:#fff; border-bottom:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
+  .ku-table td{padding:8px 10px; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle; white-space:nowrap;}
+  .ku-table tbody tr:last-child td{border-bottom:none;}
+  .ku-table tbody tr:hover td{background:#F8F9FD;}
+  .ku-table th:not(.ku-col-share), .ku-table td:not(.ku-col-share){width:1%;}
+  .ku-table .ku-col-share{width:100%; min-width:120px;}
+  .ku-table .ku-stk{position:sticky; z-index:1; background:#fff;}
+  .ku-table th.ku-stk{z-index:2;}
+  .ku-table .ku-stk-no{left:0; width:40px; min-width:40px; max-width:40px; box-sizing:border-box; text-align:center; color:var(--ink-soft);}
+  .ku-table .ku-stk-nama{left:40px; box-shadow:1px 0 0 var(--border); font-weight:600; max-width:200px; overflow:hidden; text-overflow:ellipsis;}
+  .ku-table tbody tr:hover td.ku-stk{background:#F8F9FD;}
+  .ku-table .ku-num{text-align:right; font-weight:700; font-variant-numeric:tabular-nums;}
+  @media (max-width:899px){ .ku-table .ku-stk-nama{max-width:130px;} .ku-table .ku-col-share{min-width:80px;} }
+
+  /* ===== Popup ===== */
+  #ku-modal{align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;}
+  #ku-modal.show{opacity:1;}
+  #ku-form{display:contents;}
+
+  /* ===== Animasi ===== */
+  @keyframes kuIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes kuFade{from{opacity:0;} to{opacity:1;}}
+  #ku-list .ku-card.ku-in{animation:kuIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #ku-list .ku-table tbody tr.ku-in td{animation:kuFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
+  @media (prefers-reduced-motion: reduce){
+    #ku-list .ku-card.ku-in, #ku-list .ku-table tbody tr.ku-in td, .kub-bars.ku-anim .t i, .ku-share.ku-anim i, .ku-btn-pop{animation:none !important;}
+    .kub-ring .arc{transition:none;}
+    .ku-card:hover{transform:none;}
+  }
 </style>
 
-  <!-- Hero -->
-  <div class="ku-hero-box">
-    <div class="ku-hero-main-col">
-      <div class="ku-hero-badges">
-        <span class="ku-hero-badge-pill">
-          <span style="width:5px; height:5px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
-          KELOLA UNIT
-        </span>
+  <!-- Highlight -->
+  <div class="ku-hb">
+    <div class="kub-main">
+      <div class="kub-top">
+        <span class="kub-label"><i></i>Unit terdaftar</span>
+        <span class="kub-pill" id="ku-heroSiswa">0 siswa aktif</span>
       </div>
-      <div class="ku-hero-counter">
-        <div class="ku-hero-sublabel">Total Unit Terdaftar</div>
-        <div class="ku-hero-num-wrap">
-          <span class="ku-hero-val" id="ku-heroTotal">0</span>
-          <span class="ku-hero-unit">Unit</span>
-        </div>
-      </div>
+      <div class="kub-num"><span id="ku-heroTotal">0</span><span class="kub-unit">unit</span></div>
+      <div class="kub-sub" id="ku-heroSub">-</div>
+      <div class="kub-bars" id="ku-heroBars" aria-label="Siswa aktif per unit"></div>
     </div>
-
-    <div class="ku-hero-stats-row">
-      <div class="ku-hero-stat-card">
-        <span class="ku-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="ku-hero-stat-label">Aktif</div>
-          <div class="ku-hero-stat-val" id="ku-heroAktif">0 Unit</div>
+    <div class="kub-side">
+      <div class="kub-ringwrap">
+        <svg class="kub-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="tr" cx="32" cy="32" r="25"/>
+          <circle class="arc" id="ku-heroRingArc" cx="32" cy="32" r="25" stroke-dasharray="0 157.08" stroke-linecap="round"/>
+          <text id="ku-heroRingPct" x="32" y="36.5" text-anchor="middle">0%</text>
+        </svg>
+        <div class="kub-list">
+          <div><em style="background:#7CF0C3;"></em>Unit aktif<b id="ku-heroAktif">0</b></div>
+          <div><em style="background:rgba(255,255,255,.25);"></em>Nonaktif<b id="ku-heroNonaktif">0</b></div>
+          <div><em style="background:#9DB6FF;"></em>Rata-rata siswa<b id="ku-heroAvg">0</b></div>
         </div>
       </div>
-      <div class="ku-hero-stat-card">
-        <span class="ku-hero-stat-icon" style="background:rgba(142,142,147,.25); color:#c7c7cc;">
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="ku-hero-stat-label">Nonaktif</div>
-          <div class="ku-hero-stat-val" id="ku-heroNonaktif">0 Unit</div>
-        </div>
-      </div>
+      <button type="button" id="ku-addBtn" class="ku-hero-add-btn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah unit</button>
     </div>
   </div>
 
-  <!-- Search -->
-  <div style="display:flex; gap:6px; margin-bottom:10px;">
+  <!-- Pencarian dan ganti tampilan -->
+  <div style="display:flex; gap:8px; margin-bottom:12px;">
     <div style="flex:1; position:relative;">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="ku-searchInput" placeholder="Cari nama unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 32px; font-family:var(--font); font-size:11.5px; background:#fff; outline:none; box-sizing:border-box;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="ku-searchInput" placeholder="Cari nama unit..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
     </div>
-    <button id="ku-addBtn" aria-label="Tambah unit" style="width:32px; height:32px; border-radius:8px; background:var(--blue); color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;">
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    </button>
+    <button id="ku-viewToggleBtn" type="button" aria-label="Tampilkan sebagai tabel" title="Tampilkan sebagai tabel"></button>
+  </div>
+
+  <div class="ku-list-head">
+    <div id="ku-sectionLabel">Daftar unit</div>
+    <div id="ku-resultCount">0 unit</div>
   </div>
 
   <div id="ku-list">
     <div class="empty-state">Memuat data unit...</div>
   </div>
 
-  <!-- Modal tambah/edit -->
+  <!-- Popup tambah / edit unit -->
   <div class="modal-overlay" id="ku-modal" hidden>
-    <div class="modal-sheet">
-      <h3 id="ku-modalTitle">Tambah Unit</h3>
-      <div id="ku-modalAlert" class="alert alert-error" hidden></div>
-
-      <form id="ku-form">
-        <input type="hidden" id="ku-id">
-        <div class="field">
-          <label for="ku-nama">Nama unit</label>
-          <input type="text" id="ku-nama" required placeholder="mis. Condongcatur">
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-buildings" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3 id="ku-modalTitle">Tambah unit</h3>
+          <p class="gx-sub" id="ku-modalSub">Unit atau cabang baru Genio Institute.</p>
         </div>
-        <div class="field" id="ku-statusField" hidden>
-          <label>Status</label>
-          <div class="radio-row">
-            <label class="radio-opt" data-val="aktif"><input type="radio" name="ku-status" value="aktif"> Aktif</label>
-            <label class="radio-opt" data-val="nonaktif"><input type="radio" name="ku-status" value="nonaktif"> Nonaktif</label>
+        <button type="button" class="gx-close" id="ku-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <form id="ku-form">
+        <div class="gx-body">
+          <div id="ku-modalAlert" class="alert alert-error" hidden></div>
+          <input type="hidden" id="ku-id">
+          <div class="gx-step-title"><span class="gx-step">1</span>Nama unit</div>
+          <div class="gx-row"><label for="ku-nama">Nama unit <em class="gx-req">wajib</em></label><input type="text" id="ku-nama" required placeholder="mis. Condongcatur"></div>
+          <div id="ku-statusField" hidden>
+            <div class="gx-step-title"><span class="gx-step">2</span>Status</div>
+            <div class="gx-seg">
+              <label class="radio-opt" data-val="aktif"><input type="radio" name="ku-status" value="aktif"><i></i>Aktif</label>
+              <label class="radio-opt" data-val="nonaktif"><input type="radio" name="ku-status" value="nonaktif"><i></i>Nonaktif</label>
+            </div>
+            <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span>Unit nonaktif tidak muncul di pilihan unit saat membuat kontrak baru. Data lamanya tetap tersimpan.</span></div>
           </div>
         </div>
-        <div class="modal-actions">
+        <div class="modal-actions gx-foot">
           <button type="button" class="btn btn-outline" id="ku-cancelBtn">Batal</button>
           <button type="submit" class="btn btn-primary" id="ku-saveBtn">Simpan</button>
         </div>
@@ -291,6 +216,9 @@
   var kuLoaded = false;
   var kuUnits = [];
   var kuSearch = '';
+  var KU_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var KU_RING_LEN = 2 * Math.PI * 25;
+  var kuViewMode = (function () { try { return localStorage.getItem('genio_ku_view_mode') || 'cards'; } catch (e) { return 'cards'; } })();
 
   window.genioModuleHandlers['kelola-unit'] = function () {
     kuLoadList();
@@ -300,6 +228,23 @@
     var d = document.createElement('div');
     d.textContent = str == null ? '' : str;
     return d.innerHTML;
+  }
+
+  function kuCountUp(el, to) {
+    if (!el) return;
+    if (KU_REDUCED_MOTION || !to) { el.textContent = to; return; }
+    var start = null, dur = 700;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function kuTotalSiswa() {
+    return kuUnits.reduce(function (a, u) { return a + (u._siswaCount || 0); }, 0);
   }
 
   async function kuLoadList() {
@@ -319,67 +264,156 @@
       });
       kuUnits.forEach(function (u) { u._siswaCount = siswaCountMap[u.id] || 0; });
 
-      var aktifCount = kuUnits.filter(function (u) { return u.status === 'aktif'; }).length;
-      var nonaktifCount = kuUnits.length - aktifCount;
-      document.getElementById('ku-heroTotal').textContent = kuUnits.length;
-      document.getElementById('ku-heroAktif').textContent = aktifCount + ' Unit';
-      document.getElementById('ku-heroNonaktif').textContent = nonaktifCount + ' Unit';
-
-      kuRenderList();
+      kuRenderHero();
+      kuRenderList(true);
     } catch (err) {
-      listEl.innerHTML = '<div class="empty-state">Gagal memuat data unit: ' + kuEscape(err.message) + '</div>';
+      listEl.classList.remove('ku-view-table');
+      listEl.innerHTML = '<div class="ku-card ku-full-width">Gagal memuat data unit: ' + kuEscape(err.message) + '</div>';
     }
   }
 
-  function kuRenderList() {
+  function kuRenderHero() {
+    var aktif = kuUnits.filter(function (u) { return u.status === 'aktif'; });
+    var nonaktifCount = kuUnits.length - aktif.length;
+    var total = kuTotalSiswa();
+    var sorted = kuUnits.slice().sort(function (a, b) {
+      if ((a.status === 'aktif') !== (b.status === 'aktif')) return a.status === 'aktif' ? -1 : 1;
+      return b._siswaCount - a._siswaCount;
+    });
+    var top = sorted[0];
+
+    kuCountUp(document.getElementById('ku-heroTotal'), kuUnits.length);
+    document.getElementById('ku-heroSiswa').textContent = total + ' siswa aktif';
+    document.getElementById('ku-heroSub').textContent = kuUnits.length
+      ? aktif.length + ' aktif · ' + nonaktifCount + ' nonaktif' + (top && top._siswaCount ? ' · terbanyak di ' + top.nama_unit : '')
+      : 'Belum ada unit terdaftar';
+    document.getElementById('ku-heroAktif').textContent = aktif.length;
+    document.getElementById('ku-heroNonaktif').textContent = nonaktifCount;
+    document.getElementById('ku-heroAvg').textContent = aktif.length ? Math.round(total / aktif.length) : 0;
+
+    var pct = kuUnits.length ? Math.round(aktif.length / kuUnits.length * 100) : 0;
+    document.getElementById('ku-heroRingPct').textContent = pct + '%';
+    var arc = document.getElementById('ku-heroRingArc');
+    arc.setAttribute('stroke-dasharray', '0 ' + KU_RING_LEN);
+    var len = kuUnits.length ? aktif.length / kuUnits.length * KU_RING_LEN : 0;
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      arc.setAttribute('stroke-dasharray', len.toFixed(2) + ' ' + KU_RING_LEN.toFixed(2));
+    }); });
+
+    // Bar siswa per unit (unit aktif dulu, lalu nonaktif); maksimal 6 baris
+    var barsEl = document.getElementById('ku-heroBars');
+    var shown = sorted.slice(0, 6);
+    var max = Math.max.apply(null, shown.map(function (u) { return u._siswaCount; }).concat([1]));
+    barsEl.innerHTML = shown.map(function (u, i) {
+      var off = u.status !== 'aktif';
+      return '<div class="kub-u' + (off ? ' is-off' : '') + '" title="' + kuEscape(u.nama_unit) + (off ? ' (nonaktif)' : '') + ': ' + u._siswaCount + ' siswa aktif">' +
+        '<span class="n">' + kuEscape(u.nama_unit) + '</span>' +
+        '<span class="t"><i style="width:' + Math.max(3, u._siswaCount / max * 100).toFixed(1) + '%; --i:' + i + ';"></i></span>' +
+        '<b>' + u._siswaCount + ' siswa</b>' +
+      '</div>';
+    }).join('') + (sorted.length > 6 ? '<div class="kub-more">+' + (sorted.length - 6) + ' unit lain di daftar bawah</div>' : '');
+    if (!KU_REDUCED_MOTION) { barsEl.classList.remove('ku-anim'); void barsEl.offsetWidth; barsEl.classList.add('ku-anim'); }
+  }
+
+  function kuUpdateViewToggleUI() {
+    var btn = document.getElementById('ku-viewToggleBtn');
+    var isTable = kuViewMode === 'table';
+    var label = isTable ? 'Tampilkan sebagai kartu' : 'Tampilkan sebagai tabel';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
+    btn.innerHTML = isTable
+      ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+  }
+
+  function kuStatusPill(isAktif) {
+    return isAktif
+      ? '<span class="ku-status is-on"><i></i>Aktif</span>'
+      : '<span class="ku-status is-off"><i></i>Nonaktif</span>';
+  }
+
+  function kuShare(u, total, i) {
+    var pct = total ? Math.round(u._siswaCount / total * 100) : 0;
+    return '<div class="ku-share"><span class="t"><i style="width:' + Math.max(pct ? 3 : 0, pct) + '%; --i:' + Math.min(i, 12) + ';"></i></span><span>' + pct + '%</span></div>';
+  }
+
+  function kuRenderList(animate) {
     var listEl = document.getElementById('ku-list');
     var rows = kuUnits.filter(function (u) {
       return !kuSearch || u.nama_unit.toLowerCase().indexOf(kuSearch) !== -1;
     });
+    var total = kuTotalSiswa();
+    kuUpdateViewToggleUI();
+    document.getElementById('ku-resultCount').textContent = rows.length + ' unit';
 
     if (!rows.length) {
-      listEl.innerHTML = '<div class="ku-card ku-full-width empty-state">' +
-        (kuUnits.length ? 'Tidak ada unit yang cocok dengan pencarian.' : 'Belum ada unit. Tap tombol + untuk menambah.') +
-      '</div>';
+      listEl.classList.remove('ku-view-table');
+      listEl.innerHTML = '<div class="ku-card ku-full-width"><i class="ph ph-buildings" aria-hidden="true" style="font-size:26px; opacity:.6;"></i>' +
+        '<div style="font-size:12px; font-weight:600; color:var(--ink); margin-top:6px;">' + (kuUnits.length ? 'Tidak ada unit yang cocok' : 'Belum ada unit') + '</div>' +
+        '<div style="margin-top:2px;">' + (kuUnits.length ? 'Ubah kata kunci pencarian.' : 'Tambahkan lewat tombol Tambah unit di atas.') + '</div></div>';
       return;
     }
 
-    listEl.innerHTML = rows.map(function (u, idx) {
-      var isAktif = u.status === 'aktif';
-      var badge = isAktif
-        ? '<span class="ku-status-badge" style="background:rgba(52,199,89,.14); color:#28a745;"><span style="width:14px; height:14px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
-        : '<span class="ku-status-badge" style="background:rgba(142,142,147,.16); color:#8e8e93;"><span style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
-
-      return '' +
-        '<div class="card ku-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-          '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
-            '<div style="display:flex; align-items:center; gap:8px; min-width:0;">' +
-              '<div style="width:32px; height:32px; border-radius:8px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; flex:none; font-weight:600; font-size:12px;">' +
-                (idx + 1) +
-              '</div>' +
-              '<div style="min-width:0;">' +
-                '<h4 style="font-size:13px; font-weight:500; color:#1c1c1e; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + kuEscape(u.nama_unit) + '</h4>' +
-                '<p style="font-size:10.5px; color:#8e8e93; font-weight:500; margin:1px 0 0;">' + u._siswaCount + ' Siswa Aktif</p>' +
-              '</div>' +
-            '</div>' +
-            badge +
+    if (kuViewMode === 'table') {
+      listEl.classList.add('ku-view-table');
+      listEl.innerHTML = '<div class="ku-table-card"><div class="ku-table-wrap"><table class="ku-table"><thead><tr>' +
+          '<th class="ku-stk ku-stk-no">No</th><th class="ku-stk ku-stk-nama">Unit</th><th>Status</th><th style="text-align:right;">Siswa aktif</th><th class="ku-col-share">Porsi siswa</th><th style="text-align:right;">Aksi</th>' +
+        '</tr></thead><tbody>' + rows.map(function (u, idx) {
+          return '<tr>' +
+            '<td class="ku-stk ku-stk-no">' + (idx + 1) + '</td>' +
+            '<td class="ku-stk ku-stk-nama" title="' + kuEscape(u.nama_unit) + '">' + kuEscape(u.nama_unit) + '</td>' +
+            '<td>' + kuStatusPill(u.status === 'aktif') + '</td>' +
+            '<td class="ku-num">' + u._siswaCount + '</td>' +
+            '<td class="ku-col-share">' + kuShare(u, total, idx) + '</td>' +
+            '<td style="text-align:right;"><button type="button" class="ku-icon-btn ku-edit-btn-t" data-edit="' + u.id + '" title="Edit unit" aria-label="Edit unit"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button></td>' +
+          '</tr>';
+        }).join('') + '</tbody></table></div></div>';
+    } else {
+      listEl.classList.remove('ku-view-table');
+      listEl.innerHTML = rows.map(function (u, idx) {
+        var isAktif = u.status === 'aktif';
+        return '<div class="ku-card' + (isAktif ? '' : ' is-off') + '">' +
+          '<div class="kuc-head">' +
+            '<span class="ku-ico"><i class="ph ph-buildings" aria-hidden="true"></i></span>' +
+            '<div class="kuc-who"><h4 title="' + kuEscape(u.nama_unit) + '">' + kuEscape(u.nama_unit) + '</h4><p><b>' + u._siswaCount + '</b> siswa aktif</p></div>' +
+            kuStatusPill(isAktif) +
           '</div>' +
-          '<button class="ku-edit-btn" data-edit="' + u.id + '" style="width:100%; height:28px; margin-top:10px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:500; cursor:pointer;">Edit Unit</button>' +
+          '<div class="kuc-share"><div class="kuc-share-l">Porsi dari seluruh siswa aktif</div>' + kuShare(u, total, idx) + '</div>' +
+          '<div class="kuc-foot"><button type="button" class="ku-edit-btn" data-edit="' + u.id + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit unit</button></div>' +
         '</div>';
-    }).join('');
+      }).join('');
+    }
 
-    document.querySelectorAll('.ku-edit-btn').forEach(function (btn) {
+    listEl.querySelectorAll('.ku-edit-btn, .ku-edit-btn-t').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var unit = kuUnits.find(function (u) { return u.id === btn.dataset.edit; });
         kuOpenModal(unit);
       });
     });
+
+    if (!KU_REDUCED_MOTION) {
+      listEl.querySelectorAll('.ku-share').forEach(function (el) { el.classList.add('ku-anim'); });
+      if (animate) {
+        var items = kuViewMode === 'table' ? listEl.querySelectorAll('.ku-table tbody tr') : listEl.querySelectorAll('.ku-card:not(.ku-full-width)');
+        items.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('ku-in'); });
+        clearTimeout(listEl._kuAnimT);
+        listEl._kuAnimT = setTimeout(function () { items.forEach(function (el) { el.classList.remove('ku-in'); }); }, 1200);
+      }
+    }
   }
 
   document.getElementById('ku-searchInput').addEventListener('input', function (e) {
     kuSearch = e.target.value.toLowerCase();
-    kuRenderList();
+    kuRenderList(false);
   });
+  document.getElementById('ku-viewToggleBtn').addEventListener('click', function () {
+    var btn = this;
+    btn.classList.remove('ku-btn-pop'); void btn.offsetWidth; btn.classList.add('ku-btn-pop');
+    kuViewMode = kuViewMode === 'table' ? 'cards' : 'table';
+    try { localStorage.setItem('genio_ku_view_mode', kuViewMode); } catch (e) {}
+    kuRenderList(true);
+  });
+  kuUpdateViewToggleUI();
 
   var kuModal = document.getElementById('ku-modal');
   var kuForm = document.getElementById('ku-form');
@@ -388,25 +422,36 @@
   function kuShowError(msg) { kuAlert.textContent = msg; kuAlert.hidden = false; }
   function kuHideError() { kuAlert.hidden = true; }
 
+  function kuSetStatus(val) {
+    document.querySelectorAll('#ku-form .radio-opt').forEach(function (o) {
+      var on = o.dataset.val === val;
+      o.classList.toggle('checked', on);
+      o.classList.toggle('is-on', on);
+      o.querySelector('input').checked = on;
+    });
+  }
+
   function kuOpenModal(unit) {
     kuHideError();
     kuForm.reset();
-    document.querySelectorAll('#ku-form .radio-opt').forEach(function (o) { o.classList.remove('checked'); });
+    kuSetStatus(null);
 
     if (unit) {
-      document.getElementById('ku-modalTitle').textContent = 'Edit Unit';
+      document.getElementById('ku-modalTitle').textContent = 'Edit unit';
+      document.getElementById('ku-modalSub').textContent = unit._siswaCount + ' siswa aktif di unit ini.';
       document.getElementById('ku-id').value = unit.id;
       document.getElementById('ku-nama').value = unit.nama_unit;
       document.getElementById('ku-statusField').hidden = false;
-      var opt = document.querySelector('#ku-form .radio-opt[data-val="' + unit.status + '"]');
-      if (opt) { opt.classList.add('checked'); opt.querySelector('input').checked = true; }
+      kuSetStatus(unit.status);
     } else {
-      document.getElementById('ku-modalTitle').textContent = 'Tambah Unit';
+      document.getElementById('ku-modalTitle').textContent = 'Tambah unit';
+      document.getElementById('ku-modalSub').textContent = 'Unit atau cabang baru Genio Institute.';
       document.getElementById('ku-id').value = '';
       document.getElementById('ku-statusField').hidden = true;
     }
     kuModal.hidden = false;
     requestAnimationFrame(function () { kuModal.classList.add('show'); });
+    setTimeout(function () { document.getElementById('ku-nama').focus(); }, 320);
   }
   function kuCloseModal() {
     kuModal.classList.remove('show');
@@ -415,12 +460,13 @@
 
   document.getElementById('ku-addBtn').addEventListener('click', function () { kuOpenModal(null); });
   document.getElementById('ku-cancelBtn').addEventListener('click', function () { kuCloseModal(); });
+  document.getElementById('ku-modalCloseX').addEventListener('click', function () { kuCloseModal(); });
+  kuModal.addEventListener('click', function (e) { if (e.target === kuModal) kuCloseModal(); });
 
   document.querySelectorAll('#ku-form .radio-opt').forEach(function (opt) {
-    opt.addEventListener('click', function () {
-      document.querySelectorAll('#ku-form .radio-opt').forEach(function (o) { o.classList.remove('checked'); });
-      opt.classList.add('checked');
-      opt.querySelector('input').checked = true;
+    opt.addEventListener('click', function (e) {
+      e.preventDefault();
+      kuSetStatus(opt.dataset.val);
     });
   });
 

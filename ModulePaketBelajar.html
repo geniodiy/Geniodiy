@@ -250,6 +250,44 @@
     border-radius:999px; background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.05);
     font-size:10.5px; font-weight:500; color:var(--ink-soft);
   }
+  /* ===== Tampilan tabel ===== */
+  #pkt-filterCount[hidden]{display:none !important;}
+  #pkt-viewToggleBtn{position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:transform .15s ease, background .15s ease;}
+  #pkt-viewToggleBtn:hover{background:var(--surface);}
+  #pkt-viewToggleBtn:active{transform:scale(.9);}
+  @keyframes pktPop{0%{transform:scale(1);} 35%{transform:scale(1.18);} 100%{transform:scale(1);}}
+  .pkt-btn-pop{animation:pktPop .32s cubic-bezier(.34,1.56,.64,1);}
+  #pkt-list.pkt-view-table{display:block !important;}
+  .pkt-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:12px;}
+  .pkt-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .pkt-table{width:100%; border-collapse:separate; border-spacing:0; text-align:left; font-family:var(--font); font-size:11px;}
+  .pkt-table th{padding:10px 10px; background:#fff; border-bottom:1px solid var(--border); font-size:10.5px; font-weight:500; color:var(--ink-soft); white-space:nowrap;}
+  .pkt-table th.pkt-sort-th{cursor:pointer; user-select:none; -webkit-user-select:none;}
+  .pkt-table th.pkt-sort-th:hover{color:var(--ink);}
+  .pkt-table td{padding:8px 10px; border-bottom:1px solid #EEF0F6; color:var(--ink); vertical-align:middle; white-space:nowrap;}
+  .pkt-table tbody tr:last-child td{border-bottom:none;}
+  .pkt-table tbody tr:hover td{background:#F8F9FD;}
+  /* Kolom selebar isinya; kolom nama paket mengambil sisa ruang */
+  .pkt-table th:not(.pkt-stk-nama), .pkt-table td:not(.pkt-stk-nama){width:1%;}
+  .pkt-table .pkt-stk{position:sticky; z-index:1; background:#fff;}
+  .pkt-table th.pkt-stk{z-index:2;}
+  .pkt-table .pkt-stk-no{left:0; width:40px; min-width:40px; max-width:40px; box-sizing:border-box; text-align:center; color:var(--ink-soft);}
+  .pkt-table .pkt-stk-nama{left:40px; width:100%; max-width:0; min-width:170px; box-shadow:1px 0 0 var(--border);}
+  .pkt-table .pkt-stk-nama b{display:block; font-weight:600; overflow:hidden; text-overflow:ellipsis;}
+  .pkt-table tbody tr:hover td.pkt-stk{background:#F8F9FD;}
+  .pkt-table .pkt-kode{font-family:monospace; font-size:10.5px; color:var(--ink-soft); letter-spacing:.02em;}
+  .pkt-table .pkt-num{text-align:right; font-weight:700; font-variant-numeric:tabular-nums;}
+  .pkt-table .pkt-dim-badge{margin:0;}
+  .pkt-t-status{display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px;}
+  .pkt-t-status i{width:6px; height:6px; border-radius:50%;}
+  .pkt-t-status.is-on{background:#E9F7EF; color:#1E8E5A;} .pkt-t-status.is-on i{background:#1E8E5A;}
+  .pkt-t-status.is-off{background:var(--surface); color:var(--ink-soft);} .pkt-t-status.is-off i{background:#A9ADC0;}
+  .pkt-t-btn{width:28px; height:28px; padding:0; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; background:#fff; color:var(--ink-soft); border:1px solid var(--border); font-size:13px;}
+  .pkt-t-btn:hover{background:var(--surface); color:var(--ink);}
+  @keyframes pktFade{from{opacity:0;} to{opacity:1;}}
+  #pkt-list .pkt-table tbody tr.pkt-in td{animation:pktFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
+  @media (max-width:899px){ .pkt-table .pkt-stk-nama{min-width:120px;} }
+  @media (prefers-reduced-motion: reduce){ #pkt-list .pkt-table tbody tr.pkt-in td, .pkt-btn-pop{animation:none !important;} }
 </style>
 
   <!-- Hero -->
@@ -310,6 +348,7 @@
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
       <span id="pkt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 2px;">0</span>
     </button>
+    <button id="pkt-viewToggleBtn" type="button" aria-label="Tampilkan sebagai tabel" title="Tampilkan sebagai tabel"></button>
   </div>
 
   <div class="pkt-sub-bar">
@@ -467,7 +506,9 @@
     filterJenjang: '',
     filterJenis: '',
     filterPelaksanaan: '',
-    filterMode: ''
+    filterMode: '',
+    sortField: 'nama', sortDir: 'asc',
+    viewMode: (function () { try { return localStorage.getItem('genio_pkt_view_mode') || 'cards'; } catch (e) { return 'cards'; } })()
   };
 
   function pktInit() {
@@ -482,6 +523,21 @@
       document.getElementById('pkt-cancelBtn').addEventListener('click', pktCloseModal);
       document.getElementById('pkt-saveBtn').addEventListener('click', pktSubmitForm);
       document.getElementById('pkt-filterBtn').addEventListener('click', pktOpenFilterModal);
+      document.getElementById('pkt-viewToggleBtn').addEventListener('click', function () {
+        var btn = this;
+        btn.classList.remove('pkt-btn-pop'); void btn.offsetWidth; btn.classList.add('pkt-btn-pop');
+        pktState.viewMode = pktState.viewMode === 'table' ? 'cards' : 'table';
+        try { localStorage.setItem('genio_pkt_view_mode', pktState.viewMode); } catch (e) {}
+        pktRenderList(true);
+      });
+      document.getElementById('pkt-list').addEventListener('click', function (e) {
+        var th = e.target.closest('.pkt-sort-th');
+        if (!th) return;
+        var f = th.dataset.sort;
+        if (pktState.sortField === f) pktState.sortDir = pktState.sortDir === 'asc' ? 'desc' : 'asc';
+        else { pktState.sortField = f; pktState.sortDir = f === 'harga' ? 'desc' : 'asc'; }
+        pktRenderList(false);
+      });
 
       ['pkt-jenjangOpts', 'pkt-jenisOpts', 'pkt-pelaksanaanOpts', 'pkt-modeOpts', 'pkt-statusOpts'].forEach(function (groupId) {
         document.querySelectorAll('#' + groupId + ' .pkt-opt').forEach(function (opt) {
@@ -572,18 +628,109 @@
     return 'Rp ' + Math.round(n || 0).toLocaleString('id-ID');
   }
 
-  function pktRenderList() {
+  function pktUpdateViewToggleUI() {
+    var btn = document.getElementById('pkt-viewToggleBtn');
+    if (!btn) return;
+    var isTable = pktState.viewMode === 'table';
+    var label = isTable ? 'Tampilkan sebagai kartu' : 'Tampilkan sebagai tabel';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
+    btn.innerHTML = isTable
+      ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+  }
+
+  function pktSortRows(rows) {
+    var f = pktState.sortField, dir = pktState.sortDir === 'asc' ? 1 : -1;
+    var key = {
+      nama: function (p) { return (p.nama_paket || '').toLowerCase(); },
+      kode: function (p) { return (p.kode_paket || '').toLowerCase(); },
+      jenjang: function (p) { return (p.jenjang || '').toLowerCase(); },
+      jenis: function (p) { return (p.jenis || '').toLowerCase(); },
+      harga: function (p) { return parseFloat(p.harga_default || 0); },
+      status: function (p) { return p.status || ''; }
+    }[f] || function (p) { return (p.nama_paket || '').toLowerCase(); };
+    return rows.slice().sort(function (a, b) { var x = key(a), y = key(b); return x < y ? -dir : (x > y ? dir : 0); });
+  }
+
+  function pktSortIcon(field) {
+    if (pktState.sortField === field) {
+      return pktState.sortDir === 'asc'
+        ? '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="margin-left:4px;"><path d="M12 7l-5.5 8h11z"/></svg>'
+        : '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="margin-left:4px;"><path d="M12 17l5.5-8h-11z"/></svg>';
+    }
+    return '<svg viewBox="0 0 24 24" width="9" height="9" fill="currentColor" style="margin-left:4px; opacity:.2;"><path d="M12 7l-5.5 8h11z"/></svg>';
+  }
+
+  var PKT_DIM_COLORS = {
+    jenjang: ['var(--blue-tint)', 'var(--blue)'],
+    jenis: ['rgba(175,82,222,.14)', '#8e2fc9'],
+    pelaksanaan: ['rgba(255,149,0,.16)', '#c06400'],
+    mode: ['rgba(0,199,190,.16)', '#009e96']
+  };
+  function pktDim(kind, label) {
+    if (!label) return '<span style="color:var(--ink-soft);">-</span>';
+    var c = PKT_DIM_COLORS[kind];
+    return '<span class="pkt-dim-badge" style="background:' + c[0] + '; color:' + c[1] + ';">' + pktEscape(label) + '</span>';
+  }
+
+  function pktRenderTable(rows) {
+    function th(field, label, extra, style) {
+      return '<th class="pkt-sort-th' + (extra || '') + '" data-sort="' + field + '"' + (style ? ' style="' + style + '"' : '') + '><span style="display:inline-flex; align-items:center;">' + label + pktSortIcon(field) + '</span></th>';
+    }
+    var trs = rows.map(function (p, idx) {
+      var isAktif = p.status === 'aktif';
+      return '<tr>' +
+        '<td class="pkt-stk pkt-stk-no">' + (idx + 1) + '</td>' +
+        '<td class="pkt-stk pkt-stk-nama" title="' + pktEscape(p.nama_paket || '') + '"><b>' + pktEscape(p.nama_paket || 'Tanpa nama') + '</b></td>' +
+        '<td class="pkt-kode">' + pktEscape(p.kode_paket || '-') + '</td>' +
+        '<td>' + pktDim('jenjang', p.jenjang) + '</td>' +
+        '<td>' + pktDim('jenis', p.jenis) + '</td>' +
+        '<td>' + pktDim('pelaksanaan', p.pelaksanaan) + '</td>' +
+        '<td>' + pktDim('mode', p.mode_belajar) + '</td>' +
+        '<td class="pkt-num">' + pktFormatRp(p.harga_default) + '</td>' +
+        '<td>' + (isAktif ? '<span class="pkt-t-status is-on"><i></i>Aktif</span>' : '<span class="pkt-t-status is-off"><i></i>Nonaktif</span>') + '</td>' +
+        '<td style="text-align:right;"><button type="button" class="pkt-t-btn pkt-edit-btn" data-id="' + p.id + '" title="Edit paket" aria-label="Edit paket"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button></td>' +
+      '</tr>';
+    }).join('');
+    return '<div class="pkt-table-card"><div class="pkt-table-wrap"><table class="pkt-table"><thead><tr>' +
+      '<th class="pkt-stk pkt-stk-no">No</th>' +
+      th('nama', 'Nama paket', ' pkt-stk pkt-stk-nama') +
+      th('kode', 'Kode') +
+      th('jenjang', 'Jenjang') +
+      th('jenis', 'Jenis') +
+      '<th>Pelaksanaan</th><th>Mode</th>' +
+      th('harga', 'Harga per sesi', '', 'text-align:right;') +
+      th('status', 'Status') +
+      '<th style="text-align:right;">Aksi</th>' +
+      '</tr></thead><tbody>' + trs + '</tbody></table></div></div>';
+  }
+
+  function pktRenderList(animate) {
     var listEl = document.getElementById('pkt-list');
     var rows = pktState.packages.filter(pktMatchesSearch).filter(pktMatchesFilters);
 
     document.getElementById('pkt-resultCount').textContent = rows.length + ' Paket';
+    pktUpdateViewToggleUI();
 
     if (!rows.length) {
+      listEl.classList.remove('pkt-view-table');
       listEl.innerHTML = '<div class="pkt-card pkt-full-width empty-state">Tidak ada paket yang cocok.</div>';
       return;
     }
 
-    listEl.innerHTML = rows.map(pktRenderCard).join('');
+    if (pktState.viewMode === 'table') {
+      listEl.classList.add('pkt-view-table');
+      listEl.innerHTML = pktRenderTable(pktSortRows(rows));
+      if (animate && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+        var trs = listEl.querySelectorAll('.pkt-table tbody tr');
+        trs.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('pkt-in'); });
+        setTimeout(function () { trs.forEach(function (el) { el.classList.remove('pkt-in'); }); }, 1100);
+      }
+    } else {
+      listEl.classList.remove('pkt-view-table');
+      listEl.innerHTML = rows.map(pktRenderCard).join('');
+    }
     document.querySelectorAll('.pkt-edit-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var pkg = pktState.packages.find(function (p) { return p.id === btn.dataset.id; });
