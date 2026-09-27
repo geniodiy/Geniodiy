@@ -475,6 +475,24 @@
   .ps-table tbody tr:hover{background:#F8F9FD !important;}
   .ps-table .pt2-tutor{display:flex; align-items:center; gap:8px;}
   .ps-table .pt2-av{width:24px; height:24px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; font-size:10px !important; font-weight:600; flex:none;}
+  /* Kolom No, Tanggal, Tutor tetap di tempat saat tabel digeser */
+  .ps-table{border-collapse:separate !important; border-spacing:0;}
+  .ps-table .ps-stk{position:sticky; z-index:1; background:#fff;}
+  .ps-table th.ps-stk{z-index:2;}
+  .ps-table .ps-stk-no{left:0; width:40px; min-width:40px; max-width:40px; box-sizing:border-box; padding-left:6px !important; padding-right:6px !important; text-align:center;}
+  .ps-table .ps-stk-tgl{left:40px; width:96px; min-width:96px; max-width:96px; box-sizing:border-box; white-space:nowrap;}
+  .ps-table .ps-stk-tutor{left:136px; max-width:180px; box-shadow:1px 0 0 var(--border);}
+  .ps-table .ps-stk-tutor .pt2-tutor{min-width:0;}
+  .ps-table .ps-stk-tutor .pt2-name{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .ps-table tbody tr:hover td.ps-stk{background:#F7F9FF;}
+  .ps-table th.ps-stk.ps-sort-th:hover{background:#F3F4F8 !important;}
+  @media (max-width:899px){
+    /* HP: kolom yang diam dibuat ramping supaya kolom lain tetap kelihatan */
+    .ps-table .ps-stk-tgl{width:62px; min-width:62px; max-width:62px; padding-left:8px !important; padding-right:8px !important;}
+    .ps-table .ps-stk-tgl .ps-d-y{display:none;}
+    .ps-table .ps-stk-tutor{left:102px; max-width:112px; padding-left:8px !important; padding-right:10px !important;}
+    .ps-table .ps-stk-tutor .pt2-av{display:none;}
+  }
   .ps-table .pt2-mapel{display:inline-block; background:var(--surface); border-radius:6px; padding:2px 7px; font-size:10.5px !important;}
   .ps-table .pt2-late{display:inline-flex; align-items:center; gap:4px; background:#FFF4E0; color:#B86E00; border-radius:999px; padding:2px 8px; font-size:10px !important; font-weight:600;}
   .ps-table .pt2-ok{color:var(--muted, #8A8EA5); font-size:10.5px !important;}
@@ -2256,10 +2274,10 @@
 
       return '' +
         '<tr>' +
-          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10px; font-weight:400;">' + (idx + 1) + '</td>' +
-          '<td style="white-space:nowrap; color:var(--ink); font-weight:500;">' + psEscape(psFormatTanggal(row.tanggal)) + '</td>' +
+          '<td class="ps-stk ps-stk-no" style="color:var(--ink-soft); font-size:10px; font-weight:400;">' + (idx + 1) + '</td>' +
+          '<td class="ps-stk ps-stk-tgl" style="color:var(--ink); font-weight:500;" title="' + psEscape(psFormatTanggal(row.tanggal)) + '">' + psEscape(psFormatTanggal(row.tanggal)).replace(/ (\d{4})$/, '<span class="ps-d-y"> $1</span>') + '</td>' +
+          '<td class="ps-stk ps-stk-tutor" title="' + psEscape(tutorNama) + '"><span class="pt2-tutor"><span class="pt2-av">' + psEscape(tutorNama.charAt(0)) + '</span><span class="pt2-name" style="color:var(--ink); font-weight:600;">' + psEscape(tutorNama) + '</span></span></td>' +
           '<td style="white-space:nowrap; color:var(--ink); font-size:10.5px; font-weight:400;">' + (row.jam ? row.jam.slice(0, 5) + ' WIB' : '-') + '</td>' +
-          '<td><span class="pt2-tutor"><span class="pt2-av">' + psEscape(tutorNama.charAt(0)) + '</span><span style="color:var(--ink); font-weight:600; white-space:nowrap;">' + psEscape(tutorNama) + '</span></span></td>' +
           '<td><span style="color:var(--ink); font-size:10.5px; font-weight:400; white-space:nowrap;">' + psEscape(siswaNama) + '</span></td>' +
           '<td><span class="pt2-mapel" style="white-space:nowrap;">' + psEscape(mapel) + '</span></td>' +
           '<td><span style="color:var(--ink-soft); white-space:nowrap;">' + psEscape(unitNama) + '</span></td>' +
@@ -2276,15 +2294,15 @@
           '<table class="ps-table">' +
             '<thead>' +
               '<tr>' +
-                '<th style="width:36px; text-align:center;">No</th>' +
-                '<th class="ps-sort-th" data-sort="tanggal" title="Urutkan Tanggal">' +
+                '<th class="ps-stk ps-stk-no">No</th>' +
+                '<th class="ps-sort-th ps-stk ps-stk-tgl" data-sort="tanggal" title="Urutkan Tanggal">' +
                   '<span style="display:inline-flex; align-items:center;">Tanggal' + psGetSortIcon('tanggal') + '</span>' +
+                '</th>' +
+                '<th class="ps-sort-th ps-stk ps-stk-tutor" data-sort="tutor" title="Urutkan Tutor (A - Z)">' +
+                  '<span style="display:inline-flex; align-items:center;">Tutor' + psGetSortIcon('tutor') + '</span>' +
                 '</th>' +
                 '<th class="ps-sort-th" data-sort="jam" title="Urutkan Jam">' +
                   '<span style="display:inline-flex; align-items:center;">Jam' + psGetSortIcon('jam') + '</span>' +
-                '</th>' +
-                '<th class="ps-sort-th" data-sort="tutor" title="Urutkan Tutor (A - Z)">' +
-                  '<span style="display:inline-flex; align-items:center;">Tutor' + psGetSortIcon('tutor') + '</span>' +
                 '</th>' +
                 '<th class="ps-sort-th" data-sort="siswa" title="Urutkan Siswa (A - Z)">' +
                   '<span style="display:inline-flex; align-items:center;">Siswa' + psGetSortIcon('siswa') + '</span>' +

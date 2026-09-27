@@ -15,5 +15,6 @@ Reference implementations: `Login.html`, `ModuleHome.html`, `ModulePresensi.html
 - **Shapes:** buttons/inputs 8-10px radius, cards 14px, popups 18px, 1px borders `var(--border)`.
 - **Buttons:** primary = blue background, white text; secondary = white with border. No black (`var(--ink)`) buttons.
 - **Popups:** follow the login form style: light title, labels above grey input boxes (`var(--surface)`), blue focus ring, 36px actions. Handled globally by the "Genio UI layer" in `Config.html`.
+- **Tables:** freeze the identifying columns on the left so they stay put when the table scrolls sideways (`position:sticky`, fixed widths, `border-collapse:separate`, solid background on sticky cells). Kontrak: No + Siswa. Jadwal: No + Tutor. Presensi: No + Tanggal + Tutor. Gaji: No + Nama tutor. Operasional: No + Transaksi. Frozen columns must be adjacent and first, so reorder columns if needed. Always plan for mobile: on narrow screens slim the frozen columns (hide avatars, drop the year, ellipsis with a `title` tooltip) so other columns stay visible. Size columns to content and avoid fixed `min-width` on the table, so it fits without scrolling when the screen is wide enough.
 - **Copy:** sentence case, no em dashes, no uppercase micro-labels.
 - Light theme only (whole app is light).

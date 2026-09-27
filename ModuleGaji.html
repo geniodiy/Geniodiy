@@ -182,6 +182,20 @@
   .gt-av{width:24px; height:24px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; flex:none;}
   .gt-chip{display:inline-block; background:var(--surface); border-radius:6px; padding:2px 7px; font-size:10.5px; white-space:nowrap; margin:1px 0;}
   .gj-table-status-pill{font-size:10px !important; font-weight:600 !important;}
+  /* Kolom No dan Tutor tetap di tempat saat tabel digeser */
+  .gj-table{border-collapse:separate !important; border-spacing:0;}
+  .gj-table .gj-stk{position:sticky; z-index:1; background:#fff;}
+  .gj-table th.gj-stk{z-index:2;}
+  .gj-table .gj-stk-no{left:0; width:40px; min-width:40px; max-width:40px; box-sizing:border-box; padding-left:6px !important; padding-right:6px !important; text-align:center;}
+  .gj-table .gj-stk-tutor{left:40px; max-width:200px; box-shadow:1px 0 0 var(--border);}
+  .gj-table .gj-stk-tutor .gt-tutor{max-width:100%; min-width:0;}
+  .gj-table .gj-stk-tutor .gt-name{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .gj-table tbody tr:hover td.gj-stk{background:#F8F9FD;}
+  @media (max-width:899px){
+    /* HP: kolom tutor dibuat ramping supaya kolom lain tetap kelihatan */
+    .gj-table .gj-stk-tutor{max-width:124px; padding-left:8px !important; padding-right:10px !important;}
+    .gj-table .gj-stk-tutor .gt-av{display:none;}
+  }
 
   /* ===== Animasi ===== */
   @keyframes gjIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
@@ -1082,8 +1096,8 @@
 
       return '' +
         '<tr>' +
-          '<td style="text-align:center; width:34px; color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
-          '<td style="white-space:nowrap;"><span class="gt-tutor"><span class="gt-av">' + genioEscapeHtml((user.nama || '?').charAt(0).toUpperCase()) + '</span><span style="font-weight:600;">' + genioEscapeHtml(user.nama || '-') + '</span></span></td>' +
+          '<td class="gj-stk gj-stk-no" style="color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
+          '<td class="gj-stk gj-stk-tutor" style="white-space:nowrap;" title="' + genioEscapeHtml(user.nama || '') + '"><span class="gt-tutor"><span class="gt-av">' + genioEscapeHtml((user.nama || '?').charAt(0).toUpperCase()) + '</span><span class="gt-name" style="font-weight:600;">' + genioEscapeHtml(user.nama || '-') + '</span></span></td>' +
           '<td style="white-space:nowrap; color:var(--ink); font-size:11px; font-weight:400;">' + genioEscapeHtml(bankText) + '</td>' +
           '<td>' + (mapelList.length ? mapelList.map(function (m) { return '<span class="gt-chip">' + genioEscapeHtml(m) + '</span>'; }).join(' ') : '<span style="color:var(--ink-soft);">-</span>') + '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + row.total_pertemuan + ' sesi</td>' +
@@ -1100,8 +1114,8 @@
           '<table class="gj-table">' +
             '<thead>' +
               '<tr>' +
-                '<th style="width:36px; text-align:center;">No</th>' +
-                '<th class="gj-sort-th" data-sort="tutor" title="Urutkan Tutor">' +
+                '<th class="gj-stk gj-stk-no">No</th>' +
+                '<th class="gj-sort-th gj-stk gj-stk-tutor" data-sort="tutor" title="Urutkan Tutor">' +
                   '<span style="display:inline-flex; align-items:center;">Tutor' + gjGetSortIcon('tutor') + '</span>' +
                 '</th>' +
                 '<th class="gj-sort-th" data-sort="bank" title="Urutkan Bank">' +
