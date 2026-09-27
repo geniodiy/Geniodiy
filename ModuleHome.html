@@ -27,6 +27,24 @@
   @keyframes homeJmDot{ from{ opacity:0; transform:scale(.3); } to{ opacity:1; transform:none; } }
   #home-jmGrid.home-jm-anim .home-jm-dot{ animation:homeJmDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 15ms); }
   .home-jm-sub{ font-size:10.5px; color:var(--ink-soft); margin-top:1px; }
+  /* Sesi hari ini (semua unit): baris = hari ini + fleksibel, kolom = jam */
+  .home-td-grid{ display:grid; gap:3px; align-items:stretch; min-width:min-content; }
+  .home-td-grid .home-jm-head{ white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .home-td-row{ font-size:10.5px; font-weight:600; color:var(--ink); padding:0 8px 0 2px; align-self:center; white-space:nowrap; }
+  .home-td-row small{ display:block; font-size:9.5px; font-weight:500; color:var(--ink-soft); }
+  .home-td-row.is-today{ color:var(--blue); }
+  .home-td-grid .home-jm-cell{ min-height:34px; min-width:40px; }
+  .home-jm-dot.is-late{ box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #FFC46B; }
+  .home-jm-dot.is-done{ box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #7CD9A8; }
+  .home-td-st{ display:inline-flex; align-items:center; gap:6px; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; }
+  .home-td-st i{ width:8px; height:8px; border-radius:50%; background:#C9CCDA; flex:none; }
+  .home-td-st i.late{ box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #FFC46B; } .home-td-st i.done{ box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #7CD9A8; }
+  .home-td-more{ display:block; margin:8px auto 0; background:none; border:none; font-family:var(--font); font-size:11px; font-weight:600; color:var(--blue); cursor:pointer; padding:4px 8px; text-decoration:none; flex:none; }
+  .home-td-more:hover{ text-decoration:underline; }
+  .home-slot-st{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; font-size:10.5px; color:var(--ink-soft); }
+  .home-slot-chip{ font-size:10px; font-weight:600; padding:3px 8px; border-radius:999px; white-space:nowrap; background:var(--surface); color:var(--ink-soft); }
+  .home-slot-chip.ok{ background:#E9F7EF; color:#1E8E5A; } .home-slot-chip.late{ background:#FFF4E0; color:#B26A00; }
+  .home-slot-chip.wait, .home-slot-chip.live{ background:var(--blue-tint); color:var(--blue); } .home-slot-chip.no{ background:var(--red-soft); color:var(--red); }
   .home-jm-leg{ display:inline-flex; align-items:center; gap:6px; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; }
   .home-jm-leg i{ width:8px; height:8px; border-radius:50%; flex:none; }
   /* Popup detail slot, sama dengan halaman Jadwal */
@@ -542,20 +560,20 @@
           <div style="display:flex; align-items:center; gap:6px;">
             <div>
               <div style="display:flex; align-items:center; gap:6px;">
-                <div class="home-sec-title" style="margin:0;">Jadwal tutor</div>
+                <div class="home-sec-title" style="margin:0;">Sesi Hari ini</div>
                 <span id="homeJmTotalBadge" style="background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px;">-</span>
               </div>
-              <div class="home-jm-sub">Ketuk titik untuk detail sesi</div>
+              <div class="home-jm-sub" id="homeJmSub">Ketuk titik untuk detail sesi</div>
             </div>
           </div>
-          <a href="javascript:void(0)" id="homeLihatSemuaJadwal" style="font-size:11px; font-weight:500; color:var(--blue); text-decoration:none;">Lihat semua</a>
         </div>
 
         <!-- Matrix Timetable Grid identik dengan Jadwal Mingguan Kontrak -->
         <div id="home-jmGridWrap" class="home-scrollable" style="flex:1; min-height:0; overflow-y:auto; overflow-x:auto; padding-right:2px;">
           <div id="home-jmGrid"><div class="empty-state" style="padding:20px;">Memuat jadwal...</div></div>
         </div>
-        <div id="home-jmLegend" class="home-scrollable" style="display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); flex:none; max-height:56px; overflow-y:auto;"></div>
+        <div id="home-jmLegend" class="home-scrollable" style="display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); flex:none; max-height:78px; overflow-y:auto;"></div>
+        <a href="javascript:void(0)" id="homeLihatSemuaJadwal" class="home-td-more">Lihat selengkapnya</a>
 
         <!-- Popup kecil detail sesi: muncul tepat di titik yang ditekan -->
         <div class="genio-pop" id="home-slotModal" hidden role="dialog" aria-label="Detail sesi"></div>
@@ -771,7 +789,7 @@
       genioToast('Fitur cetak laporan segera hadir', 'loading');
     };
     document.getElementById('homeLihatSemuaJadwal').onclick = function () {
-      if (window.genioDashboardShowModule) window.genioDashboardShowModule('kontrak');
+      if (window.genioDashboardShowModule) window.genioDashboardShowModule('jadwal');
     };
 
     loadJadwalTutorMingguan();
@@ -875,6 +893,7 @@
   var HOME_JM_HARI_LABEL = { senin: 'Sen', selasa: 'Sel', rabu: 'Rab', kamis: 'Kam', jumat: 'Jum', sabtu: 'Sab', minggu: 'Min', fleksibel: 'Fleks' };
   var HOME_JM_COLORS = ['#378ADD', '#E24B4A', '#639922', '#7F77DD', '#D85A30', '#D4537E', '#0F9E86', '#BA7517'];
   var homeJmSessions = [];
+  var homeJmPresToday = [];
 
   function homeJmColorForTutor(tutorId) {
     var hash = 0;
@@ -902,17 +921,26 @@
     var badge = document.getElementById('homeJmTotalBadge');
 
     try {
-      var rows = await supaRest(
-        'kontrak_siswa?select=id,status,siswa(nama,orangtua(no_hp)),units(nama_unit),paket_belajar(nama_paket),kontrak_tutor(id,tutor_id,mapel,status,durasi_menit,users:users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url),jadwal(id,hari,jam_mulai,jam_selesai))&status=eq.aktif',
-        session.access_token
-      );
+      var now = new Date();
+      var todayKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+      var both = await Promise.all([
+        supaRest(
+          'kontrak_siswa?select=id,status,siswa(nama,orangtua(no_hp)),units(nama_unit),paket_belajar(nama_paket),kontrak_tutor(id,tutor_id,mapel,status,durasi_menit,users:users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),jadwal(id,hari,jam_mulai,jam_selesai))&status=eq.aktif',
+          session.access_token
+        ),
+        supaRest('presensi?select=kontrak_tutor_id,jam,status&tanggal=eq.' + todayKey, session.access_token).catch(function () { return []; })
+      ]);
+      var rows = both[0];
+      homeJmPresToday = both[1] || [];
 
       homeJmSessions = [];
       (rows || []).forEach(function (k) {
         (k.kontrak_tutor || []).forEach(function (kt) {
           if (kt.status && kt.status !== 'aktif') return;
           var tutorNama = (kt.users && kt.users.nama) || 'Tutor';
-          var tutorHp = kt.users && kt.users.no_hp;
+          var tpu = kt.users && kt.users.tutor_profile;
+          if (Array.isArray(tpu)) tpu = tpu[0];
+          var tutorHp = (kt.users && kt.users.no_hp) || (tpu && tpu.no_wa);
           var siswaNama = (k.siswa && k.siswa.nama) || '-';
           var ortuHp = k.siswa && k.siswa.orangtua && k.siswa.orangtua.no_hp;
           var mapel = kt.mapel || 'Bimbel';
@@ -936,15 +964,13 @@
               mapel: mapel,
               siswaNama: siswaNama,
               ortuHp: ortuHp,
-              kontrakId: k.id
+              kontrakId: k.id,
+              ktId: kt.id
             });
           });
         });
       });
 
-      if (badge) {
-        badge.textContent = homeJmSessions.length + ' sesi / minggu';
-      }
 
       renderJadwalTutorMatrix();
     } catch (err) {
@@ -955,47 +981,70 @@
     }
   }
 
+  // Sesi Hari ini (semua unit): hanya jadwal hari ini + fleksibel. Baris = hari, kolom = jam.
+  var HOME_TD_ST = { ok: 'Sudah lapor', wait: 'Menunggu verifikasi', no: 'Ditolak', late: 'Belum lapor', live: 'Berlangsung', next: 'Akan datang', flex: 'Fleksibel' };
+  var homeTdItems = [];
   function renderJadwalTutorMatrix() {
     var gridEl = document.getElementById('home-jmGrid');
     var legendEl = document.getElementById('home-jmLegend');
+    var badge = document.getElementById('homeJmTotalBadge');
+    var subEl = document.getElementById('homeJmSub');
     if (!gridEl) return;
 
-    if (!homeJmSessions.length) {
-      gridEl.innerHTML = '<div class="empty-state" style="padding:20px;">Belum ada jadwal tutor.</div>';
+    var now = new Date();
+    var todayHari = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][now.getDay()];
+    var nowMin = now.getHours() * 60 + now.getMinutes();
+    var toMin = function (hm) { var p = String(hm || '').split(':'); return (+p[0] || 0) * 60 + (+p[1] || 0); };
+    var today = homeJmSessions.filter(function (s) { return s.hari === todayHari; });
+    var fleks = homeJmSessions.filter(function (s) { return s.hari === 'fleksibel'; });
+    var belum = 0;
+    function status(s, isFleks) {
+      var lapor = homeJmPresToday.filter(function (p) { return p.kontrak_tutor_id === s.ktId; });
+      var sameKt = (isFleks ? fleks : today).filter(function (y) { return y.ktId === s.ktId; }).length;
+      var match = lapor.find(function (p) { return String(p.jam || '').slice(0, 5) === s.jam; }) || (sameKt === 1 ? lapor[0] : null);
+      if (match) return match.status === 'pending' ? 'wait' : match.status === 'ditolak' ? 'no' : 'ok';
+      if (isFleks) return 'flex';
+      var end = s.jamSelesai ? toMin(s.jamSelesai) : toMin(s.jam) + (s.durasi || 90);
+      if (nowMin >= end) return 'late';
+      return nowMin >= toMin(s.jam) ? 'live' : 'next';
+    }
+    homeTdItems = today.map(function (s) { return Object.assign({}, s, { row: 'today', col: s.jam || '-', st: status(s, false) }); })
+      .concat(fleks.map(function (s) { return Object.assign({}, s, { row: 'fleks', col: (!s.jam || s.jam === '00:00') ? 'Bebas' : s.jam, st: status(s, true) }); }));
+    homeTdItems.forEach(function (it) { if (it.st === 'late') belum++; });
+
+    if (badge) badge.textContent = homeTdItems.length + ' sesi';
+    if (subEl) subEl.textContent = today.length + ' sesi hari ini' + (fleks.length ? ' · ' + fleks.length + ' fleksibel' : '') + (belum ? ' · ' + belum + ' belum lapor' : '') + ' · ketuk titik untuk detail';
+
+    if (!homeTdItems.length) {
+      gridEl.innerHTML = '<div class="empty-state" style="padding:20px;">Tidak ada sesi hari ini maupun jadwal fleksibel.</div>';
       if (legendEl) legendEl.innerHTML = '';
       return;
     }
 
-    var jamSet = {};
-    homeJmSessions.forEach(function (s) { if (s.jam) jamSet[s.jam] = true; });
-    var jamList = Object.keys(jamSet).sort();
-    if (!jamList.length) jamList = ['08:00'];
-
-    var todayIdx = new Date().getDay(); // 0=Minggu, 1=Senin, ...
-    var todayHari = HOME_JM_HARI[todayIdx === 0 ? 7 : todayIdx];
+    var colSet = {};
+    homeTdItems.forEach(function (it) { colSet[it.col] = true; });
+    var cols = Object.keys(colSet).sort(function (a, b) { if (a === 'Bebas') return 1; if (b === 'Bebas') return -1; return a < b ? -1 : 1; });
+    var hariLabel = homeCapitalize(todayHari);
+    var rowsDef = [{ key: 'today', label: 'Hari ini', sub: hariLabel }];
+    if (fleks.length) rowsDef.push({ key: 'fleks', label: 'Fleksibel', sub: 'kapan saja' });
 
     var dotN = 0;
-    var html = '<div class="home-jm-grid">';
-    html += '<div></div>';
-    HOME_JM_HARI.forEach(function (h) {
-      html += '<div class="home-jm-head' + (h === todayHari ? ' is-today' : '') + '">' + HOME_JM_HARI_LABEL[h] + '</div>';
-    });
-
-    jamList.forEach(function (jam) {
-      html += '<div class="home-jm-hour">' + jam + '</div>';
-      HOME_JM_HARI.forEach(function (hari) {
-        var isToday = hari === todayHari;
-        var matches = homeJmSessions.filter(function (s) { return s.hari === hari && s.jam === jam; });
-        var dots = matches.map(function (s) {
-          return '<span class="home-jm-dot genio-pop-dot" data-idx="' + homeJmSessions.indexOf(s) + '" style="background:' + homeJmColorForTutor(s.tutorId) + '; --i:' + Math.min(dotN++, 60) + ';"></span>';
+    var html = '<div class="home-td-grid" style="grid-template-columns:auto repeat(' + cols.length + ', minmax(40px, 1fr));"><div></div>';
+    cols.forEach(function (c) { html += '<div class="home-jm-head">' + homeEsc(c) + '</div>'; });
+    rowsDef.forEach(function (r) {
+      html += '<div class="home-td-row' + (r.key === 'today' ? ' is-today' : '') + '">' + r.label + '<small>' + homeEsc(r.sub) + '</small></div>';
+      cols.forEach(function (c) {
+        var m = homeTdItems.filter(function (it) { return it.row === r.key && it.col === c; });
+        var dots = m.map(function (it) {
+          var ring = it.st === 'late' ? ' is-late' : (it.st === 'ok' || it.st === 'wait') ? ' is-done' : '';
+          return '<span class="home-jm-dot genio-pop-dot' + ring + '" data-idx="' + homeTdItems.indexOf(it) + '" style="background:' + homeJmColorForTutor(it.tutorId) + '; --i:' + Math.min(dotN++, 60) + ';"></span>';
         }).join('');
-        html += matches.length
-          ? '<div class="home-jm-cell has-dots' + (isToday ? ' is-today' : '') + '" data-genio-pop-trigger role="button" tabindex="0" data-hari="' + hari + '" data-jam="' + jam + '" aria-label="' + homeEsc(homeCapitalize(hari) + ' ' + jam + ', ' + matches.length + ' sesi') + '">' + dots + '</div>'
-          : '<div class="home-jm-cell' + (isToday ? ' is-today' : '') + '"></div>';
+        html += m.length
+          ? '<div class="home-jm-cell has-dots' + (r.key === 'today' ? ' is-today' : '') + '" data-genio-pop-trigger role="button" tabindex="0" data-row="' + r.key + '" data-col="' + homeEsc(c) + '" aria-label="' + homeEsc(r.label + ' ' + c + ', ' + m.length + ' sesi') + '">' + dots + '</div>'
+          : '<div class="home-jm-cell' + (r.key === 'today' ? ' is-today' : '') + '"></div>';
       });
     });
-    html += '</div>';
-    gridEl.innerHTML = html;
+    gridEl.innerHTML = html + '</div>';
     if (!HOME_REDUCED_MOTION) { gridEl.classList.remove('home-jm-anim'); void gridEl.offsetWidth; gridEl.classList.add('home-jm-anim'); }
 
     gridEl.querySelectorAll('.home-jm-cell.has-dots').forEach(function (cell) {
@@ -1005,8 +1054,8 @@
         var dot = e && e.target.closest && e.target.closest('.home-jm-dot');
         var dots = cell.querySelectorAll('.home-jm-dot');
         if (!dot && dots.length === 1) dot = dots[0];
-        if (dot) homeOpenSlotModal([homeJmSessions[+dot.dataset.idx]], dot);
-        else homeOpenSlotModal(homeJmSessions.filter(function (s) { return s.hari === cell.dataset.hari && s.jam === cell.dataset.jam; }), cell);
+        if (dot) homeOpenSlotModal([homeTdItems[+dot.dataset.idx]], dot);
+        else homeOpenSlotModal(homeTdItems.filter(function (s) { return s.row === cell.dataset.row && s.col === cell.dataset.col; }), cell);
       }
       cell.addEventListener('click', openCell);
       cell.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCell(e); } });
@@ -1014,10 +1063,10 @@
 
     if (legendEl) {
       var tutorMap = {};
-      homeJmSessions.forEach(function (s) { tutorMap[s.tutorId] = s.tutorNama; });
+      homeTdItems.forEach(function (s) { tutorMap[s.tutorId] = s.tutorNama; });
       legendEl.innerHTML = Object.keys(tutorMap).map(function (id) {
         return '<span class="home-jm-leg"><i style="background:' + homeJmColorForTutor(id) + ';"></i>' + homeEsc(tutorMap[id]) + '</span>';
-      }).join('');
+      }).join('') + '<span class="home-td-st"><i class="done"></i>Sudah lapor</span><span class="home-td-st"><i class="late"></i>Belum lapor</span>';
     }
   }
 
@@ -1031,17 +1080,19 @@
     var listEl = homeSlotModal;
     listEl.innerHTML = rows.map(function (r) {
       var initials = (r.tutorNama || '').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || 'T';
-      var tutorWa = homeWaLink(r.tutorHp), ortuWa = homeWaLink(r.ortuHp);
+      var remind = r.st === 'late' ? 'Halo ' + (r.tutorNama || '') + ', mohon isi presensi sesi ' + r.jam + ' dengan ' + (r.siswaNama || 'siswa') + ' hari ini. Terima kasih.' : '';
+      var tutorWa = homeWaLink(r.tutorHp) + (remind && r.tutorHp ? '?text=' + encodeURIComponent(remind) : ''), ortuWa = homeWaLink(r.ortuHp);
       var extra = [r.unitNama, r.paketNama].filter(Boolean).map(homeEsc).join(' · ');
       return '<div class="home-slot-item">' +
         '<div class="home-slot-top">' +
           '<span class="home-slot-av" style="background:' + homeJmColorForTutor(r.tutorId) + ';">' + genioAvatarInner(r.tutorNama, r.tutorFoto, initials) + '</span>' +
           '<div class="home-slot-who"><b>' + homeEsc(r.tutorNama) + '</b><span>' + homeEsc(r.mapel) + (r.durasi ? ' · ' + r.durasi + ' menit' : '') + '</span></div>' +
-          '<span class="home-slot-time">' + homeEsc((r.jam || '-') + (r.jamSelesai ? ' - ' + r.jamSelesai : '')) + '</span>' +
+          '<span class="home-slot-time">' + homeEsc(r.col === 'Bebas' ? 'Fleksibel' : ((r.jam || '-') + (r.jamSelesai ? ' - ' + r.jamSelesai : ''))) + '</span>' +
         '</div>' +
         '<div class="home-slot-siswa"><i class="ph ph-student" aria-hidden="true"></i><span><b>' + homeEsc(r.siswaNama) + '</b>' + (extra ? ' · ' + extra : '') + '</span></div>' +
+        (r.st ? '<div class="home-slot-st"><span>Status hari ini</span><span class="home-slot-chip ' + (r.st === 'flex' ? '' : r.st) + '">' + HOME_TD_ST[r.st] + '</span></div>' : '') +
         '<div class="home-slot-act">' +
-          '<a class="home-slot-wa" data-has="' + (tutorWa ? 1 : 0) + '" data-who="tutor" href="' + (tutorWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Chat tutor</a>' +
+          '<a class="home-slot-wa" data-has="' + (tutorWa ? 1 : 0) + '" data-who="tutor" href="' + (tutorWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>' + (r.st === 'late' ? 'Ingatkan tutor' : 'Chat tutor') + '</a>' +
           '<a class="home-slot-wa" data-has="' + (ortuWa ? 1 : 0) + '" data-who="orang tua" href="' + (ortuWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Chat ortu</a>' +
           '<button type="button" class="home-slot-goto" data-id="' + homeEsc(r.id) + '" title="Buka di halaman jadwal" aria-label="Buka di halaman jadwal"><i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>' +
         '</div>' +

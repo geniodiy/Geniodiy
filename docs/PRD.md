@@ -322,7 +322,7 @@ Union dari Kepala Unit + HRD, ditambah menu eksklusif. Sidebar:
 >
 > | Posisi | Menu | Isi saat ini |
 > |---|---|---|
-> | Dock | **Home** | Highlight bulanan omset, laba bersih + margin, pengeluaran (gaji + operasional) dengan perbandingan bulan lalu. Banner presensi pending. Rekap keuangan per unit (siswa aktif, sesi, omset, pengeluaran, laba). Grafik tren 3/6/12 bulan (omset/laba/sesi). Jadwal tutor minggu ini. Carousel Genio News. |
+> | Dock | **Home** | Highlight bulanan omset, laba bersih + margin, pengeluaran (gaji + operasional) dengan perbandingan bulan lalu. Banner presensi pending. Rekap keuangan per unit (siswa aktif, sesi, omset, pengeluaran, laba). Grafik tren 3/6/12 bulan (omset/laba/sesi). Sesi Hari ini (semua unit): grid hari ini + fleksibel per jam, status lapor per sesi, popup detail dengan WA pengingat, link Lihat selengkapnya ke Jadwal mengajar. Carousel Genio News. |
 > | Dock | **Presensi** | Tab Approval & Riwayat, lintas unit, plus "Isi presensi untuk tutor". |
 > | Dock | **Gaji** | Penggajian: daftar slip per periode, tandai sudah dibayar, cetak slip. |
 > | Lainnya | Data Ortu & Siswa | Lintas unit, alur ortu baru / sudah terdaftar. |
