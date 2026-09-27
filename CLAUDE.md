@@ -1,6 +1,6 @@
 # Genio Institute (Apps Script web app)
 
-Google Apps Script web app (HtmlService). `Code.gs` serves pages; each `Module*.html` is included into `Dashboard.html`. `Config.html` holds shared tokens, components, Supabase helpers, and the shared UI layer for popups/buttons. Deploy by importing files into Apps Script (`importProjectFilesFromDrive` in `Export.gs`), then create a new deployment version. Keep all element IDs and JS hooks intact when restyling.
+Google Apps Script web app (HtmlService). `Code.gs` serves pages; each `Module*.html` is included into `Dashboard.html`. `Config.html` holds shared tokens, components, Supabase helpers, and the shared UI layer for popups/buttons. Deploy by importing files into Apps Script (`importProjectFilesFromDrive` in `Export.gs`), then create a new deployment version. Keep all element IDs and JS hooks intact when restyling. Product requirements and build status live in `docs/PRD.md` (v5); update its Section 14 status when a module changes.
 
 ## Design preferences (from the owner, apply to every page)
 
