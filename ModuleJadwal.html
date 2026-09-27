@@ -189,7 +189,6 @@
   .jdw-jm-cell.has-dots{cursor:pointer; transition:background .15s ease, box-shadow .15s ease;}
   .jdw-jm-cell.has-dots:hover{background:#E6E8FA; box-shadow:inset 0 0 0 1px #C9CCF0;}
   .jdw-jm-cell.has-dots:focus-visible{outline:2px solid var(--blue); outline-offset:1px;}
-  #jdw-slotList{display:grid; gap:10px; padding:12px 0 4px;}
   .jdw-slot-item{border:1px solid var(--border); border-radius:12px; padding:11px 12px; background:#fff;}
   .jdw-slot-top{display:flex; align-items:center; gap:9px; min-width:0;}
   .jdw-slot-top .jdw-av{width:30px; height:30px; font-size:10.5px;}
@@ -204,8 +203,8 @@
   .jdw-slot-act .jdw-pv-wa{height:30px;}
   .jdw-slot-goto{width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; padding:0;}
   .jdw-slot-goto:hover{background:var(--surface); color:var(--ink);}
-  #jdw-slotModal{align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;}
-  #jdw-slotModal.show{opacity:1;}
+  .jdw-jm-dot{position:relative;}
+  .jdw-jm-dot::after{content:''; position:absolute; inset:-5px; border-radius:50%;}
 
   /* Kolom No dan Tutor tetap saat tabel digeser */
   .jdw-table .jdw-stk{position:sticky; z-index:1; background:#fff;}
@@ -271,7 +270,7 @@
   <div id="jdw-jadwalMingguanCard">
     <div class="jdw-jm-headrow">
       <div class="jdw-jm-title">Jadwal mingguan<small>Satu titik satu sesi, warna menandai tutor</small></div>
-      <div id="jdw-jmHeaderHint">Ketuk kotak berisi titik untuk detail</div>
+      <div id="jdw-jmHeaderHint">Ketuk titik untuk detail sesi</div>
     </div>
     <div id="jdw-jmGrid"><div class="empty-state" style="padding:16px;">Memuat jadwal...</div></div>
     <div id="jdw-jmLegend"></div>
@@ -458,20 +457,8 @@
     </div>
   </div>
 
-  <!-- Popup detail slot jadwal mingguan -->
-  <div class="modal-overlay" id="jdw-slotModal" hidden style="z-index:74;">
-    <div class="modal-sheet gx-sheet gx-sm">
-      <div class="gx-head">
-        <span class="gx-head-ico"><i class="ph ph-calendar-dots" aria-hidden="true"></i></span>
-        <div style="min-width:0;"><h3 id="jdw-slotTitle">Detail sesi</h3><p class="gx-sub" id="jdw-slotSub">-</p></div>
-        <button type="button" class="gx-close" id="jdw-slotCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
-      </div>
-      <div class="gx-body"><div id="jdw-slotList"></div></div>
-      <div class="modal-actions gx-foot">
-        <button type="button" class="btn btn-outline" id="jdw-slotCloseBtn">Tutup</button>
-      </div>
-    </div>
-  </div>
+  <!-- Popup kecil detail sesi: muncul tepat di titik yang ditekan -->
+  <div class="genio-pop" id="jdw-slotModal" hidden role="dialog" aria-label="Detail sesi"></div>
 
   <!-- Popup hubungi WhatsApp -->
   <div class="modal-overlay" id="jdw-waModal" hidden style="z-index:75;">
@@ -918,10 +905,10 @@
         var dots = matches.map(function (s) {
           var color = jdwColorForTutor(s.tutorId);
           var idx = jdwState.scheduleRows.indexOf(s);
-          return '<button type="button" class="jdw-jm-dot" data-idx="' + idx + '" style="background:' + color + '; --i:' + Math.min(dotN++, 60) + ';" title="' + jdwEscape(s.tutorNama + ' - ' + s.siswaNama) + '" aria-label="' + jdwEscape(s.tutorNama) + '"></button>';
+          return '<button type="button" class="jdw-jm-dot genio-pop-dot" data-idx="' + idx + '" style="background:' + color + '; --i:' + Math.min(dotN++, 60) + ';" title="' + jdwEscape(s.tutorNama + ' - ' + s.siswaNama) + '" aria-label="' + jdwEscape(s.tutorNama) + '"></button>';
         }).join('');
         html += matches.length
-          ? '<div class="jdw-jm-cell has-dots' + (isToday ? ' is-today' : '') + '" role="button" tabindex="0" data-hari="' + hari + '" data-jam="' + jam + '" aria-label="' + jdwEscape((JDW_HARI_MAP[hari] || hari) + ' ' + jam + ', ' + matches.length + ' sesi') + '">' + dots + '</div>'
+          ? '<div class="jdw-jm-cell has-dots' + (isToday ? ' is-today' : '') + '" data-genio-pop-trigger role="button" tabindex="0" data-hari="' + hari + '" data-jam="' + jam + '" aria-label="' + jdwEscape((JDW_HARI_MAP[hari] || hari) + ' ' + jam + ', ' + matches.length + ' sesi') + '">' + dots + '</div>'
           : '<div class="jdw-jm-cell' + (isToday ? ' is-today' : '') + '"></div>';
       });
     });
@@ -929,11 +916,15 @@
     gridEl.innerHTML = html;
     jdwReplay(gridEl);
 
-    // Ketuk kotak (atau titik) untuk membuka detail semua sesi di slot itu
+    // Ketuk titik: kartu sesi itu muncul tepat di titiknya. Ketuk kotak: semua sesi di slot itu.
     gridEl.querySelectorAll('.jdw-jm-cell.has-dots').forEach(function (cell) {
       function openCell(e) {
         if (e) e.stopPropagation();
-        jdwOpenSlotModal(cell.dataset.hari, cell.dataset.jam);
+        var dot = e && e.target.closest && e.target.closest('.jdw-jm-dot');
+        var dots = cell.querySelectorAll('.jdw-jm-dot');
+        if (!dot && dots.length === 1) dot = dots[0];
+        if (dot) jdwOpenSlotModal([jdwState.scheduleRows[+dot.dataset.idx]], dot);
+        else jdwOpenSlotModal(jdwState.scheduleRows.filter(function (s) { return s.hari === cell.dataset.hari && s.jamMulai === cell.dataset.jam; }), cell);
       }
       cell.addEventListener('click', openCell);
       cell.addEventListener('keydown', function (e) {
@@ -953,12 +944,10 @@
 
   /* ===== Popup detail slot ===== */
   var jdwSlotModal = document.getElementById('jdw-slotModal');
-  function jdwOpenSlotModal(hari, jam) {
-    var rows = jdwState.scheduleRows.filter(function (s) { return s.hari === hari && s.jamMulai === jam; });
+  function jdwOpenSlotModal(rows, anchor) {
+    rows = (rows || []).filter(Boolean);
     if (!rows.length) return;
-    document.getElementById('jdw-slotTitle').textContent = (JDW_HARI_MAP[hari] || jdwCapitalize(hari)) + ', ' + jam;
-    document.getElementById('jdw-slotSub').textContent = rows.length + ' sesi di jam ini';
-    var listEl = document.getElementById('jdw-slotList');
+    var listEl = jdwSlotModal;
     listEl.innerHTML = rows.map(function (r) {
       var tutorWa = jdwWaLink(r.tutorHp), ortuWa = jdwWaLink(r.ortuHp);
       return '<div class="jdw-slot-item">' +
@@ -986,16 +975,9 @@
         setTimeout(function () { jdwScrollToSchedule(btn.dataset.id); }, 300);
       });
     });
-    jdwSlotModal.hidden = false;
-    requestAnimationFrame(function () { jdwSlotModal.classList.add('show'); });
+    genioOpenPop(jdwSlotModal, anchor);
   }
-  function jdwCloseSlotModal() {
-    jdwSlotModal.classList.remove('show');
-    setTimeout(function () { jdwSlotModal.hidden = true; }, 280);
-  }
-  document.getElementById('jdw-slotCloseX').addEventListener('click', jdwCloseSlotModal);
-  document.getElementById('jdw-slotCloseBtn').addEventListener('click', jdwCloseSlotModal);
-  jdwSlotModal.addEventListener('click', function (e) { if (e.target === jdwSlotModal) jdwCloseSlotModal(); });
+  function jdwCloseSlotModal() { genioClosePop(jdwSlotModal); }
 
   /* Popover Preview Logic */
   var jdwJmPreviewModal = document.getElementById('jdw-jmPreviewModal');

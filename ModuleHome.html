@@ -21,16 +21,15 @@
   .home-jm-cell.has-dots{ cursor:pointer; transition:background .15s ease, box-shadow .15s ease; }
   .home-jm-cell.has-dots:hover{ background:#E6E8FA; box-shadow:inset 0 0 0 1px #C9CCF0; }
   .home-jm-cell.has-dots:focus-visible{ outline:2px solid var(--blue); outline-offset:1px; }
-  .home-jm-dot{ width:9px; height:9px; border-radius:50%; flex:none; box-shadow:0 0 0 2px #fff; pointer-events:none; }
+  .home-jm-dot{ position:relative; width:9px; height:9px; border-radius:50%; flex:none; box-shadow:0 0 0 2px #fff; cursor:pointer; transition:transform .12s ease; }
+  .home-jm-dot:hover{ transform:scale(1.3); }
+  .home-jm-dot::after{ content:''; position:absolute; inset:-5px; border-radius:50%; }
   @keyframes homeJmDot{ from{ opacity:0; transform:scale(.3); } to{ opacity:1; transform:none; } }
   #home-jmGrid.home-jm-anim .home-jm-dot{ animation:homeJmDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 15ms); }
   .home-jm-sub{ font-size:10.5px; color:var(--ink-soft); margin-top:1px; }
   .home-jm-leg{ display:inline-flex; align-items:center; gap:6px; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; }
   .home-jm-leg i{ width:8px; height:8px; border-radius:50%; flex:none; }
   /* Popup detail slot, sama dengan halaman Jadwal */
-  #home-slotModal{ align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease; }
-  #home-slotModal.show{ opacity:1; }
-  #home-slotList{ display:grid; gap:10px; padding:12px 0 4px; }
   .home-slot-item{ border:1px solid var(--border); border-radius:12px; padding:11px 12px; background:#fff; }
   .home-slot-top{ display:flex; align-items:center; gap:9px; min-width:0; }
   .home-slot-av{ width:30px; height:30px; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:600; flex:none; }
@@ -546,7 +545,7 @@
                 <div class="home-sec-title" style="margin:0;">Jadwal tutor</div>
                 <span id="homeJmTotalBadge" style="background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px;">-</span>
               </div>
-              <div class="home-jm-sub">Ketuk kotak berisi titik untuk detail sesi</div>
+              <div class="home-jm-sub">Ketuk titik untuk detail sesi</div>
             </div>
           </div>
           <a href="javascript:void(0)" id="homeLihatSemuaJadwal" style="font-size:11px; font-weight:500; color:var(--blue); text-decoration:none;">Lihat semua</a>
@@ -558,20 +557,8 @@
         </div>
         <div id="home-jmLegend" class="home-scrollable" style="display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); flex:none; max-height:56px; overflow-y:auto;"></div>
 
-        <!-- Popup detail slot, sama dengan halaman Jadwal -->
-        <div class="modal-overlay" id="home-slotModal" hidden style="z-index:74;">
-          <div class="modal-sheet gx-sheet gx-sm">
-            <div class="gx-head">
-              <span class="gx-head-ico"><i class="ph ph-calendar-dots" aria-hidden="true"></i></span>
-              <div style="min-width:0;"><h3 id="home-slotTitle">Detail sesi</h3><p class="gx-sub" id="home-slotSub">-</p></div>
-              <button type="button" class="gx-close" id="home-slotCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
-            </div>
-            <div class="gx-body"><div id="home-slotList"></div></div>
-            <div class="modal-actions gx-foot">
-              <button type="button" class="btn btn-outline" id="home-slotCloseBtn">Tutup</button>
-            </div>
-          </div>
-        </div>
+        <!-- Popup kecil detail sesi: muncul tepat di titik yang ditekan -->
+        <div class="genio-pop" id="home-slotModal" hidden role="dialog" aria-label="Detail sesi"></div>
       </div>
 
       <!-- Genio News: carousel gambar -->
@@ -993,10 +980,10 @@
         var isToday = hari === todayHari;
         var matches = homeJmSessions.filter(function (s) { return s.hari === hari && s.jam === jam; });
         var dots = matches.map(function (s) {
-          return '<span class="home-jm-dot" style="background:' + homeJmColorForTutor(s.tutorId) + '; --i:' + Math.min(dotN++, 60) + ';"></span>';
+          return '<span class="home-jm-dot genio-pop-dot" data-idx="' + homeJmSessions.indexOf(s) + '" style="background:' + homeJmColorForTutor(s.tutorId) + '; --i:' + Math.min(dotN++, 60) + ';"></span>';
         }).join('');
         html += matches.length
-          ? '<div class="home-jm-cell has-dots' + (isToday ? ' is-today' : '') + '" role="button" tabindex="0" data-hari="' + hari + '" data-jam="' + jam + '" aria-label="' + homeEsc(homeCapitalize(hari) + ' ' + jam + ', ' + matches.length + ' sesi') + '">' + dots + '</div>'
+          ? '<div class="home-jm-cell has-dots' + (isToday ? ' is-today' : '') + '" data-genio-pop-trigger role="button" tabindex="0" data-hari="' + hari + '" data-jam="' + jam + '" aria-label="' + homeEsc(homeCapitalize(hari) + ' ' + jam + ', ' + matches.length + ' sesi') + '">' + dots + '</div>'
           : '<div class="home-jm-cell' + (isToday ? ' is-today' : '') + '"></div>';
       });
     });
@@ -1005,7 +992,15 @@
     if (!HOME_REDUCED_MOTION) { gridEl.classList.remove('home-jm-anim'); void gridEl.offsetWidth; gridEl.classList.add('home-jm-anim'); }
 
     gridEl.querySelectorAll('.home-jm-cell.has-dots').forEach(function (cell) {
-      function openCell(e) { if (e) e.stopPropagation(); homeOpenSlotModal(cell.dataset.hari, cell.dataset.jam); }
+      function openCell(e) {
+        if (e) e.stopPropagation();
+        // Ketuk titik: kartu sesi itu muncul tepat di titiknya. Ketuk kotak: semua sesi di slot itu.
+        var dot = e && e.target.closest && e.target.closest('.home-jm-dot');
+        var dots = cell.querySelectorAll('.home-jm-dot');
+        if (!dot && dots.length === 1) dot = dots[0];
+        if (dot) homeOpenSlotModal([homeJmSessions[+dot.dataset.idx]], dot);
+        else homeOpenSlotModal(homeJmSessions.filter(function (s) { return s.hari === cell.dataset.hari && s.jam === cell.dataset.jam; }), cell);
+      }
       cell.addEventListener('click', openCell);
       cell.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCell(e); } });
     });
@@ -1021,14 +1016,12 @@
 
   /* ===== Popup detail slot jadwal ===== */
   var homeSlotModal = document.getElementById('home-slotModal');
-  // Pindahkan ke body agar overlay tidak terkurung oleh animasi transform pada kartu
+  // Pindahkan ke body agar posisi fixed tidak terkurung oleh animasi transform pada kartu
   if (homeSlotModal && homeSlotModal.parentNode !== document.body) document.body.appendChild(homeSlotModal);
-  function homeOpenSlotModal(hari, jam) {
-    var rows = homeJmSessions.filter(function (s) { return s.hari === hari && s.jam === jam; });
+  function homeOpenSlotModal(rows, anchor) {
+    rows = (rows || []).filter(Boolean);
     if (!rows.length || !homeSlotModal) return;
-    document.getElementById('home-slotTitle').textContent = homeCapitalize(hari) + ', ' + jam;
-    document.getElementById('home-slotSub').textContent = rows.length + ' sesi di jam ini';
-    var listEl = document.getElementById('home-slotList');
+    var listEl = homeSlotModal;
     listEl.innerHTML = rows.map(function (r) {
       var initials = (r.tutorNama || '').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || 'T';
       var tutorWa = homeWaLink(r.tutorHp), ortuWa = homeWaLink(r.ortuHp);
@@ -1067,19 +1060,9 @@
         })();
       });
     });
-    homeSlotModal.hidden = false;
-    requestAnimationFrame(function () { homeSlotModal.classList.add('show'); });
+    genioOpenPop(homeSlotModal, anchor);
   }
-  function homeCloseSlotModal() {
-    if (!homeSlotModal) return;
-    homeSlotModal.classList.remove('show');
-    setTimeout(function () { homeSlotModal.hidden = true; }, 280);
-  }
-  if (homeSlotModal) {
-    document.getElementById('home-slotCloseX').addEventListener('click', homeCloseSlotModal);
-    document.getElementById('home-slotCloseBtn').addEventListener('click', homeCloseSlotModal);
-    homeSlotModal.addEventListener('click', function (e) { if (e.target === homeSlotModal) homeCloseSlotModal(); });
-  }
+  function homeCloseSlotModal() { if (homeSlotModal) genioClosePop(homeSlotModal); }
 
 
   async function renderHomePeriode(periode) {
