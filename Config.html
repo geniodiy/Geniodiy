@@ -653,6 +653,25 @@
     if (el) el.innerHTML = genioAvatarInner(nama, fotoUrl, initials, fill);
   }
 
+  // ===== Tutup popup lewat latar hanya kalau sentuhan memang dimulai di latar =====
+  // Saat kolom di popup disentuh di HP, popup bergeser ke atas (lihat genioKeyboardAware)
+  // sebelum event click terjadi, sehingga click bisa "mendarat" di latar dan menutup popup.
+  // Click di latar diabaikan kalau pointerdown-nya tidak di latar, atau terjadi tepat setelah popup bergeser.
+  var genioOverlayGuard = { downOnOverlay: null, shiftedAt: 0 };
+  document.addEventListener('pointerdown', function (e) {
+    var t = e.target;
+    genioOverlayGuard.downOnOverlay = (t && t.classList && t.classList.contains('modal-overlay')) ? t : null;
+  }, true);
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!(t && t.classList && t.classList.contains('modal-overlay'))) return;
+    var shiftedRecently = Date.now() - genioOverlayGuard.shiftedAt < 700;
+    if (genioOverlayGuard.downOnOverlay !== t || shiftedRecently) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    }
+  }, true);
+
   // ===== Keyboard layar di HP: jaga kolom yang sedang diketik di dalam popup tetap terlihat =====
   // Web app Apps Script berjalan di dalam iframe, jadi tinggi keyboard sering tidak terbaca.
   // Saat kolom ketik di popup difokuskan, popup dipindah ke atas layar dan dipendekkan
@@ -699,6 +718,7 @@
     }
     function release() {
       if (overlay) {
+        if (overlay.classList.contains('gx-typing')) genioOverlayGuard.shiftedAt = Date.now();
         overlay.classList.remove('gx-typing');
         overlay.style.removeProperty('--gx-vh');
         overlay.style.paddingTop = '';
@@ -712,6 +732,7 @@
       clearTimeout(hideTimer);
       if (overlay && overlay !== ov) release();
       active = el; overlay = ov;
+      if (!ov.classList.contains('gx-typing')) genioOverlayGuard.shiftedAt = Date.now();
       ov.classList.add('gx-typing');
       keepVisible();
       setTimeout(keepVisible, 120);
