@@ -232,10 +232,12 @@ Setelah "Terima" atau "Visit" → PDF Presensi final digenerate dan disimpan ke 
 >   - Invoice yang sudah lunas tidak diubah (snapshot tetap).
 > - Tagihan dikelompokkan per orang tua.
 > - Ada aksi tambahan: kirim via WhatsApp, "Batalkan lunas" (menghapus receipt dan file PDF-nya), dan hapus tagihan.
-> - **Slip gaji:**
->   - Status slip yang belum dibayar ikut disinkronkan dari presensi saat menu Gaji dibuka.
+> - **Slip gaji juga digenerate otomatis, bukan lewat tombol Generate.** Setiap kali Manajer atau Super Admin membuka menu Gaji untuk suatu periode:
+>   - Tutor yang punya presensi `diterima`/`visit` tapi belum punya slip dibuatkan slip `belum_dibayar`. Unique `(tutor_id, periode)` mencegah dobel.
+>   - Slip yang belum dibayar disinkronkan ulang dari presensi.
+>   - Slip yang sudah dibayar tidak diubah.
 >   - PDF slip hanya bisa dibuat setelah ditandai sudah dibayar. Ada "Cetak semua slip".
->   - **Belum ada proses yang membuat baris `slip_gaji` untuk periode baru**, jadi tombol "Generate slip gaji" masih harus dibuat (lihat Section 14).
+>   - HRD hanya melihat, tidak membuat slip.
 > - **Periode:** dipilih lewat pemilih bulan global di header. Pemilih ini berlaku untuk semua menu, bukan hanya bulan lalu.
 
 ---
@@ -775,7 +777,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 | 7 | Presensi | Selesai (sisi Manajer) | PDF Laporan Belajar untuk presensi diwakilkan. Form isi presensi dan revisi oleh tutor masuk Fase 4. |
 | 8 | Tagihan | Selesai (dengan sinkron otomatis) | |
 | 9 | Operasional | Selesai | |
-| 10 | Penggajian | Sebagian | **Tombol "Generate slip gaji"**: belum ada yang membuat baris `slip_gaji` untuk bulan baru, jadi menu Gaji kosong di bulan tanpa data dummy. |
+| 10 | Penggajian | Selesai (dengan generate otomatis) | Pengeluaran gaji di Home membaca `slip_gaji`, jadi baru terisi setelah menu Gaji bulan itu dibuka. |
 | 11 | Home & Progres | Sebagian | Genio News dipindah ke paling atas. Tambah siswa aktif dan jumlah pertemuan di highlight, pie chart siswa aktif per unit, shortcut tagihan belum lunas. Menu Progres belum ada. |
 | 12 | Genio News | Belum | Menu penuh dengan daftar, detail, dan editor (upload gambar dengan kompresi). |
 | + | Profil | Sebagian | Form edit, foto profil dengan kompresi, dan ganti password. |
@@ -784,7 +786,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) membuka Kontrak, seharusnya Jadwal Mengajar.
 
 ### [v5] Langkah berikutnya (urutan yang disarankan)
-1. **Penggajian: Generate slip gaji** untuk bulan sebelumnya, dari presensi `diterima`/`visit`, unique per tutor dan periode. Ini paling mendesak karena tanpa ini alur gaji tidak jalan di bulan baru.
+1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
 2. **Genio News**: menu penuh + editor, lalu pindahkan cuplikannya ke paling atas Home.
 3. **Home & Progres**: lengkapi highlight, pie chart per unit, shortcut tagihan belum lunas, dan halaman Progres (rata-rata semua unit, 3 bulan).
 4. **Profil: Edit**: nama, jenis kelamin, no HP, foto dengan kompresi canvas, dan ganti password.
@@ -826,7 +828,7 @@ Dibangun terpisah dari awal (bukan reuse komponen Manajer): Beranda, Form Isi Pr
   - Daftar menu Manajer aktual (Section 6.4).
 - **Jadwal Mengajar** jadi menu sendiri, terpisah dari Kontrak.
 - **Pemilih periode global** di header menggantikan dropdown bulan per halaman. **Lonceng notifikasi** ditambahkan.
-- **Tagihan** disinkronkan otomatis saat menu dibuka, menggantikan tombol "Generate Invoice". Ditambah: kirim WhatsApp, batalkan lunas, hapus tagihan.
+- **Tagihan dan slip gaji** digenerate otomatis saat menunya dibuka, menggantikan tombol "Generate Invoice" dan "Generate Slip Gaji". Ditambah: kirim WhatsApp, batalkan lunas, hapus tagihan.
 - **Perhitungan presensi** (telat, denda, visit, reset revisi, diwakilkan) dilakukan oleh trigger database `presensi_before_write`.
 - **Kolom tambahan:**
   - `users.no_hp`
