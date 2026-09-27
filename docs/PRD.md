@@ -785,18 +785,27 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 
 Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) membuka Kontrak, seharusnya Jadwal Mengajar.
 
-### [v5] Langkah berikutnya (urutan yang disarankan)
+### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
 1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
-2. **Genio News**: menu penuh + editor, lalu pindahkan cuplikannya ke paling atas Home.
-3. **Home & Progres**: lengkapi highlight, pie chart per unit, shortcut tagihan belum lunas, dan halaman Progres (rata-rata semua unit, 3 bulan).
-4. **Profil: Edit**: nama, jenis kelamin, no HP, foto dengan kompresi canvas, dan ganti password.
-5. **Kelola User / Tutor**: tambah akun. Tolak pendaftar dan hapus user sekalian menghapus akun Auth (butuh proses sisi server).
-6. **Login**: redesign dan Google Sign-In.
-7. Setelah itu lanjut **Fase 3**. Prasyaratnya:
+2. **Profil: Edit.** Dibutuhkan semua role. Isinya:
+   - nama, jenis kelamin, no HP
+   - foto profil dengan kompresi canvas
+   - ganti password
+   - khusus tutor: keahlian, pendidikan terakhir, no WA, bank dan rekening
+3. **Kelola User / Tutor:**
+   - Tambah akun dari admin.
+   - Tolak pendaftar dan hapus user sekalian menghapus akun Supabase Auth. Ini butuh proses sisi server.
+4. **Fase 3: Dashboard Kepala Unit & HRD.** Prasyaratnya:
    - Simpan `unit_id` di sesi.
    - Buat konfigurasi menu per role (dock + Lainnya).
    - Terapkan flag akses per modul (unit-scoped, read-only).
-   - Uji RLS dengan akun Kepala Unit dan HRD.
+   - Uji RLS dengan akun asli.
+5. **Fase 4: Dashboard Tutor** (Section 6.1).
+6. **Genio News**, paling akhir. Sampai saat itu menu tetap berlabel "Coming Soon".
+
+Tidak dikerjakan untuk saat ini:
+- Home & Progres, karena Home sudah diredesign.
+- Redesign dan Google Sign-In di Login.
 
 ### Fase 2 — Desktop layout (Manajer)
 Adaptasi seluruh modul Fase 1 ke layout desktop, setelah versi mobile-nya fix.
