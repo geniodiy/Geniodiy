@@ -23,7 +23,13 @@
   #prfEditProfileBtn i{font-size:14px;}
   #prfEditProfileBtn .soon{font-size:9px; font-weight:600; background:rgba(255,255,255,.2); padding:1px 6px; border-radius:999px;}
 
-  .prf-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px;}
+  .prf-grid{display:grid; grid-template-columns:minmax(0,1fr); gap:14px;}
+  @media (min-width:900px){
+    /* Desktop: Kontak di atas, Akun di bawah; tiap kartu dua data per baris */
+    .prf-card{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); column-gap:28px;}
+    .prf-card .prf-row + .prf-row{border-top:none;}
+    .prf-card .prf-row:nth-child(n+3){border-top:1px solid #EEF0F6;}
+  }
   .prf-sec{font-size:12px; font-weight:600; color:var(--ink); margin:0 2px 8px;}
   .prf-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:4px 16px;}
   .prf-row{display:flex; align-items:center; gap:12px; padding:12px 0; min-width:0;}
@@ -44,7 +50,6 @@
   @media (max-width:899px){
     .prf-hb{grid-template-columns:1fr;}
     .prf-side{border-left:none; border-top:1px solid var(--border); min-width:0;}
-    .prf-grid{grid-template-columns:1fr;}
     #prfDetailNamaHero{font-size:20px;}
     .prf-av, #prfDetailPhoto, #prfDetailPhotoFallback{width:56px; height:56px;}
     #prfDetailPhotoFallback{font-size:18px;}
