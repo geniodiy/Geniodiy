@@ -822,6 +822,23 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Sesi:** menyimpan `unit_id` dan `unit_nama` (`genioEnsureSessionProfile`).
 - **Belum diuji dengan akun kepala unit asli.**
 
+### [v5] Fase 3b: Dashboard HRD (dikerjakan 27 Sep 2026)
+- **Dock:** Home, **Tutor** (kelola penuh + tinjau pendaftar), **Jadwal**, Lainnya.
+- **Lainnya:** Data ortu & siswa, Kontrak, Presensi (hanya lihat), Genio News, Profil.
+- **Hak:**
+  - Tambah dan edit siswa, kontrak siswa, kontrak tutor, dan jadwal. RLS sudah mengizinkan lewat `is_staff_lintas_unit()`.
+  - Tidak bisa menghapus kontrak tutor dan jadwal. Tombolnya disembunyikan.
+  - Presensi tanpa tombol approval, isi untuk tutor, ubah status, maupun hapus.
+- **Home (`ModuleHomeUnit.html` mode HRD, opsi B):**
+  - Total gaji tutor bulan ini (dari `presensi.nominal_dibayar`) dengan batang 3 bulan.
+  - Kartu putih: tutor aktif, pertemuan, tutor telat lapor, dan siswa baru bulan ini.
+  - Perlu tindakan: pendaftar menunggu, tutor aktif tanpa jadwal, tutor telat lapor, siswa belum ada tutor.
+  - Sesi Hari ini semua unit.
+  - Kinerja tutor semua unit.
+  - Tren SDM: pertemuan, gaji tutor, tutor mengajar.
+  - Genio News.
+- **Belum diuji dengan akun HRD asli.**
+
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
 1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
 2. ~~Profil: Edit~~ (selesai). Dibutuhkan semua role. Isinya:

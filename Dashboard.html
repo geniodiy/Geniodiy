@@ -869,8 +869,8 @@
       var wasSplitView = content.classList.contains('lainnya-split-view'); // baca status SEBELUM ditimpa
       content.classList.toggle('lainnya-split-view', splitView);
 
-      // Home kepala unit memakai panel tersendiri (ModuleHomeUnit.html)
-      var panelName = (name === 'home' && IS_KU) ? 'home-unit' : name;
+      // Home kepala unit dan HRD memakai panel tersendiri (ModuleHomeUnit.html)
+      var panelName = (name === 'home' && (IS_KU || IS_HRD)) ? 'home-unit' : name;
       document.querySelectorAll('.module-panel').forEach(function (panel) {
         var isTarget = panel.dataset.module === panelName;
         var isSidebar = splitView && panel.dataset.module === 'lainnya';

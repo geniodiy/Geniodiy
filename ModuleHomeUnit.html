@@ -45,6 +45,17 @@
   .kuh-mbar i{display:block; height:100%; width:0; background:#1E8E5A; border-radius:6px; transition:width .8s cubic-bezier(.16,1,.3,1);}
   .kuh-wcard small{font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
+  .kuh-hb[hidden], .kuh-acts[hidden]{display:none !important;}
+  /* HRD: batang gaji 3 bulan di highlight */
+  .kuh-bars{display:flex; align-items:flex-end; gap:14px; height:88px; margin-top:14px;}
+  .kuh-bars .b{flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; min-width:0;}
+  .kuh-bars .b i{display:block; width:100%; max-width:64px; border-radius:8px 8px 4px 4px; background:rgba(157,182,255,.45); transform-origin:bottom; animation:kuhBar .7s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 80ms);}
+  .kuh-bars .b.on i{background:#C9D6FF;}
+  .kuh-bars .b span{font-size:9.5px; color:rgba(255,255,255,.6);} .kuh-bars .b.on span{color:#fff; font-weight:600;}
+  .kuh-bars .b em{font-style:normal; font-size:9.5px; color:rgba(255,255,255,.75); font-weight:600; white-space:nowrap;}
+  @keyframes kuhBar{from{transform:scaleY(0);} to{transform:scaleY(1);}}
+  .kuh-wcard .r b.a{color:#B26A00;}
+
   /* Perlu tindakan */
   .kuh-acts{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px;}
   .kuh-act{background:#fff; border:1px solid var(--border); border-radius:14px; padding:12px 14px; display:flex; gap:10px; align-items:flex-start; min-width:0; cursor:pointer; text-align:left; font-family:var(--font); color:var(--ink); transition:border-color .15s ease, transform .1s ease;}
@@ -142,6 +153,7 @@
   @media (prefers-reduced-motion: reduce){
     .kuh-anim .kuh-ses, .kuh-anim .kuh-tut, .kuh-anim .kuh-act, .kuh-tut .bar i{animation:none;}
     .kuh-reveal{animation:none;}
+    .kuh-bars .b i{animation:none;}
     .kuh-mbar i{transition:none;}
   }
 </style>
@@ -154,7 +166,7 @@
       <div class="date"><span id="kuhDay">-</span><br><b id="kuhDate">-</b></div>
     </div>
 
-    <div class="kuh-hb">
+    <div class="kuh-hb" id="kuhHeroUnit">
       <div class="kuh-hm">
         <div class="kuh-top"><span class="kuh-lbl"><i></i><span id="kuhOmsetLabel">Omset unit</span></span><span class="kuh-pill" id="kuhUnitPill">-</span></div>
         <div class="kuh-num" id="kuhOmset">Rp 0</div>
@@ -175,11 +187,37 @@
       </div>
     </div>
 
+    <!-- Highlight HRD (opsi B): gaji tutor bulan ini + batang 3 bulan, kartu putih SDM -->
+    <div class="kuh-hb" id="kuhHeroHrd" hidden>
+      <div class="kuh-hm">
+        <div class="kuh-top"><span class="kuh-lbl"><i></i><span id="kuhHrdLabel">Total gaji tutor</span></span><span class="kuh-pill">Semua unit</span></div>
+        <div class="kuh-num" id="kuhHrdGaji">Rp 0</div>
+        <div class="kuh-deltarow" id="kuhHrdDelta"></div>
+        <div class="kuh-bars" id="kuhHrdBars" aria-hidden="true"></div>
+      </div>
+      <div class="kuh-hs">
+        <div class="kuh-wcard">
+          <div class="r"><span><i class="ic ph ph-chalkboard-teacher" aria-hidden="true"></i>Tutor aktif</span><b id="kuhHrdTutor">0 tutor</b></div>
+          <div class="r"><span><i class="ic ph ph-calendar-check" aria-hidden="true"></i>Pertemuan</span><b id="kuhHrdSesi">0 sesi</b></div>
+          <div class="r"><span><i class="ic ph ph-clock-countdown" aria-hidden="true"></i>Tutor telat lapor</span><b class="a" id="kuhHrdTelat">0 tutor</b></div>
+          <hr>
+          <div class="r"><span><i class="ic ph ph-student" aria-hidden="true"></i>Siswa baru bulan ini</span><b class="m" id="kuhHrdSiswaBaru">0 siswa</b></div>
+          <small id="kuhHrdAvg">-</small>
+        </div>
+      </div>
+    </div>
+
     <div class="kuh-acts" id="kuhActs">
       <button type="button" class="kuh-act" data-goto="presensi" style="--i:0"><span class="ic"><i class="ph ph-check-square" aria-hidden="true"></i></span><div class="t"><b id="kuhActPending">0</b><span>Presensi menunggu</span><small id="kuhActPendingSub">-</small></div></button>
       <button type="button" class="kuh-act" data-goto="tagihan" style="--i:1"><span class="ic r"><i class="ph ph-receipt" aria-hidden="true"></i></span><div class="t"><b id="kuhActTagihan">0</b><span>Tagihan belum lunas</span><small id="kuhActTagihanSub">-</small></div></button>
       <button type="button" class="kuh-act" data-goto="presensi" style="--i:2"><span class="ic a"><i class="ph ph-clock-countdown" aria-hidden="true"></i></span><div class="t"><b id="kuhActTelat">0</b><span>Presensi telat</span><small id="kuhActTelatSub">-</small></div></button>
       <button type="button" class="kuh-act" data-goto="kontrak" style="--i:3"><span class="ic"><i class="ph ph-user-circle-plus" aria-hidden="true"></i></span><div class="t"><b id="kuhActNoTutor">0</b><span>Siswa belum ada tutor</span><small id="kuhActNoTutorSub">-</small></div></button>
+    </div>
+    <div class="kuh-acts" id="kuhActsHrd" hidden>
+      <button type="button" class="kuh-act" data-goto="data-tutor" style="--i:0"><span class="ic a"><i class="ph ph-user-plus" aria-hidden="true"></i></span><div class="t"><b id="kuhHActPend">0</b><span>Pendaftar tutor menunggu</span><small id="kuhHActPendSub">-</small></div></button>
+      <button type="button" class="kuh-act" data-goto="data-tutor" style="--i:1"><span class="ic"><i class="ph ph-calendar-x" aria-hidden="true"></i></span><div class="t"><b id="kuhHActNoJadwal">0</b><span>Tutor belum ada jadwal</span><small id="kuhHActNoJadwalSub">-</small></div></button>
+      <button type="button" class="kuh-act" data-goto="presensi" style="--i:2"><span class="ic a"><i class="ph ph-clock-countdown" aria-hidden="true"></i></span><div class="t"><b id="kuhHActTelat">0</b><span>Tutor telat lapor</span><small id="kuhHActTelatSub">-</small></div></button>
+      <button type="button" class="kuh-act" data-goto="kontrak" style="--i:3"><span class="ic r"><i class="ph ph-user-circle-plus" aria-hidden="true"></i></span><div class="t"><b id="kuhHActNoTutor">0</b><span>Siswa belum ada tutor</span><small id="kuhHActNoTutorSub">-</small></div></button>
     </div>
 
     <div class="kuh-2">
@@ -196,7 +234,7 @@
         <div class="genio-pop" id="kuh-slotModal" hidden role="dialog" aria-label="Detail sesi"></div>
       </div>
       <div class="kuh-card">
-        <div class="kuh-sec"><h4>Tutor di unit ini</h4><span id="kuhTutorSub">-</span></div>
+        <div class="kuh-sec"><h4 id="kuhTutorTitle">Tutor di unit ini</h4><span id="kuhTutorSub">-</span></div>
         <div id="kuhTutorList"><div class="kuh-empty">Memuat data tutor...</div></div>
       </div>
     </div>
@@ -204,7 +242,7 @@
     <div class="kuh-card ht-card kuh-trend">
       <div class="ht-head">
         <div style="min-width:0;">
-          <div class="kuh-sec" style="margin:0;"><h4>Trend progress unit</h4></div>
+          <div class="kuh-sec" style="margin:0;"><h4 id="kuhTrendTitle">Trend progress unit</h4></div>
           <div class="ht-sub" id="kuhTrendSub">-</div>
         </div>
         <div id="kuhTrendRange" class="ht-range">
@@ -320,17 +358,26 @@
       s = genioGetSession() || s;
       if (!s || token !== kuhState.loading) return;
       var unitId = s.unit_id;
+      var isHrd = s.role === 'hrd';
+      kuhState.isHrd = isHrd;
+      document.getElementById('kuhHeroUnit').hidden = isHrd;
+      document.getElementById('kuhHeroHrd').hidden = !isHrd;
+      document.getElementById('kuhActs').hidden = isHrd;
+      document.getElementById('kuhActsHrd').hidden = !isHrd;
+      document.getElementById('kuhTutorTitle').textContent = isHrd ? 'Kinerja tutor' : 'Tutor di unit ini';
+      document.getElementById('kuhTrendTitle').textContent = isHrd ? 'Tren SDM' : 'Trend progress unit';
+      kuhSetTrendMetrics(isHrd);
 
       // Sapaan
       genioSetAvatar(document.getElementById('kuhAvatar'), s.nama, s.foto_profil_url, genioInitials(s.nama));
-      document.getElementById('kuhRole').textContent = 'Kepala unit' + (s.unit_nama ? ' · ' + s.unit_nama : '');
+      document.getElementById('kuhRole').textContent = isHrd ? 'HRD · Semua unit' : 'Kepala unit' + (s.unit_nama ? ' · ' + s.unit_nama : '');
       document.getElementById('kuhGreeting').textContent = 'Selamat datang, ' + (s.nama || '');
       var today = new Date();
       document.getElementById('kuhDay').textContent = KUH_HARI[today.getDay()];
       document.getElementById('kuhDate').textContent = today.getDate() + ' ' + KUH_BULAN[today.getMonth()] + ' ' + today.getFullYear();
       document.getElementById('kuhUnitPill').textContent = s.unit_nama || 'Unit';
 
-      if (!unitId) {
+      if (!unitId && !isHrd) {
         document.getElementById('kuhSesiList').innerHTML = '<div class="kuh-empty">Akun Anda belum terhubung ke unit. Hubungi manajer.</div>';
         document.getElementById('kuhTutorList').innerHTML = '';
         return;
@@ -343,41 +390,48 @@
       var range = monthRange(periode);
       var first24 = shiftMonth(periode, -23);
       var todayKey = today.getFullYear() + '-' + pad(today.getMonth() + 1) + '-' + pad(today.getDate());
-      var u = '&unit_id=eq.' + unitId;
+      var u = isHrd ? '' : '&unit_id=eq.' + unitId; // HRD melihat semua unit
       document.getElementById('kuhOmsetLabel').textContent = 'Omset unit ' + KUH_BULAN[+periode.split('-')[1] - 1];
 
       var q = function (path) { return supaRest(path, s.access_token).catch(function (e) { console.warn('Home unit:', path.split('?')[0], e.message); return []; }); };
+      var none = function () { return Promise.resolve([]); };
+      var nextMonthStart = shiftMonth(periode, 1) + '-01';
       var nowIso = new Date().toISOString();
       var res = await Promise.all([
-        q('presensi?select=tanggal,nominal_dibayar,kontrak_tutor(kontrak_siswa(harga))&status=in.(diterima,visit)' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
-        q('operasional?select=tanggal,nominal' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
+        q('presensi?select=tanggal,nominal_dibayar,kontrak_tutor(tutor_id,kontrak_siswa(harga))&status=in.(diterima,visit)' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
+        isHrd ? none() : q('operasional?select=tanggal,nominal' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
         q('presensi?select=status,terlambat,denda,kontrak_tutor(tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url))' + u + '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end),
         q('kontrak_siswa?select=id,siswa_id,status,tanggal_mulai,tanggal_selesai,kontrak_tutor(id,status)' + u),
         q('presensi?select=id,created_at&status=eq.pending' + u + '&order=created_at.asc'),
-        q('invoice?select=nominal&status=eq.belum_lunas' + u),
-        q('kontrak_tutor?select=id,tutor_id,mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),kontrak_siswa!inner(status,siswa(nama,orangtua(no_hp)),paket_belajar(nama_paket)),jadwal(id,hari,jam_mulai,jam_selesai)&status=eq.aktif&kontrak_siswa.status=eq.aktif' + u),
+        isHrd ? none() : q('invoice?select=nominal&status=eq.belum_lunas' + u),
+        q('kontrak_tutor?select=id,tutor_id,mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),kontrak_siswa!inner(status,siswa(nama,orangtua(no_hp)),paket_belajar(nama_paket),units(nama_unit)),jadwal(id,hari,jam_mulai,jam_selesai)&status=eq.aktif&kontrak_siswa.status=eq.aktif' + u),
         q('presensi?select=kontrak_tutor_id,jam,status' + u + '&tanggal=eq.' + todayKey),
-        q('genio_news?select=id,judul,gambar_url,tanggal_publish,tombol_kontak_url&status=eq.aktif&tanggal_publish=lte.' + nowIso + '&or=(tanggal_expire.gte.' + nowIso + ',tanggal_expire.is.null)&order=tanggal_publish.desc&limit=3')
+        q('genio_news?select=id,judul,gambar_url,tanggal_publish,tombol_kontak_url&status=eq.aktif&tanggal_publish=lte.' + nowIso + '&or=(tanggal_expire.gte.' + nowIso + ',tanggal_expire.is.null)&order=tanggal_publish.desc&limit=3'),
+        isHrd ? q('users?role=eq.tutor&select=id,status,created_at&order=created_at.asc') : none(),
+        isHrd ? q('siswa?select=id&created_at=gte.' + range.start + '&created_at=lt.' + nextMonthStart) : none()
       ]);
       if (token !== kuhState.loading) return;
       var presHist = res[0], opsHist = res[1], presMonth = res[2], kontrakSiswa = res[3], pending = res[4],
-          unpaid = res[5], ktAktif = res[6], presToday = res[7], news = res[8];
+          unpaid = res[5], ktAktif = res[6], presToday = res[7], news = res[8], tutorUsers = res[9], siswaBaru = res[10];
 
       // ===== Agregat per bulan (24 bulan: 12 untuk tren + 12 untuk garis periode sebelumnya) =====
       var byMonth = {};
-      for (var i = 0; i < 24; i++) { var k = shiftMonth(first24, i); byMonth[k] = { key: k, omset: 0, gaji: 0, ops: 0, sesi: 0 }; }
+      for (var i = 0; i < 24; i++) { var k = shiftMonth(first24, i); byMonth[k] = { key: k, omset: 0, gaji: 0, ops: 0, sesi: 0, tutorSet: {} }; }
       presHist.forEach(function (r) {
         var b = byMonth[String(r.tanggal).slice(0, 7)]; if (!b) return;
         b.omset += harga(r); b.gaji += parseFloat(r.nominal_dibayar || 0) || 0; b.sesi += 1;
+        if (r.kontrak_tutor && r.kontrak_tutor.tutor_id) b.tutorSet[r.kontrak_tutor.tutor_id] = true;
       });
       opsHist.forEach(function (r) {
         var b = byMonth[String(r.tanggal).slice(0, 7)]; if (!b) return;
         b.ops += parseFloat(r.nominal || 0) || 0;
       });
-      kuhState.months = Object.keys(byMonth).sort().map(function (k) { var b = byMonth[k]; b.laba = b.omset - b.gaji - b.ops; return b; });
+      kuhState.months = Object.keys(byMonth).sort().map(function (k) { var b = byMonth[k]; b.laba = b.omset - b.gaji - b.ops; b.tutor = Object.keys(b.tutorSet).length; return b; });
 
-      // ===== Highlight =====
       var cur = byMonth[periode], prev = byMonth[shiftMonth(periode, -1)];
+      if (isHrd) kuhRenderHrd(periode, cur, prev, byMonth, presMonth, kontrakSiswa, ktAktif, tutorUsers, siswaBaru);
+      else {
+      // ===== Highlight =====
       reveal(document.getElementById('kuhOmset'), rpShort(cur.omset));
       var deltaHtml;
       if (prev.omset > 0) {
@@ -425,9 +479,10 @@
       setAct('kuhActTelat', telat.length, telat.length ? 'Bulan ini · denda ' + rpShort(dendaSum) : 'Tidak ada yang telat bulan ini');
       var noTutor = kontrakSiswa.filter(function (k) { return k.status === 'aktif' && !(k.kontrak_tutor || []).some(function (kt) { return kt.status === 'aktif'; }); });
       setAct('kuhActNoTutor', noTutor.length, noTutor.length ? 'Perlu dibuatkan kontrak tutor' : 'Semua sudah punya tutor');
+      }
 
       var badge = document.getElementById('bnPresensiBadge');
-      if (badge) { badge.textContent = pending.length > 99 ? '99+' : pending.length; badge.hidden = !pending.length; }
+      if (badge && !isHrd) { badge.textContent = pending.length > 99 ? '99+' : pending.length; badge.hidden = !pending.length; }
 
       // ===== Sesi hari ini =====
       var hariKode = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][today.getDay()];
@@ -465,7 +520,8 @@
           id: x.jadwalId, row: isFleks ? 'fleks' : 'today', jam: jamKey, mulai: x.mulai, selesai: x.selesai, st: st,
           tutorId: kt.tutor_id, tutorNama: user.nama || 'Tutor', tutorFoto: user.foto_profil_url, tutorHp: user.no_hp || (tp && tp.no_wa),
           ortuHp: ortuHp, siswa: siswa, mapel: kt.mapel || 'Bimbel', durasi: kt.durasi_menit,
-          paket: ks.paket_belajar && ks.paket_belajar.nama_paket
+          paket: ks.paket_belajar && ks.paket_belajar.nama_paket,
+          unit: ks.units && ks.units.nama_unit
         };
       }
       var items = sesi.map(function (x) { return sesiItem(x, false); }).concat(fleks.map(function (x) { return sesiItem(x, true); }));
@@ -489,7 +545,7 @@
       });
       var tList = Object.keys(tutors).map(function (k) { return tutors[k]; }).sort(function (a, b) { return b.sesi - a.sesi || a.nama.localeCompare(b.nama); });
       var maxSesi = Math.max.apply(null, tList.map(function (t) { return t.sesi; }).concat([1]));
-      document.getElementById('kuhTutorSub').textContent = KUH_BULAN[+periode.split('-')[1] - 1] + (tList.length ? ' · ' + tList.length + ' tutor' : '');
+      document.getElementById('kuhTutorSub').textContent = KUH_BULAN[+periode.split('-')[1] - 1] + (isHrd ? ' · semua unit' : '') + (tList.length ? ' · ' + tList.length + ' tutor' : '');
       document.getElementById('kuhTutorList').innerHTML = tList.length
         ? '<div class="kuh-tut-scroll"><div class="kuh-tut h"><span>Tutor</span><span>Sesi</span><span>Telat</span><span>Ditolak</span></div>' + tList.map(function (t, i) {
             return '<div class="kuh-tut" style="--i:' + i + '"><div class="n"><span class="av" style="background:' + colorFor(t.id) + '">' + genioAvatarInner(t.nama, t.foto, genioInitials(t.nama)) + '</span><b title="' + esc(t.nama) + '">' + esc(t.nama) + '</b></div>' +
@@ -578,7 +634,7 @@
         var st = KUH_ST[r.st] || KUH_ST.next;
         var remind = r.st === 'late' ? 'Halo ' + r.tutorNama + ', mohon isi presensi sesi ' + r.mulai + ' dengan ' + r.siswa + ' hari ini. Terima kasih.' : '';
         var tutorWa = waLink(r.tutorHp, remind), ortuWa = waLink(r.ortuHp);
-        var extra = [s.unit_nama, r.paket].filter(Boolean).map(esc).join(' · ');
+        var extra = [r.unit || s.unit_nama, r.paket].filter(Boolean).map(esc).join(' · ');
         var jamTxt = r.jam === 'Bebas' ? 'Fleksibel' : (r.mulai + (r.selesai ? ' - ' + r.selesai : ''));
         return '<div class="home-slot-item">' +
           '<div class="home-slot-top">' +
@@ -635,8 +691,65 @@
     }
 
     // ===== Trend progress unit: sama persis dengan "Trend progress cabang" manajer, data hanya unit ini =====
-    function trendFmt(metric, v) { return metric === 'sesi' ? Math.round(v) + ' sesi' : 'Rp ' + Math.round(v || 0).toLocaleString('id-ID'); }
-    function trendFmtShort(metric, v) { return metric === 'sesi' ? Math.round(v) + ' sesi' : rpShort(v); }
+    function trendFmt(metric, v) { return metric === 'sesi' ? Math.round(v) + ' sesi' : metric === 'tutor' ? Math.round(v) + ' tutor' : 'Rp ' + Math.round(v || 0).toLocaleString('id-ID'); }
+    function trendFmtShort(metric, v) { return metric === 'sesi' ? Math.round(v) + ' sesi' : metric === 'tutor' ? Math.round(v) + ' tutor' : rpShort(v); }
+    // Metrik tren: kepala unit = omset/laba/sesi, HRD = pertemuan/gaji tutor/tutor mengajar
+    function kuhSetTrendMetrics(isHrd) {
+      var defs = isHrd ? [['sesi', 'Pertemuan'], ['gaji', 'Gaji tutor'], ['tutor', 'Tutor mengajar']] : [['omset', 'Omset'], ['laba', 'Laba'], ['sesi', 'Sesi']];
+      var btns = document.querySelectorAll('.kuh-trend-metric');
+      btns.forEach(function (b, i) { b.dataset.metric = defs[i][0]; b.textContent = defs[i][1]; });
+      if (!defs.some(function (d) { return d[0] === kuhState.metric; })) kuhState.metric = defs[0][0];
+    }
+
+    // ===== Highlight & perlu tindakan versi HRD =====
+    function kuhRenderHrd(periode, cur, prev, byMonth, presMonth, kontrakSiswa, ktAktif, tutorUsers, siswaBaru) {
+      var bulan = KUH_BULAN[+periode.split('-')[1] - 1], prevKey = shiftMonth(periode, -1);
+      document.getElementById('kuhHrdLabel').textContent = 'Total gaji tutor ' + bulan;
+      reveal(document.getElementById('kuhHrdGaji'), rpShort(cur.gaji));
+      var dh;
+      if (prev.gaji > 0) {
+        var pct = (cur.gaji - prev.gaji) / prev.gaji * 100;
+        var cls = Math.abs(pct) < 0.05 ? 'is-flat' : (pct > 0 ? '' : 'is-down');
+        dh = '<span class="kuh-delta ' + cls + '"><i class="ph ph-trend-' + (pct >= 0 ? 'up' : 'down') + '" aria-hidden="true"></i>' + (pct >= 0 ? '+' : '') + pct.toFixed(1).replace('.', ',') + '%</span><span>dari ' + KUH_BULAN[+prevKey.split('-')[1] - 1] + ' (' + rpShort(prev.gaji) + ')</span>';
+      } else {
+        dh = '<span class="kuh-delta is-flat">Belum ada pembanding</span><span>bulan lalu tanpa sesi</span>';
+      }
+      document.getElementById('kuhHrdDelta').innerHTML = dh;
+      var keys = [shiftMonth(periode, -2), prevKey, periode];
+      var vals = keys.map(function (k) { return (byMonth[k] && byMonth[k].gaji) || 0; });
+      var mx = Math.max.apply(null, vals.concat([1]));
+      document.getElementById('kuhHrdBars').innerHTML = keys.map(function (k, i) {
+        return '<div class="b' + (i === 2 ? ' on' : '') + '"><em>' + rpShort(vals[i]).replace('Rp ', '') + '</em><i style="--i:' + i + '; height:' + Math.max(4, Math.round(vals[i] / mx * 52)) + 'px"></i><span>' + monthShort(k) + '</span></div>';
+      }).join('');
+
+      var aktif = tutorUsers.filter(function (t) { return t.status === 'aktif'; });
+      var pendaftar = tutorUsers.filter(function (t) { return t.status === 'pending_approval'; });
+      var telatSet = {};
+      presMonth.forEach(function (r) { if (r.terlambat && r.kontrak_tutor && r.kontrak_tutor.tutor_id) telatSet[r.kontrak_tutor.tutor_id] = true; });
+      var telatCount = Object.keys(telatSet).length;
+      var telatPres = presMonth.filter(function (r) { return r.terlambat; }).length;
+      reveal(document.getElementById('kuhHrdTutor'), aktif.length + ' tutor');
+      reveal(document.getElementById('kuhHrdSesi'), cur.sesi + ' sesi');
+      reveal(document.getElementById('kuhHrdTelat'), telatCount + ' tutor');
+      reveal(document.getElementById('kuhHrdSiswaBaru'), (siswaBaru.length ? '+' : '') + siswaBaru.length + ' siswa');
+      var mengajar = cur.tutor || 0;
+      document.getElementById('kuhHrdAvg').textContent = mengajar ? 'Rata-rata ' + Math.round(cur.sesi / mengajar) + ' sesi per tutor · ' + mengajar + ' tutor mengajar' : 'Belum ada sesi bulan ini';
+
+      function setAct(id, n, sub) {
+        document.getElementById(id).textContent = n;
+        document.getElementById(id + 'Sub').textContent = sub;
+        document.getElementById(id).closest('.kuh-act').classList.toggle('is-zero', !n);
+      }
+      var oldest = pendaftar[0] && pendaftar[0].created_at ? Math.floor((Date.now() - new Date(pendaftar[0].created_at).getTime()) / 86400000) : null;
+      setAct('kuhHActPend', pendaftar.length, pendaftar.length ? (oldest > 0 ? 'Terlama ' + oldest + ' hari lalu' : 'Daftar hari ini') : 'Tidak ada pendaftar baru');
+      var punyaJadwal = {};
+      ktAktif.forEach(function (kt) { if ((kt.jadwal || []).length) punyaJadwal[kt.tutor_id] = true; });
+      var tanpaJadwal = aktif.filter(function (t) { return !punyaJadwal[t.id]; });
+      setAct('kuhHActNoJadwal', tanpaJadwal.length, tanpaJadwal.length ? 'Aktif tanpa jadwal berjalan' : 'Semua tutor aktif punya jadwal');
+      setAct('kuhHActTelat', telatCount, telatCount ? 'Bulan ini · ' + telatPres + ' presensi' : 'Tidak ada yang telat bulan ini');
+      var noTutor = kontrakSiswa.filter(function (k) { return k.status === 'aktif' && !(k.kontrak_tutor || []).some(function (kt) { return kt.status === 'aktif'; }); });
+      setAct('kuhHActNoTutor', noTutor.length, noTutor.length ? 'Perlu dibuatkan kontrak tutor' : 'Semua sudah punya tutor');
+    }
     function pctText(cur, prev) {
       if (!prev) return null;
       var pct = ((cur - prev) / Math.abs(prev)) * 100;
@@ -762,8 +875,10 @@
       kuhResizeT = setTimeout(function () { if (genioIsModuleVisible('home-unit')) kuhRenderTrend(false); }, 150);
     });
     document.getElementById('kuhSesiMore').addEventListener('click', function () { goto('jadwal'); });
-    document.getElementById('kuhActs').addEventListener('click', function (e) {
-      var b = e.target.closest('.kuh-act'); if (b) goto(b.dataset.goto);
+    ['kuhActs', 'kuhActsHrd'].forEach(function (id) {
+      document.getElementById(id).addEventListener('click', function (e) {
+        var b = e.target.closest('.kuh-act'); if (b) goto(b.dataset.goto);
+      });
     });
     document.getElementById('kuhNewsAll').addEventListener('click', function () { goto('genio-news'); });
 
