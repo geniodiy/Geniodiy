@@ -111,7 +111,7 @@ function uploadOperasionalFile(base64Data, fileName, mimeType) {
  * Foto sudah dikompres di browser (maks. lebar 800px) sebelum dikirim ke sini.
  * URL yang dikembalikan adalah link gambar langsung supaya bisa dipakai di <img src>.
  */
-var PROFIL_FOLDER_ID = '';
+var PROFIL_FOLDER_ID = '1xcwChbByNVpdhitV6W6PXEZFxCjx5Oay';
 
 function uploadProfilFile(base64Data, fileName, mimeType) {
   try {
