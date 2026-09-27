@@ -77,6 +77,18 @@
   .prf-pe-meter.lv3 i:nth-child(-n+3), .prf-pe-meter.lv4 i{background:#1E8E5A;}
   .prf-pe-hint{font-size:10px; color:var(--ink-soft); margin:-4px 0 10px;}
 
+  /* ===== Popup atur foto (crop lingkaran) ===== */
+  #prfCropModal{z-index:70; align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
+  #prfCropModal.show{opacity:1;}
+  @media (prefers-reduced-motion: reduce){ #prfCropModal{transition:none;} }
+  .prf-crop-frame{position:relative; width:min(260px, 72vw); aspect-ratio:1; margin:4px auto 14px; border-radius:14px; overflow:hidden; background:#14162B; touch-action:none; cursor:grab; user-select:none; -webkit-user-select:none;}
+  .prf-crop-frame.is-drag{cursor:grabbing;}
+  #prfCropImg{position:absolute; left:0; top:0; max-width:none; transform-origin:0 0; pointer-events:none; will-change:transform;}
+  .prf-crop-mask{position:absolute; inset:0; border-radius:50%; box-shadow:0 0 0 999px rgba(20,22,43,.55); outline:2px solid rgba(255,255,255,.9); outline-offset:-2px; pointer-events:none;}
+  .prf-crop-zoom{display:flex; align-items:center; gap:10px; color:var(--ink-soft); font-size:14px;}
+  .prf-crop-zoom input{flex:1; accent-color:var(--blue);}
+  .prf-crop-hint{font-size:10.5px; color:var(--ink-soft); text-align:center; margin:8px 0 0;}
+
   @keyframes prfIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
   .prf-anim .prf-hb, .prf-anim .prf-grid > div{animation:prfIn .45s cubic-bezier(.16,1,.3,1) both;}
   .prf-anim .prf-grid > div:nth-child(1){animation-delay:.06s;} .prf-anim .prf-grid > div:nth-child(2){animation-delay:.12s;}
@@ -148,6 +160,36 @@
     </div>
   </div>
 
+  <!-- Popup atur foto: geser dan perbesar, hasil dipotong persegi lalu tampil bulat -->
+  <div class="modal-overlay" id="prfCropModal" hidden>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-crop" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Atur foto</h3>
+          <p class="gx-sub">Geser dan perbesar sampai wajah pas di lingkaran.</p>
+        </div>
+        <button type="button" class="gx-close" id="prfCropCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="gx-body">
+        <div class="prf-crop-frame" id="prfCropFrame">
+          <img id="prfCropImg" alt="" draggable="false">
+          <div class="prf-crop-mask"></div>
+        </div>
+        <div class="prf-crop-zoom">
+          <i class="ph ph-magnifying-glass-minus" aria-hidden="true"></i>
+          <input type="range" id="prfCropZoom" min="1" max="4" step="0.01" value="1" aria-label="Perbesar foto">
+          <i class="ph ph-magnifying-glass-plus" aria-hidden="true"></i>
+        </div>
+        <p class="prf-crop-hint">Di HP bisa dicubit untuk memperbesar.</p>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="prfCropCancel">Batal</button>
+        <button type="button" class="btn btn-primary" id="prfCropApply">Pakai foto</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Popup edit profil -->
   <div class="modal-overlay" id="prfEditModal" hidden>
     <div class="modal-sheet gx-sheet">
@@ -170,13 +212,13 @@
           </div>
           <div class="tx">
             <b>Foto profil</b>
-            <span id="prfFotoHint">JPG atau PNG. Dikompres otomatis sebelum diunggah.</span>
+            <span id="prfFotoHint">JPG, PNG, atau HEIC. Bisa dipotong, lalu dikompres otomatis.</span>
             <div class="prf-pe-acts">
               <button type="button" class="prf-pe-btn" id="prfFotoPick"><i class="ph ph-upload-simple" aria-hidden="true"></i>Ganti foto</button>
               <button type="button" class="prf-pe-btn is-link" id="prfFotoRemove">Hapus</button>
             </div>
           </div>
-          <input type="file" id="prfFotoInput" accept="image/*" hidden>
+          <input type="file" id="prfFotoInput" accept="image/*,.heic,.heif" hidden>
         </div>
 
         <div class="gx-step-title"><span class="gx-step">1</span>Data diri</div>
@@ -405,7 +447,7 @@
     if (prfEdit.previewUrl) { URL.revokeObjectURL(prfEdit.previewUrl); prfEdit.previewUrl = null; }
     prfEdit.file = null; prfEdit.removePhoto = false;
     document.getElementById('prfFotoInput').value = '';
-    document.getElementById('prfFotoHint').textContent = 'JPG atau PNG. Dikompres otomatis sebelum diunggah.';
+    document.getElementById('prfFotoHint').textContent = 'JPG, PNG, atau HEIC. Bisa dipotong, lalu dikompres otomatis.';
     document.getElementById('prfEditAlert').hidden = true;
 
     prfSetEditPhoto(me.foto_profil_url || '', nama);
@@ -430,34 +472,188 @@
     prfHideModal(document.getElementById('prfEditModal'));
   }
 
-  // Kompres foto di browser: resize ke lebar maks. 800px lalu turunkan kualitas JPEG sampai ~400KB
-  function prfCompressImage(file) {
+  // ===== Baca foto: JPG/PNG langsung, HEIC/HEIF dikonversi ke JPEG di browser =====
+  var PRF_HEIC_LIB = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
+  var prfHeicLoading = null;
+  function prfIsHeic(file) {
+    return /image\/hei[cf]/i.test(file.type || '') || /\.hei[cf]$/i.test(file.name || '');
+  }
+  function prfLoadHeicLib() {
+    if (window.heic2any) return Promise.resolve(window.heic2any);
+    if (!prfHeicLoading) {
+      prfHeicLoading = new Promise(function (resolve, reject) {
+        var sc = document.createElement('script');
+        sc.src = PRF_HEIC_LIB; sc.async = true;
+        sc.onload = function () { window.heic2any ? resolve(window.heic2any) : reject(new Error('Konverter HEIC gagal dimuat')); };
+        sc.onerror = function () { prfHeicLoading = null; reject(new Error('Konverter HEIC gagal dimuat. Periksa koneksi internet.')); };
+        document.head.appendChild(sc);
+      });
+    }
+    return prfHeicLoading;
+  }
+  function prfLoadImage(blob) {
     return new Promise(function (resolve, reject) {
-      var url = URL.createObjectURL(file);
+      var url = URL.createObjectURL(blob);
       var img = new Image();
-      img.onload = function () {
-        URL.revokeObjectURL(url);
-        var scale = Math.min(1, PRF_FOTO_MAX_W / img.naturalWidth);
-        var w = Math.max(1, Math.round(img.naturalWidth * scale));
-        var h = Math.max(1, Math.round(img.naturalHeight * scale));
-        var canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        var ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
-        ctx.drawImage(img, 0, 0, w, h);
-        var q = 0.86;
-        (function attempt() {
-          canvas.toBlob(function (blob) {
-            if (!blob) { reject(new Error('Foto tidak bisa diproses')); return; }
-            if (blob.size > PRF_FOTO_TARGET && q > 0.5) { q -= 0.08; attempt(); return; }
-            resolve(blob);
-          }, 'image/jpeg', q);
-        })();
-      };
+      img.onload = function () { resolve({ img: img, url: url }); };
       img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('File bukan gambar yang valid')); };
       img.src = url;
     });
   }
+  async function prfReadImage(file) {
+    try {
+      return await prfLoadImage(file); // Safari bisa membuka HEIC langsung
+    } catch (err) {
+      if (!prfIsHeic(file)) throw err;
+    }
+    var hint = document.getElementById('prfFotoHint');
+    hint.textContent = 'Mengonversi foto HEIC...';
+    var conv = await prfLoadHeicLib();
+    var out;
+    try {
+      out = await conv({ blob: file, toType: 'image/jpeg', quality: 0.92 });
+    } catch (e) {
+      throw new Error('Foto HEIC tidak bisa dibuka. Coba simpan sebagai JPG dulu.');
+    }
+    return prfLoadImage(Array.isArray(out) ? out[0] : out);
+  }
+
+  // Ubah canvas jadi JPEG, turunkan kualitas sampai ~400KB
+  function prfCanvasToJpeg(canvas) {
+    return new Promise(function (resolve, reject) {
+      var q = 0.88;
+      (function attempt() {
+        canvas.toBlob(function (blob) {
+          if (!blob) { reject(new Error('Foto tidak bisa diproses')); return; }
+          if (blob.size > PRF_FOTO_TARGET && q > 0.5) { q -= 0.08; attempt(); return; }
+          resolve(blob);
+        }, 'image/jpeg', q);
+      })();
+    });
+  }
+
+  // ===== Crop: frame persegi, masker lingkaran, geser + zoom (slider, scroll, cubit) =====
+  var prfCrop = { img: null, url: null, frame: 0, base: 1, zoom: 1, x: 0, y: 0, pointers: {}, pinch: null, drag: null };
+  function prfCropScale() { return prfCrop.base * prfCrop.zoom; }
+  function prfCropClamp() {
+    var sc = prfCropScale(), F = prfCrop.frame;
+    var W = prfCrop.img.naturalWidth * sc, H = prfCrop.img.naturalHeight * sc;
+    prfCrop.x = Math.min(0, Math.max(F - W, prfCrop.x));
+    prfCrop.y = Math.min(0, Math.max(F - H, prfCrop.y));
+  }
+  function prfCropRender() {
+    prfCropClamp();
+    document.getElementById('prfCropImg').style.transform = 'translate(' + prfCrop.x + 'px,' + prfCrop.y + 'px) scale(' + prfCropScale() + ')';
+  }
+  // Zoom dengan titik (cx, cy) di dalam frame tetap di tempat
+  function prfCropSetZoom(z, cx, cy) {
+    z = Math.max(1, Math.min(4, z));
+    var F = prfCrop.frame;
+    if (cx == null) { cx = F / 2; cy = F / 2; }
+    var old = prfCropScale();
+    prfCrop.zoom = z;
+    var ratio = prfCropScale() / old;
+    prfCrop.x = cx - (cx - prfCrop.x) * ratio;
+    prfCrop.y = cy - (cy - prfCrop.y) * ratio;
+    document.getElementById('prfCropZoom').value = z;
+    prfCropRender();
+  }
+  function prfOpenCrop(loaded) {
+    if (prfCrop.url) URL.revokeObjectURL(prfCrop.url);
+    prfCrop.img = loaded.img; prfCrop.url = loaded.url;
+    var el = document.getElementById('prfCropImg');
+    el.src = loaded.url;
+    el.style.width = loaded.img.naturalWidth + 'px';
+    el.style.height = loaded.img.naturalHeight + 'px';
+    prfShowModal(document.getElementById('prfCropModal'));
+    requestAnimationFrame(function () {
+      var F = document.getElementById('prfCropFrame').clientWidth || 260;
+      prfCrop.frame = F;
+      prfCrop.base = F / Math.min(loaded.img.naturalWidth, loaded.img.naturalHeight);
+      prfCrop.zoom = 1;
+      prfCrop.x = (F - loaded.img.naturalWidth * prfCrop.base) / 2;
+      prfCrop.y = (F - loaded.img.naturalHeight * prfCrop.base) / 2;
+      document.getElementById('prfCropZoom').value = 1;
+      prfCropRender();
+    });
+  }
+  function prfCloseCrop() {
+    prfHideModal(document.getElementById('prfCropModal'));
+    document.getElementById('prfFotoInput').value = '';
+  }
+  async function prfApplyCrop() {
+    var sc = prfCropScale();
+    var side = prfCrop.frame / sc; // sisi persegi di koordinat foto asli
+    var out = Math.max(160, Math.min(PRF_FOTO_MAX_W, Math.round(side)));
+    var canvas = document.createElement('canvas');
+    canvas.width = out; canvas.height = out;
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, out, out);
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(prfCrop.img, -prfCrop.x / sc, -prfCrop.y / sc, side, side, 0, 0, out, out);
+    try {
+      var blob = await prfCanvasToJpeg(canvas);
+      prfEdit.file = blob; prfEdit.removePhoto = false;
+      if (prfEdit.previewUrl) URL.revokeObjectURL(prfEdit.previewUrl);
+      prfEdit.previewUrl = URL.createObjectURL(blob);
+      prfSetEditPhoto(prfEdit.previewUrl, document.getElementById('prfEditNama').value);
+      document.getElementById('prfFotoHint').textContent = 'Foto baru siap diunggah (' + Math.max(1, Math.round(blob.size / 1024)) + ' KB).';
+      document.getElementById('prfEditAlert').hidden = true;
+      prfCloseCrop();
+    } catch (err) {
+      prfCloseCrop();
+      prfEditFail(err.message);
+    }
+  }
+  (function prfBindCrop() {
+    var frame = document.getElementById('prfCropFrame');
+    function pt(e) { var r = frame.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+    frame.addEventListener('pointerdown', function (e) {
+      if (!prfCrop.img) return;
+      frame.setPointerCapture(e.pointerId);
+      prfCrop.pointers[e.pointerId] = pt(e);
+      var ids = Object.keys(prfCrop.pointers);
+      if (ids.length === 2) {
+        var a = prfCrop.pointers[ids[0]], b = prfCrop.pointers[ids[1]];
+        prfCrop.pinch = { dist: Math.hypot(a.x - b.x, a.y - b.y), zoom: prfCrop.zoom };
+        prfCrop.drag = null;
+      } else {
+        prfCrop.drag = { px: e.clientX, py: e.clientY, x: prfCrop.x, y: prfCrop.y };
+        frame.classList.add('is-drag');
+      }
+    });
+    frame.addEventListener('pointermove', function (e) {
+      if (!prfCrop.pointers[e.pointerId]) return;
+      prfCrop.pointers[e.pointerId] = pt(e);
+      var ids = Object.keys(prfCrop.pointers);
+      if (prfCrop.pinch && ids.length >= 2) {
+        var a = prfCrop.pointers[ids[0]], b = prfCrop.pointers[ids[1]];
+        var d = Math.hypot(a.x - b.x, a.y - b.y);
+        prfCropSetZoom(prfCrop.pinch.zoom * d / (prfCrop.pinch.dist || 1), (a.x + b.x) / 2, (a.y + b.y) / 2);
+      } else if (prfCrop.drag) {
+        prfCrop.x = prfCrop.drag.x + (e.clientX - prfCrop.drag.px);
+        prfCrop.y = prfCrop.drag.y + (e.clientY - prfCrop.drag.py);
+        prfCropRender();
+      }
+    });
+    function end(e) {
+      delete prfCrop.pointers[e.pointerId];
+      if (Object.keys(prfCrop.pointers).length < 2) prfCrop.pinch = null;
+      if (!Object.keys(prfCrop.pointers).length) { prfCrop.drag = null; frame.classList.remove('is-drag'); }
+    }
+    frame.addEventListener('pointerup', end);
+    frame.addEventListener('pointercancel', end);
+    frame.addEventListener('wheel', function (e) {
+      if (!prfCrop.img) return;
+      e.preventDefault();
+      var p = pt(e);
+      prfCropSetZoom(prfCrop.zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08), p.x, p.y);
+    }, { passive: false });
+    document.getElementById('prfCropZoom').addEventListener('input', function () { prfCropSetZoom(parseFloat(this.value)); });
+    document.getElementById('prfCropApply').addEventListener('click', prfApplyCrop);
+    document.getElementById('prfCropCancel').addEventListener('click', prfCloseCrop);
+    document.getElementById('prfCropCloseX').addEventListener('click', prfCloseCrop);
+  })();
   function prfBlobToBase64(blob) {
     return new Promise(function (resolve, reject) {
       var reader = new FileReader();
@@ -486,16 +682,17 @@
 
   async function prfPickFoto(file) {
     if (!file) return;
-    if (!/^image\//.test(file.type)) { prfEditFail('Pilih file gambar (JPG atau PNG).'); return; }
+    var hint = document.getElementById('prfFotoHint');
+    var hintAwal = hint.textContent;
+    if (!/^image\//.test(file.type || '') && !prfIsHeic(file)) { prfEditFail('Pilih file gambar (JPG, PNG, atau HEIC).'); return; }
+    document.getElementById('prfEditAlert').hidden = true;
     try {
-      var blob = await prfCompressImage(file);
-      prfEdit.file = blob; prfEdit.removePhoto = false;
-      if (prfEdit.previewUrl) URL.revokeObjectURL(prfEdit.previewUrl);
-      prfEdit.previewUrl = URL.createObjectURL(blob);
-      prfSetEditPhoto(prfEdit.previewUrl, document.getElementById('prfEditNama').value);
-      document.getElementById('prfFotoHint').textContent = 'Foto baru siap diunggah (' + Math.max(1, Math.round(blob.size / 1024)) + ' KB).';
-      document.getElementById('prfEditAlert').hidden = true;
+      var loaded = await prfReadImage(file);
+      hint.textContent = hintAwal;
+      prfOpenCrop(loaded);
     } catch (err) {
+      hint.textContent = hintAwal;
+      document.getElementById('prfFotoInput').value = '';
       prfEditFail(err.message);
     }
   }
@@ -604,7 +801,9 @@
   document.getElementById('prfEditSave').addEventListener('click', prfSaveEdit);
   document.getElementById('prfEditModal').addEventListener('click', function (e) { if (e.target === this) prfCloseEdit(); });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !document.getElementById('prfEditModal').hidden) prfCloseEdit();
+    if (e.key !== 'Escape') return;
+    if (!document.getElementById('prfCropModal').hidden) prfCloseCrop();
+    else if (!document.getElementById('prfEditModal').hidden) prfCloseEdit();
   });
   document.getElementById('prfPwToggle').addEventListener('click', function () {
     prfSetPwOpen(document.getElementById('prfPwWrap').hidden);

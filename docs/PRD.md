@@ -688,7 +688,7 @@ Gunakan kolom `role` dan `unit_id` di tabel `users` (via `auth.uid()`) sebagai b
 > - Mode lihat sudah ada: highlight putih berisi avatar, nama, role, status, unit, dan tanggal bergabung, lalu kartu Kontak (email dengan tombol salin, tautan WhatsApp) dan kartu Akun.
 >
 > **Edit profil (satu popup, semua role):**
-> - **Foto profil:** dikompres di browser (lebar maks. 800px, JPEG ~400KB), diunggah ke Drive `Foto Profil` lewat `uploadProfilFile`, disimpan sebagai link gambar langsung. Foto lama dipindah ke sampah.
+> - **Foto profil:** menerima JPG, PNG, dan HEIC/HEIF. HEIC dikonversi di browser dengan heic2any yang dimuat dari jsDelivr hanya saat diperlukan. Setelah dipilih, foto dipotong di popup "Atur foto" (geser, zoom slider/scroll/cubit, masker lingkaran), lalu jadi JPEG persegi maks. 800×800 ~400KB, diunggah ke Drive `Foto Profil` lewat `uploadProfilFile`, disimpan sebagai link gambar langsung. Foto lama dipindah ke sampah.
 > - **Data diri:** nama, jenis kelamin, no WhatsApp (`users.no_hp`).
 > - **Khusus tutor:** keahlian, pendidikan terakhir, bank, rekening (`tutor_profile`). No WA ikut disimpan ke `tutor_profile.no_wa`.
 > - **Ganti password:** di bagian yang bisa dibuka-tutup. Wajib isi password saat ini (dicek ulang lewat login), password baru minimal 8 karakter, ada indikator kekuatan.
