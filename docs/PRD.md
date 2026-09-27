@@ -711,7 +711,7 @@ Di halaman Login tersedia tombol **"Daftar sebagai Tutor"** dengan alur berikut:
    - **Jika ditolak** → data akun & profil tutor tersebut **dihapus permanen** dari database (bukan sekadar diubah status).
    - **[v5] Catatan:**
      - Saat ini hanya baris `public.users` (dan profil) yang dihapus. Akun di Supabase Auth masih tersisa, jadi email itu tidak bisa dipakai daftar ulang.
-     - Menghapus akun Auth butuh proses sisi server (Edge Function atau Apps Script dengan service key), tidak bisa dari browser.
+     - **Sudah diperbaiki:** tolak dan hapus sekarang lewat Edge Function `admin-users`, yang menghapus `public.users`, `tutor_profile` (cascade), dan akun Supabase Auth sekaligus.
 
 ---
 
@@ -786,7 +786,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 |---|---|---|---|
 | 1 | Kelola Unit | Selesai | |
 | 2 | Pengaturan | Selesai | |
-| 3 | Kelola User + Kelola Tutor | Sebagian | Tombol tambah user dan tambah tutor. Tolak pendaftar belum menghapus akun Auth. |
+| 3 | Kelola User + Kelola Tutor | Selesai | Tambah user dan tambah tutor, lalu tolak pendaftar dan hapus akun lewat Edge Function `admin-users` (ikut menghapus akun Auth). |
 | 4 | Data Ortu & Siswa | Selesai | Hapus permanen untuk data tanpa histori (sekarang hanya nonaktifkan, dan ini boleh tetap begitu) |
 | 5 | Paket Belajar | Selesai | |
 | 6 | Kontrak + Jadwal | Selesai | |
@@ -808,7 +808,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
    - foto profil dengan kompresi canvas
    - ganti password
    - khusus tutor: keahlian, pendidikan terakhir, no WA, bank dan rekening
-3. **Kelola User / Tutor:**
+3. ~~Kelola User / Tutor~~ (selesai, Edge Function `admin-users`):
    - Tambah akun dari admin.
    - Tolak pendaftar dan hapus user sekalian menghapus akun Supabase Auth. Ini butuh proses sisi server.
 4. **Fase 3: Dashboard Kepala Unit & HRD.** Prasyaratnya:

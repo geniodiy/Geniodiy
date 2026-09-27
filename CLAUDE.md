@@ -24,6 +24,7 @@ Reference implementations: `Login.html`, `ModuleHome.html`, `ModulePresensi.html
 
 - Project **GDIY** (ref `lmtockvqirnqjabdhxbh`, region ap-southeast-1). This is the live database; ask before any write, migration, or delete. Other projects in the account ("Manajemen Genio DIY", "genio-get") are inactive and unused.
 - Schema check (27 Sep 2026): all 123 `supaRest` calls in the code match the tables and columns; all 16 public tables have RLS enabled.
+- Edge Function `admin-users` (source in `supabase/functions/admin-users/index.ts`, deployed with verify_jwt off because it checks the caller token itself): creates accounts (Auth + `public.users` + `tutor_profile`) and deletes accounts including the Auth user. Manajer/super_admin manage all roles (super_admin only by super_admin), HRD only tutors. Called from the browser via `genioAdminUsers()` in `Config.html`. Redeploy after editing the source.
 - Open security advisor warnings, noted and deliberately left as is for now:
   1. SECURITY DEFINER helpers callable by signed-in users via RPC: `current_role_name`, `current_status`, `current_unit_id`, `is_manajemen`, `is_staff_lintas_unit`. They are used by RLS policies, so do not revoke EXECUTE without testing the policies first.
   2. Leaked password protection is disabled (Supabase dashboard, Authentication settings; no code change needed).

@@ -124,6 +124,11 @@
   }
 
   /* ===== Popup ===== */
+  .kp-hero-add-btn{height:34px; border-radius:9px; width:100%; background:#fff; color:var(--blue); border:1px solid #fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .kp-hero-add-btn:hover{background:var(--blue-tint);}
+  .kp-hero-add-btn:active{transform:scale(.97);}
+  .kp-hero-add-btn i{font-size:14px;}
+  #kp-passwordWrap[hidden], #kp-statusWrap[hidden]{display:none !important;}
   #kp-modal, #kp-confirmModal{align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;}
   #kp-modal.show, #kp-confirmModal.show{opacity:1;}
   .kp-opt-row{display:flex; gap:6px; flex-wrap:wrap;}
@@ -173,6 +178,7 @@
           <div><em style="background:#FFC46B;"></em>Baru bulan ini<b id="kp-heroBaru">0</b></div>
         </div>
       </div>
+      <button type="button" id="kp-addBtn" class="kp-hero-add-btn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah user</button>
     </div>
   </div>
 
@@ -226,7 +232,11 @@
 
         <div class="gx-step-title"><span class="gx-step">1</span>Data diri</div>
         <div class="gx-row"><label for="kp-nama">Nama lengkap <em class="gx-req">wajib</em></label><input type="text" id="kp-nama"></div>
-        <div class="gx-row"><label for="kp-email">Email <em class="gx-req">wajib</em></label><input type="email" id="kp-email"></div>
+        <div class="gx-row"><label for="kp-email">Email <em class="gx-req">wajib</em></label><input type="email" id="kp-email" autocomplete="off"></div>
+        <div id="kp-passwordWrap" hidden>
+          <div class="gx-row"><label for="kp-password">Password awal <em class="gx-req">wajib</em></label><input type="text" id="kp-password" autocomplete="off" placeholder="Minimal 8 karakter"></div>
+          <div class="gx-note" style="margin:-2px 0 6px;"><i class="ph ph-key" aria-hidden="true"></i><span>Berikan password ini ke pemilik akun. Mereka bisa menggantinya sendiri di menu Profil.</span></div>
+        </div>
 
         <div class="gx-step-title"><span class="gx-step">2</span>Role</div>
         <div class="kp-opt-row" id="kp-roleOpts">
@@ -241,12 +251,14 @@
           </div>
         </div>
 
+        <div id="kp-statusWrap">
         <div class="gx-step-title"><span class="gx-step">3</span>Status</div>
         <div class="kp-opt-row" id="kp-statusOpts">
           <label class="kp-opt" data-val="aktif"><input type="radio" name="kp-status" value="aktif">Aktif</label>
           <label class="kp-opt" data-val="nonaktif"><input type="radio" name="kp-status" value="nonaktif">Nonaktif</label>
         </div>
         <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span>Akun nonaktif tidak bisa masuk ke aplikasi, tapi datanya tetap tersimpan.</span></div>
+        </div>
       </div>
       <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="kp-cancelBtn">Batal</button>
@@ -349,6 +361,7 @@
       document.getElementById('kp-cancelBtn').addEventListener('click', kpCloseModal);
       document.getElementById('kp-modalCloseX').addEventListener('click', kpCloseModal);
       document.getElementById('kp-saveBtn').addEventListener('click', kpSubmitEdit);
+      document.getElementById('kp-addBtn').addEventListener('click', function () { kpOpenModal(null); });
       document.getElementById('kp-confirmCancelBtn').addEventListener('click', kpCloseConfirm);
       document.getElementById('kp-confirmOkBtn').addEventListener('click', async function () {
         var btn = this;
@@ -714,7 +727,7 @@
   async function kpDelete(id) {
     try {
       var s = genioGetSession();
-      await supaRest('users?id=eq.' + id, s.access_token, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+      await genioAdminUsers({ action: 'delete', user_id: id });
       genioToast('Akun berhasil dihapus', 'success');
       kpLoadAll();
     } catch (err) { genioToast('Gagal menghapus: ' + err.message, 'error'); }
@@ -731,12 +744,21 @@
   }
 
   async function kpOpenModal(id) {
-    var u = kpState.userList.find(function (x) { return x.id === id; });
+    var isNew = !id;
+    var u = isNew ? { nama: '', email: '', role: 'kepala_unit', status: 'aktif', unit_id: '' } : kpState.userList.find(function (x) { return x.id === id; });
     if (!u) return;
     document.getElementById('kp-modalAlert').hidden = true;
-    document.getElementById('kp-modalTitle').textContent = 'Edit pengguna';
-    document.getElementById('kp-modalSub').textContent = 'Bergabung ' + kpFormatTgl(u.created_at) + '.';
-    document.getElementById('kp-editId').value = id;
+    document.getElementById('kp-modalTitle').textContent = isNew ? 'Tambah pengguna' : 'Edit pengguna';
+    document.getElementById('kp-modalSub').textContent = isNew ? 'Akun langsung aktif dan bisa dipakai masuk.' : 'Bergabung ' + kpFormatTgl(u.created_at) + '.';
+    document.getElementById('kp-passwordWrap').hidden = !isNew;
+    document.getElementById('kp-statusWrap').hidden = isNew;
+    document.getElementById('kp-password').value = '';
+    document.getElementById('kp-email').disabled = false;
+    document.getElementById('kp-saveBtn').textContent = isNew ? 'Tambah' : 'Simpan';
+    document.getElementById('kp-editId').value = id || '';
+    var saOpt = document.querySelector('#kp-roleOpts .kp-opt[data-val="super_admin"]');
+    var me = genioGetSession() || {};
+    if (saOpt) saOpt.style.display = (me.role === 'super_admin' || u.role === 'super_admin') ? '' : 'none';
     document.getElementById('kp-nama').value = u.nama || '';
     document.getElementById('kp-email').value = u.email || '';
     kpSetOpt('kp-roleOpts', u.role);
@@ -773,7 +795,10 @@
     var role = roleEl ? roleEl.value : '';
     var unitId = document.getElementById('kp-unitSelect').value;
 
+    var isNew = !id;
+    var password = document.getElementById('kp-password').value;
     if (!nama || !email) { alertEl.textContent = 'Nama dan email wajib diisi.'; alertEl.hidden = false; return; }
+    if (isNew && password.length < 8) { alertEl.textContent = 'Password awal minimal 8 karakter.'; alertEl.hidden = false; return; }
     if (!role) { alertEl.textContent = 'Role wajib dipilih.'; alertEl.hidden = false; return; }
     if (role === 'kepala_unit' && !unitId) { alertEl.textContent = 'Kepala unit wajib memilih unit.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
@@ -783,6 +808,13 @@
     btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
     try {
       var s = genioGetSession();
+      if (isNew) {
+        await genioAdminUsers({ action: 'create', nama: nama, email: email, password: password, role: role, unit_id: role === 'kepala_unit' ? unitId : null });
+        genioToast('Akun ' + nama + ' berhasil dibuat', 'success');
+        kpCloseModal();
+        kpLoadAll();
+        return;
+      }
       await supaRest('users?id=eq.' + id, s.access_token, {
         method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
         body: JSON.stringify({
@@ -798,7 +830,7 @@
       alertEl.textContent = err.message || 'Gagal menyimpan data.'; alertEl.hidden = false;
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Simpan';
+      btn.textContent = isNew ? 'Tambah' : 'Simpan';
     }
   }
 

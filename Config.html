@@ -630,6 +630,32 @@
     d.textContent = s == null ? '' : s;
     return d.innerHTML;
   }
+  // ===== Kelola akun lewat Edge Function "admin-users" (kunci admin Supabase tidak ada di browser) =====
+  // payload: { action: 'create', nama, email, password, role, unit_id, jenis_kelamin, no_hp, tutor_profile }
+  //       atau { action: 'delete', user_id }
+  async function genioAdminUsers(payload, _isRetry) {
+    var s = genioGetSession();
+    if (!s) throw new Error('Sesi habis, silakan masuk ulang.');
+    var res = await fetch(SUPABASE_URL + '/functions/v1/admin-users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + s.access_token },
+      body: JSON.stringify(payload)
+    });
+    var data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (res.status === 401 && !_isRetry && s.refresh_token) {
+      try {
+        var rf = await supaAuth('token?grant_type=refresh_token', { refresh_token: s.refresh_token });
+        s.access_token = rf.access_token; s.refresh_token = rf.refresh_token || s.refresh_token;
+        genioSaveSession(s);
+        return genioAdminUsers(payload, true);
+      } catch (e) {}
+    }
+    if (!res.ok) throw new Error((data && data.error) || 'Gagal memproses akun.');
+    if (data && data.warning) genioToast(data.warning, 'error');
+    return data;
+  }
+
   // ===== Avatar pengguna: foto profil kalau ada, huruf inisial kalau belum diunggah / gagal dimuat =====
   function genioInitials(nama, max) {
     var parts = String(nama || '').trim().split(/\s+/).filter(Boolean);

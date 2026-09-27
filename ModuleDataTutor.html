@@ -11,6 +11,13 @@
   }
 
   /* ===== Highlight: total tutor + komposisi | ring status + tinjau pendaftar ===== */
+  .dt-hero-btns{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px;}
+  .dt-hero-btns > button{width:100%; min-width:0;}
+  .dt-hero-new-btn{height:34px; border-radius:9px; background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.28); font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; white-space:nowrap; transition:background .15s ease, transform .1s ease;}
+  .dt-hero-new-btn:hover{background:rgba(255,255,255,.18);}
+  .dt-hero-new-btn:active{transform:scale(.97);}
+  .dt-hero-new-btn i{font-size:14px;}
+  #dt-passwordWrap[hidden], #dt-statusWrap[hidden]{display:none !important;}
   .dt-hb{position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
   .dtb-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
   .dtb-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
@@ -206,7 +213,7 @@
           <div><em style="background:#FFC46B;"></em>Pendaftar<b id="dt-heroRingPend">0</b></div>
         </div>
       </div>
-      <button type="button" id="dt-pendaftaranToggle" class="dt-hero-add-btn"><i class="ph ph-user-plus" aria-hidden="true"></i>Tinjau pendaftar<span id="dt-pendingBadge" class="is-zero">0</span></button>
+      <div class="dt-hero-btns"><button type="button" id="dt-pendaftaranToggle" class="dt-hero-add-btn"><i class="ph ph-user-plus" aria-hidden="true"></i>Tinjau pendaftar<span id="dt-pendingBadge" class="is-zero">0</span></button><button type="button" id="dt-addBtn" class="dt-hero-new-btn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah tutor</button></div>
     </div>
   </div>
 
@@ -271,7 +278,7 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-chalkboard-teacher" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3>Edit tutor</h3>
+          <h3 id="dt-modalTitle">Edit tutor</h3>
           <p class="gx-sub" id="dt-modalSub">Perbarui data diri, mapel, dan rekening.</p>
         </div>
         <button type="button" class="gx-close" id="dt-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
@@ -279,16 +286,22 @@
       <div class="gx-body">
         <div id="dt-modalAlert" class="alert alert-error" hidden></div>
         <input type="hidden" id="dt-editId">
+        <div id="dt-statusWrap">
         <div class="gx-step-title"><span class="gx-step">1</span>Status</div>
         <div class="gx-seg" id="dt-statusOpts">
           <label class="dt-opt" data-val="aktif"><input type="radio" name="dt-status" value="aktif"><i></i>Aktif</label>
           <label class="dt-opt" data-val="nonaktif"><input type="radio" name="dt-status" value="nonaktif"><i></i>Nonaktif</label>
         </div>
-        <div class="gx-step-title"><span class="gx-step">2</span>Data diri</div>
+        </div>
+        <div class="gx-step-title"><span class="gx-step" id="dt-stepData">2</span>Data diri</div>
         <div class="gx-row"><label for="dt-nama">Nama lengkap <em class="gx-req">wajib</em></label><input type="text" id="dt-nama"></div>
         <div class="gx-2col">
           <div class="gx-row"><label for="dt-email">Email <em class="gx-req">wajib</em></label><input type="email" id="dt-email"></div>
           <div class="gx-row"><label for="dt-noWa">WhatsApp</label><input type="tel" id="dt-noWa" placeholder="08xxxxxxxxxx"></div>
+        </div>
+        <div id="dt-passwordWrap" hidden>
+          <div class="gx-row"><label for="dt-password">Password awal <em class="gx-req">wajib</em></label><input type="text" id="dt-password" autocomplete="off" placeholder="Minimal 8 karakter"></div>
+          <div class="gx-note" style="margin:-2px 0 6px;"><i class="ph ph-key" aria-hidden="true"></i><span>Berikan password ini ke tutor. Tutor bisa menggantinya sendiri di menu Profil.</span></div>
         </div>
         <div class="gx-row"><label>Jenis kelamin</label>
           <div class="gx-gender" id="dt-genderOpts">
@@ -296,10 +309,10 @@
             <label class="dt-opt" data-val="P"><input type="radio" name="dt-gender" value="P"><b>P</b>Perempuan</label>
           </div>
         </div>
-        <div class="gx-step-title"><span class="gx-step">3</span>Mapel dan pendidikan</div>
+        <div class="gx-step-title"><span class="gx-step" id="dt-stepMapel">3</span>Mapel dan pendidikan</div>
         <div class="gx-row"><label for="dt-keahlian">Mapel yang dikuasai <em class="gx-opt">pisahkan koma</em></label><input type="text" id="dt-keahlian" placeholder="mis. Matematika, Fisika"></div>
         <div class="gx-row"><label for="dt-pendidikan">Pendidikan terakhir</label><input type="text" id="dt-pendidikan" placeholder="mis. S1 Pendidikan Matematika UNY"></div>
-        <div class="gx-step-title"><span class="gx-step">4</span>Rekening gaji</div>
+        <div class="gx-step-title"><span class="gx-step" id="dt-stepRek">4</span>Rekening gaji</div>
         <div class="gx-2col">
           <div class="gx-row"><label for="dt-namaBank">Bank</label><input type="text" id="dt-namaBank" placeholder="mis. BCA"></div>
           <div class="gx-row"><label for="dt-noRekening">Nomor rekening</label><input type="text" id="dt-noRekening"></div>
@@ -509,6 +522,7 @@
       if (viewToggleBtn) viewToggleBtn.addEventListener('click', dtToggleViewMode);
       document.getElementById('dt-cancelBtn').addEventListener('click', dtCloseModal);
       document.getElementById('dt-saveBtn').addEventListener('click', dtSubmitEdit);
+      document.getElementById('dt-addBtn').addEventListener('click', function () { dtOpenModal(null); });
       document.getElementById('dt-confirmCancelBtn').addEventListener('click', dtCloseConfirm);
       document.getElementById('dt-modalCloseX').addEventListener('click', dtCloseModal);
       document.getElementById('dt-filterCloseX').addEventListener('click', dtCloseFilterModal);
@@ -724,7 +738,7 @@
   async function dtReject(id) {
     try {
       var s = genioGetSession();
-      await supaRest('users?id=eq.' + id, s.access_token, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+      await genioAdminUsers({ action: 'delete', user_id: id });
       genioToast('Pendaftaran berhasil ditolak', 'success');
       dtLoadAll();
     } catch (err) { genioToast('Gagal menolak: ' + err.message, 'error'); }
@@ -997,7 +1011,7 @@
   async function dtDelete(id) {
     try {
       var s = genioGetSession();
-      await supaRest('users?id=eq.' + id, s.access_token, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+      await genioAdminUsers({ action: 'delete', user_id: id });
       genioToast('Tutor berhasil dihapus', 'success');
       dtLoadAll();
     } catch (err) { genioToast('Gagal menghapus: ' + err.message, 'error'); }
@@ -1013,11 +1027,20 @@
     });
   }
   function dtOpenModal(id) {
-    var u = dtState.tutorList.find(function (x) { return x.id === id; });
+    var isNew = !id;
+    var u = isNew ? { nama: '', email: '', status: 'aktif', jenis_kelamin: null } : dtState.tutorList.find(function (x) { return x.id === id; });
     if (!u) return;
-    var tp = u.tutor_profile || {};
+    var tp = (Array.isArray(u.tutor_profile) ? u.tutor_profile[0] : u.tutor_profile) || {};
     document.getElementById('dt-modalAlert').hidden = true;
-    document.getElementById('dt-editId').value = id;
+    document.getElementById('dt-modalTitle').textContent = isNew ? 'Tambah tutor' : 'Edit tutor';
+    document.getElementById('dt-statusWrap').hidden = isNew;
+    document.getElementById('dt-passwordWrap').hidden = !isNew;
+    document.getElementById('dt-password').value = '';
+    document.getElementById('dt-stepData').textContent = isNew ? '1' : '2';
+    document.getElementById('dt-stepMapel').textContent = isNew ? '2' : '3';
+    document.getElementById('dt-stepRek').textContent = isNew ? '3' : '4';
+    document.getElementById('dt-saveBtn').textContent = isNew ? 'Tambah' : 'Simpan';
+    document.getElementById('dt-editId').value = id || '';
     document.getElementById('dt-nama').value = u.nama || '';
     document.getElementById('dt-email').value = u.email || '';
     document.getElementById('dt-noWa').value = tp.no_wa || u.no_hp || '';
@@ -1027,7 +1050,7 @@
     document.getElementById('dt-noRekening').value = tp.no_rekening || '';
     dtSetOpt('#dt-genderOpts', u.jenis_kelamin);
     dtSetOpt('#dt-statusOpts', u.status);
-    document.getElementById('dt-modalSub').textContent = (u.nama || 'Tutor') + (u.email ? ' · ' + u.email : '');
+    document.getElementById('dt-modalSub').textContent = isNew ? 'Akun tutor langsung aktif tanpa lewat pendaftaran.' : (u.nama || 'Tutor') + (u.email ? ' · ' + u.email : '');
     dtModal.hidden = false;
     requestAnimationFrame(function () { dtModal.classList.add('show'); });
   }
@@ -1044,7 +1067,10 @@
     var statusEl = document.querySelector('input[name="dt-status"]:checked');
     var keahlian = document.getElementById('dt-keahlian').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
 
+    var isNew = !id;
+    var password = document.getElementById('dt-password').value;
     if (!nama || !email) { alertEl.textContent = 'Nama dan email wajib diisi.'; alertEl.hidden = false; return; }
+    if (isNew && password.length < 8) { alertEl.textContent = 'Password awal minimal 8 karakter.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
     var btn = document.getElementById('dt-saveBtn');
@@ -1052,6 +1078,24 @@
     btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
     try {
       var s = genioGetSession();
+      if (isNew) {
+        var noWa = document.getElementById('dt-noWa').value.trim();
+        await genioAdminUsers({
+          action: 'create', role: 'tutor', nama: nama, email: email, password: password,
+          jenis_kelamin: genderEl ? genderEl.value : null, no_hp: noWa || null,
+          tutor_profile: {
+            keahlian: keahlian,
+            pendidikan_terakhir: document.getElementById('dt-pendidikan').value.trim(),
+            no_wa: noWa,
+            nama_bank: document.getElementById('dt-namaBank').value.trim(),
+            no_rekening: document.getElementById('dt-noRekening').value.trim()
+          }
+        });
+        genioToast('Tutor ' + nama + ' berhasil ditambahkan', 'success');
+        dtCloseModal();
+        dtLoadAll();
+        return;
+      }
       await supaRest('users?id=eq.' + id, s.access_token, {
         method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
         body: JSON.stringify({
@@ -1075,7 +1119,7 @@
       alertEl.textContent = err.message || 'Gagal menyimpan data.'; alertEl.hidden = false;
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Simpan';
+      btn.textContent = isNew ? 'Tambah' : 'Simpan';
     }
   }
 
