@@ -2,261 +2,99 @@
 <style>
   @media (min-width:900px){
     .module-panel[data-module="paket-belajar"][hidden]{ display:none !important; }
-    .module-panel[data-module="paket-belajar"]:not([hidden]){
-      width:94%; max-width:1500px; margin:0 auto;
-    }
-    #pkt-list{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
-    #pkt-list > .pkt-card{ margin-bottom:0 !important; }
+    .module-panel[data-module="paket-belajar"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
+    #pkt-list:not(.pkt-view-table){ display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:12px; align-items:start; }
     #pkt-list > .pkt-full-width{ grid-column:1/-1; }
-
-    #pkt-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:10px; }
+    #pkt-toolbarRow{ display:flex; gap:10px; align-items:center; margin-bottom:12px; }
     #pkt-toolbarRow .pkt-search-sec{ flex:1; margin-bottom:0 !important; }
-    .pkt-hero-box{
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-    }
-    .pkt-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 12px !important;
-    }
-    .pkt-hero-badges{
-      justify-content: flex-start !important;
-      gap: 6px !important;
-    }
-    .pkt-hero-badge-pill{
-      font-size: 8.5px !important;
-      padding: 2px 7px !important;
-    }
-    .pkt-hero-sublabel{
-      display: none !important;
-    }
-    .pkt-hero-counter{
-      margin-top: 0 !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 10px !important;
-    }
-    .pkt-hero-num-wrap{
-      display: flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      margin-top: 0 !important;
-    }
-    .pkt-hero-val{
-      font-size: 18px !important;
-      line-height: 1.1 !important;
-    }
-    .pkt-hero-unit{
-      font-size: 10.5px !important;
-    }
-    .pkt-hero-add-btn{
-      height: 26px !important;
-      font-size: 10.5px !important;
-      padding: 0 10px !important;
-      border-radius: 7px !important;
-      margin-left: 2px !important;
-    }
-    .pkt-hero-stats-row{
-      flex: none !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 16px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .pkt-hero-stat-card{
-      flex: none !important;
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-      min-width: 0 !important;
-    }
   }
 
-  .pkt-hero-box{
-    background:var(--ink); color:#fff; border-radius:14px;
-    padding:12px 16px; margin-bottom:12px; box-sizing:border-box;
-  }
-  .pkt-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .pkt-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .pkt-hero-badge-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-  }
-  .pkt-hero-sublabel{
-    font-size: 10px;
-    opacity: .65;
-    margin-top: 8px;
-  }
-  .pkt-hero-num-wrap{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 1px;
-  }
-  .pkt-hero-val{
-    font-size: 21px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-  .pkt-hero-unit{
-    font-size: 11.5px;
-    opacity: .6;
-    font-weight: 500;
-  }
-  .pkt-hero-add-btn{
-    background: #fff;
-    color: var(--ink);
-    border: none;
-    border-radius: 999px;
-    height: 28px;
-    padding: 0 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    cursor: pointer;
-    font-size: 11.5px;
-    font-weight: 500;
-    font-family: var(--font);
-    flex: none;
-    white-space: nowrap;
-  }
-  .pkt-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.14);
-  }
-  .pkt-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .pkt-hero-stat-icon{
-    width: 22px;
-    height: 22px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .pkt-hero-stat-label{
-    font-size: 9px;
-    opacity: .65;
-  }
-  .pkt-hero-stat-val{
-    font-size: 11.5px;
-    font-weight: 600;
-    margin-top: 1px;
+  /* ===== Highlight: jumlah paket + bar per jenis | ring paket aktif + tambah ===== */
+  .pkt-hb{position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .pkb-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
+  .pkb-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
+  .pkb-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .pkb-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .pkb-label i{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .pkb-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .pkb-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; margin-top:8px; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .pkb-unit{font-size:13px; font-weight:500; color:rgba(255,255,255,.65); margin-left:5px; letter-spacing:0;}
+  .pkb-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .pkb-bars{display:grid; gap:7px; margin-top:14px; max-width:560px;}
+  .pkb-u{display:grid; grid-template-columns:minmax(0,96px) minmax(0,1fr) 110px; align-items:center; gap:10px; font-size:10.5px;}
+  .pkb-u .n{color:rgba(255,255,255,.75); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .pkb-u .t{height:8px; border-radius:99px; background:rgba(255,255,255,.08); overflow:hidden; min-width:0;}
+  .pkb-u .t i{display:block; height:100%; border-radius:99px; background:#9DB6FF; transform-origin:left center;}
+  .pkb-u b{font-weight:700; color:#fff; white-space:nowrap; font-variant-numeric:tabular-nums; text-align:right;}
+  .pkb-u b small{font-weight:400; color:rgba(255,255,255,.55); font-size:10px; margin-left:4px;}
+  .pkb-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:250px;}
+  .pkb-ringwrap{display:flex; align-items:center; gap:14px;}
+  .pkb-ring{width:64px; height:64px; flex:none; overflow:visible;}
+  .pkb-ring circle{fill:none; stroke-width:7;}
+  .pkb-ring .tr{stroke:rgba(255,255,255,.1);}
+  .pkb-ring .arc{stroke:#7CF0C3; transform:rotate(-90deg); transform-origin:32px 32px; transition:stroke-dasharray .9s cubic-bezier(.16,1,.3,1);}
+  .pkb-ring text{fill:#fff; font-family:var(--font); font-size:13px; font-weight:800;}
+  .pkb-list{display:grid; gap:6px; flex:1; min-width:150px;}
+  .pkb-list div{display:flex; align-items:center; gap:7px; font-size:10.5px; color:rgba(255,255,255,.75); white-space:nowrap;}
+  .pkb-list em{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
+  .pkb-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .pkt-hero-add-btn{height:34px; border-radius:9px; width:100%; background:#fff; color:var(--blue); border:1px solid #fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s ease, transform .1s ease;}
+  .pkt-hero-add-btn:hover{background:var(--blue-tint);}
+  .pkt-hero-add-btn:active{transform:scale(.97);}
+  .pkt-hero-add-btn i{font-size:14px;}
+  @keyframes pktGrow{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  .pkb-bars.pkt-anim .t i{animation:pktGrow .9s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 70ms);}
+  @media (max-width:899px){
+    .pkt-hb{grid-template-columns:1fr;}
+    .pkb-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .pkb-num{font-size:28px;}
+    .pkb-u{grid-template-columns:minmax(0,80px) minmax(0,1fr) 96px; gap:8px;}
   }
 
-  .pkt-status-badge{
-    display:inline-flex; align-items:center; gap:4px;
-    font-size:9.5px; font-weight:500; padding:0 8px; height:22px;
-    border-radius:999px; box-sizing:border-box; flex:none;
-  }
-  .pkt-dim-badge{
-    font-size:9px; font-weight:500; padding:2px 7px; border-radius:999px; white-space:nowrap;
-  }
-
-  #pkt-addBtn{ transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
-  #pkt-addBtn:active{ transform:scale(.92); }
-
-  #pkt-modal, #pkt-filterModal, #pkt-pickerModal{ align-items:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease; }
-  #pkt-modal.show, #pkt-filterModal.show, #pkt-pickerModal.show{ opacity:1; }
-  #pkt-modal .modal-sheet, #pkt-filterModal .modal-sheet, #pkt-pickerModal .modal-sheet{
-    border-radius:16px; width:100%; max-width:400px; margin:0 auto; padding:16px 18px 18px;
-    max-height:88vh; overflow-y:auto; transform:scale(.92) translateY(8px);
-    transition:transform .32s cubic-bezier(.34,1.56,.64,1);
-  }
-  #pkt-modal.show .modal-sheet, #pkt-filterModal.show .modal-sheet, #pkt-pickerModal.show .modal-sheet{ transform:scale(1) translateY(0); }
-  #pkt-modal .modal-sheet h3, #pkt-filterModal .modal-sheet h3, #pkt-pickerModal .modal-sheet h3{
-    font-size:13.5px; font-weight:600; margin:0 0 4px;
-  }
-  #pkt-modal .modal-actions, #pkt-filterModal .modal-actions, #pkt-pickerModal .modal-actions{
-    margin-top:14px; gap:8px;
-  }
-  #pkt-modal .modal-actions .btn, #pkt-filterModal .modal-actions .btn, #pkt-pickerModal .modal-actions .btn{
-    height: 36px !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    border-radius: 9px !important;
-    padding: 0 16px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
-  }
-
-  .pkt-group-title{ font-size:10px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; margin:10px 4px 4px; }
-  .pkt-group-title:first-of-type{ margin-top:0; }
-  .pkt-group{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-  .pkt-row{ padding:8px 12px; border-bottom:1px solid var(--border); }
-  .pkt-row:last-child{ border-bottom:none; }
-  .pkt-row label{ display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:2px; }
-  .pkt-row input, .pkt-row select{
-    width:100%; border:none; padding:0; font-family:var(--font); font-size:12px;
-    background:none; color:var(--ink); outline:none;
-  }
-  .pkt-opt-row{ display:flex; gap:6px; flex-wrap:wrap; }
-  .pkt-opt{
-    flex:1; min-width:65px; text-align:center; padding:6px 4px; border-radius:8px;
-    border:1.2px solid var(--border); font-size:11px; font-weight:500; color:var(--ink-soft); cursor:pointer;
-  }
-  .pkt-opt input{ display:none; }
-
-  .pkt-sub-bar{
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:10px; min-height:24px;
-  }
-  .pkt-res-count{
-    display:inline-flex; align-items:center; height:24px; padding:0 9px;
-    border-radius:999px; background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.05);
-    font-size:10.5px; font-weight:500; color:var(--ink-soft);
-  }
-  /* ===== Tampilan tabel ===== */
+  /* ===== Toolbar ===== */
+  #pkt-searchInput{height:34px !important; border-radius:10px !important; font-size:12px !important;}
+  #pkt-searchInput:focus{outline:none; border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  #pkt-filterBtn, #pkt-viewToggleBtn{width:34px !important; height:34px !important; border-radius:10px !important; transition:transform .15s ease, background .15s ease;}
+  #pkt-filterBtn:hover, #pkt-viewToggleBtn:hover{background:var(--surface) !important;}
+  #pkt-filterBtn:active, #pkt-viewToggleBtn:active{transform:scale(.9);}
   #pkt-filterCount[hidden]{display:none !important;}
-  #pkt-viewToggleBtn{position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none; transition:transform .15s ease, background .15s ease;}
-  #pkt-viewToggleBtn:hover{background:var(--surface);}
-  #pkt-viewToggleBtn:active{transform:scale(.9);}
+  #pkt-viewToggleBtn{position:relative; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;}
   @keyframes pktPop{0%{transform:scale(1);} 35%{transform:scale(1.18);} 100%{transform:scale(1);}}
   .pkt-btn-pop{animation:pktPop .32s cubic-bezier(.34,1.56,.64,1);}
+  .pkt-sub-bar{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;}
+  #pkt-sectionLabel{font-size:12px; font-weight:600; color:var(--ink);}
+  .pkt-res-count{display:inline-flex; align-items:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;}
+
+  /* ===== Elemen bersama ===== */
+  .pkt-dim-badge{display:inline-flex; align-items:center; font-size:10px; font-weight:600; padding:3px 8px; border-radius:7px; white-space:nowrap;}
+  .pkt-t-status{display:inline-flex; align-items:center; gap:5px; flex:none; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .pkt-t-status i{width:6px; height:6px; border-radius:50%;}
+  .pkt-t-status.is-on{background:#E9F7EF; color:#1E8E5A;} .pkt-t-status.is-on i{background:#1E8E5A;}
+  .pkt-t-status.is-off{background:var(--surface); color:var(--ink-soft);} .pkt-t-status.is-off i{background:#A9ADC0;}
+  .pkt-t-btn{width:28px; height:28px; padding:0; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; background:#fff; color:var(--ink-soft); border:1px solid var(--border); font-size:13px;}
+  .pkt-t-btn:hover{background:var(--surface); color:var(--ink);}
+  .pkt-kode-tag{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:10px; color:var(--ink-soft); letter-spacing:.02em;}
+
+  /* ===== Kartu ===== */
+  .pkt-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:12px; min-width:0; box-sizing:border-box; transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;}
+  .pkt-card:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12); transform:translateY(-1px);}
+  .pkt-card.pkt-full-width{text-align:center; color:var(--ink-soft); font-size:11.5px; padding:28px 14px;}
+  .pkt-card.pkt-full-width:hover{transform:none; box-shadow:none;}
+  .pkt-card.is-off .pkc-ico{background:var(--surface); color:var(--ink-soft);}
+  .pkc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .pkc-ico{width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
+  .pkc-who{min-width:0; flex:1;}
+  .pkc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;}
+  .pkc-who p{margin:2px 0 0;}
+  .pkc-chips{display:flex; gap:6px; margin-top:12px; flex-wrap:wrap;}
+  .pkc-foot{display:flex; align-items:center; gap:8px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .pkc-price{min-width:0; flex:1;}
+  .pkc-price span{display:block; font-size:10px; color:var(--ink-soft);}
+  .pkc-price b{display:block; font-size:13px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; margin-top:1px;}
+  .pkt-card .pkt-edit-btn{height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:11px; font-weight:600; padding:0 12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; flex:none;}
+  .pkt-card .pkt-edit-btn:hover{background:var(--surface);}
+
+  /* ===== Tabel ===== */
   #pkt-list.pkt-view-table{display:block !important;}
   .pkt-table-card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:12px;}
   .pkt-table-wrap{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
@@ -275,203 +113,187 @@
   .pkt-table .pkt-stk-nama{left:40px; width:100%; max-width:0; min-width:170px; box-shadow:1px 0 0 var(--border);}
   .pkt-table .pkt-stk-nama b{display:block; font-weight:600; overflow:hidden; text-overflow:ellipsis;}
   .pkt-table tbody tr:hover td.pkt-stk{background:#F8F9FD;}
-  .pkt-table .pkt-kode{font-family:monospace; font-size:10.5px; color:var(--ink-soft); letter-spacing:.02em;}
+  .pkt-table .pkt-kode{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:10.5px; color:var(--ink-soft); letter-spacing:.02em;}
   .pkt-table .pkt-num{text-align:right; font-weight:700; font-variant-numeric:tabular-nums;}
-  .pkt-table .pkt-dim-badge{margin:0;}
-  .pkt-t-status{display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px;}
-  .pkt-t-status i{width:6px; height:6px; border-radius:50%;}
-  .pkt-t-status.is-on{background:#E9F7EF; color:#1E8E5A;} .pkt-t-status.is-on i{background:#1E8E5A;}
-  .pkt-t-status.is-off{background:var(--surface); color:var(--ink-soft);} .pkt-t-status.is-off i{background:#A9ADC0;}
-  .pkt-t-btn{width:28px; height:28px; padding:0; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; background:#fff; color:var(--ink-soft); border:1px solid var(--border); font-size:13px;}
-  .pkt-t-btn:hover{background:var(--surface); color:var(--ink);}
-  @keyframes pktFade{from{opacity:0;} to{opacity:1;}}
-  #pkt-list .pkt-table tbody tr.pkt-in td{animation:pktFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
   @media (max-width:899px){ .pkt-table .pkt-stk-nama{min-width:120px;} }
-  @media (prefers-reduced-motion: reduce){ #pkt-list .pkt-table tbody tr.pkt-in td, .pkt-btn-pop{animation:none !important;} }
+
+  /* ===== Popup ===== */
+  #pkt-modal, #pkt-filterModal, #pkt-pickerModal{align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; transition:opacity .28s ease;}
+  #pkt-modal.show, #pkt-filterModal.show, #pkt-pickerModal.show{opacity:1;}
+  .pkt-opt-row{display:flex; gap:6px; flex-wrap:wrap;}
+  #pkt-statusTitle[hidden], #pkt-statusOpts[hidden]{display:none !important;}
+  .pkt-opt{flex:1 1 auto; min-width:64px; height:34px; padding:0 10px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; text-align:center; border-radius:9px; border:1px solid var(--border); background:#fff; font-family:var(--font); font-size:11px; font-weight:600; color:var(--ink); cursor:pointer; margin:0; transition:background .15s ease, border-color .15s ease, color .15s ease;}
+  .pkt-opt:hover{border-color:#C9CCDA;}
+  .pkt-opt input{display:none;}
+  .pkt-opt.is-on{background:var(--blue-tint); color:var(--blue); border-color:var(--blue);}
+  #pkt-statusOpts .pkt-opt.is-on[data-val="aktif"]{background:#E9F7EF; color:#1E8E5A; border-color:#1E8E5A;}
+  #pkt-statusOpts .pkt-opt.is-on[data-val="nonaktif"]{background:#FDEAEA; color:#D4070F; border-color:#D4070F;}
+  .pkt-money{position:relative;}
+  .pkt-money span{position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:11.5px; color:var(--ink-soft); pointer-events:none;}
+  .gx-sheet .gx-row .pkt-money input{padding-left:32px; font-variant-numeric:tabular-nums;}
+  .pkt-kode-box{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; padding:10px 12px; border-radius:11px; background:var(--surface); border:1px solid var(--border);}
+  .pkt-kode-box span{font-size:10.5px; color:var(--ink-soft);}
+  #pkt-kodePreview{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; font-weight:700; color:var(--ink); letter-spacing:.04em;}
+
+  /* ===== Animasi ===== */
+  @keyframes pktIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes pktFade{from{opacity:0;} to{opacity:1;}}
+  #pkt-list .pkt-card.pkt-in{animation:pktIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  #pkt-list .pkt-table tbody tr.pkt-in td{animation:pktFade .35s ease both; animation-delay:calc(var(--i) * 28ms);}
+  @media (prefers-reduced-motion: reduce){
+    #pkt-list .pkt-card.pkt-in, #pkt-list .pkt-table tbody tr.pkt-in td, .pkb-bars.pkt-anim .t i, .pkt-btn-pop{animation:none !important;}
+    .pkb-ring .arc{transition:none;}
+    .pkt-card:hover{transform:none;}
+  }
 </style>
 
-  <!-- Hero -->
-  <div class="pkt-hero-box">
-    <div class="pkt-hero-main-col">
-      <div class="pkt-hero-badges">
-        <span class="pkt-hero-badge-pill">
-          <span style="width:5px; height:5px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
-          MASTER PAKET BELAJAR
-        </span>
+  <!-- Highlight -->
+  <div class="pkt-hb">
+    <div class="pkb-main">
+      <div class="pkb-top">
+        <span class="pkb-label"><i></i>Paket belajar terdaftar</span>
+        <span class="pkb-pill" id="pkt-heroJenisPill">0 jenis</span>
       </div>
-      <div class="pkt-hero-counter">
-        <div class="pkt-hero-sublabel">Total Paket Terdaftar</div>
-        <div class="pkt-hero-num-wrap">
-          <div style="display:flex; align-items:baseline; gap:5px;">
-            <span class="pkt-hero-val" id="pkt-heroTotal">0</span>
-            <span class="pkt-hero-unit">Paket</span>
-          </div>
-          <button id="pkt-addBtn" aria-label="Tambah paket" class="pkt-hero-add-btn">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Tambah Paket
-          </button>
-        </div>
-      </div>
+      <div class="pkb-num"><span id="pkt-heroTotal">0</span><span class="pkb-unit">paket</span></div>
+      <div class="pkb-sub" id="pkt-heroSub">-</div>
+      <div class="pkb-bars" id="pkt-heroBars" aria-label="Paket aktif per jenis"></div>
     </div>
-
-    <div class="pkt-hero-stats-row">
-      <div class="pkt-hero-stat-card">
-        <span class="pkt-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="pkt-hero-stat-label">Aktif</div>
-          <div class="pkt-hero-stat-val" id="pkt-heroAktif">0 Paket</div>
+    <div class="pkb-side">
+      <div class="pkb-ringwrap">
+        <svg class="pkb-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="tr" cx="32" cy="32" r="25"/>
+          <circle class="arc" id="pkt-heroRingArc" cx="32" cy="32" r="25" stroke-dasharray="0 157.08" stroke-linecap="round"/>
+          <text id="pkt-heroRingPct" x="32" y="36.5" text-anchor="middle">0%</text>
+        </svg>
+        <div class="pkb-list">
+          <div><em style="background:#7CF0C3;"></em>Paket aktif<b id="pkt-heroAktif">0</b></div>
+          <div><em style="background:rgba(255,255,255,.25);"></em>Nonaktif<b id="pkt-heroNonaktif">0</b></div>
+          <div><em style="background:#9DB6FF;"></em>Rata-rata harga<b id="pkt-heroAvg">Rp 0</b></div>
         </div>
       </div>
-      <div class="pkt-hero-stat-card">
-        <span class="pkt-hero-stat-icon" style="background:rgba(142,142,147,.25); color:#c7c7cc;">
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="pkt-hero-stat-label">Nonaktif</div>
-          <div class="pkt-hero-stat-val" id="pkt-heroNonaktif">0 Paket</div>
-        </div>
-      </div>
+      <button type="button" id="pkt-addBtn" class="pkt-hero-add-btn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah paket</button>
     </div>
   </div>
 
   <div id="pkt-desktopAnchor"></div>
 
-  <!-- Search + Filter -->
-  <div class="pkt-search-sec" style="display:flex; gap:6px; margin-bottom:10px;">
+  <!-- Pencarian, filter, ganti tampilan -->
+  <div class="pkt-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
     <div style="flex:1; position:relative;">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="pkt-searchInput" placeholder="Cari nama paket atau kode..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 32px; font-family:var(--font); font-size:11.5px; background:#fff; outline:none; box-sizing:border-box;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="pkt-searchInput" placeholder="Cari nama paket atau kode..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
     </div>
-    <button id="pkt-filterBtn" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
+    <button id="pkt-filterBtn" type="button" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-      <span id="pkt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 2px;">0</span>
+      <span id="pkt-filterCount" hidden style="position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:8.5px; font-weight:600; min-width:14px; height:14px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 3px;">0</span>
     </button>
     <button id="pkt-viewToggleBtn" type="button" aria-label="Tampilkan sebagai tabel" title="Tampilkan sebagai tabel"></button>
   </div>
 
   <div class="pkt-sub-bar">
-    <div id="pkt-sectionLabel" style="font-size:11px; color:var(--ink-soft); font-weight:500;">Semua Paket</div>
-    <span id="pkt-resultCount" class="pkt-res-count">0 Paket</span>
+    <div id="pkt-sectionLabel">Semua paket</div>
+    <span id="pkt-resultCount" class="pkt-res-count">0 paket</span>
   </div>
 
   <div id="pkt-list">
     <div class="empty-state">Memuat data paket...</div>
   </div>
 
-  <!-- Modal Tambah/Edit Paket -->
+  <!-- Popup tambah / edit paket -->
   <div class="modal-overlay" id="pkt-modal" hidden>
-    <div class="modal-sheet">
-      <h3 id="pkt-modalTitle">Tambah Paket</h3>
-      <div id="pkt-modalAlert" class="alert alert-error" hidden></div>
-
-      <input type="hidden" id="pkt-id">
-
-      <div class="pkt-group-title">Nama &amp; Harga</div>
-      <div class="pkt-group" style="margin-bottom:4px;">
-        <div class="pkt-row"><label for="pkt-nama">Nama Paket</label><input type="text" id="pkt-nama" placeholder="mis. UTBK Privat Intensif SMA"></div>
-        <div class="pkt-row"><label for="pkt-harga">Harga per Sesi (Rp)</label><input type="number" id="pkt-harga" placeholder="mis. 150000"></div>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-books" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3 id="pkt-modalTitle">Tambah paket</h3>
+          <p class="gx-sub">Kode paket dibuat otomatis dari pilihan di bawah.</p>
+        </div>
+        <button type="button" class="gx-close" id="pkt-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
+      <div class="gx-body">
+        <div id="pkt-modalAlert" class="alert alert-error" hidden></div>
+        <input type="hidden" id="pkt-id">
 
-      <div class="pkt-group-title">Jenjang</div>
-      <div class="pkt-opt-row" id="pkt-jenjangOpts" style="margin-bottom:4px;">
-        <label class="pkt-opt" data-val="SD"><input type="radio" name="pkt-jenjang" value="SD">SD</label>
-        <label class="pkt-opt" data-val="SMP"><input type="radio" name="pkt-jenjang" value="SMP">SMP</label>
-        <label class="pkt-opt" data-val="SMA"><input type="radio" name="pkt-jenjang" value="SMA">SMA</label>
-        <label class="pkt-opt" data-val="Lainnya"><input type="radio" name="pkt-jenjang" value="Lainnya">Lainnya</label>
+        <div class="gx-step-title"><span class="gx-step">1</span>Nama dan harga</div>
+        <div class="gx-row"><label for="pkt-nama">Nama paket <em class="gx-req">wajib</em></label><input type="text" id="pkt-nama" placeholder="mis. UTBK privat intensif SMA"></div>
+        <div class="gx-row"><label for="pkt-harga">Harga per sesi <em class="gx-req">wajib</em></label><div class="pkt-money"><span>Rp</span><input type="number" id="pkt-harga" inputmode="numeric" placeholder="mis. 150000"></div></div>
+
+        <div class="gx-step-title"><span class="gx-step">2</span>Jenjang</div>
+        <div class="pkt-opt-row" id="pkt-jenjangOpts">
+          <label class="pkt-opt" data-val="SD"><input type="radio" name="pkt-jenjang" value="SD">SD</label>
+          <label class="pkt-opt" data-val="SMP"><input type="radio" name="pkt-jenjang" value="SMP">SMP</label>
+          <label class="pkt-opt" data-val="SMA"><input type="radio" name="pkt-jenjang" value="SMA">SMA</label>
+          <label class="pkt-opt" data-val="Lainnya"><input type="radio" name="pkt-jenjang" value="Lainnya">Lainnya</label>
+        </div>
+
+        <div class="gx-step-title"><span class="gx-step">3</span>Jenis</div>
+        <div class="pkt-opt-row" id="pkt-jenisOpts">
+          <label class="pkt-opt" data-val="Olimpiade"><input type="radio" name="pkt-jenis" value="Olimpiade">Olimpiade</label>
+          <label class="pkt-opt" data-val="Internasional"><input type="radio" name="pkt-jenis" value="Internasional">Internasional</label>
+          <label class="pkt-opt" data-val="Reguler"><input type="radio" name="pkt-jenis" value="Reguler">Reguler</label>
+          <label class="pkt-opt" data-val="UTBK"><input type="radio" name="pkt-jenis" value="UTBK">UTBK</label>
+          <label class="pkt-opt" data-val="TKA"><input type="radio" name="pkt-jenis" value="TKA">TKA</label>
+        </div>
+
+        <div class="gx-step-title"><span class="gx-step">4</span>Pelaksanaan dan mode belajar</div>
+        <div class="pkt-opt-row" id="pkt-pelaksanaanOpts">
+          <label class="pkt-opt" data-val="Privat"><input type="radio" name="pkt-pelaksanaan" value="Privat">Privat</label>
+          <label class="pkt-opt" data-val="Kelompok"><input type="radio" name="pkt-pelaksanaan" value="Kelompok">Kelompok (2-3 anak)</label>
+        </div>
+        <div class="pkt-opt-row" id="pkt-modeOpts" style="margin-top:8px;">
+          <label class="pkt-opt" data-val="Daring"><input type="radio" name="pkt-mode" value="Daring">Daring</label>
+          <label class="pkt-opt" data-val="Luring"><input type="radio" name="pkt-mode" value="Luring">Luring</label>
+        </div>
+
+        <div class="gx-step-title" id="pkt-statusTitle" hidden><span class="gx-step">5</span>Status</div>
+        <div class="pkt-opt-row" id="pkt-statusOpts" hidden>
+          <label class="pkt-opt" data-val="aktif"><input type="radio" name="pkt-status" value="aktif">Aktif</label>
+          <label class="pkt-opt" data-val="nonaktif"><input type="radio" name="pkt-status" value="nonaktif">Nonaktif</label>
+        </div>
+
+        <div class="pkt-kode-box"><span>Kode paket otomatis</span><b id="pkt-kodePreview">-</b></div>
       </div>
-
-      <div class="pkt-group-title">Jenis</div>
-      <div class="pkt-opt-row" id="pkt-jenisOpts" style="margin-bottom:4px; flex-wrap:wrap;">
-        <label class="pkt-opt" data-val="Olimpiade"><input type="radio" name="pkt-jenis" value="Olimpiade">Olimpiade</label>
-        <label class="pkt-opt" data-val="Internasional"><input type="radio" name="pkt-jenis" value="Internasional">Internasional</label>
-        <label class="pkt-opt" data-val="Reguler"><input type="radio" name="pkt-jenis" value="Reguler">Reguler</label>
-        <label class="pkt-opt" data-val="UTBK"><input type="radio" name="pkt-jenis" value="UTBK">UTBK</label>
-        <label class="pkt-opt" data-val="TKA"><input type="radio" name="pkt-jenis" value="TKA">TKA</label>
-      </div>
-
-      <div class="pkt-group-title">Pelaksanaan</div>
-      <div class="pkt-opt-row" id="pkt-pelaksanaanOpts" style="margin-bottom:4px;">
-        <label class="pkt-opt" data-val="Privat"><input type="radio" name="pkt-pelaksanaan" value="Privat">Privat</label>
-        <label class="pkt-opt" data-val="Kelompok"><input type="radio" name="pkt-pelaksanaan" value="Kelompok">Kelompok (2-3 Anak)</label>
-      </div>
-
-      <div class="pkt-group-title">Mode Belajar</div>
-      <div class="pkt-opt-row" id="pkt-modeOpts">
-        <label class="pkt-opt" data-val="Daring"><input type="radio" name="pkt-mode" value="Daring">Daring</label>
-        <label class="pkt-opt" data-val="Luring"><input type="radio" name="pkt-mode" value="Luring">Luring</label>
-      </div>
-
-      <div class="pkt-group-title" id="pkt-statusTitle" hidden>Status</div>
-      <div class="pkt-opt-row" id="pkt-statusOpts" hidden>
-        <label class="pkt-opt" data-val="aktif"><input type="radio" name="pkt-status" value="aktif">Aktif</label>
-        <label class="pkt-opt" data-val="nonaktif"><input type="radio" name="pkt-status" value="nonaktif">Nonaktif</label>
-      </div>
-
-      <div class="pkt-group-title">Kode Paket (Otomatis)</div>
-      <div class="pkt-group" style="padding:12px 14px; background:var(--surface);">
-        <div style="font-size:15px; font-weight:600; color:var(--ink); letter-spacing:.02em;" id="pkt-kodePreview">-</div>
-      </div>
-
-      <div class="modal-actions">
+      <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="pkt-cancelBtn">Batal</button>
         <button type="button" class="btn btn-primary" id="pkt-saveBtn">Simpan</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Filter -->
+  <!-- Popup filter -->
   <div class="modal-overlay" id="pkt-filterModal" hidden>
-    <div class="modal-sheet">
-      <h3>Filter</h3>
-      <p style="font-size:11px; color:var(--ink-soft); margin:0 0 10px;">Saring paket berdasarkan kategori.</p>
-
-      <div class="pkt-group-title">Jenjang</div>
-      <div class="pkt-group" style="margin-bottom:4px;">
-        <button type="button" class="pkt-filter-row-btn" data-picker="jenjang" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="pkt-filterJenjangSummary">Semua Jenjang</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-funnel-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Filter paket</h3><p class="gx-sub">Saring paket berdasarkan kategori.</p></div>
+        <button type="button" class="gx-close" id="pkt-filterCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-
-      <div class="pkt-group-title">Jenis</div>
-      <div class="pkt-group" style="margin-bottom:4px;">
-        <button type="button" class="pkt-filter-row-btn" data-picker="jenis" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="pkt-filterJenisSummary">Semua Jenis</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
+      <div class="gx-body">
+        <div class="gx-step-title"><span class="gx-step">1</span>Jenjang</div>
+        <div class="gx-row"><button type="button" class="pkt-filter-row-btn gx-field" data-picker="jenjang"><span id="pkt-filterJenjangSummary">Semua jenjang</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button></div>
+        <div class="gx-step-title"><span class="gx-step">2</span>Jenis</div>
+        <div class="gx-row"><button type="button" class="pkt-filter-row-btn gx-field" data-picker="jenis"><span id="pkt-filterJenisSummary">Semua jenis</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button></div>
+        <div class="gx-step-title"><span class="gx-step">3</span>Pelaksanaan</div>
+        <div class="gx-row"><button type="button" class="pkt-filter-row-btn gx-field" data-picker="pelaksanaan"><span id="pkt-filterPelaksanaanSummary">Semua pelaksanaan</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button></div>
+        <div class="gx-step-title"><span class="gx-step">4</span>Mode belajar</div>
+        <div class="gx-row"><button type="button" class="pkt-filter-row-btn gx-field" data-picker="mode"><span id="pkt-filterModeSummary">Semua mode</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button></div>
       </div>
-
-      <div class="pkt-group-title">Pelaksanaan</div>
-      <div class="pkt-group" style="margin-bottom:4px;">
-        <button type="button" class="pkt-filter-row-btn" data-picker="pelaksanaan" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="pkt-filterPelaksanaanSummary">Semua Pelaksanaan</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="pkt-group-title">Mode Belajar</div>
-      <div class="pkt-group">
-        <button type="button" class="pkt-filter-row-btn" data-picker="mode" style="width:100%; display:flex; align-items:center; justify-content:space-between; background:none; border:none; padding:9px 12px; font-size:11.5px; font-weight:500; color:var(--ink); cursor:pointer; font-family:var(--font);">
-          <span id="pkt-filterModeSummary">Semua Mode</span>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink-soft)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-
-      <div class="modal-actions">
+      <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="pkt-filterResetBtn">Reset</button>
-        <button type="button" class="btn btn-primary" id="pkt-filterApplyBtn">Terapkan Filter</button>
+        <button type="button" class="btn btn-primary" id="pkt-filterApplyBtn">Terapkan filter</button>
       </div>
     </div>
   </div>
 
-  <!-- Popup Picker -->
+  <!-- Popup pilih opsi filter -->
   <div class="modal-overlay" id="pkt-pickerModal" hidden style="z-index:70;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="pkt-pickerTitle">Pilih</h3>
-      <div id="pkt-pickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions">
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-list-checks" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="pkt-pickerTitle">Pilih</h3></div>
+      </div>
+      <div class="gx-body"><div id="pkt-pickerList" style="padding:6px 0;"></div></div>
+      <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="pkt-pickerCancelBtn">Batal</button>
         <button type="button" class="btn btn-primary" id="pkt-pickerDoneBtn">Selesai</button>
       </div>
@@ -521,6 +343,11 @@
       });
       document.getElementById('pkt-addBtn').addEventListener('click', function () { pktOpenModal(null); });
       document.getElementById('pkt-cancelBtn').addEventListener('click', pktCloseModal);
+      document.getElementById('pkt-modalCloseX').addEventListener('click', pktCloseModal);
+      document.getElementById('pkt-filterCloseX').addEventListener('click', pktCloseFilterModal);
+      [['pkt-modal', pktCloseModal], ['pkt-filterModal', pktCloseFilterModal], ['pkt-pickerModal', pktClosePicker]].forEach(function (m) {
+        document.getElementById(m[0]).addEventListener('click', function (e) { if (e.target === this) m[1](); });
+      });
       document.getElementById('pkt-saveBtn').addEventListener('click', pktSubmitForm);
       document.getElementById('pkt-filterBtn').addEventListener('click', pktOpenFilterModal);
       document.getElementById('pkt-viewToggleBtn').addEventListener('click', function () {
@@ -541,13 +368,9 @@
 
       ['pkt-jenjangOpts', 'pkt-jenisOpts', 'pkt-pelaksanaanOpts', 'pkt-modeOpts', 'pkt-statusOpts'].forEach(function (groupId) {
         document.querySelectorAll('#' + groupId + ' .pkt-opt').forEach(function (opt) {
-          opt.addEventListener('click', function () {
-            document.querySelectorAll('#' + groupId + ' .pkt-opt').forEach(function (o) {
-              o.style.background = '#fff'; o.style.color = 'var(--ink-soft)'; o.style.borderColor = 'var(--border)';
-              o.querySelector('input').checked = false;
-            });
-            opt.style.background = 'var(--blue-tint)'; opt.style.color = 'var(--blue)'; opt.style.borderColor = 'var(--blue)';
-            opt.querySelector('input').checked = true;
+          opt.addEventListener('click', function (e) {
+            e.preventDefault();
+            pktResetOptGroup(groupId, opt.dataset.val);
             pktUpdateKodePreview();
           });
         });
@@ -600,14 +423,11 @@
       var s = genioGetSession();
       pktState.packages = await supaRest('paket_belajar?select=*&order=nama_paket.asc', s.access_token);
 
-      var aktifCount = pktState.packages.filter(function (p) { return p.status === 'aktif'; }).length;
-      document.getElementById('pkt-heroTotal').textContent = pktState.packages.length;
-      document.getElementById('pkt-heroAktif').textContent = aktifCount + ' Paket';
-      document.getElementById('pkt-heroNonaktif').textContent = (pktState.packages.length - aktifCount) + ' Paket';
-
-      pktRenderList();
+      pktRenderHero();
+      pktRenderList(true);
     } catch (err) {
-      listEl.innerHTML = '<div class="empty-state">Gagal memuat data: ' + pktEscape(err.message) + '</div>';
+      listEl.classList.remove('pkt-view-table');
+      listEl.innerHTML = '<div class="pkt-card pkt-full-width">Gagal memuat data: ' + pktEscape(err.message) + '</div>';
     }
   }
 
@@ -710,19 +530,23 @@
     var listEl = document.getElementById('pkt-list');
     var rows = pktState.packages.filter(pktMatchesSearch).filter(pktMatchesFilters);
 
-    document.getElementById('pkt-resultCount').textContent = rows.length + ' Paket';
+    document.getElementById('pkt-resultCount').textContent = rows.length + ' paket';
+    var nFilter = ['jenjang', 'jenis', 'pelaksanaan', 'mode'].filter(function (t) { return pktGetFilterState(t); }).length;
+    document.getElementById('pkt-sectionLabel').textContent = nFilter ? 'Paket sesuai filter' : 'Semua paket';
     pktUpdateViewToggleUI();
 
     if (!rows.length) {
       listEl.classList.remove('pkt-view-table');
-      listEl.innerHTML = '<div class="pkt-card pkt-full-width empty-state">Tidak ada paket yang cocok.</div>';
+      listEl.innerHTML = '<div class="pkt-card pkt-full-width"><i class="ph ph-books" aria-hidden="true" style="font-size:26px; opacity:.6;"></i>' +
+        '<div style="font-size:12px; font-weight:600; color:var(--ink); margin-top:6px;">' + (pktState.packages.length ? 'Tidak ada paket yang cocok' : 'Belum ada paket') + '</div>' +
+        '<div style="margin-top:2px;">' + (pktState.packages.length ? 'Ubah filter atau kata kunci pencarian.' : 'Tambahkan lewat tombol Tambah paket di atas.') + '</div></div>';
       return;
     }
 
     if (pktState.viewMode === 'table') {
       listEl.classList.add('pkt-view-table');
       listEl.innerHTML = pktRenderTable(pktSortRows(rows));
-      if (animate && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      if (animate && !PKT_REDUCED_MOTION) {
         var trs = listEl.querySelectorAll('.pkt-table tbody tr');
         trs.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('pkt-in'); });
         setTimeout(function () { trs.forEach(function (el) { el.classList.remove('pkt-in'); }); }, 1100);
@@ -730,6 +554,11 @@
     } else {
       listEl.classList.remove('pkt-view-table');
       listEl.innerHTML = rows.map(pktRenderCard).join('');
+      if (animate && !PKT_REDUCED_MOTION) {
+        var cards = listEl.querySelectorAll('.pkt-card:not(.pkt-full-width)');
+        cards.forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('pkt-in'); });
+        setTimeout(function () { cards.forEach(function (el) { el.classList.remove('pkt-in'); }); }, 1200);
+      }
     }
     document.querySelectorAll('.pkt-edit-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -739,37 +568,94 @@
     });
   }
 
+  var PKT_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var PKT_RING_LEN = 2 * Math.PI * 25;
+
+  function pktFormatShort(n) {
+    n = Math.round(parseFloat(n) || 0);
+    function fmt(v) { return (Math.round(v * 10) / 10).toLocaleString('id-ID', { maximumFractionDigits: 1 }); }
+    if (Math.abs(n) >= 1e6) return 'Rp ' + fmt(n / 1e6) + ' Jt';
+    if (Math.abs(n) >= 1e3) return 'Rp ' + fmt(n / 1e3) + ' rb';
+    return 'Rp ' + n.toLocaleString('id-ID');
+  }
+  function pktCountUp(el, to) {
+    if (!el) return;
+    if (PKT_REDUCED_MOTION || !to) { el.textContent = to; return; }
+    var start = null, dur = 700;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function pktRenderHero() {
+    var all = pktState.packages;
+    var aktif = all.filter(function (p) { return p.status === 'aktif'; });
+    var non = all.length - aktif.length;
+    var hargas = aktif.map(function (p) { return parseFloat(p.harga_default || 0); }).filter(function (h) { return h > 0; });
+    var minH = hargas.length ? Math.min.apply(null, hargas) : 0, maxH = hargas.length ? Math.max.apply(null, hargas) : 0;
+    var avg = hargas.length ? hargas.reduce(function (a, b) { return a + b; }, 0) / hargas.length : 0;
+
+    // Paket aktif per jenis, urut dari yang terbanyak
+    var byJenis = {};
+    aktif.forEach(function (p) {
+      var k = p.jenis || 'Lainnya';
+      if (!byJenis[k]) byJenis[k] = { n: 0, sum: 0 };
+      byJenis[k].n++; byJenis[k].sum += parseFloat(p.harga_default || 0);
+    });
+    var jenis = Object.keys(byJenis).map(function (k) { return { nama: k, n: byJenis[k].n, avg: byJenis[k].sum / byJenis[k].n }; })
+      .sort(function (a, b) { return b.n - a.n || a.nama.localeCompare(b.nama); });
+
+    pktCountUp(document.getElementById('pkt-heroTotal'), all.length);
+    document.getElementById('pkt-heroJenisPill').textContent = jenis.length + ' jenis program';
+    document.getElementById('pkt-heroSub').textContent = all.length
+      ? (hargas.length ? 'Harga ' + pktFormatShort(minH) + ' sampai ' + pktFormatShort(maxH) + ' per sesi' : 'Harga belum diisi') + ' · ' + aktif.length + ' aktif'
+      : 'Belum ada paket terdaftar';
+    document.getElementById('pkt-heroAktif').textContent = aktif.length;
+    document.getElementById('pkt-heroNonaktif').textContent = non;
+    document.getElementById('pkt-heroAvg').textContent = pktFormatShort(avg);
+
+    var pct = all.length ? Math.round(aktif.length / all.length * 100) : 0;
+    document.getElementById('pkt-heroRingPct').textContent = pct + '%';
+    var arc = document.getElementById('pkt-heroRingArc');
+    arc.setAttribute('stroke-dasharray', '0 ' + PKT_RING_LEN);
+    var len = all.length ? aktif.length / all.length * PKT_RING_LEN : 0;
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      arc.setAttribute('stroke-dasharray', len.toFixed(2) + ' ' + PKT_RING_LEN.toFixed(2));
+    }); });
+
+    var barsEl = document.getElementById('pkt-heroBars');
+    if (!jenis.length) { barsEl.innerHTML = '<div class="pkb-u"><span class="n" style="grid-column:1/-1;">Bar per jenis muncul setelah ada paket aktif.</span></div>'; return; }
+    var max = jenis[0].n;
+    barsEl.innerHTML = jenis.slice(0, 5).map(function (j, i) {
+      return '<div class="pkb-u" title="' + pktEscape(j.nama) + ': ' + j.n + ' paket aktif, rata-rata ' + pktFormatRp(j.avg) + ' per sesi">' +
+        '<span class="n">' + pktEscape(j.nama) + '</span>' +
+        '<span class="t"><i style="width:' + Math.max(4, j.n / max * 100).toFixed(1) + '%; --i:' + i + ';"></i></span>' +
+        '<b>' + j.n + ' paket<small>' + pktFormatShort(j.avg) + '</small></b>' +
+      '</div>';
+    }).join('');
+    if (!PKT_REDUCED_MOTION) { barsEl.classList.remove('pkt-anim'); void barsEl.offsetWidth; barsEl.classList.add('pkt-anim'); }
+  }
+
   function pktRenderCard(p) {
     var isAktif = p.status === 'aktif';
-    var statusBadge = isAktif
-      ? '<span class="pkt-status-badge" style="background:rgba(52,199,89,.14); color:#28a745;"><span style="width:14px; height:14px; border-radius:50%; background:#34c759; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Aktif</span>'
-      : '<span class="pkt-status-badge" style="background:rgba(142,142,147,.16); color:#8e8e93;"><span style="width:14px; height:14px; border-radius:50%; background:#8e8e93; display:flex; align-items:center; justify-content:center; flex:none;"><svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>Nonaktif</span>';
-
-    var dims = [
-      { label: p.jenjang, bg: 'var(--blue-tint)', fg: 'var(--blue)' },
-      { label: p.jenis, bg: 'rgba(175,82,222,.14)', fg: '#8e2fc9' },
-      { label: p.pelaksanaan, bg: 'rgba(255,149,0,.16)', fg: '#c06400' },
-      { label: p.mode_belajar, bg: 'rgba(0,199,190,.16)', fg: '#009e96' }
-    ].filter(function (d) { return d.label; })
-     .map(function (d) { return '<span class="pkt-dim-badge" style="background:' + d.bg + '; color:' + d.fg + ';">' + pktEscape(d.label) + '</span>'; })
-     .join('');
-
-    return '' +
-      '<div class="card pkt-card" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-        '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">' +
-          '<div style="min-width:0; flex:1;">' +
-            '<div style="font-size:9.5px; font-weight:600; color:var(--ink-soft); letter-spacing:.02em; font-family:monospace;">' + pktEscape(p.kode_paket || '-') + '</div>' +
-            '<h4 style="font-size:13px; font-weight:500; color:#1c1c1e; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + pktEscape(p.nama_paket || 'Tanpa Nama') + '</h4>' +
-          '</div>' +
-          statusBadge +
-        '</div>' +
-        '<div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:8px;">' + dims + '</div>' +
-        '<div style="background:rgba(0,0,0,.035); border:1px solid rgba(0,0,0,.05); border-radius:10px; padding:8px 12px; margin-top:10px; display:flex; align-items:center; justify-content:space-between;">' +
-          '<span style="font-size:10px; color:#8e8e93; font-weight:500; text-transform:uppercase; letter-spacing:.02em;">Harga per Sesi</span>' +
-          '<span style="font-size:13px; font-weight:600; color:#28a745;">' + pktFormatRp(p.harga_default) + '</span>' +
-        '</div>' +
-        '<button class="pkt-edit-btn" data-id="' + p.id + '" style="width:100%; height:28px; margin-top:10px; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:500; cursor:pointer;">Edit Paket</button>' +
-      '</div>';
+    var chips = [pktDim('jenjang', p.jenjang), pktDim('jenis', p.jenis), pktDim('pelaksanaan', p.pelaksanaan), pktDim('mode', p.mode_belajar)]
+      .filter(function (h) { return h.indexOf('pkt-dim-badge') !== -1; }).join('');
+    return '<div class="pkt-card' + (isAktif ? '' : ' is-off') + '">' +
+      '<div class="pkc-head">' +
+        '<span class="pkc-ico"><i class="ph ph-books" aria-hidden="true"></i></span>' +
+        '<div class="pkc-who"><h4 title="' + pktEscape(p.nama_paket || '') + '">' + pktEscape(p.nama_paket || 'Tanpa nama') + '</h4><p class="pkt-kode-tag">' + pktEscape(p.kode_paket || '-') + '</p></div>' +
+        (isAktif ? '<span class="pkt-t-status is-on"><i></i>Aktif</span>' : '<span class="pkt-t-status is-off"><i></i>Nonaktif</span>') +
+      '</div>' +
+      '<div class="pkc-chips">' + (chips || '<span style="font-size:10.5px; color:var(--ink-soft);">Kategori belum diisi</span>') + '</div>' +
+      '<div class="pkc-foot">' +
+        '<div class="pkc-price"><span>Harga per sesi</span><b>' + pktFormatRp(p.harga_default) + '</b></div>' +
+        '<button type="button" class="pkt-edit-btn" data-id="' + p.id + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit paket</button>' +
+      '</div>' +
+    '</div>';
   }
 
   /* ===== Modal Tambah/Edit ===== */
@@ -779,9 +665,7 @@
   function pktResetOptGroup(groupId, value) {
     document.querySelectorAll('#' + groupId + ' .pkt-opt').forEach(function (o) {
       var active = o.dataset.val === value;
-      o.style.background = active ? 'var(--blue-tint)' : '#fff';
-      o.style.color = active ? 'var(--blue)' : 'var(--ink-soft)';
-      o.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
+      o.classList.toggle('is-on', active);
       o.querySelector('input').checked = active;
     });
   }
@@ -803,7 +687,7 @@
   function pktOpenModal(pkg) {
     document.getElementById('pkt-modalAlert').hidden = true;
     pktEditTargetId = pkg ? pkg.id : null;
-    document.getElementById('pkt-modalTitle').textContent = pkg ? 'Edit Paket' : 'Tambah Paket';
+    document.getElementById('pkt-modalTitle').textContent = pkg ? 'Edit paket' : 'Tambah paket';
     document.getElementById('pkt-nama').value = pkg ? (pkg.nama_paket || '') : '';
     document.getElementById('pkt-harga').value = pkg ? (pkg.harga_default || '') : '';
 
@@ -840,7 +724,7 @@
     var mode = pktGetOptValue('pkt-modeOpts');
 
     if (!nama) { alertEl.textContent = 'Nama paket wajib diisi.'; alertEl.hidden = false; return; }
-    if (!jenjang || !jenis || !pelaksanaan || !mode) { alertEl.textContent = 'Jenjang, Jenis, Pelaksanaan, dan Mode Belajar wajib dipilih.'; alertEl.hidden = false; return; }
+    if (!jenjang || !jenis || !pelaksanaan || !mode) { alertEl.textContent = 'Jenjang, jenis, pelaksanaan, dan mode belajar wajib dipilih.'; alertEl.hidden = false; return; }
     if (!harga || parseFloat(harga) <= 0) { alertEl.textContent = 'Harga per sesi wajib diisi dan lebih dari 0.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
@@ -882,10 +766,10 @@
 
   /* ===== Filter (picker-popup, pola sama seperti Presensi) ===== */
   var PKT_FILTER_DEFS = {
-    jenjang: { title: 'Pilih Jenjang', allLabel: 'Semua Jenjang', options: [{ value: 'SD', label: 'SD' }, { value: 'SMP', label: 'SMP' }, { value: 'SMA', label: 'SMA' }, { value: 'Lainnya', label: 'Lainnya' }] },
-    jenis: { title: 'Pilih Jenis', allLabel: 'Semua Jenis', options: [{ value: 'Olimpiade', label: 'Olimpiade' }, { value: 'Internasional', label: 'Internasional' }, { value: 'Reguler', label: 'Reguler' }, { value: 'UTBK', label: 'UTBK' }, { value: 'TKA', label: 'TKA' }] },
-    pelaksanaan: { title: 'Pilih Pelaksanaan', allLabel: 'Semua Pelaksanaan', options: [{ value: 'Privat', label: 'Privat' }, { value: 'Kelompok', label: 'Kelompok' }] },
-    mode: { title: 'Pilih Mode Belajar', allLabel: 'Semua Mode', options: [{ value: 'Daring', label: 'Daring' }, { value: 'Luring', label: 'Luring' }] }
+    jenjang: { title: 'Pilih jenjang', allLabel: 'Semua jenjang', options: [{ value: 'SD', label: 'SD' }, { value: 'SMP', label: 'SMP' }, { value: 'SMA', label: 'SMA' }, { value: 'Lainnya', label: 'Lainnya' }] },
+    jenis: { title: 'Pilih jenis', allLabel: 'Semua jenis', options: [{ value: 'Olimpiade', label: 'Olimpiade' }, { value: 'Internasional', label: 'Internasional' }, { value: 'Reguler', label: 'Reguler' }, { value: 'UTBK', label: 'UTBK' }, { value: 'TKA', label: 'TKA' }] },
+    pelaksanaan: { title: 'Pilih pelaksanaan', allLabel: 'Semua pelaksanaan', options: [{ value: 'Privat', label: 'Privat' }, { value: 'Kelompok', label: 'Kelompok' }] },
+    mode: { title: 'Pilih mode belajar', allLabel: 'Semua mode', options: [{ value: 'Daring', label: 'Daring' }, { value: 'Luring', label: 'Luring' }] }
   };
   var pktPickerCurrentType = null;
   var pktPickerTempSelected = '';
@@ -938,13 +822,13 @@
   function pktRenderPickerList(type) {
     var def = PKT_FILTER_DEFS[type];
     var listEl = document.getElementById('pkt-pickerList');
-    var allRow = '<label style="display:flex; align-items:center; gap:8px; padding:8px 4px; font-size:11.5px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
-      '<input type="radio" name="pkt-picker-opt" class="pkt-picker-opt" value="" ' + (!pktPickerTempSelected ? 'checked' : '') + ' style="width:16px; height:16px; accent-color:var(--blue); flex:none;">' +
+    var allRow = '<label class="gx-opt-row">' +
+      '<input type="radio" name="pkt-picker-opt" class="pkt-picker-opt" value="" ' + (!pktPickerTempSelected ? 'checked' : '') + '>' +
       def.allLabel + '</label>';
     var rows = def.options.map(function (opt) {
       var checked = pktPickerTempSelected === opt.value;
-      return '<label style="display:flex; align-items:center; gap:8px; padding:8px 4px; font-size:11.5px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border);">' +
-        '<input type="radio" name="pkt-picker-opt" class="pkt-picker-opt" value="' + pktEscape(opt.value) + '" ' + (checked ? 'checked' : '') + ' style="width:16px; height:16px; accent-color:var(--blue); flex:none;">' +
+      return '<label class="gx-opt-row">' +
+        '<input type="radio" name="pkt-picker-opt" class="pkt-picker-opt" value="' + pktEscape(opt.value) + '" ' + (checked ? 'checked' : '') + '>' +
         pktEscape(opt.label) + '</label>';
     }).join('');
     listEl.innerHTML = allRow + rows;
@@ -967,7 +851,7 @@
   document.getElementById('pkt-filterApplyBtn').addEventListener('click', function () {
     pktUpdateFilterBadge();
     pktCloseFilterModal();
-    pktRenderList();
+    pktRenderList(true);
   });
   document.getElementById('pkt-filterResetBtn').addEventListener('click', function () {
     pktState.filterJenjang = ''; pktState.filterJenis = ''; pktState.filterPelaksanaan = ''; pktState.filterMode = '';
