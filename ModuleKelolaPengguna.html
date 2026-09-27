@@ -522,7 +522,7 @@
     var listEl = document.getElementById('kp-list');
     try {
       var s = genioGetSession();
-      kpState.userList = await supaRest('users?role=neq.tutor&select=id,nama,email,role,status,unit_id,created_at,units(nama_unit)&order=nama.asc', s.access_token);
+      kpState.userList = await supaRest('users?role=neq.tutor&select=id,nama,email,role,status,unit_id,created_at,foto_profil_url,units(nama_unit)&order=nama.asc', s.access_token);
 
       var aktifCount = kpState.userList.filter(function (u) { return u.status === 'aktif'; }).length;
       document.getElementById('kp-aktifCount').textContent = aktifCount;
@@ -668,7 +668,7 @@
       var unit = u.units && u.units.nama_unit;
       return '<tr>' +
         '<td class="kp-stk kp-stk-no">' + (idx + 1) + '</td>' +
-        '<td class="kp-stk kp-stk-nama" title="' + kpEscape(u.nama) + '"><div class="kp-who"><span class="kp-av">' + kpEscape(kpInitials(u.nama)) + '</span><b>' + kpEscape(u.nama) + '</b></div></td>' +
+        '<td class="kp-stk kp-stk-nama" title="' + kpEscape(u.nama) + '"><div class="kp-who"><span class="kp-av">' + genioAvatarInner(u.nama, u.foto_profil_url, kpInitials(u.nama)) + '</span><b>' + kpEscape(u.nama) + '</b></div></td>' +
         '<td class="kp-col-email" title="' + kpEscape(u.email || '') + '">' + kpEscape(u.email || '-') + '</td>' +
         '<td>' + kpRoleChip(u.role) + '</td>' +
         '<td>' + (unit ? kpEscape(unit) : '<span class="kp-muted">-</span>') + '</td>' +
@@ -696,7 +696,7 @@
     var unit = u.units && u.units.nama_unit;
     return '<div class="kp-card">' +
       '<div class="kpc-head">' +
-        '<span class="kp-av">' + kpEscape(kpInitials(u.nama)) + '</span>' +
+        '<span class="kp-av">' + genioAvatarInner(u.nama, u.foto_profil_url, kpInitials(u.nama)) + '</span>' +
         '<div class="kpc-who"><h4 title="' + kpEscape(u.nama) + '">' + kpEscape(u.nama) + '</h4><p title="' + kpEscape(u.email || '') + '">' + kpEscape(u.email || '-') + '</p></div>' +
         kpStatusPill(u.status === 'aktif') +
       '</div>' +

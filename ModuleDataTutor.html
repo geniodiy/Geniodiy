@@ -411,9 +411,7 @@
     return (nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
   }
   function dtAvatar(u) {
-    return u.foto_profil_url
-      ? '<img class="dt-av" src="' + dtEscape(u.foto_profil_url) + '" alt="">'
-      : '<div class="dt-av">' + dtEscape(dtInitials(u.nama)) + '</div>';
+    return '<div class="dt-av">' + genioAvatarInner(u.nama, u.foto_profil_url, dtInitials(u.nama)) + '</div>';
   }
   function dtGenderTag(g) {
     if (g === 'L') return '<span class="dt-g is-l" title="Laki-laki">[L]</span>';

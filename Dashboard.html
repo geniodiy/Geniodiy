@@ -3,7 +3,7 @@
 <head>
   <base target="_top">
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, interactive-widget=resizes-content">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
   <script>var SCRIPT_URL = '<?!= scriptUrl ?>';</script>
@@ -579,13 +579,20 @@
       var token = session.access_token;
       genioUpdateHeaderUser();
 
-      document.getElementById('lainnyaAvatar').textContent = lainnyaInitials(session.nama);
+      genioSetAvatar(document.getElementById('lainnyaAvatar'), session.nama, session.foto_profil_url, lainnyaInitials(session.nama), true);
       document.getElementById('lainnyaRoleBadge').textContent = (LAINNYA_ROLE_LABELS[session.role] || session.role).toUpperCase();
       document.getElementById('lainnyaNama').textContent = session.nama || '-';
 
       try {
-        var userRows = await supaRest('users?id=eq.' + session.user_id + '&select=no_hp,unit_id,units(nama_unit)', token);
+        var userRows = await supaRest('users?id=eq.' + session.user_id + '&select=no_hp,unit_id,foto_profil_url,units(nama_unit)', token);
         var me = userRows && userRows[0];
+        if (me && (me.foto_profil_url || null) !== (session.foto_profil_url || null)) {
+          session.foto_profil_url = me.foto_profil_url || null;
+          genioSaveSession(session);
+          genioSetAvatar(document.getElementById('lainnyaAvatar'), session.nama, session.foto_profil_url, lainnyaInitials(session.nama), true);
+          genioUpdateHeaderUser();
+          if (typeof homeRenderGreetingAvatar === 'function') homeRenderGreetingAvatar();
+        }
         var unitNama = (me && me.units && me.units.nama_unit) || null;
 
         var kepalaCount = 0;
@@ -1012,7 +1019,7 @@
       var avatarEl = document.getElementById('genioHeaderUserAvatar');
       var nameEl = document.getElementById('genioHeaderUserName');
       var roleEl = document.getElementById('genioHeaderUserRole');
-      if (avatarEl) avatarEl.textContent = lainnyaInitials(s.nama);
+      if (avatarEl) genioSetAvatar(avatarEl, s.nama, s.foto_profil_url, lainnyaInitials(s.nama));
       if (nameEl) nameEl.textContent = (s.nama || '').split(' ')[0] || 'User';
       if (roleEl) roleEl.textContent = (LAINNYA_ROLE_LABELS[s.role] || s.role || 'User');
     }

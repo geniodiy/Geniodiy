@@ -783,7 +783,7 @@
     try {
       var s = genioGetSession();
       var results = await Promise.all([
-        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(id,nama,kelas,sekolah,unit_id,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp),jadwal(id,hari,jam_mulai,jam_selesai))&order=created_at.desc', s.access_token),
+        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(id,nama,kelas,sekolah,unit_id,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url),jadwal(id,hari,jam_mulai,jam_selesai))&order=created_at.desc', s.access_token),
         supaRest('units?select=id&order=nama_unit.asc', s.access_token)
       ]);
 
@@ -810,6 +810,7 @@
               nomorKontrak: k.nomor_kontrak,
               tutorId: kt.tutor_id,
               tutorNama: (kt.users && kt.users.nama) || 'Tutor',
+              tutorFoto: (kt.users && kt.users.foto_profil_url) || null,
               tutorHp: kt.users && kt.users.no_hp || '',
               mapel: kt.mapel || 'Semua Mapel',
               durasiMenit: kt.durasi_menit || 90,
@@ -837,6 +838,7 @@
               jamSelesai: (j.jam_selesai || '').slice(0, 5),
               tutorId: kt.tutor_id,
               tutorNama: (kt.users && kt.users.nama) || 'Tutor',
+              tutorFoto: (kt.users && kt.users.foto_profil_url) || null,
               tutorHp: kt.users && kt.users.no_hp || '',
               mapel: kt.mapel || '-',
               durasiMenit: kt.durasi_menit || 90,
@@ -952,7 +954,7 @@
       var tutorWa = jdwWaLink(r.tutorHp), ortuWa = jdwWaLink(r.ortuHp);
       return '<div class="jdw-slot-item">' +
         '<div class="jdw-slot-top">' +
-          '<span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + jdwEscape(jdwInitials(r.tutorNama)) + '</span>' +
+          '<span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + genioAvatarInner(r.tutorNama, r.tutorFoto, jdwInitials(r.tutorNama)) + '</span>' +
           '<div class="jdw-slot-who"><b>' + jdwEscape(r.tutorNama) + '</b><span>' + jdwEscape(r.mapel) + (r.durasiMenit ? ' · ' + r.durasiMenit + ' menit' : '') + '</span></div>' +
           '<span class="jdw-time">' + jdwEscape(jdwTimeText(r)) + '</span>' +
         '</div>' +
@@ -989,7 +991,7 @@
     var color = jdwColorForTutor(row.tutorId);
 
     var avatarEl = document.getElementById('jdw-jmPreviewAvatar');
-    avatarEl.textContent = initials;
+    genioSetAvatar(avatarEl, row.tutorNama, row.tutorFoto, initials);
     avatarEl.style.background = color;
     document.getElementById('jdw-jmPreviewTutor').textContent = row.tutorNama + (row.mapel ? ' · ' + row.mapel : '');
     document.getElementById('jdw-jmPreviewSiswa').textContent = row.siswaNama + (row.unitNama ? ' · ' + row.unitNama : '');
@@ -1258,7 +1260,7 @@
       var sekolahLine = [r.siswaKelas, r.siswaSekolah].filter(Boolean).join(' · ');
       return '<tr class="jdw-table-row" data-schedule-id="' + r.id + '">' +
         '<td class="jdw-no jdw-stk jdw-stk-no">' + (idx + 1) + '</td>' +
-        '<td class="jdw-stk jdw-stk-tutor"><div class="jdw-who"><span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + jdwEscape(jdwInitials(r.tutorNama)) + '</span><b>' + jdwEscape(r.tutorNama) + '</b></div></td>' +
+        '<td class="jdw-stk jdw-stk-tutor"><div class="jdw-who"><span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + genioAvatarInner(r.tutorNama, r.tutorFoto, jdwInitials(r.tutorNama)) + '</span><b>' + jdwEscape(r.tutorNama) + '</b></div></td>' +
         '<td class="jdw-wrap">' + jdwEscape(r.mapel) + '</td>' +
         '<td class="jdw-col-siswa" title="' + jdwEscape([r.siswaNama, r.unitNama, sekolahLine].filter(Boolean).join(' · ')) + '"><span class="jdw-siswa-line"><b style="font-weight:600;">' + jdwEscape(r.siswaNama) + '</b>' + (r.unitNama ? '<span class="jdw-unit">' + jdwEscape(r.unitNama) + '</span>' : '') + '</span>' +
           (sekolahLine ? '<div class="jdw-sub">' + jdwEscape(sekolahLine) + '</div>' : '') + '</td>' +
@@ -1283,7 +1285,7 @@
     var sekolahLine = [r.siswaKelas, r.siswaSekolah].filter(Boolean).join(' · ') || 'Kelas dan sekolah belum diisi';
     return '<div class="jdw-card" data-schedule-id="' + r.id + '">' +
       '<div class="jdw-c-head">' +
-        '<span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + jdwEscape(jdwInitials(r.tutorNama)) + '</span>' +
+        '<span class="jdw-av" style="background:' + jdwColorForTutor(r.tutorId) + ';">' + genioAvatarInner(r.tutorNama, r.tutorFoto, jdwInitials(r.tutorNama)) + '</span>' +
         '<div class="jdw-c-who"><h4>' + jdwEscape(r.tutorNama) + '</h4><p>' + jdwEscape(r.mapel) + '</p></div>' +
         jdwDayChip(r.hari) +
       '</div>' +
@@ -1520,7 +1522,7 @@
     container.innerHTML = filtered.map(function (c) {
       var badge = c.jadwalCount > 0 ? '<em>' + c.jadwalCount + ' sesi</em>' : '<em class="is-empty">Belum ada jadwal</em>';
       return '<button type="button" class="jdw-contract-opt" data-id="' + c.kontrakTutorId + '">' +
-        '<span class="jdw-av" style="background:' + jdwColorForTutor(c.tutorId) + ';">' + jdwEscape(jdwInitials(c.tutorNama)) + '</span>' +
+        '<span class="jdw-av" style="background:' + jdwColorForTutor(c.tutorId) + ';">' + genioAvatarInner(c.tutorNama, c.tutorFoto, jdwInitials(c.tutorNama)) + '</span>' +
         '<span class="t"><b>' + jdwEscape(c.siswaNama) + '</b><span>' + jdwEscape(c.tutorNama) + ' · ' + jdwEscape(c.mapel) + ' · ' + jdwEscape(c.paketNama) + '</span></span>' +
         badge +
       '</button>';

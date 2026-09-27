@@ -782,12 +782,14 @@
 
       session.nama = nama;
       session.jenis_kelamin = jk;
+      if ('foto_profil_url' in patch) session.foto_profil_url = patch.foto_profil_url;
       genioSaveSession(session);
       prfEdit.saving = false;
       prfCloseEdit();
       genioToast(gantiPw ? 'Profil dan password diperbarui' : 'Profil diperbarui', 'success');
       await prfLoadDetail();
       if (typeof loadLainnyaData === 'function') { try { loadLainnyaData(); } catch (e) {} }
+      if (typeof homeRenderGreetingAvatar === 'function') homeRenderGreetingAvatar();
     } catch (err) {
       prfEditFail(err.message || 'Gagal menyimpan profil.');
     } finally {

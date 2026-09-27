@@ -3,7 +3,7 @@
 <head>
   <base target="_top">
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, interactive-widget=resizes-content">
   <script>var SCRIPT_URL = '<?!= scriptUrl ?>';</script>
   <?!= include('Config'); ?>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
@@ -360,7 +360,8 @@
           role: profile.role,
           nama: profile.nama,
           email: profile.email,
-          jenis_kelamin: profile.jenis_kelamin
+          jenis_kelamin: profile.jenis_kelamin,
+          foto_profil_url: profile.foto_profil_url || null
         });
 
         goToDashboard(profile.role);

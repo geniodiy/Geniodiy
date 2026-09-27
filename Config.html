@@ -514,6 +514,14 @@
     padding:5px 10px; margin-right:10px; font-family:var(--font); font-size:12px; font-weight:500; cursor:pointer;
   }
 
+  /* ===== Keyboard layar di HP: popup naik ke atas dan memendek supaya kolom yang diketik tidak tertutup ===== */
+  .modal-overlay.gx-typing{align-items:flex-start !important; justify-content:center !important; padding:8px 8px 0 !important;}
+  .modal-overlay.gx-typing .modal-sheet{max-height:calc(var(--gx-vh, 50vh) - 16px) !important; border-radius:18px !important; margin:0 auto !important;}
+
+  /* ===== Avatar pengguna: foto profil kalau ada, huruf inisial kalau belum ===== */
+  .genio-av-img{width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block; flex:none;}
+  .genio-av-img.is-fill{position:absolute; inset:0; border-radius:50%;}
+
   /* Tombol umum di modul */
   .module-panel button{font-family:var(--font);}
   .module-panel button:focus-visible{outline:2px solid rgba(28,26,175,.35); outline-offset:1px;}
@@ -622,6 +630,110 @@
     d.textContent = s == null ? '' : s;
     return d.innerHTML;
   }
+  // ===== Avatar pengguna: foto profil kalau ada, huruf inisial kalau belum diunggah / gagal dimuat =====
+  function genioInitials(nama, max) {
+    var parts = String(nama || '').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    var ini = parts[0].charAt(0) + (max === 1 || !parts[1] ? '' : parts[1].charAt(0));
+    return ini.toUpperCase();
+  }
+  // Isi HTML untuk wadah avatar yang sudah punya ukuran & radius sendiri (mis. <span class="kp-av">)
+  function genioAvatarInner(nama, fotoUrl, initials, fill) {
+    var ini = initials != null ? String(initials) : genioInitials(nama);
+    if (!fotoUrl) return genioEscapeHtml(ini);
+    return '<img class="genio-av-img' + (fill ? ' is-fill' : '') + '" src="' + genioEscapeHtml(fotoUrl) + '" alt="" loading="lazy" referrerpolicy="no-referrer" data-ini="' + genioEscapeHtml(ini) + '" onerror="genioAvatarFail(this)">';
+  }
+  function genioAvatarFail(img) {
+    var p = img && img.parentNode;
+    if (!p) return;
+    var t = document.createTextNode(img.getAttribute('data-ini') || '');
+    p.replaceChild(t, img);
+  }
+  function genioSetAvatar(el, nama, fotoUrl, initials, fill) {
+    if (el) el.innerHTML = genioAvatarInner(nama, fotoUrl, initials, fill);
+  }
+
+  // ===== Keyboard layar di HP: jaga kolom yang sedang diketik di dalam popup tetap terlihat =====
+  // Web app Apps Script berjalan di dalam iframe, jadi tinggi keyboard sering tidak terbaca.
+  // Saat kolom ketik di popup difokuskan, popup dipindah ke atas layar dan dipendekkan
+  // (pakai visualViewport kalau terbaca, kalau tidak pakai 50% tinggi layar),
+  // lalu kolomnya di-scroll ke tengah area popup.
+  (function genioKeyboardAware() {
+    if (!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches)) return;
+    var TYPE_RE = /^(text|email|tel|number|password|search|url)$/i;
+    var baseH = window.innerHeight;
+    var active = null, overlay = null, hideTimer = null;
+
+    function isTypingField(el) {
+      if (!el || el.disabled || el.readOnly) return false;
+      if (el.tagName === 'TEXTAREA') return true;
+      if (el.tagName === 'INPUT') return TYPE_RE.test(el.getAttribute('type') || 'text');
+      return !!el.isContentEditable;
+    }
+    function visibleArea() {
+      var vv = window.visualViewport;
+      var h = vv ? vv.height : window.innerHeight;
+      if (h < baseH * 0.8) return { h: h, top: vv ? vv.offsetTop : 0 };                 // keyboard terbaca
+      return { h: Math.round(Math.max(260, baseH * 0.5)), top: vv ? vv.offsetTop : 0 };  // perkiraan
+    }
+    function scrollParent(el, stop) {
+      var n = el.parentElement;
+      while (n && n !== stop) {
+        var oy = getComputedStyle(n).overflowY;
+        if ((oy === 'auto' || oy === 'scroll') && n.scrollHeight > n.clientHeight + 1) return n;
+        n = n.parentElement;
+      }
+      return null;
+    }
+    function keepVisible() {
+      if (!active || !overlay) return;
+      var area = visibleArea();
+      overlay.style.setProperty('--gx-vh', area.h + 'px');
+      overlay.style.paddingTop = (8 + area.top) + 'px';
+      var sc = scrollParent(active, overlay);
+      if (sc) {
+        var r = active.getBoundingClientRect(), sr = sc.getBoundingClientRect();
+        var target = sc.scrollTop + (r.top - sr.top) - (sc.clientHeight / 2 - r.height / 2);
+        sc.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+      }
+    }
+    function release() {
+      if (overlay) {
+        overlay.classList.remove('gx-typing');
+        overlay.style.removeProperty('--gx-vh');
+        overlay.style.paddingTop = '';
+      }
+      active = null; overlay = null;
+    }
+    document.addEventListener('focusin', function (e) {
+      var el = e.target;
+      var ov = el && el.closest ? el.closest('.modal-overlay') : null;
+      if (!ov || !isTypingField(el)) return;
+      clearTimeout(hideTimer);
+      if (overlay && overlay !== ov) release();
+      active = el; overlay = ov;
+      ov.classList.add('gx-typing');
+      keepVisible();
+      setTimeout(keepVisible, 120);
+      setTimeout(keepVisible, 420); // setelah animasi keyboard selesai
+    });
+    document.addEventListener('focusout', function () {
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(function () {
+        var el = document.activeElement;
+        if (overlay && isTypingField(el) && overlay.contains(el)) return;
+        release();
+      }, 180);
+    });
+    function onResize() {
+      if (!active) { baseH = Math.max(window.innerHeight, window.visualViewport ? window.visualViewport.height : 0); return; }
+      keepVisible();
+    }
+    window.addEventListener('resize', onResize);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', function () { setTimeout(function () { baseH = window.innerHeight; keepVisible(); }, 300); });
+  })();
+
   // ===== Periode bersama (dipilih dari header, dipakai Home, Presensi, Gaji, Tagihan, Operasional) =====
   var GENIO_BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   function genioCurrentPeriode() {

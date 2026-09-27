@@ -2276,7 +2276,7 @@
         '<tr>' +
           '<td class="ps-stk ps-stk-no" style="color:var(--ink-soft); font-size:10px; font-weight:400;">' + (idx + 1) + '</td>' +
           '<td class="ps-stk ps-stk-tgl" style="color:var(--ink); font-weight:500;" title="' + psEscape(psFormatTanggal(row.tanggal)) + '">' + psEscape(psFormatTanggal(row.tanggal)).replace(/ (\d{4})$/, '<span class="ps-d-y"> $1</span>') + '</td>' +
-          '<td class="ps-stk ps-stk-tutor" title="' + psEscape(tutorNama) + '"><span class="pt2-tutor"><span class="pt2-av">' + psEscape(tutorNama.charAt(0)) + '</span><span class="pt2-name" style="color:var(--ink); font-weight:600;">' + psEscape(tutorNama) + '</span></span></td>' +
+          '<td class="ps-stk ps-stk-tutor" title="' + psEscape(tutorNama) + '"><span class="pt2-tutor"><span class="pt2-av">' + genioAvatarInner(tutorNama, tutor.foto_profil_url, genioInitials(tutorNama, 1)) + '</span><span class="pt2-name" style="color:var(--ink); font-weight:600;">' + psEscape(tutorNama) + '</span></span></td>' +
           '<td style="white-space:nowrap; color:var(--ink); font-size:10.5px; font-weight:400;">' + (row.jam ? row.jam.slice(0, 5) + ' WIB' : '-') + '</td>' +
           '<td><span style="color:var(--ink); font-size:10.5px; font-weight:400; white-space:nowrap;">' + psEscape(siswaNama) + '</span></td>' +
           '<td><span class="pt2-mapel" style="white-space:nowrap;">' + psEscape(mapel) + '</span></td>' +
@@ -2558,9 +2558,7 @@
     var honorLabel = row.status === 'pending' ? 'Estimasi Honor Tutor' : 'Honor Tutor';
     var honorValue = row.status === 'pending' ? estimasiHonor : (row.nominal_dibayar || 0);
 
-    var avatar = tutor.foto_profil_url
-      ? '<img src="' + psEscape(tutor.foto_profil_url) + '" alt="" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid var(--border); flex:none;">'
-      : '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:500; font-size:11px; flex:none;">' + psEscape((tutor.nama || '?').charAt(0)) + '</div>';
+    var avatar = '<div style="width:32px; height:32px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:500; font-size:11px; flex:none;">' + genioAvatarInner(tutor.nama, tutor.foto_profil_url, genioInitials(tutor.nama, 1)) + '</div>';
 
     var lampiranRows = [];
     if (row.materi_link) {

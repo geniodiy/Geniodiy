@@ -705,11 +705,17 @@
     return rows.reduce(function (acc, r) { return acc + (parseFloat(r[field]) || 0); }, 0);
   }
 
+  function homeRenderGreetingAvatar() {
+    var session = genioGetSession();
+    if (!session) return;
+    genioSetAvatar(document.getElementById('homeAvatarInitials'), session.nama, session.foto_profil_url, homeInitials(session.nama));
+  }
+
   async function loadHomeData() {
     var session = genioGetSession();
     if (!session) return;
 
-    document.getElementById('homeAvatarInitials').textContent = homeInitials(session.nama);
+    homeRenderGreetingAvatar();
     document.getElementById('homeGreeting').textContent = 'Selamat datang, ' + (session.nama || '');
     document.getElementById('homeRoleLabel').textContent = ROLE_LABELS[session.role] || session.role;
 
@@ -897,7 +903,7 @@
 
     try {
       var rows = await supaRest(
-        'kontrak_siswa?select=id,status,siswa(nama,orangtua(no_hp)),units(nama_unit),paket_belajar(nama_paket),kontrak_tutor(id,tutor_id,mapel,status,durasi_menit,users:users!kontrak_tutor_tutor_id_fkey(nama,no_hp),jadwal(id,hari,jam_mulai,jam_selesai))&status=eq.aktif',
+        'kontrak_siswa?select=id,status,siswa(nama,orangtua(no_hp)),units(nama_unit),paket_belajar(nama_paket),kontrak_tutor(id,tutor_id,mapel,status,durasi_menit,users:users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url),jadwal(id,hari,jam_mulai,jam_selesai))&status=eq.aktif',
         session.access_token
       );
 
@@ -926,6 +932,7 @@
               tutorId: kt.tutor_id,
               tutorNama: tutorNama,
               tutorHp: tutorHp,
+              tutorFoto: (kt.users && kt.users.foto_profil_url) || null,
               mapel: mapel,
               siswaNama: siswaNama,
               ortuHp: ortuHp,
@@ -1028,7 +1035,7 @@
       var extra = [r.unitNama, r.paketNama].filter(Boolean).map(homeEsc).join(' · ');
       return '<div class="home-slot-item">' +
         '<div class="home-slot-top">' +
-          '<span class="home-slot-av" style="background:' + homeJmColorForTutor(r.tutorId) + ';">' + homeEsc(initials) + '</span>' +
+          '<span class="home-slot-av" style="background:' + homeJmColorForTutor(r.tutorId) + ';">' + genioAvatarInner(r.tutorNama, r.tutorFoto, initials) + '</span>' +
           '<div class="home-slot-who"><b>' + homeEsc(r.tutorNama) + '</b><span>' + homeEsc(r.mapel) + (r.durasi ? ' · ' + r.durasi + ' menit' : '') + '</span></div>' +
           '<span class="home-slot-time">' + homeEsc((r.jam || '-') + (r.jamSelesai ? ' - ' + r.jamSelesai : '')) + '</span>' +
         '</div>' +

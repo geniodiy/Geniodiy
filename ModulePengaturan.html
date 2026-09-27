@@ -189,7 +189,7 @@
       var s = genioGetSession();
       pgtCanEdit = (s.role === 'manajer' || s.role === 'super_admin');
 
-      var rows = await supaRest('pengaturan?select=*,users(nama)', s.access_token);
+      var rows = await supaRest('pengaturan?select=*,users(nama,foto_profil_url)', s.access_token);
 
       pgtRows = {};
       rows.forEach(function (r) { pgtRows[r.kunci] = r; });
@@ -214,7 +214,7 @@
     var last = changed[0];
     if (last) {
       var nama = last.users.nama;
-      document.getElementById('pgt-heroByAv').textContent = nama.trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+      genioSetAvatar(document.getElementById('pgt-heroByAv'), nama, last.users.foto_profil_url, genioInitials(nama));
       document.getElementById('pgt-heroByName').textContent = nama;
       var tgl = pgtFormatTgl(last.updated_at);
       document.getElementById('pgt-heroByMeta').textContent = PGT_META[last.kunci].label + (tgl ? ' · ' + tgl : '');

@@ -24,7 +24,7 @@ function doGet(e) {
 
   return template.evaluate()
     .setTitle('Genio Institute')
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, interactive-widget=resizes-content')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 

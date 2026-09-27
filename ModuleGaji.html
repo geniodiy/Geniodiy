@@ -1133,7 +1133,7 @@
       return '' +
         '<tr>' +
           '<td class="gj-stk gj-stk-no" style="color:var(--ink-soft); font-size:10.5px; font-weight:400;">' + (idx + 1) + '</td>' +
-          '<td class="gj-stk gj-stk-tutor" style="white-space:nowrap;" title="' + genioEscapeHtml(user.nama || '') + '"><span class="gt-tutor"><span class="gt-av">' + genioEscapeHtml((user.nama || '?').charAt(0).toUpperCase()) + '</span><span class="gt-name" style="font-weight:600;">' + genioEscapeHtml(user.nama || '-') + '</span></span></td>' +
+          '<td class="gj-stk gj-stk-tutor" style="white-space:nowrap;" title="' + genioEscapeHtml(user.nama || '') + '"><span class="gt-tutor"><span class="gt-av">' + genioAvatarInner(user.nama, user.foto_profil_url, genioInitials(user.nama, 1)) + '</span><span class="gt-name" style="font-weight:600;">' + genioEscapeHtml(user.nama || '-') + '</span></span></td>' +
           '<td style="white-space:nowrap; color:var(--ink); font-size:11px; font-weight:400;">' + genioEscapeHtml(bankText) + '</td>' +
           '<td>' + (mapelList.length ? mapelList.map(function (m) { return '<span class="gt-chip">' + genioEscapeHtml(m) + '</span>'; }).join(' ') : '<span style="color:var(--ink-soft);">-</span>') + '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + row.total_pertemuan + ' sesi</td>' +
@@ -1186,9 +1186,7 @@
     var profile = (user.tutor_profile && user.tutor_profile[0]) || user.tutor_profile || {};
     var jam = gjState.jamMap[row.tutor_id] || 0;
     var jamText = jam ? (Math.round(jam * 10) / 10) + ' Jam' : '-';
-    var avatar = user.foto_profil_url
-      ? '<img src="' + genioEscapeHtml(user.foto_profil_url) + '" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; flex:none; border:1px solid var(--border);">'
-      : '<div style="width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:500; font-size:13px; flex:none;">' + genioEscapeHtml((user.nama || '?').charAt(0).toUpperCase()) + '</div>';
+    var avatar = '<div style="width:34px; height:34px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:500; font-size:13px; flex:none;">' + genioAvatarInner(user.nama, user.foto_profil_url, genioInitials(user.nama, 1)) + '</div>';
 
     var namaBankCard = (profile.nama_bank || '').trim();
     var noRekCard = (profile.no_rekening || '').trim();

@@ -956,7 +956,7 @@
     try {
       var s = genioGetSession();
       var results = await Promise.all([
-        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(nama,kelas,sekolah,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp))&order=created_at.desc', s.access_token),
+        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(nama,kelas,sekolah,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url))&order=created_at.desc', s.access_token),
         supaRest('units?select=id&order=nama_unit.asc', s.access_token)
       ]);
       ktrState.kontrakList = results[0];
@@ -1339,7 +1339,7 @@
     var tutorRows = tutorList.map(function (kt) {
       var nm = (kt.users && kt.users.nama) || 'Tutor';
       return '<div class="kc-tutor">' +
-        '<span class="kc-tutor-av">' + ktrEscape(nm.charAt(0).toUpperCase()) + '</span>' +
+        '<span class="kc-tutor-av">' + genioAvatarInner(nm, kt.users && kt.users.foto_profil_url, genioInitials(nm, 1)) + '</span>' +
         '<div class="kc-tutor-t"><b>' + ktrEscape(nm) + '</b><span>' + ktrEscape(kt.mapel || '-') + (kt.durasi_menit ? ' · ' + kt.durasi_menit + ' mnt' : '') + ' · fee ' + ktrFormatRp(kt.fee_mengajar) + ' · transport ' + ktrFormatRp(kt.uang_transport) + '</span></div>' +
         '<button type="button" class="ktr-edit-tutor-btn kc-icon" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Edit tutor" aria-label="Edit tutor"><i class="ph ph-pencil-simple" aria-hidden="true" style="pointer-events:none;"></i></button>' +
         '<button type="button" class="ktr-del-tutor-btn kc-icon is-danger" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Hapus tutor" aria-label="Hapus tutor"><i class="ph ph-trash" aria-hidden="true" style="pointer-events:none;"></i></button>' +
