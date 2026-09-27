@@ -18,3 +18,11 @@ Reference implementations: `Login.html`, `ModuleHome.html`, `ModulePresensi.html
 - **Tables:** freeze the identifying columns on the left so they stay put when the table scrolls sideways (`position:sticky`, fixed widths, `border-collapse:separate`, solid background on sticky cells). Kontrak: No + Siswa. Jadwal: No + Tutor. Presensi: No + Tanggal + Tutor. Gaji: No + Nama tutor. Operasional: No + Transaksi. Kelola unit: No + Unit. Paket belajar: No + Nama paket. Kelola user: No + Nama. Frozen columns must be adjacent and first, so reorder columns if needed. Always plan for mobile: on narrow screens slim the frozen columns (hide avatars, drop the year, ellipsis with a `title` tooltip) so other columns stay visible. Size columns to content and avoid fixed `min-width` on the table, so it fits without scrolling when the screen is wide enough.
 - **Copy:** sentence case, no em dashes, no uppercase micro-labels.
 - Light theme only (whole app is light).
+
+## Database (Supabase)
+
+- Project **GDIY** (ref `lmtockvqirnqjabdhxbh`, region ap-southeast-1). This is the live database; ask before any write, migration, or delete. Other projects in the account ("Manajemen Genio DIY", "genio-get") are inactive and unused.
+- Schema check (27 Sep 2026): all 123 `supaRest` calls in the code match the tables and columns; all 16 public tables have RLS enabled.
+- Open security advisor warnings, noted and deliberately left as is for now:
+  1. SECURITY DEFINER helpers callable by signed-in users via RPC: `current_role_name`, `current_status`, `current_unit_id`, `is_manajemen`, `is_staff_lintas_unit`. They are used by RLS policies, so do not revoke EXECUTE without testing the policies first.
+  2. Leaked password protection is disabled (Supabase dashboard, Authentication settings; no code change needed).
