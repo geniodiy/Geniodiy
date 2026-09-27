@@ -1,28 +1,104 @@
 <style>
-  .profile-detail-row{
-    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
-    padding:6px 0; font-size:11.5px;
+  /* ===== Profil: highlight putih (identitas | unit dan bergabung) + kartu kontak dan akun ===== */
+  .prf-hb{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:#fff; border:1px solid var(--border); border-radius:18px; overflow:hidden; margin-bottom:14px;}
+  .prf-main{position:relative; isolation:isolate; padding:20px 22px; display:flex; align-items:center; gap:16px; min-width:0;}
+  .prf-main::before{content:''; position:absolute; z-index:-1; left:-90px; top:-160px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(28,26,175,.07), rgba(28,26,175,0) 65%); pointer-events:none;}
+  .prf-av{position:relative; width:68px; height:68px; flex:none;}
+  #prfDetailPhoto{display:none; width:68px; height:68px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 3px #fff, 0 0 0 4px var(--border);}
+  #prfDetailPhotoFallback{width:68px; height:68px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; box-shadow:0 0 0 3px #fff, 0 0 0 4px var(--border);}
+  .prf-who{min-width:0;}
+  .prf-who small{display:block; font-size:11px; color:var(--ink-soft);}
+  #prfDetailNamaHero{margin:2px 0 7px; font-size:24px; font-weight:800; letter-spacing:-.03em; color:var(--ink); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .prf-chips{display:flex; gap:6px; flex-wrap:wrap;}
+  .prf-chip{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:600; padding:3px 9px; border-radius:999px; white-space:nowrap;}
+  #prfDetailRoleHero{background:var(--blue-tint); color:var(--blue);}
+  #prfDetailStatus{background:#E9F7EF; color:#1E8E5A;}
+  #prfDetailStatus i{width:6px; height:6px; border-radius:50%; background:currentColor;}
+  #prfDetailStatus.is-off{background:var(--surface); color:var(--ink-soft);}
+  .prf-side{background:var(--surface); border-left:1px solid var(--border); padding:18px; display:flex; flex-direction:column; justify-content:center; gap:10px; min-width:260px;}
+  .prf-side-list div{display:flex; justify-content:space-between; gap:12px; font-size:11px; color:var(--ink-soft); padding:3px 0;}
+  .prf-side-list b{color:var(--ink); font-weight:700; text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  #prfEditProfileBtn{width:100%; height:36px; border-radius:9px; border:none; background:var(--blue); color:#fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:transform .1s ease, opacity .15s ease;}
+  #prfEditProfileBtn:active{transform:scale(.97);}
+  #prfEditProfileBtn i{font-size:14px;}
+  #prfEditProfileBtn .soon{font-size:9px; font-weight:600; background:rgba(255,255,255,.2); padding:1px 6px; border-radius:999px;}
+
+  .prf-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px;}
+  .prf-sec{font-size:12px; font-weight:600; color:var(--ink); margin:0 2px 8px;}
+  .prf-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:4px 16px;}
+  .prf-row{display:flex; align-items:center; gap:12px; padding:12px 0; min-width:0;}
+  .prf-row + .prf-row{border-top:1px solid #EEF0F6;}
+  .prf-row[hidden]{display:none;}
+  .prf-row .ic{width:32px; height:32px; border-radius:9px; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:15px; flex:none;}
+  .prf-row .tx{min-width:0; flex:1;}
+  .prf-row .tx span{display:block; font-size:10.5px; color:var(--ink-soft);}
+  .prf-row .tx b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .prf-act{width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:14px; flex:none; cursor:pointer; text-decoration:none; transition:background .15s ease, color .15s ease;}
+  .prf-act:hover{background:var(--surface); color:var(--ink);}
+  .prf-act.is-wa{color:#14A44D;} .prf-act.is-wa:hover{background:#E9F7EF;}
+  .prf-act[hidden]{display:none;}
+
+  @keyframes prfIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  .prf-anim .prf-hb, .prf-anim .prf-grid > div{animation:prfIn .45s cubic-bezier(.16,1,.3,1) both;}
+  .prf-anim .prf-grid > div:nth-child(1){animation-delay:.06s;} .prf-anim .prf-grid > div:nth-child(2){animation-delay:.12s;}
+  @media (max-width:899px){
+    .prf-hb{grid-template-columns:1fr;}
+    .prf-side{border-left:none; border-top:1px solid var(--border); min-width:0;}
+    .prf-grid{grid-template-columns:1fr;}
+    #prfDetailNamaHero{font-size:20px;}
+    .prf-av, #prfDetailPhoto, #prfDetailPhotoFallback{width:56px; height:56px;}
+    #prfDetailPhotoFallback{font-size:18px;}
+    .prf-main{padding:18px;}
   }
-  .profile-detail-row span:first-child{color:var(--ink-soft); flex:none;}
-  .profile-detail-row span:last-child{color:var(--ink); font-weight:500; text-align:right;}
+  @media (prefers-reduced-motion: reduce){ .prf-anim .prf-hb, .prf-anim .prf-grid > div{animation:none;} }
 </style>
 
-<!-- Detail Profil — muncul sebagai panel tersendiri (drill-down mobile / sidebar+konten desktop) -->
+<!-- Detail profil: panel tersendiri (drill-down di HP, sidebar + konten di desktop) -->
 <div class="module-panel" data-module="profile-detail" hidden>
-  <div class="card" style="padding:16px 14px; text-align:center; margin-bottom:10px; border-radius:14px;">
-    <div style="position:relative; width:64px; height:64px; margin:0 auto 10px;">
-      <img id="prfDetailPhoto" style="display:none; width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--border);">
-      <div id="prfDetailPhotoFallback" style="width:64px; height:64px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:600;">-</div>
+  <div id="prfWrap">
+    <div class="prf-hb">
+      <div class="prf-main">
+        <div class="prf-av">
+          <img id="prfDetailPhoto" alt="Foto profil">
+          <div id="prfDetailPhotoFallback">-</div>
+        </div>
+        <div class="prf-who">
+          <small>Profil saya</small>
+          <div id="prfDetailNamaHero">-</div>
+          <div class="prf-chips">
+            <span class="prf-chip" id="prfDetailRoleHero">-</span>
+            <span class="prf-chip" id="prfDetailStatus"><i></i>Aktif</span>
+          </div>
+        </div>
+      </div>
+      <div class="prf-side">
+        <div class="prf-side-list">
+          <div>Unit<b id="prfDetailUnitSide">-</b></div>
+          <div>Bergabung<b id="prfDetailSinceSide">-</b></div>
+        </div>
+        <button type="button" id="prfEditProfileBtn"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit profil <span class="soon">segera</span></button>
+      </div>
     </div>
-    <div style="font-size:15px; font-weight:600; color:var(--ink);" id="prfDetailNamaHero">-</div>
-    <span id="prfDetailRoleHero" style="display:inline-block; margin-top:4px; background:var(--surface); color:var(--ink-soft); font-size:9.5px; font-weight:500; letter-spacing:.02em; padding:2.5px 9px; border-radius:999px;">-</span>
-  </div>
-  <div class="card" style="padding:12px 14px; border-radius:12px;">
-    <div class="profile-detail-row"><span>Nama Lengkap</span><span id="prfDetailNama">-</span></div>
-    <div class="profile-detail-row"><span>Jenis Kelamin</span><span id="prfDetailGender">-</span></div>
-    <div class="profile-detail-row"><span>Email</span><span id="prfDetailEmail">-</span></div>
-    <div class="profile-detail-row"><span>Nomor WhatsApp</span><span id="prfDetailHp">-</span></div>
-    <button id="prfEditProfileBtn" style="width:100%; height:32px; margin-top:12px; background:var(--blue); color:#fff; border:none; border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-weight:500; font-size:11.5px; cursor:pointer;">Edit Profil</button>
+
+    <div class="prf-grid">
+      <div>
+        <div class="prf-sec">Kontak</div>
+        <div class="prf-card">
+          <div class="prf-row"><span class="ic"><i class="ph ph-envelope-simple" aria-hidden="true"></i></span><span class="tx"><span>Email</span><b id="prfDetailEmail">-</b></span><button type="button" class="prf-act" id="prfCopyEmail" title="Salin email" aria-label="Salin email"><i class="ph ph-copy" aria-hidden="true"></i></button></div>
+          <div class="prf-row"><span class="ic"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></span><span class="tx"><span>Nomor WhatsApp</span><b id="prfDetailHp">-</b></span><a class="prf-act is-wa" id="prfWaLink" href="#" target="_blank" rel="noopener noreferrer" title="Buka WhatsApp" aria-label="Buka WhatsApp" hidden><i class="ph ph-chat-circle" aria-hidden="true"></i></a></div>
+          <div class="prf-row"><span class="ic"><i class="ph ph-gender-intersex" aria-hidden="true"></i></span><span class="tx"><span>Jenis kelamin</span><b id="prfDetailGender">-</b></span></div>
+        </div>
+      </div>
+      <div>
+        <div class="prf-sec">Akun</div>
+        <div class="prf-card">
+          <div class="prf-row"><span class="ic"><i class="ph ph-user" aria-hidden="true"></i></span><span class="tx"><span>Nama lengkap</span><b id="prfDetailNama">-</b></span></div>
+          <div class="prf-row"><span class="ic"><i class="ph ph-identification-badge" aria-hidden="true"></i></span><span class="tx"><span>Role</span><b id="prfDetailRole">-</b></span></div>
+          <div class="prf-row" id="prfRowUnit" hidden><span class="ic"><i class="ph ph-buildings" aria-hidden="true"></i></span><span class="tx"><span>Unit</span><b id="prfDetailUnit">-</b></span></div>
+          <div class="prf-row" id="prfRowSince" hidden><span class="ic"><i class="ph ph-calendar-check" aria-hidden="true"></i></span><span class="tx"><span>Bergabung</span><b id="prfDetailSince">-</b></span></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -30,40 +106,80 @@
   window.genioModuleHandlers = window.genioModuleHandlers || {};
   window.genioModuleHandlers['profile-detail'] = prfLoadDetail;
 
-  var LAINNYA_ROLE_LABELS_PRF = { manajer: 'Manajer', kepala_unit: 'Kepala Unit', hrd: 'HRD', super_admin: 'Super Admin' };
+  var LAINNYA_ROLE_LABELS_PRF = { manajer: 'Manajer', kepala_unit: 'Kepala unit', hrd: 'HRD', super_admin: 'Super admin' };
+  var PRF_BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
   function prfInitials(nama) {
     if (!nama) return '?';
     var parts = nama.trim().split(/\s+/);
     return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
   }
+  function prfWaLink(hp) {
+    var d = String(hp || '').replace(/\D/g, '');
+    if (!d) return '';
+    if (d.charAt(0) === '0') d = '62' + d.slice(1);
+    return 'https://wa.me/' + d;
+  }
 
   async function prfLoadDetail() {
     var session = genioGetSession();
     if (!session) return;
 
+    var wrap = document.getElementById('prfWrap');
+    if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      wrap.classList.remove('prf-anim'); void wrap.offsetWidth; wrap.classList.add('prf-anim');
+    }
+
+    var roleLabel = LAINNYA_ROLE_LABELS_PRF[session.role] || session.role || '-';
     document.getElementById('prfDetailNamaHero').textContent = session.nama || '-';
-    document.getElementById('prfDetailRoleHero').textContent = (LAINNYA_ROLE_LABELS_PRF[session.role] || session.role).toUpperCase();
+    document.getElementById('prfDetailRoleHero').textContent = roleLabel;
+    document.getElementById('prfDetailRole').textContent = roleLabel;
     document.getElementById('prfDetailNama').textContent = session.nama || '-';
     document.getElementById('prfDetailGender').textContent = session.jenis_kelamin === 'L' ? 'Laki-laki' : (session.jenis_kelamin === 'P' ? 'Perempuan' : '-');
     document.getElementById('prfDetailEmail').textContent = session.email || '-';
+    document.getElementById('prfDetailPhotoFallback').textContent = prfInitials(session.nama);
 
     try {
-      var rows = await supaRest('users?id=eq.' + session.user_id + '&select=no_hp,foto_profil_url', session.access_token);
+      var rows = await supaRest('users?id=eq.' + session.user_id + '&select=no_hp,foto_profil_url,status,created_at,units(nama_unit)', session.access_token);
       var me = rows && rows[0];
-      document.getElementById('prfDetailHp').textContent = (me && me.no_hp) || '-';
+
+      var hp = me && me.no_hp;
+      document.getElementById('prfDetailHp').textContent = hp || '-';
+      var wa = prfWaLink(hp);
+      var waEl = document.getElementById('prfWaLink');
+      waEl.hidden = !wa;
+      if (wa) waEl.href = wa;
+
+      var unit = (me && me.units && me.units.nama_unit) || (session.role === 'kepala_unit' ? '' : 'Semua unit');
+      document.getElementById('prfDetailUnitSide').textContent = unit || '-';
+      document.getElementById('prfDetailUnit').textContent = unit || '-';
+      document.getElementById('prfRowUnit').hidden = !unit;
+
+      var since = '';
+      if (me && me.created_at) {
+        var d = new Date(me.created_at);
+        if (!isNaN(d)) since = PRF_BULAN[d.getMonth()] + ' ' + d.getFullYear();
+      }
+      document.getElementById('prfDetailSinceSide').textContent = since || '-';
+      document.getElementById('prfDetailSince').textContent = since || '-';
+      document.getElementById('prfRowSince').hidden = !since;
+
+      var statusEl = document.getElementById('prfDetailStatus');
+      var aktif = !me || !me.status || me.status === 'aktif';
+      statusEl.classList.toggle('is-off', !aktif);
+      statusEl.innerHTML = '<i></i>' + (aktif ? 'Aktif' : 'Nonaktif');
 
       var img = document.getElementById('prfDetailPhoto');
       var fallback = document.getElementById('prfDetailPhotoFallback');
       var photoUrl = me && me.foto_profil_url;
       if (photoUrl) {
+        img.onerror = function () { img.style.display = 'none'; fallback.style.display = 'flex'; };
         img.src = photoUrl;
         img.style.display = 'block';
         fallback.style.display = 'none';
       } else {
         img.style.display = 'none';
         fallback.style.display = 'flex';
-        fallback.textContent = prfInitials(session.nama);
       }
     } catch (err) {
       genioToast('Gagal memuat data profil: ' + err.message, 'error');
@@ -71,6 +187,19 @@
   }
 
   document.getElementById('prfEditProfileBtn').addEventListener('click', function () {
-    genioToast('Fitur edit profile segera hadir', 'loading');
+    genioToast('Fitur edit profil segera hadir', 'loading');
+  });
+  document.getElementById('prfCopyEmail').addEventListener('click', function () {
+    var email = document.getElementById('prfDetailEmail').textContent;
+    if (!email || email === '-') return;
+    function done() { genioToast('Email disalin', 'success'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email).then(done, function () { genioToast('Gagal menyalin email', 'error'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = email; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { genioToast('Gagal menyalin email', 'error'); }
+      ta.remove();
+    }
   });
 </script>
