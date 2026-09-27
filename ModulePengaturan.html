@@ -2,195 +2,108 @@
 <style>
   @media (min-width:900px){
     .module-panel[data-module="pengaturan"][hidden]{ display:none !important; }
-    .module-panel[data-module="pengaturan"]:not([hidden]){
-      width:94%; max-width:1500px; margin:0 auto;
-    }
-    #pgt-list .card{
-      display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px;
-    }
-    #pgt-list .card > div:first-child{ flex:0 0 100%; }
-    #pgt-list .card > div:nth-child(2){ flex:0 0 100%; margin:0; padding-top:0 !important; }
-    #pgt-list .card .pgt-toggle-btn{
-      width:auto !important; margin-top:0 !important; margin-left:auto;
-      padding:0 16px !important; height:28px !important; flex:none;
-    }
-    #pgt-list .card .pgt-edit-wrap{ flex:0 0 100%; }
-    .pgt-hero-box{
-      height: 58px !important;
-      min-height: 58px !important;
-      box-sizing: border-box !important;
-      padding: 8px 16px !important;
-      border-radius: 12px !important;
-      margin-bottom: 10px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 14px !important;
-    }
-    .pgt-hero-main-col{
-      flex: none !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-    }
-    .pgt-hero-badges{
-      justify-content: flex-start !important;
-      gap: 8px !important;
-    }
-    .pgt-hero-sublabel,
-    .pgt-hero-desc{
-      display: none !important;
-    }
-    .pgt-hero-counter{
-      margin-top: 2px !important;
-    }
-    .pgt-hero-title{
-      font-size: 13px !important;
-      line-height: 1.1 !important;
-    }
-    .pgt-hero-stats-row{
-      flex: none !important;
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-      border-left: 1px solid rgba(255,255,255,.14) !important;
-      padding-left: 16px !important;
-      display: flex !important;
-      gap: 8px !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-    }
-    .pgt-hero-stat-card{
-      flex: none !important;
-      padding: 4px 8px !important;
-      border-radius: 8px !important;
-      gap: 6px !important;
-      min-width: 0 !important;
-    }
+    .module-panel[data-module="pengaturan"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
+    #pgt-list{ display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:12px; align-items:start; }
+    #pgt-list > .pgt-full-width{ grid-column:1/-1; }
   }
 
-  .pgt-hero-box{
-    background:var(--ink); color:#fff; border-radius:14px;
-    padding:12px 16px; margin-bottom:12px; box-sizing:border-box;
+  /* ===== Highlight: tiga kartu aturan | siapa yang terakhir mengubah ===== */
+  .pgt-hb{position:relative; overflow:hidden; border-radius:18px; color:#fff; box-sizing:border-box; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .pgb-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0; display:flex; flex-direction:column; justify-content:center;}
+  .pgb-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(124,160,255,.24), rgba(124,160,255,0) 65%); pointer-events:none;}
+  .pgb-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .pgb-label{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72);}
+  .pgb-label i{width:6px; height:6px; border-radius:50%; background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .pgb-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .pgb-rules{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:14px;}
+  .pgb-rule{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:11px 12px; min-width:0;}
+  .pgb-rule .n{font-size:10.5px; color:rgba(255,255,255,.72); display:flex; align-items:center; gap:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .pgb-rule .n i{font-size:14px; flex:none;}
+  .pgb-rule b{display:block; font-size:24px; font-weight:800; margin-top:5px; letter-spacing:-.025em; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .pgb-rule small{display:block; font-size:10px; color:rgba(255,255,255,.55); margin-top:2px;}
+  .pgb-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:12px; min-width:250px;}
+  .pgb-h{font-size:10.5px; color:rgba(255,255,255,.62);}
+  .pgb-by{display:flex; align-items:center; gap:9px; font-size:10.5px; min-width:0;}
+  .pgb-by .av{width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,.14); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:10.5px; flex:none;}
+  .pgb-by span:last-child{min-width:0;}
+  .pgb-by b{display:block; font-weight:600; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .pgb-by small{color:rgba(255,255,255,.55);}
+  .pgb-acc{display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:500; padding:4px 10px; border-radius:999px; align-self:flex-start;}
+  .pgb-acc.is-edit{color:#7CF0C3; background:rgba(124,240,195,.1);}
+  .pgb-acc.is-view{color:#FFC46B; background:rgba(255,196,107,.12);}
+  @keyframes pgtIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  .pgb-rules.pgt-anim .pgb-rule{animation:pgtIn .5s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 70ms);}
+  @media (max-width:899px){
+    .pgt-hb{grid-template-columns:1fr;}
+    .pgb-side{border-left:none; border-top:1px solid rgba(255,255,255,.1); min-width:0;}
+    .pgb-rule{padding:10px;}
+    .pgb-rule b{font-size:17px;}
   }
-  .pgt-hero-main-col{
-    display: flex;
-    flex-direction: column;
-  }
-  .pgt-hero-badges{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .pgt-hero-badge-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 2.5px 8px;
-    border-radius: 999px;
-  }
-  .pgt-hero-sublabel{
-    font-size: 10px;
-    opacity: .65;
-    margin-top: 8px;
-  }
-  .pgt-hero-title{
-    font-size: 14px;
-    font-weight: 600;
-    margin-top: 1px;
-  }
-  .pgt-hero-desc{
-    font-size: 10.5px;
-    opacity: .7;
-    margin-top: 4px;
-    line-height: 1.4;
-  }
-  .pgt-hero-stats-row{
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.14);
-  }
-  .pgt-hero-stat-card{
-    flex: 1;
-    background: rgba(255,255,255,.07);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .pgt-hero-stat-icon{
-    width: 22px;
-    height: 22px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .pgt-hero-stat-label{
-    font-size: 9px;
-    opacity: .65;
-  }
-  .pgt-hero-stat-val{
-    font-size: 11.5px;
-    font-weight: 600;
-    margin-top: 1px;
+
+  /* ===== Kartu aturan ===== */
+  .pgt-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:12px; min-width:0; box-sizing:border-box; transition:box-shadow .18s ease, border-color .18s ease;}
+  .pgt-card:hover{border-color:#D5D8E8; box-shadow:0 4px 14px -6px rgba(20,22,43,.12);}
+  .pgt-card.pgt-in{animation:pgtIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 60ms);}
+  .pgc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .pgc-ico{width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
+  .pgc-who{min-width:0; flex:1;}
+  .pgc-who h4{font-size:12.5px; font-weight:600; color:var(--ink); margin:0; line-height:1.3;}
+  .pgc-who p{font-size:10.5px; color:var(--ink-soft); margin:1px 0 0;}
+  .pgc-val{font-size:18px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; flex:none;}
+  .pgc-desc{font-size:11px; color:var(--ink-soft); line-height:1.55; margin-top:10px;}
+  .pgc-desc b{color:var(--ink); font-weight:600;}
+  .pgc-foot{display:flex; align-items:center; gap:8px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--border);}
+  .pgc-by{min-width:0; flex:1; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .pgc-by b{color:var(--ink); font-weight:600;}
+  .pgt-toggle-btn{height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font-family:var(--font); font-size:11px; font-weight:600; padding:0 12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; flex:none;}
+  .pgt-toggle-btn:hover{background:var(--surface);}
+  .pgt-toggle-btn .pgt-caret{transition:transform .25s ease;}
+  .pgt-toggle-btn[aria-expanded="true"] .pgt-caret{transform:rotate(180deg);}
+  .pgt-edit-wrap{max-height:0; opacity:0; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;}
+  .pgt-edit-inner{margin-top:12px; padding:12px; border-radius:11px; background:var(--surface);}
+  .pgt-edit-l{font-size:10.5px; font-weight:500; color:var(--ink-soft); margin:0 0 6px;}
+  .pgt-presets{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;}
+  .pgt-preset-btn{flex:1 1 auto; min-width:58px; height:32px; border-radius:9px; border:1px solid var(--border); background:#fff; font-family:var(--font); font-size:11px; font-weight:600; color:var(--ink); cursor:pointer; transition:background .15s ease, border-color .15s ease, color .15s ease;}
+  .pgt-preset-btn:hover{border-color:#C9CCDA;}
+  .pgt-preset-btn.is-on{background:var(--blue-tint); color:var(--blue); border-color:var(--blue);}
+  .pgt-input-wrap{position:relative;}
+  .pgt-input-wrap span{position:absolute; right:11px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--ink-soft); pointer-events:none;}
+  .pgt-custom-input{width:100%; height:34px; border:1px solid var(--border); border-radius:9px; padding:0 70px 0 11px; font-family:var(--font); font-size:11.5px; background:#fff; color:var(--ink); box-sizing:border-box; outline:none; font-variant-numeric:tabular-nums; transition:border-color .15s ease, box-shadow .15s ease;}
+  .pgt-custom-input:focus{border-color:var(--blue); box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .pgt-edit-inner .alert{margin:10px 0 0 !important; font-size:10.5px !important;}
+  .pgt-edit-act{display:flex; justify-content:flex-end; gap:8px; margin-top:12px;}
+  .pgt-edit-act button{height:32px; border-radius:9px; padding:0 14px; font-family:var(--font); font-size:11px; font-weight:600; cursor:pointer;}
+  .pgt-cancel-btn{background:#fff; border:1px solid var(--border); color:var(--ink);}
+  .pgt-save-btn{background:var(--blue); border:none; color:#fff;}
+  .pgt-save-btn:disabled{opacity:.7; cursor:default;}
+  .pgt-readonly{display:flex; gap:8px; align-items:center; background:#FFF6E6; color:#8A5A00; border:1px solid #F5DDB0; border-radius:11px; padding:9px 12px; font-size:11px; margin-bottom:12px;}
+  .pgt-readonly i{font-size:14px; flex:none;}
+  .pgt-foot-note{display:flex; gap:8px; align-items:flex-start; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:11px 14px; margin-top:2px;}
+  .pgt-foot-note i{font-size:14px; color:var(--ink-soft); flex:none; margin-top:1px;}
+  .pgt-foot-note div{font-size:11px; color:var(--ink-soft); line-height:1.55;}
+  @media (prefers-reduced-motion: reduce){
+    .pgb-rules.pgt-anim .pgb-rule, .pgt-card.pgt-in{animation:none !important;}
+    .pgt-edit-wrap, .pgt-toggle-btn .pgt-caret{transition:none;}
   }
 </style>
 
-  <!-- Hero ringkasan -->
-  <div class="pgt-hero-box">
-    <div class="pgt-hero-main-col">
-      <div class="pgt-hero-badges">
-        <span class="pgt-hero-badge-pill">
-          <span style="width:5px; height:5px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
-          KONFIGURASI MANAJER
-        </span>
+  <!-- Highlight -->
+  <div class="pgt-hb">
+    <div class="pgb-main">
+      <div class="pgb-top">
+        <span class="pgb-label"><i></i>Aturan presensi dan honor</span>
+        <span class="pgb-pill" id="pgt-heroCount">3 aturan aktif</span>
       </div>
-      <div class="pgt-hero-counter">
-        <div class="pgt-hero-sublabel">Kebijakan Administrasi</div>
-        <div class="pgt-hero-title">Aturan Presensi &amp; Denda</div>
-        <div class="pgt-hero-desc">Batas maksimal lapor, honor visit, dan denda keterlambatan presensi.</div>
+      <div class="pgb-rules" id="pgt-heroRules">
+        <div class="pgb-rule" style="--i:0;"><span class="n"><i class="ph ph-clock" style="color:#FFC46B;" aria-hidden="true"></i>Batas lapor</span><b id="pgt-heroJam">-</b><small>setelah sesi selesai</small></div>
+        <div class="pgb-rule" style="--i:1;"><span class="n"><i class="ph ph-car-profile" style="color:#7CF0C3;" aria-hidden="true"></i>Honor visit</span><b id="pgt-heroVisit">-</b><small>flat per kunjungan</small></div>
+        <div class="pgb-rule" style="--i:2;"><span class="n"><i class="ph ph-warning" style="color:#FF9C94;" aria-hidden="true"></i>Denda telat</span><b id="pgt-heroDenda">-</b><small>dari fee mengajar</small></div>
       </div>
     </div>
-
-    <div class="pgt-hero-stats-row">
-      <div class="pgt-hero-stat-card">
-        <span class="pgt-hero-stat-icon" style="background:rgba(245,158,11,.2); color:#FBBF24;">
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="pgt-hero-stat-label">Batas Lapor</div>
-          <div class="pgt-hero-stat-val" id="pgt-heroJam">-</div>
-        </div>
-      </div>
-      <div class="pgt-hero-stat-card">
-        <span class="pgt-hero-stat-icon" style="background:rgba(52,199,89,.2); color:#8CF5C4;">
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="9" width="15" height="9" rx="1.5"/><path d="M16 12h3l3 3v3h-6"/><circle cx="6" cy="20" r="1.6"/><circle cx="17.5" cy="20" r="1.6"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="pgt-hero-stat-label">Nominal Visit</div>
-          <div class="pgt-hero-stat-val" id="pgt-heroVisit">-</div>
-        </div>
-      </div>
-      <div class="pgt-hero-stat-card">
-        <span class="pgt-hero-stat-icon" style="background:rgba(255,59,48,.2); color:#ff9c94;">
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-        </span>
-        <div style="min-width:0;">
-          <div class="pgt-hero-stat-label">Denda Telat</div>
-          <div class="pgt-hero-stat-val" id="pgt-heroDenda">-</div>
-        </div>
-      </div>
+    <div class="pgb-side">
+      <div class="pgb-h">Terakhir diubah</div>
+      <div class="pgb-by"><span class="av" id="pgt-heroByAv">-</span><span><b id="pgt-heroByName">Belum pernah diubah</b><small id="pgt-heroByMeta">Memakai nilai bawaan</small></span></div>
+      <span class="pgb-acc is-edit" id="pgt-heroAccess"><i class="ph ph-lock-simple-open" aria-hidden="true"></i>Kamu bisa mengubah aturan</span>
     </div>
   </div>
 
@@ -198,11 +111,9 @@
     <div class="empty-state">Memuat pengaturan...</div>
   </div>
 
-  <div class="card" style="display:flex; gap:8px; align-items:flex-start; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px;">
-    <span style="color:var(--ink-soft); flex:none; font-size:14px; margin-top:1px;">&#9432;</span>
-    <div style="font-size:11px; color:var(--ink-soft); line-height:1.5;">
-      Semua aturan berlaku saat presensi disetujui (Terima/Visit) — termasuk laporan yang masih menunggu approval saat nilai ini diubah. Presensi yang sudah lebih dulu disetujui tidak akan ikut berubah.
-    </div>
+  <div class="pgt-foot-note">
+    <i class="ph ph-info" aria-hidden="true"></i>
+    <div>Semua aturan berlaku saat presensi disetujui (terima atau visit), termasuk laporan yang masih menunggu persetujuan saat nilainya diubah. Presensi yang sudah disetujui sebelumnya tidak ikut berubah.</div>
   </div>
 
 </div>
@@ -213,41 +124,44 @@
   // Metadata tampilan + preset per kunci pengaturan.
   var PGT_META = {
     batas_jam_telat: {
-      label: 'Batas Waktu Lapor',
-      color: '#F59E0B',
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>',
-      unit: 'Jam',
+      label: 'Batas waktu lapor',
+      sub: 'Tenggat tutor mengisi presensi',
+      icon: 'ph-clock', bg: '#FFF4E0', fg: '#B86E00',
+      unit: 'jam',
       presets: [12, 24, 48],
-      format: function (v) { return v + ' Jam'; },
+      format: function (v) { return v + ' jam'; },
       detailText: function (v) {
-        return 'Tutor wajib lapor maksimal <b>' + v + ' jam</b> setelah Pembelajaran. Lewat dari itu otomatis dianggap terlambat dan kena denda.';
+        return 'Tutor wajib lapor maksimal <b>' + v + ' jam</b> setelah sesi selesai. Lewat dari itu otomatis dianggap terlambat dan kena denda.';
       }
     },
     nominal_visit: {
-      label: 'Nominal Visit Tutor',
-      color: '#1C1AAF',
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="9" width="15" height="9" rx="1.5"/><path d="M16 12h3l3 3v3h-6"/><circle cx="6" cy="20" r="1.6"/><circle cx="17.5" cy="20" r="1.6"/></svg>',
-      unit: 'Rupiah',
+      label: 'Honor visit tutor',
+      sub: 'Dibayar per sesi kunjungan',
+      icon: 'ph-car-profile', bg: '#E9F7EF', fg: '#1E8E5A',
+      unit: 'rupiah',
       presets: [20000, 30000, 40000, 50000],
       format: function (v) { return 'Rp ' + Math.round(v).toLocaleString('id-ID'); },
+      short: function (v) { return v >= 1000 ? 'Rp ' + (Math.round(v / 100) / 10).toLocaleString('id-ID') + ' rb' : 'Rp ' + v; },
       detailText: function (v) {
         return 'Tutor dibayar flat <b>Rp ' + Math.round(v).toLocaleString('id-ID') + '</b> tiap sesi kunjungan, menggantikan uang transport dari kontrak.';
       }
     },
     persen_denda_telat: {
-      label: 'Denda Keterlambatan',
-      color: '#D4070F',
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 21h20L12 2z"/><path d="M12 9v5"/><circle cx="12" cy="17" r=".5" fill="#fff"/></svg>',
-      unit: 'Persen (%)',
+      label: 'Denda keterlambatan',
+      sub: 'Potongan untuk laporan telat',
+      icon: 'ph-warning', bg: '#FDECEA', fg: '#C0352B',
+      unit: 'persen',
       presets: [1, 2, 3, 5],
       format: function (v) { return v + '%'; },
       detailText: function (v) {
-        return 'Laporan yang telat kena potongan <b>' + v + '%</b> dari fee mengajar, dipotong otomatis di slip gaji.';
+        return 'Laporan yang telat kena potongan <b>' + v + '%</b> dari fee mengajar, dipotong otomatis di slip gaji. Contoh: fee Rp 150.000 dipotong <b>Rp ' + Math.round(150000 * v / 100).toLocaleString('id-ID') + '</b>.';
       }
     }
   };
   var PGT_DEFAULTS = { nominal_visit: '30000', persen_denda_telat: '2', batas_jam_telat: '24' };
   var PGT_ORDER = ['batas_jam_telat', 'nominal_visit', 'persen_denda_telat'];
+  var PGT_BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  var PGT_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var pgtRows = {};
   var pgtCanEdit = false;
@@ -262,6 +176,12 @@
     d.textContent = str == null ? '' : str;
     return d.innerHTML;
   }
+  function pgtFormatTgl(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.getDate() + ' ' + PGT_BULAN[d.getMonth()] + ' ' + d.getFullYear();
+  }
 
   async function pgtLoadList() {
     var listEl = document.getElementById('pgt-list');
@@ -274,155 +194,164 @@
       pgtRows = {};
       rows.forEach(function (r) { pgtRows[r.kunci] = r; });
 
-      if (pgtRows.batas_jam_telat) document.getElementById('pgt-heroJam').textContent = pgtRows.batas_jam_telat.nilai + ' Jam';
-      if (pgtRows.nominal_visit) document.getElementById('pgt-heroVisit').textContent = 'Rp ' + Math.round(pgtRows.nominal_visit.nilai / 1000) + ' Rb';
-      if (pgtRows.persen_denda_telat) document.getElementById('pgt-heroDenda').textContent = pgtRows.persen_denda_telat.nilai + '%';
-
-      pgtRerenderList();
+      pgtRenderHero();
+      pgtRerenderList(true);
     } catch (err) {
-      listEl.innerHTML = '<div class="empty-state">Gagal memuat pengaturan: ' + pgtEscape(err.message) + '</div>';
+      listEl.innerHTML = '<div class="pgt-card pgt-full-width" style="text-align:center; color:var(--ink-soft); font-size:11.5px;">Gagal memuat pengaturan: ' + pgtEscape(err.message) + '</div>';
     }
+  }
+
+  function pgtRenderHero() {
+    function val(key) { var r = pgtRows[key]; return parseFloat(r ? r.nilai : PGT_DEFAULTS[key]); }
+    document.getElementById('pgt-heroJam').textContent = val('batas_jam_telat') + ' jam';
+    document.getElementById('pgt-heroVisit').textContent = PGT_META.nominal_visit.short(val('nominal_visit'));
+    document.getElementById('pgt-heroDenda').textContent = val('persen_denda_telat') + '%';
+    document.getElementById('pgt-heroCount').textContent = PGT_ORDER.filter(function (k) { return pgtRows[k]; }).length + ' aturan aktif';
+
+    // Perubahan terakhir: pakai updated_at kalau ada, kalau tidak ambil baris mana pun yang punya pengubah
+    var changed = PGT_ORDER.map(function (k) { return pgtRows[k]; }).filter(function (r) { return r && r.users && r.users.nama; });
+    changed.sort(function (a, b) { return String(b.updated_at || '').localeCompare(String(a.updated_at || '')); });
+    var last = changed[0];
+    if (last) {
+      var nama = last.users.nama;
+      document.getElementById('pgt-heroByAv').textContent = nama.trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+      document.getElementById('pgt-heroByName').textContent = nama;
+      var tgl = pgtFormatTgl(last.updated_at);
+      document.getElementById('pgt-heroByMeta').textContent = PGT_META[last.kunci].label + (tgl ? ' · ' + tgl : '');
+    } else {
+      document.getElementById('pgt-heroByAv').textContent = '-';
+      document.getElementById('pgt-heroByName').textContent = 'Belum pernah diubah';
+      document.getElementById('pgt-heroByMeta').textContent = 'Memakai nilai bawaan';
+    }
+
+    var acc = document.getElementById('pgt-heroAccess');
+    acc.className = 'pgb-acc ' + (pgtCanEdit ? 'is-edit' : 'is-view');
+    acc.innerHTML = pgtCanEdit
+      ? '<i class="ph ph-lock-simple-open" aria-hidden="true"></i>Kamu bisa mengubah aturan'
+      : '<i class="ph ph-lock-simple" aria-hidden="true"></i>Hanya bisa melihat';
+
+    var rulesEl = document.getElementById('pgt-heroRules');
+    if (!PGT_REDUCED_MOTION) { rulesEl.classList.remove('pgt-anim'); void rulesEl.offsetWidth; rulesEl.classList.add('pgt-anim'); }
   }
 
   function pgtRenderCard(key, r) {
     var meta = PGT_META[key];
     var val = parseFloat(r.nilai);
-    var displayVal = meta.format(val);
     var isOpen = pgtOpenKey === key;
 
-    var editBtn = pgtCanEdit
-      ? '<button class="pgt-toggle-btn" data-key="' + key + '" style="width:100%; height:28px; margin-top:10px; background:var(--blue); color:#fff; border:none; border-radius:8px; padding:0; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:500; cursor:pointer;">' +
-          (isOpen ? 'Tutup' : 'Edit') +
-        '</button>'
-      : '';
-
     var presetsHtml = meta.presets.map(function (p) {
-      var active = p === val;
-      return '<button class="pgt-preset-btn" data-key="' + key + '" data-val="' + p + '" data-color="' + meta.color + '" style="flex:1; padding:6px 4px; border-radius:8px; border:1.2px solid ' + (active ? meta.color : 'var(--border)') + '; background:' + (active ? meta.color : '#fff') + '; color:' + (active ? '#fff' : 'var(--ink)') + '; font-size:11px; font-weight:500; cursor:pointer;">' + meta.format(p) + '</button>';
+      return '<button type="button" class="pgt-preset-btn' + (p === val ? ' is-on' : '') + '" data-key="' + key + '" data-val="' + p + '">' + meta.format(p) + '</button>';
     }).join('');
 
-    // Edit section SELALU dirender ke DOM (bukan cuma pas isOpen) supaya animasi slide
-    // bisa jalan mulus via transisi max-height, bukan muncul/hilang instan.
-    var editSection =
-      '<div class="pgt-edit-wrap" data-key="' + key + '" style="max-height:' + (isOpen ? '600px' : '0') + '; opacity:' + (isOpen ? '1' : '0') + '; overflow:hidden; transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;">' +
-        '<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border);">' +
-          '<div style="font-size:9.5px; font-weight:500; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em; margin-bottom:6px;">Pilih Preset</div>' +
-          '<div style="display:flex; gap:5px; margin-bottom:10px;">' + presetsHtml + '</div>' +
-          '<div class="field" style="margin-bottom:10px;">' +
-            '<label style="display:block; font-size:10px; font-weight:500; color:var(--ink-soft); margin-bottom:3px;">Nilai Custom (' + meta.unit + ')</label>' +
-            '<input type="number" class="pgt-custom-input" data-key="' + key + '" step="any" value="' + val + '" style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 10px; font-size:11.5px; background:var(--surface); color:var(--ink); box-sizing:border-box; outline:none;">' +
-          '</div>' +
-          '<div id="pgt-alert-' + key + '" class="alert alert-error" hidden style="margin-bottom:10px;"></div>' +
-          '<div style="display:flex; justify-content:flex-end; gap:6px;">' +
-            '<button type="button" class="pgt-cancel-btn" data-key="' + key + '" style="background:var(--surface); border:1px solid var(--border); border-radius:8px; height:28px; padding:0 12px; font-size:11.5px; font-weight:500; color:var(--ink-soft); cursor:pointer; font-family:var(--font);">Batal</button>' +
-            '<button type="button" class="pgt-save-btn" data-key="' + key + '" style="background:var(--blue); border:none; border-radius:8px; height:28px; padding:0 12px; font-size:11.5px; font-weight:500; color:#fff; cursor:pointer; font-family:var(--font);">Simpan</button>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-
-    var detailText = '<div style="margin-top:6px; font-size:11px; color:var(--ink-soft); line-height:1.5;">' + meta.detailText(val) + '</div>';
-
-    var updatedName = r.users && r.users.nama;
-    var updatedLine = updatedName
-      ? '<span style="display:inline-flex; align-items:center; gap:5px; background:rgba(30,142,90,.12); color:var(--green); font-size:9.5px; font-weight:500; padding:2px 8px 2px 6px; border-radius:999px; margin-top:6px;">' +
-          '<span style="width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block;"></span>' +
-          'Terakhir diubah oleh ' + pgtEscape(updatedName) +
-        '</span>'
-      : '';
-
-    return '' +
-      '<div class="card" data-card="' + key + '" style="padding:12px 14px; margin-bottom:10px; border-radius:12px;">' +
-        '<div style="display:flex; gap:10px; min-width:0;">' +
-          '<div style="width:32px; height:32px; border-radius:8px; background:' + meta.color + '; display:flex; align-items:center; justify-content:center; flex:none;">' +
-            '<span style="width:16px; height:16px; display:block;">' + meta.icon + '</span>' +
-          '</div>' +
-          '<div style="min-width:0;">' +
-            '<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
-              '<p class="card-title" style="margin:0; font-size:13px; font-weight:500;">' + pgtEscape(meta.label) + '</p>' +
-              '<span style="background:' + meta.color + '1A; color:' + meta.color + '; font-size:9.5px; font-weight:600; padding:1.5px 7px; border-radius:999px;">' + pgtEscape(displayVal) + '</span>' +
+    // Bagian edit selalu ada di DOM supaya animasi buka/tutup (max-height) mulus
+    var editSection = pgtCanEdit
+      ? '<div class="pgt-edit-wrap" data-key="' + key + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
+          '<div class="pgt-edit-inner">' +
+            '<p class="pgt-edit-l">Pilih cepat</p>' +
+            '<div class="pgt-presets">' + presetsHtml + '</div>' +
+            '<p class="pgt-edit-l">Atau isi nilai sendiri</p>' +
+            '<div class="pgt-input-wrap"><input type="number" class="pgt-custom-input" data-key="' + key + '" step="any" min="0" value="' + val + '" inputmode="decimal"><span>' + meta.unit + '</span></div>' +
+            '<div id="pgt-alert-' + key + '" class="alert alert-error" hidden></div>' +
+            '<div class="pgt-edit-act">' +
+              '<button type="button" class="pgt-cancel-btn" data-key="' + key + '">Batal</button>' +
+              '<button type="button" class="pgt-save-btn" data-key="' + key + '">Simpan</button>' +
             '</div>' +
           '</div>' +
-        '</div>' +
-        '<div style="padding-top:2px;">' + detailText + '<div>' + updatedLine + '</div></div>' +
-        editBtn +
-        editSection +
-      '</div>';
+        '</div>'
+      : '';
+
+    var updatedName = r.users && r.users.nama;
+    var tgl = pgtFormatTgl(r.updated_at);
+    var byLine = updatedName
+      ? 'Diubah oleh <b>' + pgtEscape(updatedName) + '</b>' + (tgl ? ' · ' + tgl : '')
+      : 'Nilai bawaan, belum pernah diubah';
+
+    return '<div class="pgt-card" data-card="' + key + '">' +
+      '<div class="pgc-head">' +
+        '<span class="pgc-ico" style="background:' + meta.bg + '; color:' + meta.fg + ';"><i class="ph ' + meta.icon + '" aria-hidden="true"></i></span>' +
+        '<div class="pgc-who"><h4>' + pgtEscape(meta.label) + '</h4><p>' + pgtEscape(meta.sub) + '</p></div>' +
+        '<span class="pgc-val">' + pgtEscape(meta.format(val)) + '</span>' +
+      '</div>' +
+      '<div class="pgc-desc">' + meta.detailText(val) + '</div>' +
+      '<div class="pgc-foot">' +
+        '<span class="pgc-by" title="' + pgtEscape(updatedName || '') + '">' + byLine + '</span>' +
+        (pgtCanEdit ? '<button type="button" class="pgt-toggle-btn" data-key="' + key + '" aria-expanded="' + isOpen + '"><span>' + (isOpen ? 'Tutup' : 'Ubah') + '</span><svg class="pgt-caret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>' : '') +
+      '</div>' +
+      editSection +
+    '</div>';
   }
 
   function pgtBindCardEvents() {
     document.querySelectorAll('.pgt-toggle-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        pgtToggleCard(btn.dataset.key);
-      });
+      btn.addEventListener('click', function () { pgtToggleCard(btn.dataset.key); });
     });
     document.querySelectorAll('.pgt-preset-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var key = btn.dataset.key;
         var input = document.querySelector('.pgt-custom-input[data-key="' + key + '"]');
         if (input) input.value = btn.dataset.val;
-
-        // Update highlight semua tombol preset di kartu ini secara langsung (tanpa render ulang,
-        // supaya kalau lagi fokus di input custom, keyboard/fokusnya nggak keganggu).
         document.querySelectorAll('.pgt-preset-btn[data-key="' + key + '"]').forEach(function (sibling) {
-          var isThis = sibling === btn;
-          var color = sibling.dataset.color;
-          sibling.style.background = isThis ? color : '#fff';
-          sibling.style.color = isThis ? '#fff' : 'var(--ink)';
-          sibling.style.borderColor = isThis ? color : 'var(--border)';
+          sibling.classList.toggle('is-on', sibling === btn);
+        });
+      });
+    });
+    document.querySelectorAll('.pgt-custom-input').forEach(function (input) {
+      input.addEventListener('input', function () {
+        var v = parseFloat(input.value);
+        document.querySelectorAll('.pgt-preset-btn[data-key="' + input.dataset.key + '"]').forEach(function (b) {
+          b.classList.toggle('is-on', parseFloat(b.dataset.val) === v);
         });
       });
     });
     document.querySelectorAll('.pgt-cancel-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        pgtToggleCard(btn.dataset.key, true);
-      });
+      btn.addEventListener('click', function () { pgtToggleCard(btn.dataset.key, true); });
     });
     document.querySelectorAll('.pgt-save-btn').forEach(function (btn) {
       btn.addEventListener('click', function () { pgtSaveValue(btn.dataset.key); });
     });
   }
 
-  // Buka/tutup kartu dengan animasi slide (max-height) — nggak render ulang seluruh
-  // list, supaya smooth dan nggak ganggu fokus input yang lain.
-  function pgtToggleCard(key, forceClose) {
+  function pgtSetOpen(key, open) {
     var wrap = document.querySelector('.pgt-edit-wrap[data-key="' + key + '"]');
     var btn = document.querySelector('.pgt-toggle-btn[data-key="' + key + '"]');
-    if (!wrap) return;
+    if (wrap) { wrap.style.maxHeight = open ? wrap.scrollHeight + 20 + 'px' : '0px'; wrap.style.opacity = open ? '1' : '0'; }
+    if (btn) { btn.setAttribute('aria-expanded', open); btn.querySelector('span').textContent = open ? 'Tutup' : 'Ubah'; }
+  }
 
+  // Buka/tutup satu kartu tanpa render ulang daftar, supaya fokus input tidak hilang
+  function pgtToggleCard(key, forceClose) {
     var closingThis = forceClose || pgtOpenKey === key;
-
-    // Tutup kartu lain yang mungkin masih terbuka
-    if (pgtOpenKey && pgtOpenKey !== key) {
-      var prevWrap = document.querySelector('.pgt-edit-wrap[data-key="' + pgtOpenKey + '"]');
-      var prevBtn = document.querySelector('.pgt-toggle-btn[data-key="' + pgtOpenKey + '"]');
-      if (prevWrap) { prevWrap.style.maxHeight = '0px'; prevWrap.style.opacity = '0'; }
-      if (prevBtn) prevBtn.textContent = 'Edit';
-    }
-
+    if (pgtOpenKey && pgtOpenKey !== key) pgtSetOpen(pgtOpenKey, false);
     if (closingThis) {
-      wrap.style.maxHeight = '0px';
-      wrap.style.opacity = '0';
-      if (btn) btn.textContent = 'Edit';
+      pgtSetOpen(key, false);
       pgtOpenKey = null;
     } else {
-      wrap.style.maxHeight = '600px';
-      wrap.style.opacity = '1';
-      if (btn) btn.textContent = 'Tutup';
+      pgtSetOpen(key, true);
       pgtOpenKey = key;
+      var input = document.querySelector('.pgt-custom-input[data-key="' + key + '"]');
+      var alertEl = document.getElementById('pgt-alert-' + key);
+      if (alertEl) alertEl.hidden = true;
+      if (input) setTimeout(function () { input.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 320);
     }
   }
 
-  function pgtRerenderList() {
+  function pgtRerenderList(animate) {
     var listEl = document.getElementById('pgt-list');
     var notice = !pgtCanEdit
-      ? '<div class="alert" style="background:var(--surface); color:var(--ink-soft); border:1px solid var(--border); margin-bottom:12px;">Kamu cuma bisa melihat pengaturan ini. Hanya Manajer yang bisa mengubahnya.</div>'
+      ? '<div class="pgt-readonly pgt-full-width"><i class="ph ph-lock-simple" aria-hidden="true"></i>Kamu hanya bisa melihat pengaturan ini. Hanya manajer yang bisa mengubahnya.</div>'
       : '';
-    listEl.innerHTML = notice + PGT_ORDER.map(function (key) {
+    var cards = PGT_ORDER.map(function (key) {
       var r = pgtRows[key];
-      if (!r) return '';
-      return pgtRenderCard(key, r);
+      return r ? pgtRenderCard(key, r) : '';
     }).join('');
+    listEl.innerHTML = notice + (cards || '<div class="pgt-card pgt-full-width" style="text-align:center; color:var(--ink-soft); font-size:11.5px;">Belum ada data pengaturan.</div>');
     pgtBindCardEvents();
+    if (animate && !PGT_REDUCED_MOTION) {
+      listEl.querySelectorAll('.pgt-card').forEach(function (el, i) {
+        el.style.setProperty('--i', i); el.classList.add('pgt-in');
+        setTimeout(function () { el.classList.remove('pgt-in'); }, 900);
+      });
+    }
   }
 
   async function pgtSaveValue(key) {
