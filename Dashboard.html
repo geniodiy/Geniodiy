@@ -101,51 +101,39 @@
     /* ===== Bottom bar (mobile) ===== */
     .dock-wrap{
       position:fixed; z-index:40;
-      left:16px; right:16px; bottom:calc(14px + env(safe-area-inset-bottom));
+      left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom));
       max-width:440px; margin:0 auto;
     }
     .ios-glass-dock{
       position:relative;
       display:flex; align-items:stretch; justify-content:space-between;
-      padding:6px; border-radius:22px;
-      /* Floating minimalis: kaca semi transparan, tab aktif = ikon biru + titik */
-      background:rgba(255,255,255,.82);
-      -webkit-backdrop-filter:blur(18px) saturate(180%); backdrop-filter:blur(18px) saturate(180%);
-      border:1px solid rgba(228,230,239,.9);
-      box-shadow:0 12px 30px -16px rgba(20,22,43,.3), 0 1px 3px rgba(20,22,43,.04);
+      padding:5px; border-radius:18px;
+      background:#fff; border:1px solid var(--border);
+      box-shadow:0 18px 40px -18px rgba(20,22,43,.35), 0 2px 6px rgba(20,22,43,.04);
       touch-action:none; -webkit-user-select:none; user-select:none;
       transition:transform .18s cubic-bezier(.16,1,.3,1);
     }
     .ios-glass-dock.dock-pressed{transform:scale(.985);}
     .dock-glider{
       position:absolute; top:5px; bottom:5px; z-index:1; pointer-events:none;
-      border-radius:14px; background:var(--blue);
-      box-shadow:0 6px 14px -6px rgba(28,26,175,.55);
+      border-radius:13px; background:var(--blue-tint);
       transition:left .32s cubic-bezier(.16,1,.3,1), width .32s cubic-bezier(.16,1,.3,1);
     }
     .dock-btn{
       position:relative; z-index:2; flex:1; min-width:0;
       display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-      height:42px; padding:0; background:none; border:none; border-radius:14px; cursor:pointer;
+      padding:7px 0 6px; background:none; border:none; border-radius:14px; cursor:pointer;
       color:var(--ink-soft); font-family:var(--font);
       transition:color .18s ease, transform .15s ease;
     }
     .dock-btn:active{transform:scale(.94);}
     .dock-btn:focus-visible{outline:2px solid var(--blue); outline-offset:-2px;}
-    .dock-btn.dock-active{color:#fff;}
-    /* Teks saja: ikon disembunyikan, kecuali panah kembali di Lainnya */
-    .dock-btn{flex-direction:row; gap:5px;}
-    .dock-icon > i:not(.icon-back){display:none !important;}
-    /* Badge jadi pill kecil sejajar di kanan label; panah kembali tetap di kiri */
-    .dock-btn .dock-icon{order:3;}
-    #nav-lainnya .dock-icon{order:0;}
-    .dock-btn .dock-badge{position:static !important; margin-left:1px; border-width:1.5px; line-height:13px;}
-    .dock-icon > i.icon-back{font-size:14px;}
+    .dock-btn.dock-active{color:var(--blue);}
     .dock-btn i{font-size:20px; line-height:1; display:block;}
     .dock-btn .hidden, .dock-btn [hidden]{display:none !important;}
     .dock-icon{position:relative; display:flex; align-items:center; justify-content:center;}
-    .dock-label{font-size:12px; font-weight:500; white-space:nowrap; line-height:1.1;}
-    .dock-btn.dock-active .dock-label{font-weight:600;}
+    .dock-label{font-size:10px; font-weight:500; white-space:nowrap; line-height:1.1;}
+    .dock-btn.dock-active .dock-label{font-weight:500;}
 
     .dock-badge{
       position:absolute; top:-5px; right:-9px;
@@ -235,22 +223,22 @@
 
       .genio-header-nav-center{display:flex; align-items:center; justify-content:center; flex:1; min-width:0;}
       #genioHeaderNavCenter .ios-glass-dock{
-        background:transparent; border:none; box-shadow:none;
-        -webkit-backdrop-filter:none; backdrop-filter:none;
-        border-radius:10px; padding:0; gap:4px; transform:none !important;
+        background:var(--surface); border:1px solid var(--border); box-shadow:none;
+        border-radius:10px; padding:3px; gap:2px; transform:none !important;
       }
-      #genioHeaderNavCenter .dock-glider{top:0; bottom:0; border-radius:9px; background:var(--blue); box-shadow:0 4px 10px -5px rgba(28,26,175,.5);}
+      #genioHeaderNavCenter .dock-glider{
+        top:3px; bottom:3px; border-radius:7px; background:#fff;
+        box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border);
+      }
       #genioHeaderNavCenter .dock-btn{
-        flex:none; flex-direction:row; gap:7px;
-        height:34px; padding:0 16px; border-radius:9px;
-        transition:color .18s ease, background .15s ease;
+        flex:none; flex-direction:row; gap:8px;
+        height:30px; padding:0 14px; border-radius:7px;
       }
-      #genioHeaderNavCenter .dock-btn:not(.dock-active):hover{color:var(--ink); background:var(--surface);}
-      #genioHeaderNavCenter .dock-btn.dock-active{color:#fff;}
+      #genioHeaderNavCenter .dock-btn:hover{color:var(--ink);}
+      #genioHeaderNavCenter .dock-btn.dock-active{color:var(--blue);}
       #genioHeaderNavCenter .dock-btn i{font-size:15px;}
       #genioHeaderNavCenter .dock-label{font-size:12px; font-weight:500;}
-      #genioHeaderNavCenter .dock-btn.dock-active .dock-label{font-weight:600;}
-
+      #genioHeaderNavCenter .dock-badge{top:-7px; right:-9px;}
     }
 
     /* ===== Modal Konfirmasi Keluar ===== */
