@@ -85,18 +85,17 @@
   .kuh-tut .bar{grid-column:1/-1; height:4px; border-radius:4px; background:#EEF0F6;}
   .kuh-tut .bar i{display:block; height:100%; border-radius:4px; background:#9DB6FF; transform-origin:left; animation:kuhGrow .7s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 60ms);}
 
-  /* Tren */
-  .kuh-tabs{display:flex; gap:4px; background:var(--surface); border-radius:9px; padding:3px;}
-  .kuh-tabs button{height:26px; padding:0 10px; border:none; background:none; border-radius:7px; font-family:var(--font); font-size:10.5px; font-weight:500; color:var(--ink-soft); cursor:pointer; white-space:nowrap;}
-  .kuh-tabs button.on{background:#fff; color:var(--blue); font-weight:600; box-shadow:0 1px 2px rgba(20,22,43,.08);}
-  .kuh-tabsrow{display:flex; gap:8px; flex-wrap:wrap;}
-  .kuh-chartwrap{position:relative;}
-  .kuh-chart{width:100%; height:190px; display:block; overflow:visible;}
-  .kuh-tip{position:absolute; top:0; pointer-events:none; background:#fff; border:1px solid var(--border); border-radius:10px; padding:7px 10px; font-size:10.5px; box-shadow:0 10px 24px -14px rgba(20,22,43,.35); white-space:nowrap; transform:translateX(-50%); opacity:0; transition:opacity .12s ease;}
-  .kuh-tip b{display:block; font-size:12px; font-weight:700;}
-  .kuh-tip span{color:var(--ink-soft);}
-  .kuh-legend{display:flex; gap:14px; font-size:10px; color:var(--ink-soft); margin-top:8px;}
-  .kuh-legend i{display:inline-block; width:12px; vertical-align:middle; margin-right:5px;}
+  #kuhSesiList{max-height:360px; overflow-y:auto; overscroll-behavior:contain; margin-right:-8px; padding-right:8px; scrollbar-width:thin;}
+  .kuh-grp{font-size:10px; font-weight:600; color:var(--ink-soft); margin:10px 0 2px; padding-top:8px; border-top:1px dashed var(--border);}
+  .kuh-ses .jam.is-flex{font-size:10px; color:var(--ink-soft); font-weight:600;}
+  .kuh-more{width:100%; height:32px; margin-top:10px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--blue); font-family:var(--font); font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;}
+  .kuh-more:hover{background:var(--blue-tint);}
+  /* Tutor: kalau banyak, digulir di dalam kartu dengan judul kolom tetap */
+  .kuh-tut-scroll{max-height:318px; overflow-y:auto; overscroll-behavior:contain; margin-right:-8px; padding-right:8px; scrollbar-width:thin;}
+  .kuh-tut-scroll .kuh-tut.h{position:sticky; top:0; z-index:1; background:#fff; padding-bottom:6px;}
+  .kuh-tut-count{font-size:10px; color:var(--ink-soft); text-align:center; margin-top:8px;}
+  .kuh-trend .ht-chart{height:200px; flex:none;}
+  @media (max-width:899px){ .kuh-trend .ht-chart{height:170px;} }
 
   /* Genio News */
   .kuh-news{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px;}
@@ -169,6 +168,7 @@
       <div class="kuh-card">
         <div class="kuh-sec"><h4>Sesi hari ini</h4><span id="kuhSesiSub">-</span></div>
         <div id="kuhSesiList"><div class="kuh-empty">Memuat jadwal...</div></div>
+        <button type="button" class="kuh-more" id="kuhSesiMore"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Lihat selengkapnya di jadwal mingguan</button>
       </div>
       <div class="kuh-card">
         <div class="kuh-sec"><h4>Tutor di unit ini</h4><span id="kuhTutorSub">-</span></div>
@@ -176,20 +176,38 @@
       </div>
     </div>
 
-    <div class="kuh-card">
-      <div class="kuh-sec">
-        <h4>Tren unit</h4>
-        <div class="kuh-tabsrow">
-          <div class="kuh-tabs" id="kuhTrendMetric"><button type="button" data-v="omset" class="on">Omset</button><button type="button" data-v="laba">Laba</button><button type="button" data-v="sesi">Sesi</button></div>
-          <div class="kuh-tabs" id="kuhTrendRange"><button type="button" data-v="3">3 bln</button><button type="button" data-v="6" class="on">6 bln</button><button type="button" data-v="12">12 bln</button></div>
+    <div class="kuh-card ht-card kuh-trend">
+      <div class="ht-head">
+        <div style="min-width:0;">
+          <div class="kuh-sec" style="margin:0;"><h4>Trend progress unit</h4></div>
+          <div class="ht-sub" id="kuhTrendSub">-</div>
+        </div>
+        <div id="kuhTrendRange" class="ht-range">
+          <div id="kuhTrendGlider" class="ht-range-glider"></div>
+          <button type="button" class="kuh-trend-range" data-range="3">3 bln</button>
+          <button type="button" class="kuh-trend-range" data-range="6">6 bln</button>
+          <button type="button" class="kuh-trend-range" data-range="12">12 bln</button>
         </div>
       </div>
-      <div class="kuh-chartwrap" id="kuhChartWrap">
-        <svg class="kuh-chart" id="kuhChart" viewBox="0 0 900 190" preserveAspectRatio="none" aria-label="Grafik tren unit"></svg>
-        <div class="kuh-tip" id="kuhTip"></div>
+      <div class="ht-tabs" role="tablist">
+        <button type="button" class="kuh-trend-metric ht-tab" data-metric="omset" role="tab">Omset</button>
+        <button type="button" class="kuh-trend-metric ht-tab" data-metric="laba" role="tab">Laba</button>
+        <button type="button" class="kuh-trend-metric ht-tab" data-metric="sesi" role="tab">Sesi</button>
       </div>
-      <div class="kuh-months" id="kuhChartMonths" style="color:var(--ink-soft); padding:0 1%;"></div>
-      <div class="kuh-legend"><span><i style="height:2px; background:var(--blue);"></i>Periode ini</span><span id="kuhGhostLegend"><i style="border-top:2px dashed #B5B8C8;"></i>Periode sebelumnya</span></div>
+      <div class="ht-hero">
+        <span class="ht-num" id="kuhTrendHeroVal">-</span>
+        <span class="ht-delta" id="kuhTrendHeroDelta"></span>
+        <span class="ht-note" id="kuhTrendHeroNote"></span>
+      </div>
+      <div class="ht-legend">
+        <span><i></i>Periode ini</span>
+        <span id="kuhTrendGhostLegend"><i class="is-ghost"></i><span id="kuhTrendGhostLabel">Periode sebelumnya</span></span>
+      </div>
+      <div id="kuhTrendChartWrap" class="ht-chart">
+        <svg id="kuhTrendSvg" viewBox="0 0 340 140" aria-label="Grafik tren unit" role="img"></svg>
+        <div id="kuhTrendTooltip" class="ht-tip"></div>
+      </div>
+      <div class="ht-foot" id="kuhTrendFooter"></div>
     </div>
 
     <div class="kuh-card" id="kuhNewsCard" hidden>
@@ -389,11 +407,13 @@
       // ===== Sesi hari ini =====
       var hariKode = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][today.getDay()];
       var nowMin = today.getHours() * 60 + today.getMinutes();
-      var sesi = [];
+      var sesi = [], fleks = [];
       ktAktif.forEach(function (kt) {
         (kt.jadwal || []).forEach(function (j) {
-          if (String(j.hari || '').toLowerCase().trim() !== hariKode) return;
-          sesi.push({ kt: kt, mulai: String(j.jam_mulai || '').slice(0, 5), selesai: String(j.jam_selesai || '').slice(0, 5) });
+          var h = String(j.hari || '').toLowerCase().trim();
+          var item = { kt: kt, mulai: String(j.jam_mulai || '').slice(0, 5), selesai: String(j.jam_selesai || '').slice(0, 5) };
+          if (h === hariKode) sesi.push(item);
+          else if (!h || h === 'fleksibel') fleks.push(item); // jadwal fleksibel: bisa dilaksanakan kapan saja
         });
       });
       sesi.sort(function (a, b) { return a.mulai < b.mulai ? -1 : 1; });
@@ -426,8 +446,26 @@
           '<span class="av" style="background:' + colorFor(kt.tutor_id) + '">' + genioAvatarInner(user.nama, user.foto_profil_url, genioInitials(user.nama)) + '</span>' +
           '<div class="who"><b>' + esc(user.nama || 'Tutor') + '</b><span>' + esc(siswa) + ' · ' + esc(kt.mapel || 'Bimbel') + '</span></div>' + chip + extra + '</div>';
       }).join('');
-      document.getElementById('kuhSesiList').innerHTML = sesiHtml || '<div class="kuh-empty">Tidak ada sesi terjadwal hari ini.</div>';
-      document.getElementById('kuhSesiSub').textContent = sesi.length ? (sesi.length + ' sesi' + (belumLapor ? ' · ' + belumLapor + ' belum lapor' : '')) : KUH_HARI[today.getDay()];
+      // Jadwal fleksibel: tampil terpisah, status dari presensi hari ini (kalau ada)
+      var fleksHtml = fleks.map(function (x, i) {
+        var kt = x.kt, user = kt.users || {};
+        var lapor = presToday.filter(function (p) { return p.kontrak_tutor_id === kt.id; })[0];
+        var chip = lapor
+          ? (lapor.status === 'pending' ? '<span class="kuh-chip wait">Menunggu verifikasi</span>' : lapor.status === 'ditolak' ? '<span class="kuh-chip no">Ditolak</span>' : '<span class="kuh-chip ok">Sudah lapor</span>')
+          : '<span class="kuh-chip next">Fleksibel</span>';
+        var siswa = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || '-';
+        return '<div class="kuh-ses" style="--i:' + (sesi.length + i) + '"><div class="jam is-flex">' + (x.mulai && x.mulai !== '00:00' ? esc(x.mulai) + '<small>fleksibel</small>' : 'Bebas<small>kapan saja</small>') + '</div>' +
+          '<span class="av" style="background:' + colorFor(kt.tutor_id) + '">' + genioAvatarInner(user.nama, user.foto_profil_url, genioInitials(user.nama)) + '</span>' +
+          '<div class="who"><b>' + esc(user.nama || 'Tutor') + '</b><span>' + esc(siswa) + ' · ' + esc(kt.mapel || 'Bimbel') + '</span></div>' + chip + '</div>';
+      }).join('');
+      document.getElementById('kuhSesiList').innerHTML =
+        (sesiHtml || '<div class="kuh-empty">Tidak ada sesi terjadwal hari ini.</div>') +
+        (fleksHtml ? '<div class="kuh-grp">Jadwal fleksibel</div>' + fleksHtml : '');
+      var subParts = [];
+      if (sesi.length) subParts.push(sesi.length + ' sesi');
+      if (fleks.length) subParts.push(fleks.length + ' fleksibel');
+      if (belumLapor) subParts.push(belumLapor + ' belum lapor');
+      document.getElementById('kuhSesiSub').textContent = subParts.length ? subParts.join(' · ') : KUH_HARI[today.getDay()];
 
       // ===== Tutor di unit ini (bulan terpilih) =====
       var tutors = {};
@@ -440,13 +478,13 @@
       });
       var tList = Object.keys(tutors).map(function (k) { return tutors[k]; }).sort(function (a, b) { return b.sesi - a.sesi || a.nama.localeCompare(b.nama); });
       var maxSesi = Math.max.apply(null, tList.map(function (t) { return t.sesi; }).concat([1]));
-      document.getElementById('kuhTutorSub').textContent = KUH_BULAN[+periode.split('-')[1] - 1];
+      document.getElementById('kuhTutorSub').textContent = KUH_BULAN[+periode.split('-')[1] - 1] + (tList.length ? ' · ' + tList.length + ' tutor' : '');
       document.getElementById('kuhTutorList').innerHTML = tList.length
-        ? '<div class="kuh-tut h"><span>Tutor</span><span>Sesi</span><span>Telat</span><span>Ditolak</span></div>' + tList.map(function (t, i) {
+        ? '<div class="kuh-tut-scroll"><div class="kuh-tut h"><span>Tutor</span><span>Sesi</span><span>Telat</span><span>Ditolak</span></div>' + tList.map(function (t, i) {
             return '<div class="kuh-tut" style="--i:' + i + '"><div class="n"><span class="av" style="background:' + colorFor(t.id) + '">' + genioAvatarInner(t.nama, t.foto, genioInitials(t.nama)) + '</span><b title="' + esc(t.nama) + '">' + esc(t.nama) + '</b></div>' +
               '<span class="v' + (t.sesi ? '' : ' z') + '">' + t.sesi + '</span><span class="v ' + (t.telat ? 'a' : 'z') + '">' + t.telat + '</span><span class="v ' + (t.tolak ? 'r' : 'z') + '">' + t.tolak + '</span>' +
-              '<div class="bar"><i style="--i:' + i + '; width:' + (t.sesi / maxSesi * 100).toFixed(1) + '%"></i></div></div>';
-          }).join('')
+              '<div class="bar"><i style="--i:' + Math.min(i, 8) + '; width:' + (t.sesi / maxSesi * 100).toFixed(1) + '%"></i></div></div>';
+          }).join('') + '</div>' + (tList.length > 6 ? '<div class="kuh-tut-count">' + tList.length + ' tutor · geser di dalam kartu untuk melihat semua</div>' : '')
         : '<div class="kuh-empty">Belum ada presensi bulan ini.</div>';
 
       kuhRenderTrend();
@@ -481,72 +519,134 @@
       document.getElementById('kuhSparkMonths').innerHTML = keys.map(function (k) { return '<span>' + monthShort(k) + '</span>'; }).join('');
     }
 
-    function kuhRenderTrend() {
-      var n = kuhState.range, metric = kuhState.metric;
+    // ===== Trend progress unit: sama persis dengan "Trend progress cabang" manajer, data hanya unit ini =====
+    function trendFmt(metric, v) { return metric === 'sesi' ? Math.round(v) + ' sesi' : 'Rp ' + Math.round(v || 0).toLocaleString('id-ID'); }
+    function trendFmtShort(metric, v) { return metric === 'sesi' ? Math.round(v) + ' sesi' : rpShort(v); }
+    function pctText(cur, prev) {
+      if (!prev) return null;
+      var pct = ((cur - prev) / Math.abs(prev)) * 100;
+      return { text: (pct >= 0 ? '+' : '') + pct.toFixed(1).replace('.', ',') + '%', up: pct >= 0 };
+    }
+    function periodeLabel(key) { return KUH_BULAN[+key.split('-')[1] - 1] + ' ' + key.split('-')[0]; }
+
+    function kuhRenderTrend(animate) {
       var all = kuhState.months;
       if (!all.length) return;
+      if (animate === undefined) animate = true;
+      var metric = kuhState.metric, n = Math.min(kuhState.range, 12);
       var curM = all.slice(-n), prevM = all.slice(-2 * n, -n);
-      var val = function (m) { return m[metric] || 0; };
-      var vals = curM.map(val), pvals = prevM.map(val);
-      var hasGhost = pvals.some(function (v) { return v !== 0; });
-      var allv = vals.concat(hasGhost ? pvals : []);
-      var mx = Math.max.apply(null, allv.concat([0])), mn = Math.min.apply(null, allv.concat([0]));
-      if (mx === mn) mx = mn + 1;
-      var W = 900, H = 190, px = 24, top = 16, bottom = 16;
-      var X = function (i) { return px + (n === 1 ? (W - 2 * px) / 2 : i * (W - 2 * px) / (n - 1)); };
-      var Y = function (v) { return top + (1 - (v - mn) / (mx - mn)) * (H - top - bottom); };
-      var pts = vals.map(function (v, i) { return [X(i), Y(v)]; });
-      var gpts = pvals.map(function (v, i) { return [X(i), Y(v)]; });
-      var grid = [0, 1, 2, 3].map(function (g) { var y = top + g * (H - top - bottom) / 3; return '<line x1="' + px + '" x2="' + (W - px) + '" y1="' + y + '" y2="' + y + '" stroke="#EEF0F6" vector-effect="non-scaling-stroke"/>'; }).join('');
-      var zero = mn < 0 ? '<line x1="' + px + '" x2="' + (W - px) + '" y1="' + Y(0) + '" y2="' + Y(0) + '" stroke="#DADDE8" vector-effect="non-scaling-stroke"/>' : '';
-      var svg = grid + zero +
-        (hasGhost ? '<path d="' + monoPath(gpts) + '" fill="none" stroke="#B5B8C8" stroke-width="1.5" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>' : '') +
-        '<clipPath id="kuhChartClip"><rect class="kuh-reveal" x="0" y="-10" width="' + W + '" height="' + (H + 20) + '"/></clipPath>' +
-        '<g clip-path="url(#kuhChartClip)"><path d="' + monoPath(pts) + '" fill="none" stroke="#1C1AAF" stroke-width="2.4" vector-effect="non-scaling-stroke"/></g>' +
-        '<line id="kuhCross" x1="0" x2="0" y1="' + top + '" y2="' + (H - bottom) + '" stroke="#C9CCDA" stroke-dasharray="3 3" vector-effect="non-scaling-stroke" style="opacity:0"/>' +
-        '<circle id="kuhDot" r="4" fill="#fff" stroke="#1C1AAF" stroke-width="2" vector-effect="non-scaling-stroke" style="opacity:0"/>';
-      var svgEl = document.getElementById('kuhChart');
-      svgEl.innerHTML = svg;
-      document.getElementById('kuhGhostLegend').style.display = hasGhost ? '' : 'none';
-      document.getElementById('kuhChartMonths').innerHTML = curM.map(function (m) { return '<span>' + monthShort(m.key) + '</span>'; }).join('');
+      var vals = curM.map(function (m) { return m[metric] || 0; });
+      var periods = curM.map(function (m) { return m.key; });
+      var prev = prevM.length === n && prevM.some(function (m) { return (m[metric] || 0) !== 0; }) ? prevM.map(function (m) { return m[metric] || 0; }) : null;
+      var li = n - 1;
 
-      // Crosshair + tooltip
-      var wrapEl = document.getElementById('kuhChartWrap'), tip = document.getElementById('kuhTip');
-      var fmt = function (v) { return metric === 'sesi' ? v + ' sesi' : rpShort(v); };
-      function show(clientX) {
-        var r = svgEl.getBoundingClientRect();
-        var xv = (clientX - r.left) / r.width * W;
-        var idx = Math.max(0, Math.min(n - 1, Math.round((xv - px) / ((W - 2 * px) / Math.max(1, n - 1)))));
-        var cx = X(idx), cy = Y(vals[idx]);
-        var cross = document.getElementById('kuhCross'), dot = document.getElementById('kuhDot');
-        cross.setAttribute('x1', cx); cross.setAttribute('x2', cx); cross.style.opacity = 1;
-        dot.setAttribute('cx', cx); dot.setAttribute('cy', cy); dot.style.opacity = 1;
-        var m = curM[idx];
-        tip.innerHTML = '<span>' + KUH_BULAN[+m.key.split('-')[1] - 1] + ' ' + m.key.split('-')[0] + '</span><b>' + fmt(vals[idx]) + '</b>' + (hasGhost ? '<span>Sebelumnya ' + fmt(pvals[idx] || 0) + '</span>' : '');
-        var left = cx / W * r.width;
-        tip.style.left = Math.max(60, Math.min(r.width - 60, left)) + 'px';
-        tip.style.opacity = 1;
-      }
-      function hide() {
-        tip.style.opacity = 0;
-        var cross = document.getElementById('kuhCross'), dot = document.getElementById('kuhDot');
-        if (cross) cross.style.opacity = 0; if (dot) dot.style.opacity = 0;
-      }
-      wrapEl.onpointermove = function (e) { show(e.clientX); };
-      wrapEl.onpointerdown = function (e) { show(e.clientX); };
-      wrapEl.onpointerleave = hide;
-    }
-
-    function bindTabs(id, key, parse) {
-      document.getElementById(id).addEventListener('click', function (e) {
-        var b = e.target.closest('button'); if (!b) return;
-        this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
-        kuhState[key] = parse(b.dataset.v);
-        kuhRenderTrend();
+      document.querySelectorAll('.kuh-trend-metric').forEach(function (b) {
+        var on = b.dataset.metric === metric;
+        b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
       });
+      document.querySelectorAll('.kuh-trend-range').forEach(function (b) {
+        var on = +b.dataset.range === n;
+        b.style.color = on ? 'var(--ink)' : 'var(--ink-soft)'; b.style.fontWeight = on ? '600' : '500';
+      });
+      var glider = document.getElementById('kuhTrendGlider'), rb = document.querySelector('.kuh-trend-range[data-range="' + n + '"]');
+      if (glider && rb && rb.offsetWidth) { glider.style.width = rb.offsetWidth + 'px'; glider.style.left = rb.offsetLeft + 'px'; }
+
+      document.getElementById('kuhTrendSub').textContent = monthShort(periods[0]) + ' ' + periods[0].slice(0, 4) + ' - ' + monthShort(periods[li]) + ' ' + periods[li].slice(0, 4);
+      var heroEl = document.getElementById('kuhTrendHeroVal');
+      if (animate) reveal(heroEl, trendFmt(metric, vals[li])); else heroEl.textContent = trendFmt(metric, vals[li]);
+      var mom = n > 1 ? pctText(vals[li], vals[li - 1]) : null;
+      var deltaEl = document.getElementById('kuhTrendHeroDelta');
+      deltaEl.textContent = mom ? mom.text : '';
+      deltaEl.className = 'ht-delta' + (mom ? (mom.up ? ' is-up' : ' is-down') : '');
+      document.getElementById('kuhTrendHeroNote').textContent = mom ? 'vs ' + KUH_BULAN[+periods[li - 1].split('-')[1] - 1] : '';
+      document.getElementById('kuhTrendGhostLegend').style.display = prev ? '' : 'none';
+      document.getElementById('kuhTrendGhostLabel').textContent = n + ' bulan sebelumnya';
+
+      var wrap = document.getElementById('kuhTrendChartWrap'), svg = document.getElementById('kuhTrendSvg');
+      var W = wrap.clientWidth || 340, H = wrap.clientHeight || 140;
+      var pl = 4, pr = 4, pt = 12, pb = 20;
+      var allv = vals.concat(prev || []);
+      var maxV = Math.max.apply(null, allv), minV = Math.min(0, Math.min.apply(null, allv));
+      if (maxV === minV) maxV = minV + 1;
+      maxV = maxV + (maxV - minV) * 0.08;
+      var x = function (i) { return n > 1 ? pl + i * (W - pl - pr) / (n - 1) : W / 2; };
+      var y = function (v) { return pt + (1 - (v - minV) / (maxV - minV)) * (H - pt - pb); };
+      var P = vals.map(function (v, i) { return [x(i), y(v)]; });
+      var line = monoPath(P), base = H - pb, labelEvery = n > 6 ? 2 : 1;
+      var grid = [0.33, 0.66, 1].map(function (f) { var gy = pt + (1 - f) * (H - pt - pb); return '<line x1="0" x2="' + W + '" y1="' + gy.toFixed(1) + '" y2="' + gy.toFixed(1) + '" stroke="#EEF0F6"/>'; }).join('');
+      var labels = periods.map(function (p, i) {
+        if (i !== li && i % labelEvery) return '';
+        var anchor = i === 0 ? 'start' : (i === li ? 'end' : 'middle');
+        return '<text class="ht-axis" x="' + x(i).toFixed(1) + '" y="' + (H - 4) + '" text-anchor="' + anchor + '"' + (i === li ? ' style="font-weight:600; fill:#14162B;"' : '') + '>' + monthShort(p) + '</text>';
+      }).join('');
+      var ghost = prev ? '<path d="' + monoPath(prev.map(function (v, i) { return [x(i), y(v)]; })) + '" fill="none" stroke="#B9BDD6" stroke-width="1.5" stroke-dasharray="4 4"/>' : '';
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      svg.innerHTML =
+        '<defs><linearGradient id="kuhTrendFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1C1AAF" stop-opacity=".2"/><stop offset="1" stop-color="#1C1AAF" stop-opacity="0"/></linearGradient>' +
+        '<linearGradient id="kuhTrendStroke" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#6E7BF2"/><stop offset="1" stop-color="#1C1AAF"/></linearGradient></defs>' +
+        grid + '<line x1="0" x2="' + W + '" y1="' + base + '" y2="' + base + '" stroke="#E3E5F0"/>' + ghost +
+        '<path class="ht-area' + (animate ? ' is-anim' : '') + '" d="' + line + ' L' + x(li).toFixed(1) + ',' + base + ' L' + x(0).toFixed(1) + ',' + base + ' Z" fill="url(#kuhTrendFill)"/>' +
+        '<path id="kuhTrendLine" d="' + line + '" fill="none" stroke="url(#kuhTrendStroke)" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<line id="kuhTrendCross" x1="0" x2="0" y1="' + pt + '" y2="' + base + '" stroke="#1C1AAF" stroke-opacity=".3" stroke-dasharray="3 3" style="display:none;"/>' +
+        '<circle class="ht-pulse" cx="' + P[li][0].toFixed(1) + '" cy="' + P[li][1].toFixed(1) + '" r="4" fill="#1C1AAF"/>' +
+        '<circle cx="' + P[li][0].toFixed(1) + '" cy="' + P[li][1].toFixed(1) + '" r="4" fill="#1C1AAF" stroke="#fff" stroke-width="2"/>' +
+        '<circle id="kuhTrendHoverDot" r="4.5" fill="#1C1AAF" stroke="#fff" stroke-width="2" style="display:none;"/>' + labels;
+
+      var lineEl = document.getElementById('kuhTrendLine');
+      if (animate && !KUH_REDUCED && lineEl.getTotalLength) {
+        var len = lineEl.getTotalLength();
+        lineEl.style.strokeDasharray = len; lineEl.style.strokeDashoffset = len;
+        lineEl.getBoundingClientRect();
+        lineEl.style.transition = 'stroke-dashoffset .9s cubic-bezier(.16,1,.3,1)';
+        lineEl.style.strokeDashoffset = '0';
+      }
+
+      var tip = document.getElementById('kuhTrendTooltip'), cross = document.getElementById('kuhTrendCross'), hdot = document.getElementById('kuhTrendHoverDot');
+      function show(i) {
+        cross.setAttribute('x1', P[i][0]); cross.setAttribute('x2', P[i][0]); cross.style.display = '';
+        hdot.setAttribute('cx', P[i][0]); hdot.setAttribute('cy', P[i][1]); hdot.style.display = '';
+        var ch = i ? pctText(vals[i], vals[i - 1]) : null;
+        tip.innerHTML = periodeLabel(periods[i]) + '<br><b>' + trendFmt(metric, vals[i]) + '</b>' +
+          (ch ? ' <span class="' + (ch.up ? 'is-up' : 'is-down') + '">' + ch.text + '</span>' : '') +
+          (prev ? '<br><span class="is-soft">Periode lalu ' + trendFmtShort(metric, prev[i]) + '</span>' : '');
+        tip.style.display = 'block';
+        var tw = tip.offsetWidth, th = tip.offsetHeight;
+        tip.style.left = Math.max(0, Math.min(W - tw, P[i][0] - tw / 2)) + 'px';
+        tip.style.top = Math.max(-th, P[i][1] - th - 12) + 'px';
+      }
+      function hide() { tip.style.display = 'none'; cross.style.display = 'none'; hdot.style.display = 'none'; }
+      svg.onpointermove = function (e) {
+        var r = svg.getBoundingClientRect(), step = n > 1 ? (W - pl - pr) / (n - 1) : 1;
+        show(Math.max(0, Math.min(li, Math.round((e.clientX - r.left - pl) / step))));
+      };
+      svg.onpointerleave = hide;
+      hide();
+
+      var sum = vals.reduce(function (a, v) { return a + v; }, 0);
+      var maxIdx = vals.indexOf(Math.max.apply(null, vals)), third;
+      if (prev) {
+        var cmp = pctText(sum, prev.reduce(function (a, v) { return a + v; }, 0));
+        third = '<div><div class="l">vs periode lalu</div><div class="v' + (cmp ? (cmp.up ? ' is-up' : ' is-down') : '') + '">' + (cmp ? cmp.text : '-') + '</div></div>';
+      } else {
+        third = '<div><div class="l">Total ' + n + ' bulan</div><div class="v">' + trendFmtShort(metric, sum) + '</div></div>';
+      }
+      document.getElementById('kuhTrendFooter').innerHTML =
+        '<div><div class="l">Rata-rata / bulan</div><div class="v">' + trendFmtShort(metric, sum / n) + '</div></div>' +
+        '<div><div class="l">Tertinggi</div><div class="v">' + trendFmtShort(metric, vals[maxIdx]) + ' <span style="font-weight:500; color:var(--ink-soft);">' + monthShort(periods[maxIdx]) + '</span></div></div>' + third;
     }
-    bindTabs('kuhTrendMetric', 'metric', function (v) { return v; });
-    bindTabs('kuhTrendRange', 'range', function (v) { return parseInt(v, 10); });
+
+    document.querySelectorAll('.kuh-trend-metric').forEach(function (b) {
+      b.addEventListener('click', function () { kuhState.metric = b.dataset.metric; kuhRenderTrend(); });
+    });
+    document.querySelectorAll('.kuh-trend-range').forEach(function (b) {
+      b.addEventListener('click', function () { kuhState.range = parseInt(b.dataset.range, 10); kuhRenderTrend(); });
+    });
+    var kuhResizeT;
+    window.addEventListener('resize', function () {
+      clearTimeout(kuhResizeT);
+      kuhResizeT = setTimeout(function () { if (genioIsModuleVisible('home-unit')) kuhRenderTrend(false); }, 150);
+    });
+    document.getElementById('kuhSesiMore').addEventListener('click', function () { goto('jadwal'); });
     document.getElementById('kuhActs').addEventListener('click', function (e) {
       var b = e.target.closest('.kuh-act'); if (b) goto(b.dataset.goto);
     });
