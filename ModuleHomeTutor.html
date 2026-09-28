@@ -29,6 +29,14 @@
   .hmt-sum{display:flex; gap:18px; flex-wrap:wrap; margin-top:2px;}
   .hmt-sum div{font-size:10.5px; color:var(--ink-soft);} .hmt-sum b{display:block; font-size:18px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums;}
   .hmt-help{display:flex; flex-direction:column; gap:3px; min-width:0;}
+  /* Kartu ringkasan: gradasi biru muda, bantuan jadwal di pita hijau bawah */
+  #hmtWrap .kuh-wcard{background:linear-gradient(160deg,#FFFFFF 0%,#EEF1FF 100%); overflow:hidden; padding-bottom:0; justify-content:flex-start;}
+  #hmtWrap .kuh-wcard > .r:first-child{margin-top:auto;}
+  #hmtWrap .kuh-wcard .ic{background:#fff; color:var(--blue); box-shadow:0 0 0 1px #DCE1FA;}
+  #hmtWrap .kuh-wcard .r:nth-child(3) .ic{color:#D4070F; box-shadow:0 0 0 1px #F6D3D3;}
+  #hmtWrap .kuh-wcard hr{display:none;}
+  #hmtWrap .hmt-help{margin:auto -16px 0; padding:12px 16px 14px; background:linear-gradient(135deg,#E6F7EE,#D9F3E6); border-top:1px solid #CBEBDA;}
+  #hmtWrap .hmt-help b{color:#136B3F;}
   .hmt-help b{font-size:11.5px; font-weight:600; color:var(--ink);}
   .kuh-wcard .hmt-help small{white-space:normal; line-height:1.45;}
   .hmt-wa{display:inline-flex; align-items:center; justify-content:center; gap:6px; height:32px; margin-top:6px; padding:0 12px; border-radius:9px; background:#1FA855; color:#fff; font-size:11px; font-weight:600; text-decoration:none; min-width:0; transition:filter .15s ease;}
@@ -236,7 +244,7 @@
     hmtRenderSpark(per);
     document.getElementById('hmtSesi').textContent = t.sesi + ' sesi';
     document.getElementById('hmtVisit').textContent = t.visit + ' sesi';
-    document.getElementById('hmtDenda').textContent = t.denda ? '−' + rp(t.denda) : rp(0);
+    document.getElementById('hmtDenda').textContent = rp(t.denda);
     hmtRenderHelp();
 
     // Kartu perlu tindakan

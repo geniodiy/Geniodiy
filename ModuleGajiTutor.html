@@ -47,6 +47,24 @@
   .gt-info p{margin:0; font-size:10.5px; line-height:1.45; color:var(--ink-soft); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
   .gt-info p.is-ok{color:#1E8E5A;} .gt-info p.is-wait{color:#B86E00;}
   .gt-card .pc2-foot{min-height:58px;}
+  .gt-grid.is-rincian{align-items:start;}
+  .gt-more{margin-top:12px; border-top:1px solid var(--border); padding-top:10px; display:none;}
+  .gt-card.is-open .gt-more{display:block; animation:gtRowIn .25s ease both;}
+  .gt-line{display:flex; align-items:flex-start; gap:10px; padding:8px 0; min-width:0;}
+  .gt-line + .gt-line{border-top:1px dashed #E6E8F0;}
+  .gt-line-t{flex:1; min-width:0;}
+  .gt-line-t b{display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:var(--ink); min-width:0;}
+  .gt-line-t b span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;}
+  .gt-tag{flex:none; font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px; background:#E9F7EF; color:#1E8E5A;}
+  .gt-tag.is-visit{background:#EAF0FF; color:#2B59D9;}
+  .gt-line-t small{display:block; font-size:10px; color:var(--ink-soft); line-height:1.5; margin-top:2px;}
+  .gt-line-t small.is-late{color:#B86E00;}
+  .gt-line-r{flex:none; text-align:right;}
+  .gt-line-r b{display:block; font-size:11.5px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums;}
+  .gt-line-r small{display:block; font-size:10px; color:var(--ink-soft);}
+  .gt-btn .gt-chev{transition:transform .2s ease;}
+  .gt-card.is-open .gt-btn .gt-chev{transform:rotate(180deg);}
+  @media (prefers-reduced-motion: reduce){ .gt-btn .gt-chev{transition:none;} .gt-card.is-open .gt-more{animation:none;} }
   .gt-foot-r{font-size:10px; color:var(--ink-soft); text-align:right; line-height:1.45; min-width:0;}
   .gt-foot-r .is-minus{color:#D4070F;}
   .gt-act{margin-top:auto; padding-top:12px;}
@@ -172,11 +190,11 @@
   var GT_HARI_S = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
   var GT_REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var GT_PRES_SELECT = 'id,kontrak_tutor_id,tanggal,jam,status,nominal_dibayar,denda,terlambat,materi_teks,' +
-    'kontrak_tutor(id,mapel,fee_mengajar,uang_transport,durasi_menit,units(nama_unit),kontrak_siswa(siswa(nama,jenjang)))';
+    'kontrak_tutor(id,mapel,fee_mengajar,uang_transport,durasi_menit,units(nama_unit),kontrak_siswa(siswa(id,nama,jenjang)))';
   var gt = {
     tab: 'rincian', q: '',
     view: genioViewPref('gt_view', 'card'),
-    slips: [], presensi: [], profile: null, loaded: false, loading: false
+    slips: [], presensi: [], profile: null, loaded: false, loading: false, open: {}
   };
 
   function esc(s) { return genioEscapeHtml(s == null ? '' : String(s)); }
@@ -265,15 +283,18 @@
         list.className = rs.length ? '' : 'gt-grid';
         list.innerHTML = rs.length ? gtRincianTable(rs) : gtEmpty('rincian');
       } else {
-        var gs = groups.filter(function (g) { return !q || (g.nama + ' ' + g.k.mapel).toLowerCase().indexOf(q) !== -1; });
-        list.className = 'gt-grid';
+        var gs = groups.filter(function (g) { return !q || (g.nama + ' ' + g.mapelText).toLowerCase().indexOf(q) !== -1; });
+        list.className = 'gt-grid is-rincian';
         list.innerHTML = gs.length ? gs.map(gtGroupCard).join('') : gtEmpty('rincian');
-        list.querySelectorAll('[data-lihat]').forEach(function (b) {
+        // Buka atau tutup detail per anak tanpa mengubah kartu lain
+        list.querySelectorAll('[data-open]').forEach(function (b) {
           b.addEventListener('click', function () {
-            var g = gs[+b.dataset.lihat]; if (!g) return;
-            gt.view = 'table'; gt.q = g.nama.toLowerCase();
-            document.getElementById('gt-search').value = g.nama;
-            gtRerender();
+            var card = b.closest('.gt-card'), key = b.dataset.open;
+            var on = !card.classList.contains('is-open');
+            card.classList.toggle('is-open', on);
+            b.setAttribute('aria-expanded', on);
+            b.querySelector('.gt-bl').textContent = on ? 'Tutup detail' : 'Lihat detail';
+            if (on) gt.open[key] = true; else delete gt.open[key];
           });
         });
       }
@@ -333,30 +354,58 @@
     btn.querySelector('span').textContent = slip ? 'Lihat slip gaji' : 'Lihat estimasi slip';
   }
 
+  // Satu kartu per anak. Di dalamnya sesi dikelompokkan per mapel dan jenis (reguler atau visit)
   function gtGroups(rows) {
     var map = {}, out = [];
     rows.forEach(function (p) {
-      var k = p.kontrak_tutor || {}, id = k.id || p.kontrak_tutor_id;
-      if (!map[id]) { map[id] = { k: k, nama: ktSiswa(k).nama || '-', rows: [] }; out.push(map[id]); }
-      map[id].rows.push(p);
+      var k = p.kontrak_tutor || {}, sw = ktSiswa(k);
+      var key = sw.id || sw.nama || k.id || p.kontrak_tutor_id;
+      if (!map[key]) { map[key] = { key: String(key), k: k, nama: sw.nama || '-', jenjang: sw.jenjang || '', rows: [], lines: [], lmap: {}, units: {} }; out.push(map[key]); }
+      var g = map[key];
+      g.rows.push(p);
+      g.units[ktUnit(k)] = 1;
+      var jenis = p.status === 'visit' ? 'visit' : 'reguler';
+      var lk = (k.mapel || '-') + '|' + jenis;
+      if (!g.lmap[lk]) { g.lmap[lk] = { mapel: k.mapel || '-', jenis: jenis, rows: [] }; g.lines.push(g.lmap[lk]); }
+      g.lmap[lk].rows.push(p);
     });
-    out.forEach(function (g) { g.t = sum(g.rows); });
+    out.forEach(function (g) {
+      g.t = sum(g.rows);
+      g.lines.forEach(function (l) { l.t = sum(l.rows); l.rows.sort(function (a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); }); });
+      g.lines.sort(function (a, b) { return a.mapel.localeCompare(b.mapel) || (a.jenis === 'visit') - (b.jenis === 'visit'); });
+      var mapels = []; g.lines.forEach(function (l) { if (mapels.indexOf(l.mapel) === -1) mapels.push(l.mapel); });
+      g.mapelText = mapels.join(', ');
+      g.unitText = Object.keys(g.units).join(', ');
+    });
     return out.sort(function (a, b) { return b.t.dibayar - a.t.dibayar; });
   }
-  function gtGroupCard(g, idx) {
-    var k = g.k, sw = ktSiswa(k), t = g.t, dibayarSesi = t.sesi - t.nVisit;
-    var info = t.denda ? '<p class="is-wait">' + g.rows.filter(function (p) { return +p.denda; }).length + ' laporan terlambat, denda &minus;' + rp(t.denda) + '.</p>'
+  function gtLine(l) {
+    var t = l.t;
+    var tgl = l.rows.map(function (p) { var d = parseIso(p.tanggal); return d.getDate() + ' ' + GT_BLN[d.getMonth()]; }).join(', ');
+    var late = l.rows.filter(function (p) { return +p.denda; }).length;
+    var rinci = l.jenis === 'visit' ? 'Visit ' + rp(t.visit) : 'Mengajar ' + rp(t.mengajar) + (t.transport ? ' · Transport ' + rp(t.transport) : '');
+    return '<div class="gt-line"><div class="gt-line-t"><b><span>' + esc(l.mapel) + '</span><em class="gt-tag' + (l.jenis === 'visit' ? ' is-visit' : '') + '" style="font-style:normal;">' + (l.jenis === 'visit' ? 'Visit' : 'Reguler') + '</em></b>' +
+      '<small>' + esc(rinci) + '</small><small>Tanggal ' + esc(tgl) + '</small>' +
+      (late ? '<small class="is-late">' + late + ' laporan terlambat, denda ' + rp(t.denda) + '</small>' : '') + '</div>' +
+      '<div class="gt-line-r"><b>' + rp(t.dibayar) + '</b><small>' + t.sesi + ' sesi</small></div></div>';
+  }
+  function gtGroupCard(g) {
+    var t = g.t, dibayarSesi = t.sesi - t.nVisit, open = !!gt.open[g.key];
+    var nMapel = g.mapelText.split(', ').length;
+    var sub = (nMapel > 1 ? nMapel + ' mapel: ' + g.mapelText : g.mapelText + (g.jenjang ? ' ' + g.jenjang : '')) + ' · Unit ' + g.unitText;
+    var info = t.denda ? '<p class="is-wait">' + g.rows.filter(function (p) { return +p.denda; }).length + ' laporan terlambat, denda ' + rp(t.denda) + '.</p>'
       : '<p class="is-ok">Semua laporan tepat waktu, tanpa denda.</p>';
-    return '<div class="ps-card pc2-card gt-card">' +
+    return '<div class="ps-card pc2-card gt-card' + (open ? ' is-open' : '') + '">' +
       '<div class="pc2-head"><span class="gt-av">' + genioAvatarInner(g.nama, null, genioInitials(g.nama)) + '</span>' +
-        '<div class="pc2-who"><h4>' + esc(g.nama) + '</h4><p>' + esc((k.mapel || '-') + (sw.jenjang ? ' ' + sw.jenjang : '') + ' · Unit ' + ktUnit(k)) + '</p></div></div>' +
+        '<div class="pc2-who"><h4>' + esc(g.nama) + '</h4><p title="' + esc(sub) + '">' + esc(sub) + '</p></div></div>' +
       '<div class="pc2-chips gt-chips">' + (dibayarSesi ? '<span class="pc2-chip"><i class="ph ph-check-circle" aria-hidden="true"></i>' + dibayarSesi + ' sesi</span>' : '') +
         (t.nVisit ? '<span class="pc2-chip is-visit"><i class="ph ph-arrow-right" aria-hidden="true"></i>' + t.nVisit + ' visit</span>' : '') +
-        '<span class="pc2-chip"><i class="ph ph-clock" aria-hidden="true"></i>' + (Math.round(t.menit / 6) / 10) + ' jam</span></div>' +
+        '<span class="pc2-chip"><i class="ph ph-clock" aria-hidden="true"></i>' + String(Math.round(t.menit / 6) / 10).replace('.', ',') + ' jam</span></div>' +
       '<div class="gt-info">' + info + '</div>' +
       '<div class="pc2-foot"><div class="pc2-honor"><span>Total dibayar</span><b>' + rp(t.dibayar) + '</b></div>' +
         '<div class="gt-foot-r">' + [t.mengajar ? 'Mengajar ' + rp(t.mengajar) : '', t.transport ? 'Transport ' + rp(t.transport) : '', t.visit ? 'Visit ' + rp(t.visit) : ''].filter(Boolean).join('<br>') + '</div></div>' +
-      '<div class="gt-act"><button type="button" class="pc2-btn is-visit gt-btn" data-lihat="' + idx + '"><i class="ph ph-list-bullets" aria-hidden="true"></i>Lihat sesi</button></div>' +
+      '<div class="gt-more">' + g.lines.map(gtLine).join('') + '</div>' +
+      '<div class="gt-act"><button type="button" class="pc2-btn is-visit gt-btn" data-open="' + esc(g.key) + '" aria-expanded="' + open + '"><span class="gt-bl">' + (open ? 'Tutup detail' : 'Lihat detail') + '</span><i class="ph ph-caret-down gt-chev" aria-hidden="true"></i></button></div>' +
     '</div>';
   }
   function gtRincianTable(rs) {

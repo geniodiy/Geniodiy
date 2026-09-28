@@ -876,7 +876,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
   - Nominal yang masih menunggu approval.
   - Garis gaji 6 bulan dengan kurva monoton.
   - Tombol **Isi presensi**.
-  - Kartu putih: pertemuan, visit, denda telat, lalu bantuan "Jadwal untuk isi presensi belum muncul?" dengan tombol WhatsApp ke kepala unit (pesan siap kirim). Kontak diambil dari RPC `tutor_kontak_bantuan()` (`supabase/migrations/20260928_tutor_kontak_bantuan.sql`): kepala unit dari unit kontrak aktif tutor, atau manajer kalau belum ada kontrak. Lebih dari satu unit: popup pilih kepala unit. Sapaan di tombol, popup, dan pesan WhatsApp dari jenis kelamin: Mr. (L), Ms. (P), Kak kalau kosong. RPC belum ada atau nomor kosong: WhatsApp dibuka dengan pesan saja.
+  - Kartu ringkasan bergradasi biru muda (opsi B): pertemuan, visit, denda telat (tanpa tanda minus), lalu pita hijau muda berisi bantuan "Jadwal untuk isi presensi belum muncul?" dengan tombol WhatsApp ke kepala unit (pesan siap kirim). Kontak diambil dari RPC `tutor_kontak_bantuan()` (`supabase/migrations/20260928_tutor_kontak_bantuan.sql`): kepala unit dari unit kontrak aktif tutor, atau manajer kalau belum ada kontrak. Lebih dari satu unit: popup pilih kepala unit. Sapaan di tombol, popup, dan pesan WhatsApp dari jenis kelamin: Mr. (L), Ms. (P), Kak kalau kosong. RPC belum ada atau nomor kosong: WhatsApp dibuka dengan pesan saja.
 - **Perlu tindakan:** perlu revisi, jadwal hari ini, menunggu diperiksa, slip belum dibayar. Kartu membuka Presensi dengan filter yang sesuai, atau tab Riwayat slip di Gaji.
 - **Sesi hari ini:** laporan yang harus direvisi, jadwal hari ini yang belum dilapor, dan sesi fleksibel minggu ini. Tombol Revisi dan Isi presensi (juga di highlight) membuka form di atas Beranda tanpa pindah tab (`window.genioPresensiTutor.open`); popup Presensi tutor dipindah ke `body`. Setelah terkirim, Beranda dimuat ulang (event `genio:presensi-tutor`).
 - **Tab bar tutor** (Presensi: Sesi dan laporan / Jadwal lengkap dan filter Perlu tindakan / Menunggu / Selesai; Gaji: Rincian / Riwayat slip; Beranda: Pertemuan / Gaji) bisa ditahan lalu digeser (`genioBindScrub` di Config). Ganti tab, filter, atau tampilan tidak melompat ke atas (`genioKeepScroll`).
@@ -897,7 +897,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
   - Panel samping: mengajar, transport, visit, denda telat, dan rekening.
   - Tombol **Lihat slip gaji**. Kalau slip belum dibuat, tombolnya jadi **Lihat estimasi slip**.
 - **Tab Rincian bulan ini:**
-  - Kartu per siswa: jumlah sesi, visit, jam, denda, dan total dibayar. Tombol "Lihat sesi" membuka tabel yang sudah difilter ke siswa itu.
+  - Kartu per siswa: jumlah sesi, visit, jam, denda, dan total dibayar. Tombol "Lihat detail" membuka rincian di dalam kartu itu saja (kartu lain tetap tampil): sesi dikelompokkan per mapel dan jenis (reguler atau visit), mapel yang sama ditulis sekali dengan jumlah sesi, subtotal, tanggal, dan denda.
   - Tabel per sesi: mengajar, transport, denda, dan dibayar, dengan baris total.
 - **Tab Riwayat slip:** slip per periode dari `slip_gaji`, status sudah atau belum dibayar dengan tanggal transfer.
 - **Lihat slip:** preview HTML dari `previewSlipGajiHtml` di `Code.gs` (template yang sama dengan PDF slip), ditambah Unduh PDF bila sudah ada.
