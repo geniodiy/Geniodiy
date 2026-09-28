@@ -384,9 +384,15 @@
     if (d.charAt(0) === '0') d = '62' + d.slice(1);
     return 'https://wa.me/' + d + '?text=' + encodeURIComponent(text);
   }
+  // Sapaan dari jenis kelamin: L = Mr., P = Ms., kosong = Kak
+  function hmtSapaan(c) {
+    var jk = String((c && c.jenis_kelamin) || '').toUpperCase();
+    var t = jk === 'L' ? 'Mr.' : jk === 'P' ? 'Ms.' : 'Kak';
+    return c && c.nama ? t + ' ' + String(c.nama).split(' ')[0] : t;
+  }
   function hmtHelpText(c) {
     var s = genioGetSession() || {};
-    var sapaan = c && c.nama ? 'Kak ' + String(c.nama).split(' ')[0] : 'Kak';
+    var sapaan = hmtSapaan(c);
     return 'Halo ' + sapaan + ', saya ' + (s.nama || 'tutor') + ', tutor Genio Institute' + (c && c.nama_unit ? ' di Unit ' + c.nama_unit : '') + '. ' +
       'Saya izin menanyakan terkait pengisian presensi. Jadwal mengajar saya belum muncul di aplikasi, jadi saya belum bisa mengisi presensi. ' +
       'Mohon bantuannya untuk dicek atau dibuatkan jadwalnya. Terima kasih.';
@@ -406,8 +412,7 @@
     var c = list[0] || null;
     btn.target = '_blank';
     if (c) {
-      var who = (c.role === 'kepala_unit' ? 'Kak ' : '') + String(c.nama || '').split(' ')[0];
-      lbl.textContent = 'Hubungi ' + who;
+      lbl.textContent = 'Hubungi ' + hmtSapaan(c);
       sub.textContent = c.role === 'kepala_unit' ? 'Kepala Unit ' + (c.nama_unit || '') + ' bisa membuatkan jadwal Anda.' : 'Belum ada kontrak aktif. Hubungi manajer untuk dibuatkan kontrak dan jadwal.';
       btn.href = hmtWaLink(c.no_hp, hmtHelpText(c));
     } else {
@@ -422,7 +427,7 @@
     document.getElementById('hmtHelpList').innerHTML = rows.map(function (c) {
       return '<a class="gx-opt-row hmt-help-row" href="' + esc(hmtWaLink(c.no_hp, hmtHelpText(c))) + '" target="_blank" rel="noopener noreferrer">' +
         '<span class="av" style="width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;font-weight:600;background:' + colorFor(c.user_id) + ';">' + genioAvatarInner(c.nama, null, genioInitials(c.nama)) + '</span>' +
-        '<span class="t"><b>' + esc(c.nama || '-') + '</b><small>Kepala Unit ' + esc(c.nama_unit || '-') + '</small></span><i class="ph ph-whatsapp-logo wa" aria-hidden="true"></i></a>';
+        '<span class="t"><b>' + esc(hmtSapaan(c).split(' ')[0] + ' ' + (c.nama || '-')) + '</b><small>Kepala Unit ' + esc(c.nama_unit || '-') + '</small></span><i class="ph ph-whatsapp-logo wa" aria-hidden="true"></i></a>';
     }).join('');
     document.getElementById('hmtHelpList').querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { hmtHideHelp(); }); });
     el.hidden = false; el.style.display = 'flex'; requestAnimationFrame(function () { el.classList.add('show'); });
