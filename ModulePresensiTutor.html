@@ -413,6 +413,7 @@
       pt.presensi = res[1] || [];
       pt.loaded = true;
       ptRender(true);
+      ptRunPending();
     } catch (err) {
       document.getElementById('pt-list').innerHTML = '<div class="pt-empty"><i class="ph ph-warning"></i><b>Gagal memuat presensi</b><span>' + esc(err.message) + '</span></div>';
     } finally {
@@ -1045,7 +1046,28 @@
   window.addEventListener('genio:periode', function () { if (genioIsModuleVisible('presensi-tutor')) ptLoad(); else pt.loaded = false; });
 
   window.genioModuleHandlers = window.genioModuleHandlers || {};
-  window.genioModuleHandlers['presensi-tutor'] = function () { ptSyncDock(); ptLoad(); };
+  // Aksi titipan dari Beranda tutor: buka pemilih siswa, form isi presensi, atau form revisi setelah data termuat
+  function ptRunPending() {
+    var a = window.genioPresensiTutorPending; window.genioPresensiTutorPending = null;
+    if (!a) return;
+    if (a.action === 'pick') { ptOpenPicker('new'); return; }
+    if (a.action === 'isi') {
+      var k = pt.kontrak.find(function (x) { return x.id === a.kontrakId; });
+      if (!k) return;
+      var j = a.jadwalId ? (k.jadwal || []).find(function (x) { return x.id === a.jadwalId; }) : null;
+      ptOpenForm({ mode: 'new', k: k, j: j, flex: !!a.flex });
+      return;
+    }
+    if (a.action === 'revisi') {
+      var p = pt.presensi.find(function (x) { return x.id === a.presensiId; });
+      if (p) ptOpenForm({ mode: 'revisi', p: p, k: p.kontrak_tutor });
+    }
+  }
+  window.genioModuleHandlers['presensi-tutor'] = function () {
+    var a = window.genioPresensiTutorPending;
+    if (a) { pt.tab = 'sesi'; if (a.action === 'filter') { pt.filter = a.filter || 'tindakan'; window.genioPresensiTutorPending = null; } }
+    ptSyncDock(); ptLoad();
+  };
   window.genioModuleHandlers['presensi-tutor-goto'] = function (filter) { pt.tab = 'sesi'; pt.filter = filter || 'tindakan'; if (pt.loaded) ptRender(true); };
 })();
 </script>

@@ -487,7 +487,10 @@
   window.addEventListener('genio:periode', function () { if (genioIsModuleVisible('gaji-tutor')) gtLoad(); else gt.loaded = false; });
 
   window.genioModuleHandlers = window.genioModuleHandlers || {};
-  window.genioModuleHandlers['gaji-tutor'] = function () { gtSyncDock(); gtLoad(); };
+  window.genioModuleHandlers['gaji-tutor'] = function () {
+    if (window.genioGajiTutorTab) { gt.tab = window.genioGajiTutorTab; window.genioGajiTutorTab = null; }
+    gtSyncDock(); gtLoad();
+  };
 })();
 </script>
 </div>

@@ -868,6 +868,24 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Foto tutor di semua role:** pemilih tutor di form kontrak tutor dan di "Isi presensi untuk tutor" sekarang ikut menampilkan foto profil, atau inisial kalau belum ada foto.
 - **Belum diuji dengan akun tutor asli.**
 
+### [v5] Fase 4b: Beranda tutor (dikerjakan 28 Sep 2026, opsi B)
+- **Halaman:** `ModuleHomeTutor.html`, panel `home-tutor`. Memakai kelas `.kuh-*` dari Home kepala unit.
+- **Sapaan:** foto, nama, dan tanggal.
+- **Highlight:**
+  - Gaji bulan ini (periode header), dibanding bulan lalu.
+  - Nominal yang masih menunggu approval.
+  - Garis gaji 6 bulan dengan kurva monoton.
+  - Tombol **Isi presensi**.
+  - Kartu putih: pertemuan, visit, denda telat, status slip, dan rekening.
+- **Perlu tindakan:** perlu revisi, jadwal hari ini, menunggu diperiksa, slip belum dibayar. Kartu membuka Presensi dengan filter yang sesuai, atau tab Riwayat slip di Gaji.
+- **Sesi hari ini:** laporan yang harus direvisi, jadwal hari ini yang belum dilapor, dan sesi fleksibel minggu ini. Tombol Revisi dan Isi presensi langsung membuka formnya di halaman Presensi (`window.genioPresensiTutorPending`).
+- **Tren mengajar 3 bulan:**
+  - Pertemuan atau gaji.
+  - Garis putus-putus abu-abu untuk 3 bulan sebelumnya.
+  - Crosshair dan tooltip.
+- **Genio News:** ketuk untuk membuka tautannya.
+- **Belum diuji dengan akun tutor asli.**
+
 ### [v5] Fase 4c: Gaji tutor (dikerjakan 28 Sep 2026)
 - **Halaman:** `ModuleGajiTutor.html`, panel `gaji-tutor`.
 - **Highlight:**
@@ -899,7 +917,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
    - Buat konfigurasi menu per role (dock + Lainnya).
    - Terapkan flag akses per modul (unit-scoped, read-only).
    - Uji RLS dengan akun asli.
-5. **Fase 4: Dashboard Tutor** (Section 6.1). Presensi (4a) dan Gaji (4c) sudah. Berikutnya Beranda (4b).
+5. **Fase 4: Dashboard Tutor** (Section 6.1). Presensi (4a), Beranda (4b), dan Gaji (4c) sudah.
 6. **Genio News**, paling akhir. Sampai saat itu menu tetap berlabel "Coming Soon".
 
 Tidak dikerjakan untuk saat ini:
