@@ -498,7 +498,7 @@
         var on = pt.filter === f[0];
         return '<button type="button" role="tab" aria-selected="' + on + '" class="pt-seg-btn' + (on ? ' is-on' : '') + '" data-f="' + f[0] + '" style="--c:' + FC[f[0]] + ';"' + (f[0] === 'selesai' ? ' title="Periode ' + esc(st.range.label) + '"' : '') + '><span><i></i>' + f[1] + '</span><b>' + f[2] + '</b></button>';
       }).join('') + '</div>';
-      sec.querySelectorAll('.pt-seg-btn').forEach(function (b) { b.addEventListener('click', function () { pt.filter = b.dataset.f; ptRender(true); }); });
+      sec.querySelectorAll('.pt-seg-btn').forEach(function (b) { b.addEventListener('click', function () { ptSetFilter(b.dataset.f); }); });
       var items = (pt.filter === 'tindakan' ? tindakan : pt.filter === 'menunggu' ? menunggu : selesai).filter(matchQ);
       if (!items.length) {
         list.className = 'pt-grid';
@@ -972,6 +972,7 @@
       genioToast(data.mode === 'revisi' ? 'Revisi terkirim, menunggu diperiksa' : 'Presensi terkirim, menunggu diperiksa', 'success');
       pt.filter = 'menunggu';
       ptLoad();
+      try { window.dispatchEvent(new CustomEvent('genio:presensi-tutor')); } catch (e) {}
     } catch (err) {
       var m = String(err && err.message || err);
       if (/duplicate|unique|23505/i.test(m)) m = 'Presensi untuk siswa ini di tanggal dan jam yang sama sudah ada.';
@@ -1018,14 +1019,20 @@
   }
 
   // ===== Event =====
+  function ptSetTab(tab) { if (!tab || pt.tab === tab) { ptSyncDock(); return; } pt.tab = tab; ptRerender(); }
+  function ptSetFilter(f) { if (!f || pt.filter === f) { ptRerender(); return; } pt.filter = f; ptRerender(); }
+  // Ganti tab atau filter tanpa melompat ke atas
+  function ptRerender() { genioKeepScroll(document.getElementById('pt-list'), function () { ptRender(true); }); }
   document.querySelectorAll('#pt-dock .ps-dock-btn').forEach(function (b) {
-    b.addEventListener('click', function () { if (pt.tab === b.dataset.tab) return; pt.tab = b.dataset.tab; ptRender(true); });
+    b.addEventListener('click', function () { ptSetTab(b.dataset.tab); });
   });
+  genioBindScrub(document.getElementById('pt-dock'), { btnSel: '.ps-dock-btn', attr: 'data-tab', activeClass: 'ps-dock-active', glider: function () { return document.getElementById('pt-dockGlider'); }, current: function () { return pt.tab; }, pick: ptSetTab });
+  genioBindScrub(document.getElementById('pt-sec'), { btnSel: '.pt-seg-btn', attr: 'data-f', activeClass: 'is-on', current: function () { return pt.filter; }, pick: ptSetFilter });
   document.getElementById('pt-search').addEventListener('input', function (e) { pt.q = e.target.value.trim().toLowerCase(); ptRender(false); });
   document.getElementById('pt-viewBtn').addEventListener('click', function () {
     pt.view = pt.view === 'table' ? 'card' : 'table';
     genioSaveViewPref('pt_view', pt.view);
-    ptRender(true);
+    ptRerender();
   });
   document.getElementById('pt-isiBtn').addEventListener('click', function () { ptOpenPicker('new'); });
   document.getElementById('pt-pickSearch').addEventListener('input', function (e) { ptRenderPicker(e.target.value.trim().toLowerCase()); });
@@ -1067,6 +1074,23 @@
     var a = window.genioPresensiTutorPending;
     if (a) { pt.tab = 'sesi'; if (a.action === 'filter') { pt.filter = a.filter || 'tindakan'; window.genioPresensiTutorPending = null; } }
     ptSyncDock(); ptLoad();
+  };
+  // Popup dipindah ke body supaya bisa dibuka dari Beranda tanpa pindah tab
+  ['pt-pickModal', 'pt-formModal', 'pt-lapModal'].forEach(function (id) { var el = document.getElementById(id); if (el && el.parentNode !== document.body) document.body.appendChild(el); });
+  function ptTryPending() {
+    var a = window.genioPresensiTutorPending;
+    if (!a || !pt.loaded) return false;
+    if (a.action === 'isi' && !pt.kontrak.some(function (x) { return x.id === a.kontrakId; })) return false;
+    if (a.action === 'revisi' && !pt.presensi.some(function (x) { return x.id === a.presensiId; })) return false;
+    ptRunPending();
+    return true;
+  }
+  // Dipakai Beranda tutor: { action: 'pick' | 'isi' | 'revisi', ... }
+  window.genioPresensiTutor = {
+    open: function (opts) {
+      window.genioPresensiTutorPending = opts;
+      if (!ptTryPending()) ptLoad();
+    }
   };
   window.genioModuleHandlers['presensi-tutor-goto'] = function (filter) { pt.tab = 'sesi'; pt.filter = filter || 'tindakan'; if (pt.loaded) ptRender(true); };
 })();

@@ -857,6 +857,66 @@
     try { localStorage.setItem(key + '@' + (genioIsWideView() ? 'wide' : 'mobile'), val); } catch (e) {}
   }
 
+  // Tab bar yang bisa ditahan lalu digeser (sama seperti dock manajer dan kepala unit).
+  // opts: { btnSel, attr, activeClass, glider, current(), preview(val), pick(val) }
+  function genioBindScrub(bar, opts) {
+    if (!bar || bar._genioScrub) return;
+    bar._genioScrub = true;
+    var down = false, dragging = false, suppress = false, sx = 0, sy = 0, pid = null, rect = null, target = null;
+    var btns = function () { return Array.prototype.slice.call(bar.querySelectorAll(opts.btnSel)); };
+    bar.style.touchAction = 'pan-y';
+    bar.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    bar.addEventListener('click', function (e) { if (suppress) { e.stopPropagation(); e.preventDefault(); } }, true);
+    bar.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      down = true; dragging = false; suppress = false; pid = e.pointerId; sx = e.clientX; sy = e.clientY;
+      rect = bar.getBoundingClientRect(); target = opts.current();
+    });
+    bar.addEventListener('pointermove', function (e) {
+      if (!down) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy;
+      if (!dragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+        dragging = true; suppress = true;
+        try { bar.setPointerCapture(pid); } catch (_) {}
+      }
+      if (!dragging) return;
+      if (e.cancelable) e.preventDefault();
+      var list = btns(); if (!list.length) return;
+      var relX = e.clientX - rect.left, hit = list[list.length - 1];
+      for (var i = 0; i < list.length; i++) { var r = list[i].getBoundingClientRect(); if (e.clientX < r.right) { hit = list[i]; break; } }
+      target = hit.getAttribute(opts.attr);
+      list.forEach(function (b) { b.classList.toggle(opts.activeClass, b === hit); });
+      var gl = opts.glider && opts.glider();
+      if (gl) {
+        var w = gl.offsetWidth || hit.offsetWidth;
+        gl.style.transition = 'none';
+        gl.style.left = Math.max(0, Math.min(rect.width - w, relX - w / 2)) + 'px';
+      }
+      if (opts.preview) opts.preview(target);
+    });
+    function end() {
+      if (!down) return;
+      down = false;
+      var gl = opts.glider && opts.glider(); if (gl) gl.style.transition = '';
+      if (pid !== null) { try { bar.releasePointerCapture(pid); } catch (_) {} pid = null; }
+      if (dragging) { dragging = false; opts.pick(target); setTimeout(function () { suppress = false; }, 80); }
+      else suppress = false;
+    }
+    bar.addEventListener('pointerup', end);
+    bar.addEventListener('pointercancel', end);
+  }
+
+  // Render ulang daftar tanpa melompat ke atas: tahan tinggi minimum supaya posisi scroll tetap.
+  function genioKeepScroll(el, fn) {
+    var y = window.scrollY;
+    if (el) {
+      var top = el.getBoundingClientRect().top + y;
+      el.style.minHeight = Math.max(0, y + window.innerHeight - top) + 'px';
+    }
+    fn();
+    if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
+  }
+
   function genioGetPeriode() {
     var v = null;
     try { v = sessionStorage.getItem('genio_periode'); } catch (e) {}

@@ -273,7 +273,7 @@
             var g = gs[+b.dataset.lihat]; if (!g) return;
             gt.view = 'table'; gt.q = g.nama.toLowerCase();
             document.getElementById('gt-search').value = g.nama;
-            gtRender(true);
+            gtRerender();
           });
         });
       }
@@ -471,14 +471,20 @@
       : '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
   }
 
+  function gtRerender() { genioKeepScroll(document.getElementById('gt-list'), function () { gtRender(true); }); }
+  function gtSetTab(tab) {
+    if (!tab || gt.tab === tab) { gtSyncDock(); return; }
+    gt.tab = tab; gt.q = ''; document.getElementById('gt-search').value = ''; gtRerender();
+  }
   document.querySelectorAll('#gt-dock .ps-dock-btn').forEach(function (b) {
-    b.addEventListener('click', function () { if (gt.tab === b.dataset.tab) return; gt.tab = b.dataset.tab; gt.q = ''; document.getElementById('gt-search').value = ''; gtRender(true); });
+    b.addEventListener('click', function () { gtSetTab(b.dataset.tab); });
   });
+  genioBindScrub(document.getElementById('gt-dock'), { btnSel: '.ps-dock-btn', attr: 'data-tab', activeClass: 'ps-dock-active', glider: function () { return document.getElementById('gt-dockGlider'); }, current: function () { return gt.tab; }, pick: gtSetTab });
   document.getElementById('gt-search').addEventListener('input', function (e) { gt.q = e.target.value.trim().toLowerCase(); gtRender(false); });
   document.getElementById('gt-viewBtn').addEventListener('click', function () {
     gt.view = gt.view === 'table' ? 'card' : 'table';
     genioSaveViewPref('gt_view', gt.view);
-    gtRender(true);
+    gtRerender();
   });
   document.getElementById('gt-slipBtn').addEventListener('click', function () { var per = genioGetPeriode(); gtOpenSlip(per, slipOf(per)); });
   ['gt-slipClose', 'gt-slipOk'].forEach(function (id) { document.getElementById(id).addEventListener('click', gtCloseSlip); });
