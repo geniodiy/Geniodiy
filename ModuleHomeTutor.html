@@ -49,6 +49,7 @@
   .hmt-help-row .t{flex:1; min-width:0;}
   .hmt-help-row .t b{display:block; font-size:12px; font-weight:600;}
   .hmt-help-row .t small{display:block; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .hmt-mine{flex:none; font-style:normal; font-size:9.5px; font-weight:600; padding:2px 8px; border-radius:999px; background:var(--blue-tint); color:var(--blue);}
   .hmt-help-row .wa{color:#1E8E5A; font-size:18px; flex:none;}
   @media (max-width:899px){
     #hmtActs{grid-template-columns:repeat(2, minmax(0,1fr));}
@@ -121,7 +122,7 @@
       <div class="modal-sheet gx-sheet gx-sm">
         <div class="gx-head">
           <span class="gx-head-ico"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></span>
-          <div style="flex:1; min-width:0;"><h3>Hubungi kepala unit</h3><p class="gx-sub">Pilih unit yang jadwalnya belum muncul.</p></div>
+          <div style="flex:1; min-width:0;"><h3>Hubungi kepala unit</h3><p class="gx-sub">Pilih unit tempat jadwal Anda belum muncul.</p></div>
           <button type="button" class="gx-close" id="hmtHelpClose" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
         </div>
         <div class="gx-body" id="hmtHelpList"></div>
@@ -398,21 +399,24 @@
     var t = jk === 'L' ? 'Mr.' : jk === 'P' ? 'Ms.' : 'Kak';
     return c && c.nama ? t + ' ' + String(c.nama).split(' ')[0] : t;
   }
+  // "Unit 1" tetap "Unit 1", "Sleman" jadi "Unit Sleman"
+  function hmtUnit(n) { n = String(n || '').trim(); return /^unit\b/i.test(n) ? n : 'Unit ' + n; }
   function hmtHelpText(c) {
     var s = genioGetSession() || {};
     var sapaan = hmtSapaan(c);
-    return 'Halo ' + sapaan + ', saya ' + (s.nama || 'tutor') + ', tutor Genio Institute' + (c && c.nama_unit ? ' di Unit ' + c.nama_unit : '') + '. ' +
+    return 'Halo ' + sapaan + ', saya ' + (s.nama || 'tutor') + ', tutor Genio Institute' + (c && c.nama_unit ? ' di ' + hmtUnit(c.nama_unit) : '') + '. ' +
       'Saya izin menanyakan terkait pengisian presensi. Jadwal mengajar saya belum muncul di aplikasi, jadi saya belum bisa mengisi presensi. ' +
       'Mohon bantuannya untuk dicek atau dibuatkan jadwalnya. Terima kasih.';
   }
+  // Tombol selalu membuka popup pilihan kepala unit (unit tempat tutor mengajar di paling atas)
   function hmtRenderHelp() {
     var list = (hmt.kontak || []).filter(function (c) { return String(c.no_hp || '').replace(/\D/g, ''); });
     var btn = document.getElementById('hmtHelpBtn'), lbl = document.getElementById('hmtHelpLbl'), sub = document.getElementById('hmtHelpSub');
     var kepala = list.filter(function (c) { return c.role === 'kepala_unit'; });
     btn.onclick = null;
-    if (kepala.length > 1) {
+    if (kepala.length) {
       lbl.textContent = 'Hubungi kepala unit';
-      sub.textContent = 'Anda mengajar di ' + kepala.length + ' unit. Pilih unit yang jadwalnya belum muncul.';
+      sub.textContent = 'Pilih kepala unit tempat Anda akan mengajar, pesan WhatsApp sudah disiapkan.';
       btn.href = '#'; btn.removeAttribute('target');
       btn.onclick = function (e) { e.preventDefault(); hmtOpenHelp(kepala); };
       return;
@@ -421,7 +425,7 @@
     btn.target = '_blank';
     if (c) {
       lbl.textContent = 'Hubungi ' + hmtSapaan(c);
-      sub.textContent = c.role === 'kepala_unit' ? 'Kepala Unit ' + (c.nama_unit || '') + ' bisa membuatkan jadwal Anda.' : 'Belum ada kontrak aktif. Hubungi manajer untuk dibuatkan kontrak dan jadwal.';
+      sub.textContent = 'Hubungi manajer untuk dibuatkan kontrak dan jadwal.';
       btn.href = hmtWaLink(c.no_hp, hmtHelpText(c));
     } else {
       // Kontak tidak tersedia: buka WhatsApp dengan pesan saja, tutor memilih penerimanya sendiri
@@ -435,7 +439,7 @@
     document.getElementById('hmtHelpList').innerHTML = rows.map(function (c) {
       return '<a class="gx-opt-row hmt-help-row" href="' + esc(hmtWaLink(c.no_hp, hmtHelpText(c))) + '" target="_blank" rel="noopener noreferrer">' +
         '<span class="av" style="width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;font-weight:600;background:' + colorFor(c.user_id) + ';">' + genioAvatarInner(c.nama, null, genioInitials(c.nama)) + '</span>' +
-        '<span class="t"><b>' + esc(hmtSapaan(c).split(' ')[0] + ' ' + (c.nama || '-')) + '</b><small>Kepala Unit ' + esc(c.nama_unit || '-') + '</small></span><i class="ph ph-whatsapp-logo wa" aria-hidden="true"></i></a>';
+        '<span class="t"><b>' + esc(hmtSapaan(c).split(' ')[0] + ' ' + (c.nama || '-')) + '</b><small>Kepala ' + esc(c.nama_unit ? hmtUnit(c.nama_unit) : 'unit') + '</small></span>' + (c.unit_saya ? '<em class="hmt-mine">Unit Anda</em>' : '') + '<i class="ph ph-whatsapp-logo wa" aria-hidden="true"></i></a>';
     }).join('');
     document.getElementById('hmtHelpList').querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { hmtHideHelp(); }); });
     el.hidden = false; el.style.display = 'flex'; requestAnimationFrame(function () { el.classList.add('show'); });
