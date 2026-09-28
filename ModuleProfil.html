@@ -1,5 +1,7 @@
 <style>
   /* ===== Profil: highlight putih (identitas | unit dan bergabung) + kartu kontak dan akun ===== */
+  /* Tutor tidak punya split view Lainnya: lebar halaman disamakan dengan Presensi dan Gaji tutor */
+  @media (min-width:900px){ .role-tutor .module-panel[data-module="profile-detail"]:not([hidden]){width:94%; max-width:1500px; margin:0 auto;} }
   .prf-hb{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,auto); background:#fff; border:1px solid var(--border); border-radius:18px; overflow:hidden; margin-bottom:14px;}
   .prf-main{position:relative; isolation:isolate; padding:20px 22px; display:flex; align-items:center; gap:16px; min-width:0;}
   .prf-main::before{content:''; position:absolute; z-index:-1; left:-90px; top:-160px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(28,26,175,.07), rgba(28,26,175,0) 65%); pointer-events:none;}
