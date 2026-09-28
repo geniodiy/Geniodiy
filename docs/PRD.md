@@ -864,6 +864,8 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
     - Revisi boleh mengubah tanggal, jam, materi, link, dan foto.
   - **Keamanan:** trigger `presensi_before_write` memaksa laporan tutor berstatus `pending`, lihat `supabase/migrations/20260927_presensi_tutor_write_guard.sql`.
 - **Lonceng notifikasi tutor:** hanya laporan ditolak yang perlu direvisi.
+- **Profil tutor:** baris unit tidak ditampilkan, karena tutor tidak terikat unit mana pun.
+- **Foto tutor di semua role:** pemilih tutor di form kontrak tutor dan di "Isi presensi untuk tutor" sekarang ikut menampilkan foto profil, atau inisial kalau belum ada foto.
 - **Belum diuji dengan akun tutor asli.**
 
 ### [v5] Fase 4c: Gaji tutor (dikerjakan 28 Sep 2026)

@@ -1605,7 +1605,7 @@
     var s = genioGetSession();
     try {
       if (!ktrState.tutorOptions.length) {
-        var rows = await supaRest('users?role=eq.tutor&status=eq.aktif&select=id,nama&order=nama.asc', s.access_token);
+        var rows = await supaRest('users?role=eq.tutor&status=eq.aktif&select=id,nama,foto_profil_url&order=nama.asc', s.access_token);
         ktrState.tutorOptions = rows;
       }
     } catch (err) { /* biarkan kosong */ }
@@ -1915,8 +1915,11 @@
       listEl.innerHTML = '<div style="font-size:12.5px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data.') + '</div>';
       return;
     }
+    var isTutorPick = ktrSelectPickerCurrentType === 'tutor';
     listEl.innerHTML = options.map(function (opt, idx) {
-      return '<button type="button" class="ktr-select-picker-opt" data-idx="' + idx + '" style="width:100%; text-align:left; display:block; background:none; border:none; padding:12px 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' + ktrEscape(opt.label) + '</button>';
+      // Pemilih tutor: tampilkan foto profil (huruf inisial kalau belum ada foto)
+      var av = isTutorPick ? '<span class="ktr-pick-av" style="width:28px; height:28px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:600; flex:none; overflow:hidden;">' + genioAvatarInner(opt.label, opt.raw && opt.raw.foto_profil_url, genioInitials(opt.label)) + '</span>' : '';
+      return '<button type="button" class="ktr-select-picker-opt" data-idx="' + idx + '" style="width:100%; text-align:left; display:' + (isTutorPick ? 'flex; align-items:center; gap:10px' : 'block') + '; background:none; border:none; padding:' + (isTutorPick ? '9px' : '12px') + ' 4px; font-size:13px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' + av + '<span style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + ktrEscape(opt.label) + '</span></button>';
     }).join('');
     listEl.querySelectorAll('.ktr-select-picker-opt').forEach(function (btn) {
       btn.addEventListener('click', function () {

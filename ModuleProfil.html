@@ -123,7 +123,7 @@
       </div>
       <div class="prf-side">
         <div class="prf-side-list">
-          <div>Unit<b id="prfDetailUnitSide">-</b></div>
+          <div id="prfSideUnitRow">Unit<b id="prfDetailUnitSide">-</b></div>
           <div>Bergabung<b id="prfDetailSinceSide">-</b></div>
         </div>
         <button type="button" id="prfEditProfileBtn"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit profil</button>
@@ -329,7 +329,9 @@
       waEl.hidden = !wa;
       if (wa) waEl.href = wa;
 
-      var unit = (me && me.units && me.units.nama_unit) || (session.role === 'kepala_unit' ? '' : (session.role === 'tutor' ? 'Lintas unit' : 'Semua unit'));
+      // Tutor tidak terikat unit mana pun, jadi baris unit tidak ditampilkan
+      var unit = session.role === 'tutor' ? '' : ((me && me.units && me.units.nama_unit) || (session.role === 'kepala_unit' ? '' : 'Semua unit'));
+      document.getElementById('prfSideUnitRow').style.display = session.role === 'tutor' ? 'none' : '';
       document.getElementById('prfDetailUnitSide').textContent = unit || '-';
       document.getElementById('prfDetailUnit').textContent = unit || '-';
       document.getElementById('prfRowUnit').hidden = !unit;

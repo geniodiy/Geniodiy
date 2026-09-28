@@ -3073,14 +3073,14 @@
       var s = genioGetSession();
       if (s.role === 'kepala_unit') {
         // Kepala unit: hanya tutor aktif yang punya kontrak aktif di unitnya (RLS sudah membatasi kontrak_tutor ke unitnya)
-        var ktRows = await supaRest('kontrak_tutor?status=eq.aktif&select=tutor_id,users!kontrak_tutor_tutor_id_fkey(id,nama,status)', s.access_token);
+        var ktRows = await supaRest('kontrak_tutor?status=eq.aktif&select=tutor_id,users!kontrak_tutor_tutor_id_fkey(id,nama,status,foto_profil_url)', s.access_token);
         var seen = {};
         psWakilTutorList = ktRows.map(function (r) { return r.users; }).filter(function (u) {
           if (!u || u.status !== 'aktif' || seen[u.id]) return false;
           seen[u.id] = true; return true;
         }).sort(function (a, b) { return String(a.nama).localeCompare(String(b.nama)); });
       } else {
-        psWakilTutorList = await supaRest('users?role=eq.tutor&status=eq.aktif&select=id,nama&order=nama.asc', s.access_token);
+        psWakilTutorList = await supaRest('users?role=eq.tutor&status=eq.aktif&select=id,nama,foto_profil_url&order=nama.asc', s.access_token);
       }
       document.getElementById('ps-wakilTutorLabel').textContent = 'Pilih tutor...';
       psWakilTutorsLoaded = true;
@@ -3176,7 +3176,7 @@
     var listEl = document.getElementById('ps-wakilPickerList');
     var items;
     if (psWakilPickerType === 'tutor') {
-      items = psWakilTutorList.map(function (t) { return { value: t.id, label: t.nama }; });
+      items = psWakilTutorList.map(function (t) { return { value: t.id, label: t.nama, foto: t.foto_profil_url || null, isTutor: true }; });
     } else {
       items = psWakilKontrakList.map(function (k, idx) { return { value: String(idx), label: psWakilKontrakLabel(k) }; });
     }
@@ -3187,7 +3187,9 @@
       return;
     }
     listEl.innerHTML = filtered.map(function (it, i) {
-      return '<button type="button" class="ps-wakil-picker-opt" data-value="' + psEscape(it.value) + '" style="width:100%; text-align:left; display:block; background:none; border:none; padding:8px 4px; font-size:10.5px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' + psEscape(it.label) + '</button>';
+      // Pemilih tutor: tampilkan foto profil (huruf inisial kalau belum ada foto)
+      var av = it.isTutor ? '<span style="width:26px; height:26px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; flex:none; overflow:hidden;">' + genioAvatarInner(it.label, it.foto, genioInitials(it.label)) + '</span>' : '';
+      return '<button type="button" class="ps-wakil-picker-opt" data-value="' + psEscape(it.value) + '" style="width:100%; text-align:left; display:' + (it.isTutor ? 'flex; align-items:center; gap:9px' : 'block') + '; background:none; border:none; padding:' + (it.isTutor ? '7px' : '8px') + ' 4px; font-size:10.5px; color:var(--ink); cursor:pointer; border-bottom:1px solid var(--border); font-family:var(--font);">' + av + '<span style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + psEscape(it.label) + '</span></button>';
     }).join('');
     listEl.querySelectorAll('.ps-wakil-picker-opt').forEach(function (btn) {
       btn.addEventListener('click', function () {
