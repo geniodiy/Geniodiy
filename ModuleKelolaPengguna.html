@@ -234,7 +234,7 @@
         <div class="gx-row"><label for="kp-nama">Nama lengkap <em class="gx-req">wajib</em></label><input type="text" id="kp-nama"></div>
         <div class="gx-row"><label for="kp-email">Email <em class="gx-req">wajib</em></label><input type="email" id="kp-email" autocomplete="off"></div>
         <div id="kp-passwordWrap" hidden>
-          <div class="gx-row"><label for="kp-password">Password awal <em class="gx-req">wajib</em></label><input type="text" id="kp-password" autocomplete="off" placeholder="Minimal 8 karakter"></div>
+          <div class="gx-row"><label for="kp-password">Password awal <em class="gx-req">wajib</em></label><input type="text" id="kp-password" autocomplete="off" placeholder="Minimal 6 karakter"></div>
           <div class="gx-note" style="margin:-2px 0 6px;"><i class="ph ph-key" aria-hidden="true"></i><span>Berikan password ini ke pemilik akun. Mereka bisa menggantinya sendiri di menu Profil.</span></div>
         </div>
 
@@ -798,7 +798,7 @@
     var isNew = !id;
     var password = document.getElementById('kp-password').value;
     if (!nama || !email) { alertEl.textContent = 'Nama dan email wajib diisi.'; alertEl.hidden = false; return; }
-    if (isNew && password.length < 8) { alertEl.textContent = 'Password awal minimal 8 karakter.'; alertEl.hidden = false; return; }
+    if (isNew && password.length < 6) { alertEl.textContent = 'Password awal minimal 6 karakter.'; alertEl.hidden = false; return; }
     if (!role) { alertEl.textContent = 'Role wajib dipilih.'; alertEl.hidden = false; return; }
     if (role === 'kepala_unit' && !unitId) { alertEl.textContent = 'Kepala unit wajib memilih unit.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;

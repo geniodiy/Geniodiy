@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
 
     if (!nama) return fail("Nama wajib diisi");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("Email tidak valid");
-    if (password.length < 8) return fail("Password awal minimal 8 karakter");
+    if (password.length < 6) return fail("Password awal minimal 6 karakter");
     if (!ROLES.includes(role)) return fail("Role tidak dikenal");
     if (!canManage(caller.role, role)) return fail("Anda tidak boleh membuat akun dengan role ini", 403);
     if (role === "kepala_unit" && !unitId) return fail("Kepala unit wajib punya unit");

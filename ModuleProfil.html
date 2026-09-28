@@ -250,7 +250,7 @@
           <div class="gx-row"><label for="prfPwNow">Password saat ini</label><input type="password" id="prfPwNow" autocomplete="current-password"></div>
           <div class="gx-row"><label for="prfPwNew">Password baru</label><input type="password" id="prfPwNew" autocomplete="new-password"></div>
           <div class="prf-pe-meter" id="prfPwMeter" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-          <div class="prf-pe-hint">Minimal 8 karakter. Campur huruf dan angka supaya lebih aman.</div>
+          <div class="prf-pe-hint">Minimal 6 karakter. Campur huruf dan angka supaya lebih aman.</div>
           <div class="gx-row"><label for="prfPwNew2">Ulangi password baru</label><input type="password" id="prfPwNew2" autocomplete="new-password"></div>
         </div>
       </div>
@@ -425,7 +425,7 @@
   function prfUpdateMeter() {
     var v = document.getElementById('prfPwNew').value;
     var lv = 0;
-    if (v.length >= 8) lv++;
+    if (v.length >= 6) lv++;
     if (/[a-zA-Z]/.test(v) && /\d/.test(v)) lv++;
     if (v.length >= 12) lv++;
     if (/[^a-zA-Z0-9]/.test(v) || (/[a-z]/.test(v) && /[A-Z]/.test(v))) lv++;
@@ -720,7 +720,7 @@
     var gantiPw = pwOpen && (pwNow || pwNew || pwNew2);
     if (gantiPw) {
       if (!pwNow) { prfEditFail('Isi password saat ini.'); return; }
-      if (pwNew.length < 8) { prfEditFail('Password baru minimal 8 karakter.'); return; }
+      if (pwNew.length < 6) { prfEditFail('Password baru minimal 6 karakter.'); return; }
       if (pwNew !== pwNew2) { prfEditFail('Ulangi password baru belum sama.'); return; }
       if (pwNew === pwNow) { prfEditFail('Password baru sama dengan password saat ini.'); return; }
     }
