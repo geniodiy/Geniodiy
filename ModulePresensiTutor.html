@@ -20,11 +20,19 @@
   #pt-isiBtn:focus-visible{outline:2px solid #fff; outline-offset:2px;}
 
   .pt-sec{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; min-width:0;}
-  .pt-chips{display:flex; gap:6px; flex-wrap:nowrap; overflow-x:auto; min-width:0; scrollbar-width:none;}
-  .pt-chips::-webkit-scrollbar{display:none;}
-  .pt-chip{flex:none;}
-  .pt-chip b{margin-left:4px; font-weight:700; font-variant-numeric:tabular-nums;}
-  .pt-chip.is-on{background:var(--blue) !important; color:#fff !important; border-color:var(--blue) !important;}
+  /* Filter tiga bagian di tengah: angka di atas, label dengan titik warna di bawah */
+  .pt-sec.is-seg{justify-content:center;}
+  .pt-seg{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; width:100%; max-width:560px; margin:0 auto;}
+  .pt-seg-btn{--c:var(--blue); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-width:0; min-height:58px; padding:9px 6px; border-radius:12px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); font-family:var(--font); cursor:pointer; transition:border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .1s ease;}
+  .pt-seg-btn:hover{border-color:#C9CCDA;}
+  .pt-seg-btn:active{transform:scale(.97);}
+  .pt-seg-btn b{font-size:17px; font-weight:700; line-height:1; color:var(--ink); font-variant-numeric:tabular-nums;}
+  .pt-seg-btn span{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:500; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis;}
+  .pt-seg-btn span i{width:7px; height:7px; border-radius:50%; background:var(--c); flex:none;}
+  .pt-seg-btn.is-on{border-color:var(--c); background:color-mix(in srgb, var(--c) 7%, #fff); box-shadow:0 0 0 3px color-mix(in srgb, var(--c) 12%, transparent);}
+  .pt-seg-btn.is-on span, .pt-seg-btn.is-on b{color:var(--c);}
+  .pt-seg-btn:focus-visible{outline:2px solid var(--c); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){ .pt-seg-btn{transition:none;} }
 
   /* Kartu: tinggi selalu sama, tombol aksi selalu satu dan selebar kartu */
   .pt-grid{display:grid; grid-template-columns:minmax(0,1fr); gap:12px; align-items:stretch;}
@@ -32,6 +40,7 @@
   .pt-card .pc2-head{min-width:0;}
   .pt-av{position:relative; width:34px; height:34px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; background:var(--blue-tint); color:var(--blue); font-size:11px; font-weight:600;}
   .pt-av > .genio-av-img, .pt-av > img{width:100%; height:100%; border-radius:50%; object-fit:cover;}
+  .pt-av-ok.is-visit{background:#2B59D9;}
   .pt-av-ok{position:absolute; right:-3px; bottom:-3px; width:16px; height:16px; border-radius:50%; background:#1E8E5A; color:#fff; border:2px solid #fff; display:flex; align-items:center; justify-content:center; font-size:9px; box-sizing:border-box;}
   .pt-chips-row{flex-wrap:nowrap !important; overflow:hidden;}
   .pt-chips-row .pc2-chip{flex:none;}
@@ -101,7 +110,6 @@
   #pt-fLate[hidden], #pt-fAlert[hidden], #pt-lapPdf[hidden]{display:none !important;}
   #pt-lapPdf{text-decoration:none;}
   #pt-formModal .gx-2col label{display:block; font-size:10.5px; font-weight:500; color:var(--ink-soft); margin:0 0 5px;}
-  @media (max-width:899px){ .pt-sec-pill{display:none !important;} }
   .pt-note-red{background:#FDEAEA !important; color:#B0060C !important;}
   .pt-pick-sec{font-size:10.5px; color:var(--ink-soft); margin:10px 2px 2px;}
   .pt-pick-row .pt-av{width:30px; height:30px; font-size:10.5px;}
@@ -345,7 +353,7 @@
   function ktUnit(k) { return (k && k.units && k.units.nama_unit) || '-'; }
   function siswaJenjang(s) { return [s.jenjang, s.kelas ? 'kelas ' + s.kelas : ''].filter(Boolean).join(' '); }
   function avatar(nama, done) {
-    return '<span class="pt-av">' + genioAvatarInner(nama, null, genioInitials(nama)) + (done ? '<span class="pt-av-ok" aria-hidden="true"><svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12.5 10 17 19 7.5"/></svg></span>' : '') + '</span>';
+    return '<span class="pt-av">' + genioAvatarInner(nama, null, genioInitials(nama)) + (done ? '<span class="pt-av-ok' + (done === 'visit' ? ' is-visit' : '') + '" aria-hidden="true"><svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12.5 10 17 19 7.5"/></svg></span>' : '') + '</span>';
   }
   function jadwalRows(k) {
     return (k.jadwal || []).slice().sort(function (a, b) {
@@ -370,7 +378,7 @@
     flex: { l: 'Fleksibel', c: '#5B3FD1', bg: '#F0ECFD' },
     pending: { l: 'Menunggu', c: '#C27400', bg: '#FFF4E0' },
     diterima: { l: 'Diterima', c: '#1E8E5A', bg: '#E9F7EF', done: true },
-    visit: { l: 'Visit', c: '#1E8E5A', bg: '#E9F7EF', done: true },
+    visit: { l: 'Visit', c: '#2B59D9', bg: '#EAF0FF', done: true },
     aktif: { l: 'Aktif', c: '#1C1AAF', bg: '#EEEEFB' }
   };
   function pill(key) {
@@ -478,10 +486,13 @@
     var list = document.getElementById('pt-list');
     if (pt.tab === 'sesi') {
       var F = [['tindakan', 'Perlu tindakan', tindakan.length], ['menunggu', 'Menunggu', menunggu.length], ['selesai', 'Selesai', selesai.length]];
-      sec.innerHTML = '<div class="pt-chips">' + F.map(function (f) {
-        return '<button type="button" class="ps-meta-pill pt-chip' + (pt.filter === f[0] ? ' is-on' : '') + '" data-f="' + f[0] + '">' + f[1] + '<b>' + f[2] + '</b></button>';
-      }).join('') + '</div>' + (pt.filter === 'selesai' ? '<span class="ps-meta-pill pt-sec-pill" style="flex:none;">' + st.range.label + '</span>' : '');
-      sec.querySelectorAll('.pt-chip').forEach(function (b) { b.addEventListener('click', function () { pt.filter = b.dataset.f; ptRender(true); }); });
+      var FC = { tindakan: '#1C1AAF', menunggu: '#C27400', selesai: '#1E8E5A' };
+      sec.classList.add('is-seg');
+      sec.innerHTML = '<div class="pt-seg" role="tablist" aria-label="Filter laporan">' + F.map(function (f) {
+        var on = pt.filter === f[0];
+        return '<button type="button" role="tab" aria-selected="' + on + '" class="pt-seg-btn' + (on ? ' is-on' : '') + '" data-f="' + f[0] + '" style="--c:' + FC[f[0]] + ';"' + (f[0] === 'selesai' ? ' title="Periode ' + esc(st.range.label) + '"' : '') + '><b>' + f[2] + '</b><span><i></i>' + f[1] + '</span></button>';
+      }).join('') + '</div>';
+      sec.querySelectorAll('.pt-seg-btn').forEach(function (b) { b.addEventListener('click', function () { pt.filter = b.dataset.f; ptRender(true); }); });
       var items = (pt.filter === 'tindakan' ? tindakan : pt.filter === 'menunggu' ? menunggu : selesai).filter(matchQ);
       if (!items.length) {
         list.className = 'pt-grid';
@@ -495,6 +506,7 @@
       }
       ptBindItems(list, items);
     } else {
+      sec.classList.remove('is-seg');
       sec.innerHTML = '<div style="min-width:0;"><div class="ps-section-title">Jadwal mengajar aktif</div><div class="ps-section-sub">Jadwal sebagai acuan. Pertemuan dan fee bulan ' + esc(st.range.label) + ' adalah estimasi.</div></div>';
       var ks = pt.kontrak.filter(function (k) { return !pt.q || (ktSiswa(k).nama + ' ' + k.mapel + ' ' + ktUnit(k)).toLowerCase().indexOf(pt.q) !== -1; });
       if (!ks.length) {
@@ -564,7 +576,7 @@
     var honorL = done ? 'Honor' : 'Estimasi honor';
     var tglChip = it.kind === 'flex' ? 'Minggu ini' : tglPendek(it.tanggal);
     return '<div class="ps-card pc2-card pt-card">' +
-      '<div class="pc2-head">' + avatar(it.nama, done) +
+      '<div class="pc2-head">' + avatar(it.nama, done ? it.kind : false) +
         '<div class="pc2-who"><h4>' + esc(it.nama) + '</h4><p>' + esc(it.sub) + '</p></div>' + pill(stKey) + '</div>' +
       '<div class="pc2-chips pt-chips-row"><span class="pc2-chip"><i class="ph ph-calendar-blank" aria-hidden="true"></i>' + esc(tglChip) + '</span>' +
         '<span class="pc2-chip"><i class="ph ph-' + (it.kind === 'flex' ? 'shuffle' : 'clock') + '" aria-hidden="true"></i>' + esc(it.jamText) + '</span></div>' +
