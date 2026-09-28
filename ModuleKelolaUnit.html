@@ -218,7 +218,7 @@
   var kuSearch = '';
   var KU_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var KU_RING_LEN = 2 * Math.PI * 25;
-  var kuViewMode = (function () { try { return localStorage.getItem('genio_ku_view_mode') || 'cards'; } catch (e) { return 'cards'; } })();
+  var kuViewMode = genioViewPref('genio_ku_view_mode');
 
   window.genioModuleHandlers['kelola-unit'] = function () {
     kuLoadList();
@@ -410,7 +410,7 @@
     var btn = this;
     btn.classList.remove('ku-btn-pop'); void btn.offsetWidth; btn.classList.add('ku-btn-pop');
     kuViewMode = kuViewMode === 'table' ? 'cards' : 'table';
-    try { localStorage.setItem('genio_ku_view_mode', kuViewMode); } catch (e) {}
+    genioSaveViewPref('genio_ku_view_mode', kuViewMode);
     kuRenderList(true);
   });
   kuUpdateViewToggleUI();

@@ -323,7 +323,7 @@
 
   var pt = {
     tab: 'sesi', filter: 'tindakan', q: '',
-    view: (function () { try { return localStorage.getItem('pt_view') || 'card'; } catch (e) { return 'card'; } })(),
+    view: genioViewPref('pt_view', 'card'),
     kontrak: [], presensi: [], loaded: false, loading: false,
     form: null, pickFor: 'new'
   };
@@ -1024,7 +1024,7 @@
   document.getElementById('pt-search').addEventListener('input', function (e) { pt.q = e.target.value.trim().toLowerCase(); ptRender(false); });
   document.getElementById('pt-viewBtn').addEventListener('click', function () {
     pt.view = pt.view === 'table' ? 'card' : 'table';
-    try { localStorage.setItem('pt_view', pt.view); } catch (e) {}
+    genioSaveViewPref('pt_view', pt.view);
     ptRender(true);
   });
   document.getElementById('pt-isiBtn').addEventListener('click', function () { ptOpenPicker('new'); });

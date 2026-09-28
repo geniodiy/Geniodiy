@@ -330,7 +330,7 @@
     filterPelaksanaan: '',
     filterMode: '',
     sortField: 'nama', sortDir: 'asc',
-    viewMode: (function () { try { return localStorage.getItem('genio_pkt_view_mode') || 'cards'; } catch (e) { return 'cards'; } })()
+    viewMode: genioViewPref('genio_pkt_view_mode')
   };
 
   function pktInit() {
@@ -354,7 +354,7 @@
         var btn = this;
         btn.classList.remove('pkt-btn-pop'); void btn.offsetWidth; btn.classList.add('pkt-btn-pop');
         pktState.viewMode = pktState.viewMode === 'table' ? 'cards' : 'table';
-        try { localStorage.setItem('genio_pkt_view_mode', pktState.viewMode); } catch (e) {}
+        genioSaveViewPref('genio_pkt_view_mode', pktState.viewMode);
         pktRenderList(true);
       });
       document.getElementById('pkt-list').addEventListener('click', function (e) {

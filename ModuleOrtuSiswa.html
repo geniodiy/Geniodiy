@@ -507,7 +507,7 @@
     ortuMode: 'baru',
     filterUnit: '',
     filterJenjang: '',
-    viewMode: (function () { try { return localStorage.getItem('genio_os_view_mode') || 'cards'; } catch (e) { return 'cards'; } })(),
+    viewMode: genioViewPref('genio_os_view_mode'),
     sort: { key: 'nama', dir: 'asc' }
   };
 
@@ -732,7 +732,7 @@
     var btn = document.getElementById('os-viewToggleBtn');
     if (btn) { btn.classList.remove('os-btn-pop'); void btn.offsetWidth; btn.classList.add('os-btn-pop'); }
     osState.viewMode = osState.viewMode === 'table' ? 'cards' : 'table';
-    try { localStorage.setItem('genio_os_view_mode', osState.viewMode); } catch (e) {}
+    genioSaveViewPref('genio_os_view_mode', osState.viewMode);
     osUpdateViewToggleUI();
     osRenderList(true);
   }

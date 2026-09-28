@@ -426,9 +426,7 @@
     itemList: [], unitOptions: [], search: '', filterUnit: '', initialized: false,
     viewYear: new Date().getFullYear(), viewMonth: new Date().getMonth(),
     sortField: 'tanggal', sortDir: 'desc', openCard: null,
-    viewMode: (function () {
-      try { return localStorage.getItem('genio_ops_view_mode') || 'cards'; } catch (e) { return 'cards'; }
-    })()
+    viewMode: genioViewPref('genio_ops_view_mode')
   };
 
   function opsEscape(str) {
@@ -770,7 +768,7 @@
       btn.classList.add('ops-btn-pop');
     }
     opsState.viewMode = (opsState.viewMode === 'table') ? 'cards' : 'table';
-    try { localStorage.setItem('genio_ops_view_mode', opsState.viewMode); } catch (e) {}
+    genioSaveViewPref('genio_ops_view_mode', opsState.viewMode);
     opsRenderList(true);
   }
 

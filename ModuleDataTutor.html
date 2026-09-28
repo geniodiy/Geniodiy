@@ -394,14 +394,7 @@
     filterGender: '',
     sortField: 'nama',
     sortDir: 'asc',
-    viewMode: (function () {
-      try {
-        var saved = localStorage.getItem('genio_dt_view_mode');
-        if (saved === 'cards' || saved === 'table') return saved;
-      } catch (e) {}
-      var isDesktop = window.matchMedia && window.matchMedia('(min-width: 900px)').matches;
-      return isDesktop ? 'table' : 'cards';
-    })()
+    viewMode: genioViewPref('genio_dt_view_mode')
   };
 
   function dtEscape(str) {
@@ -785,9 +778,7 @@
       btn.classList.add('dt-btn-pop');
     }
     dtState.viewMode = (dtState.viewMode === 'table') ? 'cards' : 'table';
-    try {
-      localStorage.setItem('genio_dt_view_mode', dtState.viewMode);
-    } catch (e) {}
+    genioSaveViewPref('genio_dt_view_mode', dtState.viewMode);
     dtRenderList(true);
   }
 

@@ -175,7 +175,7 @@
     'kontrak_tutor(id,mapel,fee_mengajar,uang_transport,durasi_menit,units(nama_unit),kontrak_siswa(siswa(nama,jenjang)))';
   var gt = {
     tab: 'rincian', q: '',
-    view: (function () { try { return localStorage.getItem('gt_view') || 'card'; } catch (e) { return 'card'; } })(),
+    view: genioViewPref('gt_view', 'card'),
     slips: [], presensi: [], profile: null, loaded: false, loading: false
   };
 
@@ -477,7 +477,7 @@
   document.getElementById('gt-search').addEventListener('input', function (e) { gt.q = e.target.value.trim().toLowerCase(); gtRender(false); });
   document.getElementById('gt-viewBtn').addEventListener('click', function () {
     gt.view = gt.view === 'table' ? 'card' : 'table';
-    try { localStorage.setItem('gt_view', gt.view); } catch (e) {}
+    genioSaveViewPref('gt_view', gt.view);
     gtRender(true);
   });
   document.getElementById('gt-slipBtn').addEventListener('click', function () { var per = genioGetPeriode(); gtOpenSlip(per, slipOf(per)); });

@@ -531,14 +531,7 @@
     search: '',
     sortField: 'hari',
     sortDir: 'asc',
-    viewMode: (function () {
-      try {
-        var saved = localStorage.getItem('genio_jdw_view_mode');
-        if (saved === 'cards' || saved === 'table') return saved;
-      } catch (e) {}
-      var isDesktop = window.matchMedia && window.matchMedia('(min-width: 900px)').matches;
-      return isDesktop ? 'table' : 'cards';
-    })(),
+    viewMode: genioViewPref('genio_jdw_view_mode'),
     selectedContractTutor: null
   };
 
@@ -1192,7 +1185,7 @@
     var btn = document.getElementById('jdw-viewToggleBtn');
     if (btn) { btn.classList.remove('jdw-btn-pop'); void btn.offsetWidth; btn.classList.add('jdw-btn-pop'); }
     jdwState.viewMode = (jdwState.viewMode === 'table') ? 'cards' : 'table';
-    try { localStorage.setItem('genio_jdw_view_mode', jdwState.viewMode); } catch (e) {}
+    genioSaveViewPref('genio_jdw_view_mode', jdwState.viewMode);
     jdwUpdateViewToggleUI();
     jdwRenderList(true);
   }

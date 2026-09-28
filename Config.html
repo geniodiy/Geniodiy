@@ -838,6 +838,25 @@
     var d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
   }
+  // ===== Tampilan kartu atau tabel (berlaku di semua modul dan role) =====
+  // HP (layar < 768px) mulai dari kartu, tablet dan desktop mulai dari tabel.
+  // Pilihan dari tombol ganti tampilan disimpan terpisah untuk HP dan untuk layar lebar.
+  function genioIsWideView() {
+    return window.matchMedia ? window.matchMedia('(min-width:768px)').matches : window.innerWidth >= 768;
+  }
+  function genioViewPref(key, cardVal) {
+    cardVal = cardVal || 'cards';
+    var dev = genioIsWideView() ? 'wide' : 'mobile';
+    try {
+      var v = localStorage.getItem(key + '@' + dev);
+      if (v === 'table' || v === cardVal) return v;
+    } catch (e) {}
+    return dev === 'wide' ? 'table' : cardVal;
+  }
+  function genioSaveViewPref(key, val) {
+    try { localStorage.setItem(key + '@' + (genioIsWideView() ? 'wide' : 'mobile'), val); } catch (e) {}
+  }
+
   function genioGetPeriode() {
     var v = null;
     try { v = sessionStorage.getItem('genio_periode'); } catch (e) {}

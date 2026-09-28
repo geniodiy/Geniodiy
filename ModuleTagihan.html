@@ -386,7 +386,7 @@
     search: '',
     filterUnit: '',
     filterCetak: '', // '' | 'sudah_dicetak' | 'belum_dicetak'
-    viewMode: (window.matchMedia && window.matchMedia('(min-width:900px)').matches) ? 'table' : 'cards',
+    viewMode: genioViewPref('genio_tg_view_mode'),
     sortField: 'nominal',
     sortDesc: true,
     rows: [],
@@ -493,7 +493,7 @@
     var btn = document.getElementById('tg-viewToggleBtn');
     if (btn) { btn.classList.remove('tg-btn-pop'); void btn.offsetWidth; btn.classList.add('tg-btn-pop'); }
     tgState.viewMode = (tgState.viewMode === 'table') ? 'cards' : 'table';
-    try { localStorage.setItem('genio_tg_view_mode', tgState.viewMode); } catch (e) {}
+    genioSaveViewPref('genio_tg_view_mode', tgState.viewMode);
     tgUpdateViewToggleUI();
     tgRenderList(true);
   }
@@ -1813,13 +1813,7 @@
       tgState.periode = y + '-' + String(m).padStart(2, '0');
     }
 
-    // Restore saved view preference if available
-    try {
-      var savedView = localStorage.getItem('genio_tg_view_mode');
-      if (savedView === 'cards' || savedView === 'table') {
-        tgState.viewMode = savedView;
-      }
-    } catch (e) {}
+    tgState.viewMode = genioViewPref('genio_tg_view_mode');
 
     tgUpdatePeriodeLabel();
 

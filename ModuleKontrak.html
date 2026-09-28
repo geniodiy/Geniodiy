@@ -769,9 +769,7 @@
     filterOrtu: [],
     sortField: 'nomor_kontrak',
     sortDir: 'asc',
-    viewMode: (function () {
-      try { return localStorage.getItem('genio_ktr_view_mode') || 'cards'; } catch (e) { return 'cards'; }
-    })()
+    viewMode: genioViewPref('genio_ktr_view_mode')
   };
 
   function ktrEscape(str) {
@@ -1080,9 +1078,7 @@
       btn.classList.add('ktr-btn-pop');
     }
     ktrState.viewMode = (ktrState.viewMode === 'table') ? 'cards' : 'table';
-    try {
-      localStorage.setItem('genio_ktr_view_mode', ktrState.viewMode);
-    } catch (e) {}
+    genioSaveViewPref('genio_ktr_view_mode', ktrState.viewMode);
     ktrRenderList(true);
   }
 

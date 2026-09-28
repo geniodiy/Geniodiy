@@ -1249,16 +1249,7 @@
     sortAsc: false,
     sortField: 'tanggal',
     sortDir: 'desc',
-    viewMode: (function () {
-      try {
-        var isDesktop = typeof window !== 'undefined' && window.innerWidth >= 900;
-        var saved = localStorage.getItem('genio_ps_view_mode');
-        if (saved === 'table' || saved === 'cards') return saved;
-        return isDesktop ? 'table' : 'cards';
-      } catch (e) {
-        return (typeof window !== 'undefined' && window.innerWidth >= 900) ? 'table' : 'cards';
-      }
-    })(),
+    viewMode: genioViewPref('genio_ps_view_mode'),
     role: null,
     editTargetId: null,
     filterUnit: '',
@@ -1840,9 +1831,7 @@
       btn.classList.add('ps-btn-pop');
     }
     psState.viewMode = (psState.viewMode === 'table') ? 'cards' : 'table';
-    try {
-      localStorage.setItem('genio_ps_view_mode', psState.viewMode);
-    } catch (e) {}
+    genioSaveViewPref('genio_ps_view_mode', psState.viewMode);
     psRenderList(true);
   }
 

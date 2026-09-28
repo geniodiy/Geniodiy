@@ -288,11 +288,7 @@
   window.genioModuleHandlers = window.genioModuleHandlers || {};
   window.genioModuleHandlers['kelola-pengguna'] = function () { kpInit(); };
 
-  var defaultKpView = (window.matchMedia && window.matchMedia('(min-width:900px)').matches) ? 'table' : 'cards';
-  try {
-    var savedKpView = localStorage.getItem('genio_kp_view_mode');
-    if (savedKpView === 'table' || savedKpView === 'cards') defaultKpView = savedKpView;
-  } catch (e) {}
+  var defaultKpView = genioViewPref('genio_kp_view_mode');
 
   var kpState = {
     tab: 'aktif',
@@ -432,7 +428,7 @@
     var btn = document.getElementById('kp-viewToggleBtn');
     btn.classList.remove('kp-btn-pop'); void btn.offsetWidth; btn.classList.add('kp-btn-pop');
     kpState.viewMode = (kpState.viewMode === 'table') ? 'cards' : 'table';
-    try { localStorage.setItem('genio_kp_view_mode', kpState.viewMode); } catch (e) {}
+    genioSaveViewPref('genio_kp_view_mode', kpState.viewMode);
     kpRenderList(true);
   }
 

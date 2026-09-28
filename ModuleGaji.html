@@ -481,7 +481,7 @@
     search: '',
     sortDesc: true,
     sortField: 'total_gaji',
-    viewMode: localStorage.getItem('genio_gj_view_mode') || 'cards'
+    viewMode: genioViewPref('genio_gj_view_mode')
   };
 
   function gjInit() {
@@ -491,10 +491,7 @@
     }
     gjUpdatePeriodeLabel();
 
-    var savedView = localStorage.getItem('genio_gj_view_mode');
-    if (savedView === 'table' || savedView === 'cards') {
-      gjState.viewMode = savedView;
-    }
+    gjState.viewMode = genioViewPref('genio_gj_view_mode');
     gjUpdateViewToggleUI();
 
     function gjOpenPeriodePicker() {
@@ -969,9 +966,7 @@
       btn.classList.add('gj-btn-pop');
     }
     gjState.viewMode = (gjState.viewMode === 'table') ? 'cards' : 'table';
-    try {
-      localStorage.setItem('genio_gj_view_mode', gjState.viewMode);
-    } catch (e) {}
+    genioSaveViewPref('genio_gj_view_mode', gjState.viewMode);
     gjUpdateViewToggleUI();
     gjRenderList(true);
   }
