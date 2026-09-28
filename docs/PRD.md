@@ -790,7 +790,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 | 4 | Data Ortu & Siswa | Selesai | Hapus permanen untuk data tanpa histori (sekarang hanya nonaktifkan, dan ini boleh tetap begitu) |
 | 5 | Paket Belajar | Selesai | |
 | 6 | Kontrak + Jadwal | Selesai | |
-| 7 | Presensi | Selesai (sisi Manajer) | PDF Laporan Belajar untuk presensi diwakilkan. Form isi presensi dan revisi oleh tutor masuk Fase 4. |
+| 7 | Presensi | Selesai (sisi Manajer), sisi tutor sebagian | PDF Laporan Belajar untuk presensi diwakilkan. Halaman Presensi tutor (isi, revisi, jadwal lengkap) sudah dibuat di Fase 4a. |
 | 8 | Tagihan | Selesai (dengan sinkron otomatis) | |
 | 9 | Operasional | Selesai | |
 | 10 | Penggajian | Selesai (dengan generate otomatis) | Pengeluaran gaji di Home membaca `slip_gaji`, jadi baru terisi setelah menu Gaji bulan itu dibuka. |
@@ -839,6 +839,33 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
   - Genio News.
 - **Belum diuji dengan akun HRD asli.**
 
+### [v5] Fase 4a: Presensi tutor (dikerjakan 28 Sep 2026)
+- **Dock tutor:** Beranda, Presensi, Gaji, Profil. Tidak ada menu Lainnya. Genio News nanti cukup tampil di Beranda.
+- **Beranda dan Gaji tutor** masih panel "sedang dikembangkan" (Fase 4b dan 4c).
+- **Halaman Presensi (`ModulePresensiTutor.html`, panel `presensi-tutor`):**
+  - **Highlight:**
+    - Angka utama: jumlah perlu tindakan, dengan batang presensi per minggu (amber = ada laporan telat).
+    - Ring status bulan ini.
+    - Tombol **Isi presensi**: pilih siswa, lalu isi form.
+  - **Tab Sesi dan laporan**, dengan filter:
+    - **Perlu tindakan:** laporan ditolak (Revisi laporan) di paling atas, lalu jadwal hari ini dan sesi fleksibel minggu ini yang belum dilapor.
+    - **Menunggu:** laporan yang belum diperiksa.
+    - **Selesai:** diterima atau visit pada periode header, dengan centang hijau.
+  - **Tab Jadwal lengkap:**
+    - Per kontrak aktif: jadwal acuan dan pertemuan bulan ini dibanding estimasi.
+    - Estimasi pertemuan = jumlah sesi per minggu × 4.
+    - Estimasi fee bulan ini, dengan rincian mengajar dan transport per sesi.
+  - **Tampilan:** kartu atau tabel. Kartu selalu sama tinggi dan tombol aksinya selalu satu dan sama lebar.
+  - **Lihat laporan:** preview HTML laporan belajar dari `previewLaporanBelajarHtml` di `Code.gs` (template yang sama dengan PDF), ditambah tautan lampiran dan PDF bila sudah ada.
+  - **Form:**
+    - Jadwal hanya acuan. Tanggal dan jam diisi sesuai pelaksanaan.
+    - Peringatan muncul bila sudah lewat 24 jam.
+    - Foto HEIC dikonversi dan dikompres ke JPEG maksimal 1600px.
+    - Revisi boleh mengubah tanggal, jam, materi, link, dan foto.
+  - **Keamanan:** trigger `presensi_before_write` memaksa laporan tutor berstatus `pending`, lihat `supabase/migrations/20260927_presensi_tutor_write_guard.sql`.
+- **Lonceng notifikasi tutor:** hanya laporan ditolak yang perlu direvisi.
+- **Belum diuji dengan akun tutor asli.**
+
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
 1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
 2. ~~Profil: Edit~~ (selesai). Dibutuhkan semua role. Isinya:
@@ -854,7 +881,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
    - Buat konfigurasi menu per role (dock + Lainnya).
    - Terapkan flag akses per modul (unit-scoped, read-only).
    - Uji RLS dengan akun asli.
-5. **Fase 4: Dashboard Tutor** (Section 6.1).
+5. **Fase 4: Dashboard Tutor** (Section 6.1). Presensi sudah (4a). Berikutnya Beranda (4b) dan Gaji (4c).
 6. **Genio News**, paling akhir. Sampai saat itu menu tetap berlabel "Coming Soon".
 
 Tidak dikerjakan untuk saat ini:

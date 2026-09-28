@@ -343,7 +343,11 @@
 
     <!-- ===== Tab: Presensi ===== -->
     <?!= include('ModulePresensi'); ?>
+    <?!= include('ModulePresensiTutor'); ?>
     <?!= include('ModuleGaji'); ?>
+    <!-- Beranda dan Gaji tutor: dibangun di tahap berikutnya (panel kosong = tampilan "sedang dikembangkan") -->
+    <div class="module-panel" data-module="home-tutor" hidden></div>
+    <div class="module-panel" data-module="gaji-tutor" hidden></div>
 
     <!-- ===== Tab: Lainnya — profil + menu di-generate JS ===== -->
     <div class="module-panel" data-module="lainnya" hidden>
@@ -470,13 +474,15 @@
     var GENIO_ROLE = session.role;
     var IS_KU = GENIO_ROLE === 'kepala_unit';
     var IS_HRD = GENIO_ROLE === 'hrd';
+    var IS_TUTOR = GENIO_ROLE === 'tutor';
     window.GENIO_ROLE = GENIO_ROLE;
     document.body.classList.add('role-' + GENIO_ROLE); // dipakai CSS untuk menyembunyikan tombol per role (lihat Config.html)
     if (typeof genioEnsureSessionProfile === 'function') genioEnsureSessionProfile();
     // Menu Lainnya yang boleh dilihat per role (role yang tidak tercantum melihat semua menu)
     var ROLE_MENU = {
       kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'data-tutor', 'operasional', 'genio-news'],
-      hrd: ['ortu-siswa', 'kontrak', 'presensi', 'genio-news']
+      hrd: ['ortu-siswa', 'kontrak', 'presensi', 'genio-news'],
+      tutor: []
     };
     function genioRetab(btnId, newTab, label, icon) {
       var b = document.getElementById(btnId);
@@ -491,6 +497,11 @@
       // HRD: dock Home, Tutor, Jadwal, Lainnya (Presensi hanya lihat, ada di Lainnya)
       genioRetab('nav-presensi', 'data-tutor', 'Tutor', 'chalkboard-teacher');
       genioRetab('nav-gaji', 'jadwal', 'Jadwal', 'calendar-blank');
+    }
+    if (IS_TUTOR) {
+      // Tutor: dock Beranda, Presensi, Gaji, Profil (tanpa menu Lainnya)
+      genioRetab('nav-home', 'home', 'Beranda', 'house');
+      genioRetab('nav-lainnya', 'profil', 'Profil', 'user-circle');
     }
     if (IS_KU) {
       // Kepala unit: posisi ke-3 dock = Jadwal mengajar (tidak punya menu Gaji)
@@ -561,8 +572,9 @@
     });
 
     var MODULE_TITLES = {
-      'home': ['Home', IS_KU ? 'Dashboard Kepala unit' : IS_HRD ? 'Dashboard HRD' : 'Dashboard Manajer'],
-      'presensi': ['Presensi', 'Approval & riwayat'],
+      'home': [IS_TUTOR ? 'Beranda' : 'Home', IS_KU ? 'Dashboard Kepala unit' : IS_HRD ? 'Dashboard HRD' : IS_TUTOR ? 'Dashboard tutor' : 'Dashboard Manajer'],
+      'presensi': ['Presensi', IS_TUTOR ? 'Sesi, laporan, dan jadwal' : 'Approval & riwayat'],
+      'profil': ['Profil', 'Informasi akun saya'],
       'gaji': ['Gaji', 'Slip gaji tutor'],
       'lainnya': ['Lainnya', 'Menu & pengaturan'],
       'profile-detail': ['Detail Profil', 'Informasi akun saya'],
@@ -733,6 +745,7 @@
     // ===== Dock glider & Header zoom animation engine =====
     var PRIMARY_TABS = IS_KU ? ['home', 'presensi', 'jadwal', 'lainnya']
       : IS_HRD ? ['home', 'data-tutor', 'jadwal', 'lainnya']
+      : IS_TUTOR ? ['home', 'presensi', 'gaji', 'profil']
       : ['home', 'presensi', 'gaji', 'lainnya'];
     var currentBottomTab = 'home';
     var currentActiveModule = 'home';
@@ -871,6 +884,8 @@
 
       // Home kepala unit dan HRD memakai panel tersendiri (ModuleHomeUnit.html)
       var panelName = (name === 'home' && (IS_KU || IS_HRD)) ? 'home-unit' : name;
+      // Tutor punya halaman sendiri untuk tiap tab dock
+      if (IS_TUTOR) panelName = ({ home: 'home-tutor', presensi: 'presensi-tutor', gaji: 'gaji-tutor', profil: 'profile-detail' })[name] || name;
       document.querySelectorAll('.module-panel').forEach(function (panel) {
         var isTarget = panel.dataset.module === panelName;
         var isSidebar = splitView && panel.dataset.module === 'lainnya';
@@ -1288,6 +1303,27 @@
           var latePresensi = [];
           var pendingTutor = [];
 
+          if (IS_TUTOR) {
+            // Tutor: cukup laporan yang ditolak dan perlu direvisi
+            var revItems = [];
+            try {
+              var revRes = await supaRest('presensi?status=eq.ditolak&select=id,tanggal,kontrak_tutor(mapel,kontrak_siswa(siswa(nama)))&order=tanggal.desc&limit=30', s.access_token);
+              (revRes || []).forEach(function (r) {
+                var sw = (r.kontrak_tutor && r.kontrak_tutor.kontrak_siswa && r.kontrak_tutor.kontrak_siswa.siswa && r.kontrak_tutor.kontrak_siswa.siswa.nama) || 'siswa';
+                revItems.push({
+                  id: 'revisi-' + r.id, type: 'presensi-revisi',
+                  title: 'Laporan ' + sw + ' ditolak, perlu revisi', tanggal: r.tanggal,
+                  icon: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>', iconBg: 'rgba(212,7,15,.1)', iconColor: '#D4070F'
+                });
+              });
+            } catch (errRev) { console.warn('Info notif revisi:', errRev.message); }
+            var readIdsT = genioGetReadIds();
+            genioNotifItems = revItems.map(function (it) { it.read = readIdsT.indexOf(it.id) !== -1; return it; });
+            genioRenderNotifBadge();
+            if (panel.style.display === 'block') genioRenderNotifList();
+            return;
+          }
+
           // 1. Ambil Presensi yang Menunggu Approval (status = pending)
           try {
             var presPendingRes = await supaRest('presensi?status=eq.pending&select=id,tanggal,status,terlambat,kontrak_tutor(users!kontrak_tutor_tutor_id_fkey(nama))&order=tanggal.desc&limit=40', s.access_token);
@@ -1454,6 +1490,10 @@
             genioCloseNotifPanel();
             var type = el.dataset.notifType;
             if (type === 'tutor-approval') { showModule('data-tutor'); }
+            else if (type === 'presensi-revisi') {
+              showModule('presensi');
+              if (window.genioModuleHandlers && window.genioModuleHandlers['presensi-tutor-goto']) window.genioModuleHandlers['presensi-tutor-goto']('tindakan');
+            }
             else {
               showModule('presensi');
               if (window.genioModuleHandlers && window.genioModuleHandlers['presensi-goto']) {

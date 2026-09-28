@@ -155,6 +155,18 @@ var LAPORAN_BELAJAR_FOLDER_ID = '1SZ8BUZRq_G0d283Ku-vLR9PHm_u2pfWi';
 var INVOICE_FOLDER_ID = '1GQicyee2sBrGzzdKVdGooB69kZuycoQJ';
 var KUITANSI_FOLDER_ID = '10E1hTgF-PHMTMUIrjQa4RHpk_BoUolGX';
 
+/**
+ * Preview laporan belajar dalam bentuk HTML (tampilan yang sama dengan PDF, tanpa membuat file).
+ * Dipakai tombol "Lihat laporan" di dashboard tutor.
+ */
+function previewLaporanBelajarHtml(laporanData) {
+  try {
+    return { success: true, html: buildLaporanBelajarHtml_(laporanData || {}) };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
 function generateLaporanBelajarPdf(laporanData) {
   try {
     var subfolder;
@@ -540,6 +552,9 @@ function buildLaporanBelajarHtml_(d) {
   var statusBadgeColor = isVisit ? '#007aff' : '#28a745';
   var statusBadgeBg = isVisit ? '#eaf3ff' : '#e8f5e9';
   var statusLabel = isVisit ? 'TELAH VISIT' : 'DISETUJUI / DITERIMA';
+  // Preview dari dashboard tutor juga bisa untuk laporan yang belum diperiksa atau ditolak
+  if (d.status === 'pending') { statusBadgeColor = '#b86e00'; statusBadgeBg = '#fff4e0'; statusLabel = 'MENUNGGU VERIFIKASI'; }
+  if (d.status === 'ditolak') { statusBadgeColor = '#d4070f'; statusBadgeBg = '#fdeaea'; statusLabel = 'PERLU REVISI'; }
 
   var escapeHtml = function (str) {
     if (!str) return '';
