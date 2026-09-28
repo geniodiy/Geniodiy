@@ -345,9 +345,9 @@
     <?!= include('ModulePresensi'); ?>
     <?!= include('ModulePresensiTutor'); ?>
     <?!= include('ModuleGaji'); ?>
-    <!-- Beranda dan Gaji tutor: dibangun di tahap berikutnya (panel kosong = tampilan "sedang dikembangkan") -->
+    <?!= include('ModuleGajiTutor'); ?>
+    <!-- Beranda tutor: dibangun di tahap berikutnya (panel kosong = tampilan "sedang dikembangkan") -->
     <div class="module-panel" data-module="home-tutor" hidden></div>
-    <div class="module-panel" data-module="gaji-tutor" hidden></div>
 
     <!-- ===== Tab: Lainnya — profil + menu di-generate JS ===== -->
     <div class="module-panel" data-module="lainnya" hidden>
@@ -575,7 +575,7 @@
       'home': [IS_TUTOR ? 'Beranda' : 'Home', IS_KU ? 'Dashboard Kepala unit' : IS_HRD ? 'Dashboard HRD' : IS_TUTOR ? 'Dashboard tutor' : 'Dashboard Manajer'],
       'presensi': ['Presensi', IS_TUTOR ? 'Sesi, laporan, dan jadwal' : 'Approval & riwayat'],
       'profil': ['Profil', 'Informasi akun saya'],
-      'gaji': ['Gaji', 'Slip gaji tutor'],
+      'gaji': ['Gaji', IS_TUTOR ? 'Gaji dan slip saya' : 'Slip gaji tutor'],
       'lainnya': ['Lainnya', 'Menu & pengaturan'],
       'profile-detail': ['Detail Profil', 'Informasi akun saya'],
       'ortu-siswa': ['Data Ortu & Siswa', 'Lintas unit'],

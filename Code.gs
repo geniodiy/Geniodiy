@@ -404,6 +404,18 @@ function getGenioLogoDataUri_() {
   return uri;
 }
 
+/**
+ * Preview slip gaji dalam bentuk HTML (tampilan yang sama dengan PDF, tanpa membuat file).
+ * Dipakai tombol "Lihat slip" di dashboard tutor.
+ */
+function previewSlipGajiHtml(slipData) {
+  try {
+    return { success: true, html: buildSlipGajiHtml_(slipData || {}) };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
 function buildSlipGajiHtml_(d) {
   var formatRp = function (n) {
     return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');

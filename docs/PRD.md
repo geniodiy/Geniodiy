@@ -841,7 +841,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 
 ### [v5] Fase 4a: Presensi tutor (dikerjakan 28 Sep 2026)
 - **Dock tutor:** Beranda, Presensi, Gaji, Profil. Tidak ada menu Lainnya. Genio News nanti cukup tampil di Beranda.
-- **Beranda dan Gaji tutor** masih panel "sedang dikembangkan" (Fase 4b dan 4c).
+- **Beranda tutor** masih panel "sedang dikembangkan" (Fase 4b). Gaji tutor sudah (Fase 4c, lihat di bawah).
 - **Halaman Presensi (`ModulePresensiTutor.html`, panel `presensi-tutor`):**
   - **Highlight:**
     - Angka utama: jumlah perlu tindakan, dengan batang presensi per minggu (amber = ada laporan telat).
@@ -866,6 +866,22 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Lonceng notifikasi tutor:** hanya laporan ditolak yang perlu direvisi.
 - **Belum diuji dengan akun tutor asli.**
 
+### [v5] Fase 4c: Gaji tutor (dikerjakan 28 Sep 2026)
+- **Halaman:** `ModuleGajiTutor.html`, panel `gaji-tutor`.
+- **Highlight:**
+  - Angka utama: gaji periode header, dari presensi diterima dan visit. Kalau slip sudah dibayar, angkanya diambil dari `slip_gaji.total_gaji`.
+  - Status: sudah dibayar dengan tanggal, menunggu transfer, atau masih berjalan.
+  - Batang 6 bulan, bulan terpilih berwarna mint.
+  - Legenda: sesi dibayar, visit, dan presensi yang masih menunggu approval (sesi dan nominal).
+  - Panel samping: mengajar, transport, visit, denda telat, dan rekening.
+  - Tombol **Lihat slip gaji**. Kalau slip belum dibuat, tombolnya jadi **Lihat estimasi slip**.
+- **Tab Rincian bulan ini:**
+  - Kartu per siswa: jumlah sesi, visit, jam, denda, dan total dibayar. Tombol "Lihat sesi" membuka tabel yang sudah difilter ke siswa itu.
+  - Tabel per sesi: mengajar, transport, denda, dan dibayar, dengan baris total.
+- **Tab Riwayat slip:** slip per periode dari `slip_gaji`, status sudah atau belum dibayar dengan tanggal transfer.
+- **Lihat slip:** preview HTML dari `previewSlipGajiHtml` di `Code.gs` (template yang sama dengan PDF slip), ditambah Unduh PDF bila sudah ada.
+- **Belum diuji dengan akun tutor asli.**
+
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
 1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
 2. ~~Profil: Edit~~ (selesai). Dibutuhkan semua role. Isinya:
@@ -881,7 +897,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
    - Buat konfigurasi menu per role (dock + Lainnya).
    - Terapkan flag akses per modul (unit-scoped, read-only).
    - Uji RLS dengan akun asli.
-5. **Fase 4: Dashboard Tutor** (Section 6.1). Presensi sudah (4a). Berikutnya Beranda (4b) dan Gaji (4c).
+5. **Fase 4: Dashboard Tutor** (Section 6.1). Presensi (4a) dan Gaji (4c) sudah. Berikutnya Beranda (4b).
 6. **Genio News**, paling akhir. Sampai saat itu menu tetap berlabel "Coming Soon".
 
 Tidak dikerjakan untuk saat ini:

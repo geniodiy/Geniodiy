@@ -1,0 +1,493 @@
+<div class="module-panel" data-module="gaji-tutor" hidden>
+
+<style>
+  /* Gaji tutor: gaya highlight, tab, kartu, dan tabel mengikuti Presensi tutor */
+  .module-panel[data-module="gaji-tutor"] .ps-hero-sec,
+  .module-panel[data-module="gaji-tutor"] .gt-toolbar{margin-bottom:14px;}
+  .gt-toolbar{display:flex; flex-direction:column; gap:12px;}
+  .gt-toolbar .ps-search-sec{margin:0;}
+  #gt-viewBtn{position:relative; width:34px; height:34px; color:var(--ink);}
+  .gt-hero-num{font-size:30px !important;}
+  .gt-hero-st{display:inline-flex; align-items:center; gap:6px; margin-top:8px; font-size:10.5px; font-weight:600; padding:3px 9px; border-radius:999px; background:rgba(255,255,255,.1); color:#fff;}
+  .gt-hero-st i{width:6px; height:6px; border-radius:50%; background:currentColor;}
+  .gt-hero-st.is-paid{color:#7CF0C3; background:rgba(124,240,195,.12);}
+  .gt-hero-st.is-wait{color:#FFC46B; background:rgba(255,196,107,.12);}
+  .gt-months .pc-week i{background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.15));}
+  .gt-months .pc-week.is-cur i{background:linear-gradient(180deg, rgba(124,240,195,.95), rgba(124,240,195,.3));}
+  .gt-months .pc-week span{font-size:8.5px;}
+  .gt-break{display:grid; gap:5px; font-size:10.5px; color:rgba(255,255,255,.72); min-width:0;}
+  .gt-break div{display:flex; align-items:center; gap:6px; white-space:nowrap; min-width:0;}
+  .gt-break div > i{width:7px; height:7px; border-radius:2px; flex:none;}
+  .gt-break b{margin-left:auto; padding-left:12px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .gt-break .is-minus b{color:#FF9C94;}
+  .gt-break .gt-bank{padding-top:6px; margin-top:2px; border-top:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.6);}
+  .gt-break .gt-bank b{font-weight:500; overflow:hidden; text-overflow:ellipsis; max-width:170px;}
+  #gt-slipBtn{
+    height:34px; padding:0 14px; border-radius:9px; width:100%;
+    background:#fff; color:var(--blue); border:1px solid #fff;
+    font-family:var(--font); font-size:11.5px; font-weight:600; white-space:nowrap; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    transition:background .15s ease, transform .1s ease;
+  }
+  #gt-slipBtn i{font-size:14px;}
+  #gt-slipBtn:hover{background:var(--blue-tint);}
+  #gt-slipBtn:active{transform:scale(.97);}
+  #gt-slipBtn:disabled{opacity:.6; cursor:default;}
+
+  .gt-sec{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; min-width:0;}
+  .gt-grid{display:grid; grid-template-columns:minmax(0,1fr); gap:12px; align-items:stretch;}
+  .gt-card{margin:0 !important; display:flex; flex-direction:column; min-width:0;}
+  .gt-av{position:relative; width:34px; height:34px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; background:var(--blue-tint); color:var(--blue); font-size:11px; font-weight:600;}
+  .gt-av.is-month{border-radius:10px; flex-direction:column; line-height:1; font-size:9px; font-weight:600; gap:2px;}
+  .gt-av.is-month b{font-size:13px; font-weight:700;}
+  .gt-chips{flex-wrap:nowrap !important; overflow:hidden;}
+  .gt-chips .pc2-chip{flex:none;}
+  .gt-chips .pc2-chip.is-visit{background:#EAF0FF; color:#2B59D9;} .gt-chips .pc2-chip.is-visit i{color:#2B59D9;}
+  .gt-info{height:34px; margin-top:10px; display:flex; align-items:center; min-width:0;}
+  .gt-info p{margin:0; font-size:10.5px; line-height:1.45; color:var(--ink-soft); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+  .gt-info p.is-ok{color:#1E8E5A;} .gt-info p.is-wait{color:#B86E00;}
+  .gt-card .pc2-foot{min-height:58px;}
+  .gt-foot-r{font-size:10px; color:var(--ink-soft); text-align:right; line-height:1.45; min-width:0;}
+  .gt-foot-r .is-minus{color:#D4070F;}
+  .gt-act{margin-top:auto; padding-top:12px;}
+  .gt-btn{width:100%; display:inline-flex !important; align-items:center; justify-content:center; gap:6px; cursor:pointer;}
+  .gt-tbtn{width:104px; height:28px !important;}
+  .pc2-status.is-done i{display:none;}
+  .pc2-status.is-done .ph-fill{font-size:12px;}
+
+  .gt-table .gt-stk{position:sticky; z-index:1; background:#fff;}
+  .gt-table th.gt-stk{z-index:2;}
+  .gt-table .gt-stk-no{left:0; width:40px; min-width:40px; max-width:40px; box-sizing:border-box; padding-left:6px !important; padding-right:6px !important; text-align:center;}
+  .gt-table .gt-stk-a{left:40px; width:92px; min-width:92px; max-width:92px; box-sizing:border-box; white-space:nowrap;}
+  .gt-table .gt-stk-b{left:132px; max-width:170px; box-shadow:1px 0 0 var(--border); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .gt-table.is-slip .gt-stk-a{width:auto; max-width:160px; box-shadow:1px 0 0 var(--border);}
+  .gt-table tbody tr:hover td.gt-stk{background:#F7F9FF;}
+  .gt-table td b{font-weight:600;}
+  .gt-table .gt-num{text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .gt-table .gt-minus{color:#D4070F;}
+  .gt-table tfoot td{background:var(--surface) !important; font-weight:700 !important; border-top:1px solid var(--border) !important;}
+  .gt-table tfoot td.gt-stk{background:var(--surface) !important;}
+  @media (max-width:899px){
+    .gt-table .gt-stk-a{width:62px; min-width:62px; max-width:62px; padding-left:8px !important; padding-right:8px !important;}
+    .gt-table .gt-stk-b{left:102px; max-width:96px; padding-left:8px !important;}
+    .gt-table.is-slip .gt-stk-a{width:auto; min-width:0; max-width:110px;}
+    .gt-table .gt-y{display:none;}
+  }
+  .gt-empty{grid-column:1/-1; background:#fff; border:1px solid var(--border); border-radius:14px; padding:34px 20px; text-align:center;}
+  .gt-empty i{display:inline-flex; width:44px; height:44px; border-radius:50%; background:var(--blue-tint); color:var(--blue); align-items:center; justify-content:center; font-size:20px; margin-bottom:10px;}
+  .gt-empty b{display:block; font-size:12.5px; font-weight:600; color:var(--ink);}
+  .gt-empty span{display:block; font-size:11px; color:var(--ink-soft); margin-top:3px;}
+
+  #gt-slipModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
+  #gt-slipModal.show{opacity:1;}
+  #gt-slipModal .modal-sheet.gx-sheet{max-width:760px !important;}
+  #gt-slipPdf[hidden]{display:none !important;}
+  #gt-slipPdf{text-decoration:none;}
+  .gt-slip-frame{width:100%; height:min(64vh, 720px); border:1px solid var(--border); border-radius:12px; background:#fff; display:block;}
+  .gt-slip-load{height:min(64vh, 720px); display:flex; align-items:center; justify-content:center; color:var(--ink-soft); font-size:11.5px; border:1px dashed var(--border); border-radius:12px;}
+
+  @keyframes gtIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @keyframes gtRowIn{from{opacity:0;} to{opacity:1;}}
+  .gt-grid .gt-card.gt-in{animation:gtIn .42s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 45ms);}
+  .gt-table tbody tr.gt-in td{animation:gtRowIn .35s ease both; animation-delay:calc(var(--i) * 30ms);}
+  .gt-months .pc-week i{transform-origin:bottom; animation:gtGrow .6s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 60ms);}
+  @keyframes gtGrow{from{transform:scaleY(0);} to{transform:scaleY(1);}}
+  @media (prefers-reduced-motion: reduce){
+    .gt-grid .gt-card.gt-in, .gt-table tbody tr.gt-in td, .gt-months .pc-week i{animation:none !important;}
+  }
+
+  @media (min-width:900px){
+    .module-panel[data-module="gaji-tutor"][hidden]{display:none !important;}
+    .module-panel[data-module="gaji-tutor"]:not([hidden]){width:94%; max-width:1500px; margin:0 auto;}
+    .gt-toolbar{flex-direction:row; align-items:center;}
+    .gt-toolbar .ps-dock{flex:none; width:auto; min-width:300px;}
+    .gt-toolbar .ps-search-sec{flex:1;}
+    .gt-grid{grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:14px;}
+    .gt-hero-num{font-size:34px !important;}
+  }
+</style>
+
+  <!-- Highlight: gaji periode ini + batang 6 bulan -->
+  <div class="ps-hero-sec">
+    <div class="pc-main">
+      <div class="pc-top">
+        <span class="ps-hero-label"><span class="pc-dot"></span>Gaji bulan ini</span>
+        <span class="ps-hero-periode-pill" id="gt-heroPill">-</span>
+      </div>
+      <div class="pc-row">
+        <div style="min-width:0;">
+          <span class="ps-hero-num gt-hero-num" id="gt-heroNum">Rp 0</span>
+          <div><span class="gt-hero-st" id="gt-heroSt"><i></i>-</span></div>
+        </div>
+        <div class="pc-weeks gt-months" id="gt-heroMonths" role="img" aria-label="Gaji 6 bulan terakhir"></div>
+      </div>
+      <div class="pc-legend" id="gt-heroLegend"></div>
+    </div>
+    <div class="pc-side ps-hero-actions">
+      <div class="gt-break" id="gt-heroBreak"></div>
+      <button id="gt-slipBtn" type="button"><i class="ph ph-file-text" aria-hidden="true"></i><span>Lihat slip gaji</span></button>
+    </div>
+  </div>
+
+  <div class="gt-toolbar">
+    <div class="ps-dock" id="gt-dock">
+      <div class="ps-dock-glider" id="gt-dockGlider"></div>
+      <button type="button" class="ps-dock-btn ps-dock-active" data-tab="rincian"><span>Rincian bulan ini</span><span class="ps-count ps-count-approval" id="gt-countRincian">0</span></button>
+      <button type="button" class="ps-dock-btn" data-tab="slip"><span>Riwayat slip</span><span class="ps-count ps-count-riwayat" id="gt-countSlip">0</span></button>
+    </div>
+    <div class="ps-search-sec">
+      <label class="ps-search-box">
+        <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+        <input type="text" id="gt-search" placeholder="Cari siswa atau mapel" aria-label="Cari">
+      </label>
+      <button id="gt-viewBtn" type="button" aria-label="Ubah tampilan" class="genio-tool-btn genio-tool-icon"></button>
+    </div>
+  </div>
+
+  <div class="gt-sec" id="gt-sec"></div>
+  <div id="gt-list"></div>
+
+  <!-- Popup preview slip gaji (tampilan HTML sebelum PDF) -->
+  <div class="modal-overlay" id="gt-slipModal" hidden>
+    <div class="modal-sheet gx-sheet">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-receipt" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Slip gaji</h3>
+          <p class="gx-sub" id="gt-slipSub">-</p>
+        </div>
+        <button type="button" class="gx-close" id="gt-slipClose" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="gx-body" style="padding-top:12px;"><div id="gt-slipBody"></div></div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="gt-slipOk">Tutup</button>
+        <a class="btn btn-primary" id="gt-slipPdf" target="_blank" rel="noopener" hidden>Unduh PDF</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  var GT_BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  var GT_HARI_S = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+  var GT_REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var GT_PRES_SELECT = 'id,kontrak_tutor_id,tanggal,jam,status,nominal_dibayar,denda,terlambat,materi_teks,' +
+    'kontrak_tutor(id,mapel,fee_mengajar,uang_transport,durasi_menit,units(nama_unit),kontrak_siswa(siswa(nama,jenjang)))';
+  var gt = {
+    tab: 'rincian', q: '',
+    view: (function () { try { return localStorage.getItem('gt_view') || 'card'; } catch (e) { return 'card'; } })(),
+    slips: [], presensi: [], profile: null, loaded: false, loading: false
+  };
+
+  function esc(s) { return genioEscapeHtml(s == null ? '' : String(s)); }
+  function rp(n) { return 'Rp ' + Math.round(n || 0).toLocaleString('id-ID'); }
+  function parseIso(s) { var p = String(s).slice(0, 10).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function tglPendek(s) { var d = parseIso(s); return GT_HARI_S[d.getDay()] + ', ' + d.getDate() + ' ' + GT_BLN[d.getMonth()]; }
+  function tglTabel(s) { var d = parseIso(s); return d.getDate() + ' ' + GT_BLN[d.getMonth()] + '<span class="gt-y"> ' + d.getFullYear() + '</span>'; }
+  function tsTanggal(ts) { if (!ts) return '-'; var d = new Date(ts); return d.getDate() + ' ' + GT_BLN[d.getMonth()] + ' ' + d.getFullYear(); }
+  function periodeLabel(p) { var x = p.split('-'); return GENIO_BULAN[+x[1] - 1] + ' ' + x[0]; }
+  function periodeShift(p, n) { var x = p.split('-'); var d = new Date(+x[0], +x[1] - 1 + n, 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
+  function periodeEnd(p) { var x = p.split('-'); return p + '-' + String(new Date(+x[0], +x[1], 0).getDate()).padStart(2, '0'); }
+  function ktSiswa(k) { return (k && k.kontrak_siswa && k.kontrak_siswa.siswa) || {}; }
+  function ktUnit(k) { return (k && k.units && k.units.nama_unit) || '-'; }
+  function jam5(t) { return t ? String(t).slice(0, 5).replace(':', '.') : ''; }
+  function bankText() {
+    var tp = gt.profile || {};
+    var b = (tp.nama_bank || '').trim(), r = (tp.no_rekening || '').trim();
+    return b && r ? b + ' ' + r : (b || r || 'Belum diisi');
+  }
+
+  // Rincian satu presensi: mengajar, transport, denda, dibayar
+  function parts(p) {
+    var kt = p.kontrak_tutor || {};
+    if (p.status === 'visit') return { mengajar: 0, transport: 0, visit: +p.nominal_dibayar || 0, denda: 0, dibayar: +p.nominal_dibayar || 0 };
+    var fee = +kt.fee_mengajar || 0, tr = +kt.uang_transport || 0, d = +p.denda || 0;
+    if (p.status === 'pending') return { mengajar: fee, transport: tr, visit: 0, denda: 0, dibayar: fee + tr };
+    return { mengajar: fee, transport: tr, visit: 0, denda: d, dibayar: +p.nominal_dibayar || (fee + tr - d) };
+  }
+  function monthRows(periode, withPending) {
+    var s = periode + '-01', e = periodeEnd(periode);
+    return gt.presensi.filter(function (p) {
+      return p.tanggal >= s && p.tanggal <= e && (p.status === 'diterima' || p.status === 'visit' || (withPending && p.status === 'pending'));
+    });
+  }
+  function sum(rows) {
+    var t = { mengajar: 0, transport: 0, visit: 0, denda: 0, dibayar: 0, sesi: 0, nVisit: 0, menit: 0 };
+    rows.forEach(function (p) {
+      var x = parts(p);
+      t.mengajar += x.mengajar; t.transport += x.transport; t.visit += x.visit; t.denda += x.denda; t.dibayar += x.dibayar;
+      t.sesi++; if (p.status === 'visit') t.nVisit++;
+      t.menit += +((p.kontrak_tutor || {}).durasi_menit) || 0;
+    });
+    return t;
+  }
+  function slipOf(periode) { return gt.slips.find(function (s) { return s.periode === periode; }) || null; }
+
+  async function gtLoad() {
+    var s = genioGetSession();
+    if (!s || s.role !== 'tutor' || gt.loading) return;
+    gt.loading = true;
+    if (!gt.loaded) document.getElementById('gt-list').innerHTML = '<div class="gt-empty"><b>Memuat gaji...</b></div>';
+    try {
+      var per = genioGetPeriode();
+      var from = periodeShift(per, -5) + '-01';
+      var res = await Promise.all([
+        supaRest('slip_gaji?tutor_id=eq.' + s.user_id + '&select=id,periode,total_pertemuan,total_gaji,status,tanggal_dibayar,pdf_url&order=periode.desc&limit=24', s.access_token),
+        supaRest('presensi?select=' + GT_PRES_SELECT + '&status=in.(diterima,visit,pending)&tanggal=gte.' + from + '&tanggal=lte.' + periodeEnd(per) + '&order=tanggal.desc,jam.desc', s.access_token),
+        supaRest('tutor_profile?user_id=eq.' + s.user_id + '&select=nama_bank,no_rekening', s.access_token)
+      ]);
+      gt.slips = res[0] || [];
+      gt.presensi = res[1] || [];
+      gt.profile = (res[2] && res[2][0]) || null;
+      gt.loaded = true;
+      gtRender(true);
+    } catch (err) {
+      document.getElementById('gt-list').innerHTML = '<div class="gt-empty"><i class="ph ph-warning"></i><b>Gagal memuat gaji</b><span>' + esc(err.message) + '</span></div>';
+    } finally { gt.loading = false; }
+  }
+
+  function gtRender(animate) {
+    var per = genioGetPeriode();
+    var rows = monthRows(per, false), t = sum(rows);
+    var pending = sum(gt.presensi.filter(function (p) { return p.status === 'pending' && p.tanggal >= per + '-01' && p.tanggal <= periodeEnd(per); }));
+    gtRenderHero(per, t, pending, animate);
+    var groups = gtGroups(rows);
+    document.getElementById('gt-countRincian').textContent = rows.length;
+    document.getElementById('gt-countSlip').textContent = gt.slips.length;
+    gtSyncDock();
+    gtRenderViewBtn();
+    var sec = document.getElementById('gt-sec'), list = document.getElementById('gt-list');
+    if (gt.tab === 'rincian') {
+      sec.innerHTML = '<div style="min-width:0;"><div class="ps-section-title">Rincian ' + esc(periodeLabel(per)) + '</div><div class="ps-section-sub">Hanya presensi yang diterima atau visit. Yang masih menunggu belum dihitung.</div></div>';
+      var q = gt.q;
+      if (gt.view === 'table') {
+        var rs = rows.filter(function (p) { var k = p.kontrak_tutor || {}; return !q || (ktSiswa(k).nama + ' ' + k.mapel + ' ' + tglPendek(p.tanggal)).toLowerCase().indexOf(q) !== -1; });
+        list.className = rs.length ? '' : 'gt-grid';
+        list.innerHTML = rs.length ? gtRincianTable(rs) : gtEmpty('rincian');
+      } else {
+        var gs = groups.filter(function (g) { return !q || (g.nama + ' ' + g.k.mapel).toLowerCase().indexOf(q) !== -1; });
+        list.className = 'gt-grid';
+        list.innerHTML = gs.length ? gs.map(gtGroupCard).join('') : gtEmpty('rincian');
+        list.querySelectorAll('[data-lihat]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var g = gs[+b.dataset.lihat]; if (!g) return;
+            gt.view = 'table'; gt.q = g.nama.toLowerCase();
+            document.getElementById('gt-search').value = g.nama;
+            gtRender(true);
+          });
+        });
+      }
+    } else {
+      sec.innerHTML = '<div style="min-width:0;"><div class="ps-section-title">Riwayat slip gaji</div><div class="ps-section-sub">Slip dibuat oleh manajer setiap periode, lalu ditandai setelah ditransfer.</div></div>';
+      var sl = gt.slips.filter(function (x) { return !gt.q || periodeLabel(x.periode).toLowerCase().indexOf(gt.q) !== -1; });
+      if (!sl.length) { list.className = 'gt-grid'; list.innerHTML = gtEmpty('slip'); }
+      else if (gt.view === 'table') { list.className = ''; list.innerHTML = gtSlipTable(sl); }
+      else { list.className = 'gt-grid'; list.innerHTML = sl.map(gtSlipCard).join(''); }
+      list.querySelectorAll('[data-slip]').forEach(function (b) {
+        b.addEventListener('click', function () { var x = gt.slips.find(function (y) { return y.id === b.dataset.slip; }); if (x) gtOpenSlip(x.periode, x); });
+      });
+    }
+    if (animate && !GT_REDUCED) {
+      list.querySelectorAll('.gt-card, .gt-table tbody tr').forEach(function (el, i) { el.style.setProperty('--i', Math.min(i, 12)); el.classList.add('gt-in'); });
+    }
+  }
+
+  function gtEmpty(kind) {
+    if (gt.q) return '<div class="gt-empty"><i class="ph ph-magnifying-glass"></i><b>Tidak ada yang cocok</b><span>Coba kata kunci lain.</span></div>';
+    if (kind === 'slip') return '<div class="gt-empty"><i class="ph ph-receipt"></i><b>Belum ada slip gaji</b><span>Slip muncul setelah manajer membuat slip untuk periode Anda.</span></div>';
+    return '<div class="gt-empty"><i class="ph ph-wallet"></i><b>Belum ada gaji di periode ini</b><span>Presensi yang diterima atau visit akan dihitung di sini.</span></div>';
+  }
+
+  function gtRenderHero(per, t, pending, animate) {
+    var slip = slipOf(per);
+    var num = document.getElementById('gt-heroNum');
+    var total = slip && slip.status === 'sudah_dibayar' ? +slip.total_gaji || t.dibayar : t.dibayar;
+    if (animate && typeof homeRevealValue === 'function') homeRevealValue(num, rp(total)); else num.textContent = rp(total);
+    document.getElementById('gt-heroPill').textContent = periodeLabel(per);
+    var st = document.getElementById('gt-heroSt');
+    var isCur = per === genioCurrentPeriode();
+    if (slip && slip.status === 'sudah_dibayar') { st.className = 'gt-hero-st is-paid'; st.innerHTML = '<i></i>Sudah dibayar ' + esc(tsTanggal(slip.tanggal_dibayar)); }
+    else if (slip) { st.className = 'gt-hero-st is-wait'; st.innerHTML = '<i></i>Slip dibuat, menunggu transfer'; }
+    else { st.className = 'gt-hero-st'; st.innerHTML = '<i></i>' + (isCur ? 'Masih berjalan, slip dibuat setelah periode selesai' : 'Slip belum dibuat'); }
+    document.getElementById('gt-heroLegend').innerHTML =
+      '<span class="pc-lg"><i style="background:#7CF0C3;"></i>Sesi dibayar <b>' + (t.sesi - t.nVisit) + '</b></span>' +
+      '<span class="pc-lg"><i style="background:#9DB4FF;"></i>Visit <b>' + t.nVisit + '</b></span>' +
+      (pending.sesi ? '<span class="pc-lg"><i style="background:#FFC46B;"></i>Menunggu approval <b>' + pending.sesi + ' sesi, ' + rp(pending.dibayar) + '</b></span>' : '');
+    // Batang 6 bulan (bulan terpilih berwarna mint)
+    var months = [];
+    for (var i = -5; i <= 0; i++) { var p = periodeShift(per, i); months.push({ p: p, v: sum(monthRows(p, false)).dibayar }); }
+    months.forEach(function (m) { var sl = slipOf(m.p); if (sl && sl.status === 'sudah_dibayar' && +sl.total_gaji) m.v = +sl.total_gaji; });
+    var max = Math.max.apply(null, months.map(function (m) { return m.v; })) || 1;
+    document.getElementById('gt-heroMonths').innerHTML = months.map(function (m, i) {
+      var pct = m.v ? Math.max(8, Math.round(m.v / max * 100)) : 0;
+      return '<div class="pc-week' + (m.p === per ? ' is-cur' : '') + '" style="--i:' + i + ';" title="' + periodeLabel(m.p) + ': ' + rp(m.v) + '"><i style="height:calc((100% - 13px) * ' + (pct / 100) + ')"></i><span>' + GT_BLN[+m.p.split('-')[1] - 1] + '</span></div>';
+    }).join('');
+    document.getElementById('gt-heroBreak').innerHTML =
+      '<div><i style="background:#7CF0C3;"></i>Mengajar<b>' + rp(t.mengajar) + '</b></div>' +
+      '<div><i style="background:#C9B8FF;"></i>Transport<b>' + rp(t.transport) + '</b></div>' +
+      '<div><i style="background:#9DB4FF;"></i>Visit<b>' + rp(t.visit) + '</b></div>' +
+      '<div class="is-minus"><i style="background:#FF9C94;"></i>Denda telat<b>' + (t.denda ? '&minus;' + rp(t.denda) : rp(0)) + '</b></div>' +
+      '<div class="gt-bank"><i style="background:transparent;"></i>Rekening<b title="' + esc(bankText()) + '">' + esc(bankText()) + '</b></div>';
+    var btn = document.getElementById('gt-slipBtn');
+    btn.disabled = !t.sesi && !slip;
+    btn.querySelector('span').textContent = slip ? 'Lihat slip gaji' : 'Lihat estimasi slip';
+  }
+
+  function gtGroups(rows) {
+    var map = {}, out = [];
+    rows.forEach(function (p) {
+      var k = p.kontrak_tutor || {}, id = k.id || p.kontrak_tutor_id;
+      if (!map[id]) { map[id] = { k: k, nama: ktSiswa(k).nama || '-', rows: [] }; out.push(map[id]); }
+      map[id].rows.push(p);
+    });
+    out.forEach(function (g) { g.t = sum(g.rows); });
+    return out.sort(function (a, b) { return b.t.dibayar - a.t.dibayar; });
+  }
+  function gtGroupCard(g, idx) {
+    var k = g.k, sw = ktSiswa(k), t = g.t, dibayarSesi = t.sesi - t.nVisit;
+    var info = t.denda ? '<p class="is-wait">' + g.rows.filter(function (p) { return +p.denda; }).length + ' laporan terlambat, denda &minus;' + rp(t.denda) + '.</p>'
+      : '<p class="is-ok">Semua laporan tepat waktu, tanpa denda.</p>';
+    return '<div class="ps-card pc2-card gt-card">' +
+      '<div class="pc2-head"><span class="gt-av">' + genioAvatarInner(g.nama, null, genioInitials(g.nama)) + '</span>' +
+        '<div class="pc2-who"><h4>' + esc(g.nama) + '</h4><p>' + esc((k.mapel || '-') + (sw.jenjang ? ' ' + sw.jenjang : '') + ' · Unit ' + ktUnit(k)) + '</p></div></div>' +
+      '<div class="pc2-chips gt-chips">' + (dibayarSesi ? '<span class="pc2-chip"><i class="ph ph-check-circle" aria-hidden="true"></i>' + dibayarSesi + ' sesi</span>' : '') +
+        (t.nVisit ? '<span class="pc2-chip is-visit"><i class="ph ph-arrow-right" aria-hidden="true"></i>' + t.nVisit + ' visit</span>' : '') +
+        '<span class="pc2-chip"><i class="ph ph-clock" aria-hidden="true"></i>' + (Math.round(t.menit / 6) / 10) + ' jam</span></div>' +
+      '<div class="gt-info">' + info + '</div>' +
+      '<div class="pc2-foot"><div class="pc2-honor"><span>Total dibayar</span><b>' + rp(t.dibayar) + '</b></div>' +
+        '<div class="gt-foot-r">' + [t.mengajar ? 'Mengajar ' + rp(t.mengajar) : '', t.transport ? 'Transport ' + rp(t.transport) : '', t.visit ? 'Visit ' + rp(t.visit) : ''].filter(Boolean).join('<br>') + '</div></div>' +
+      '<div class="gt-act"><button type="button" class="pc2-btn is-visit gt-btn" data-lihat="' + idx + '"><i class="ph ph-list-bullets" aria-hidden="true"></i>Lihat sesi</button></div>' +
+    '</div>';
+  }
+  function gtRincianTable(rs) {
+    var tot = sum(rs);
+    var trs = rs.map(function (p, i) {
+      var k = p.kontrak_tutor || {}, x = parts(p), nama = ktSiswa(k).nama || '-';
+      var st = p.status === 'visit'
+        ? '<span class="pc2-status is-done" style="--st:#2B59D9; background:#EAF0FF;"><i></i><span class="ph-fill ph-check-circle" aria-hidden="true"></span>Visit</span>'
+        : '<span class="pc2-status is-done" style="--st:#1E8E5A; background:#E9F7EF;"><i></i><span class="ph-fill ph-check-circle" aria-hidden="true"></span>Diterima</span>';
+      return '<tr><td class="gt-stk gt-stk-no">' + (i + 1) + '</td><td class="gt-stk gt-stk-a">' + tglTabel(p.tanggal) + '</td>' +
+        '<td class="gt-stk gt-stk-b" title="' + esc(nama) + '"><b>' + esc(nama) + '</b></td>' +
+        '<td style="white-space:nowrap;">' + esc(k.mapel || '-') + '</td><td style="white-space:nowrap;">' + esc(jam5(p.jam)) + '</td>' +
+        '<td style="text-align:center;">' + st + '</td>' +
+        '<td class="gt-num">' + rp(x.mengajar + x.visit) + '</td><td class="gt-num">' + rp(x.transport) + '</td>' +
+        '<td class="gt-num' + (x.denda ? ' gt-minus' : '') + '">' + (x.denda ? '&minus;' + rp(x.denda) : '-') + '</td>' +
+        '<td class="gt-num"><b style="font-weight:700;">' + rp(x.dibayar) + '</b></td></tr>';
+    }).join('');
+    return '<div class="ps-table-card"><div class="ps-table-wrap"><table class="ps-table gt-table"><thead><tr>' +
+      '<th class="gt-stk gt-stk-no">No</th><th class="gt-stk gt-stk-a">Tanggal</th><th class="gt-stk gt-stk-b">Siswa</th><th>Mapel</th><th>Jam</th><th style="text-align:center;">Status</th>' +
+      '<th style="text-align:right;">Mengajar</th><th style="text-align:right;">Transport</th><th style="text-align:right;">Denda</th><th style="text-align:right;">Dibayar</th>' +
+      '</tr></thead><tbody>' + trs + '</tbody><tfoot><tr><td class="gt-stk gt-stk-no"></td><td class="gt-stk gt-stk-a">Total</td><td class="gt-stk gt-stk-b">' + tot.sesi + ' sesi</td><td></td><td></td><td></td>' +
+      '<td class="gt-num">' + rp(tot.mengajar + tot.visit) + '</td><td class="gt-num">' + rp(tot.transport) + '</td><td class="gt-num gt-minus">' + (tot.denda ? '&minus;' + rp(tot.denda) : '-') + '</td><td class="gt-num">' + rp(tot.dibayar) + '</td></tr></tfoot></table></div></div>';
+  }
+  function gtSlipPill(s) {
+    return s.status === 'sudah_dibayar'
+      ? '<span class="pc2-status is-done" style="--st:#1E8E5A; background:#E9F7EF;"><i></i><span class="ph-fill ph-check-circle" aria-hidden="true"></span>Sudah dibayar</span>'
+      : '<span class="pc2-status" style="--st:#C27400; background:#FFF4E0;"><i></i>Belum dibayar</span>';
+  }
+  function gtSlipCard(s) {
+    var x = s.periode.split('-'), paid = s.status === 'sudah_dibayar';
+    return '<div class="ps-card pc2-card gt-card">' +
+      '<div class="pc2-head"><span class="gt-av is-month">' + GT_BLN[+x[1] - 1] + '<b>' + x[0].slice(2) + '</b></span>' +
+        '<div class="pc2-who"><h4>' + esc(periodeLabel(s.periode)) + '</h4><p>' + (s.total_pertemuan || 0) + ' sesi mengajar</p></div>' + gtSlipPill(s) + '</div>' +
+      '<div class="pc2-chips gt-chips"><span class="pc2-chip"><i class="ph ph-bank" aria-hidden="true"></i>' + esc(bankText()) + '</span></div>' +
+      '<div class="gt-info"><p class="' + (paid ? 'is-ok' : 'is-wait') + '">' + (paid ? 'Ditransfer ' + esc(tsTanggal(s.tanggal_dibayar)) + '.' : 'Menunggu transfer dari manajer.') + '</p></div>' +
+      '<div class="pc2-foot"><div class="pc2-honor"><span>Total gaji</span><b>' + rp(s.total_gaji) + '</b></div><div class="gt-foot-r">' + (s.pdf_url ? '<i class="ph ph-file-pdf"></i> PDF tersedia' : 'PDF belum dibuat') + '</div></div>' +
+      '<div class="gt-act"><button type="button" class="pc2-btn is-visit gt-btn" data-slip="' + s.id + '"><i class="ph ph-eye" aria-hidden="true"></i>Lihat slip</button></div>' +
+    '</div>';
+  }
+  function gtSlipTable(sl) {
+    var trs = sl.map(function (s, i) {
+      return '<tr><td class="gt-stk gt-stk-no">' + (i + 1) + '</td><td class="gt-stk gt-stk-a"><b>' + esc(periodeLabel(s.periode)) + '</b></td>' +
+        '<td style="white-space:nowrap;">' + (s.total_pertemuan || 0) + ' sesi</td><td class="gt-num"><b style="font-weight:700;">' + rp(s.total_gaji) + '</b></td>' +
+        '<td style="text-align:center;">' + gtSlipPill(s) + '</td><td style="white-space:nowrap;">' + (s.status === 'sudah_dibayar' ? esc(tsTanggal(s.tanggal_dibayar)) : '-') + '</td>' +
+        '<td style="text-align:center;"><button type="button" class="pc2-btn is-visit gt-btn gt-tbtn" data-slip="' + s.id + '"><i class="ph ph-eye" aria-hidden="true"></i>Lihat</button></td></tr>';
+    }).join('');
+    return '<div class="ps-table-card"><div class="ps-table-wrap"><table class="ps-table gt-table is-slip"><thead><tr>' +
+      '<th class="gt-stk gt-stk-no">No</th><th class="gt-stk gt-stk-a">Periode</th><th>Pertemuan</th><th style="text-align:right;">Total gaji</th><th style="text-align:center;">Status</th><th>Tanggal transfer</th><th style="text-align:center;">Aksi</th>' +
+      '</tr></thead><tbody>' + trs + '</tbody></table></div></div>';
+  }
+
+  // ===== Preview slip (template buildSlipGajiHtml_ yang sama dengan PDF) =====
+  async function gtOpenSlip(periode, slip) {
+    var modal = document.getElementById('gt-slipModal');
+    var body = document.getElementById('gt-slipBody');
+    document.getElementById('gt-slipSub').textContent = periodeLabel(periode) + (slip ? (slip.status === 'sudah_dibayar' ? ' · Sudah dibayar' : ' · Belum dibayar') : ' · Estimasi, slip belum dibuat');
+    body.innerHTML = '<div class="gt-slip-load">Menyiapkan slip gaji...</div>';
+    var pdf = document.getElementById('gt-slipPdf');
+    if (slip && slip.pdf_url) { pdf.href = slip.pdf_url; pdf.hidden = false; } else { pdf.hidden = true; pdf.removeAttribute('href'); }
+    modal.hidden = false; modal.style.display = 'flex'; requestAnimationFrame(function () { modal.classList.add('show'); });
+    try {
+      var rows = monthRows(periode, false);
+      if (!rows.length && periode < periodeShift(genioGetPeriode(), -5)) {
+        var s = genioGetSession();
+        rows = await supaRest('presensi?select=' + GT_PRES_SELECT + '&status=in.(diterima,visit)&tanggal=gte.' + periode + '-01&tanggal=lte.' + periodeEnd(periode) + '&order=tanggal.asc', s.access_token);
+      }
+      rows = rows.slice().sort(function (a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); });
+      var t = sum(rows), mapel = {};
+      rows.forEach(function (p) { var m = (p.kontrak_tutor || {}).mapel; if (m) mapel[m] = true; });
+      var session = genioGetSession();
+      var payload = {
+        id: slip ? slip.id : '', tutorNama: (session && session.nama) || 'Tutor', bankText: bankText(),
+        mapel: Object.keys(mapel).join(', ') || '-', periode: periode, periodeLabel: periodeLabel(periode),
+        totalPertemuan: slip ? (slip.total_pertemuan || t.sesi) : t.sesi,
+        totalJam: t.menit ? (Math.round(t.menit / 6) / 10) + ' Jam' : '-',
+        totalGaji: slip ? (+slip.total_gaji || t.dibayar) : t.dibayar,
+        status: slip ? slip.status : 'belum_dibayar',
+        tanggalDibayar: slip && slip.tanggal_dibayar ? new Date(slip.tanggal_dibayar).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : '-',
+        rincianPresensi: rows.map(function (p) {
+          var k = p.kontrak_tutor || {}, sw = ktSiswa(k);
+          return { tanggal: tglPendek(p.tanggal), mapel: (k.mapel || '-') + ' · ' + (sw.nama || '-'), materi: p.status === 'visit' ? 'Visit' : (p.materi_teks || 'Sesi pembelajaran'), durasi: k.durasi_menit ? (Math.round(k.durasi_menit / 6) / 10) + ' Jam' : '-', nominal: parts(p).dibayar };
+        })
+      };
+      if (!(window.google && google.script && google.script.run)) { body.innerHTML = '<div class="gt-slip-load">Preview hanya tersedia di aplikasi.</div>'; return; }
+      google.script.run
+        .withSuccessHandler(function (r) {
+          if (!r || !r.success) { body.innerHTML = '<div class="gt-slip-load">' + esc((r && r.error) || 'Preview gagal dimuat') + '</div>'; return; }
+          var fr = document.createElement('iframe');
+          fr.className = 'gt-slip-frame'; fr.title = 'Preview slip gaji'; fr.setAttribute('sandbox', 'allow-popups allow-popups-to-escape-sandbox');
+          fr.srcdoc = r.html; body.innerHTML = ''; body.appendChild(fr);
+        })
+        .withFailureHandler(function (e) { body.innerHTML = '<div class="gt-slip-load">' + esc(e.message || e) + '</div>'; })
+        .previewSlipGajiHtml(payload);
+    } catch (err) {
+      body.innerHTML = '<div class="gt-slip-load">' + esc(err.message) + '</div>';
+    }
+  }
+  function gtCloseSlip() { var m = document.getElementById('gt-slipModal'); m.classList.remove('show'); setTimeout(function () { m.hidden = true; m.style.display = 'none'; }, 280); }
+
+  function gtSyncDock() {
+    var act = null;
+    document.querySelectorAll('#gt-dock .ps-dock-btn').forEach(function (b) { var on = b.dataset.tab === gt.tab; b.classList.toggle('ps-dock-active', on); if (on) act = b; });
+    var gl = document.getElementById('gt-dockGlider');
+    if (act && gl && act.offsetWidth) { gl.style.width = act.offsetWidth + 'px'; gl.style.left = act.offsetLeft + 'px'; }
+    document.getElementById('gt-search').placeholder = gt.tab === 'rincian' ? 'Cari siswa, mapel, tanggal' : 'Cari periode';
+  }
+  function gtRenderViewBtn() {
+    var b = document.getElementById('gt-viewBtn'), isTable = gt.view === 'table';
+    b.title = isTable ? 'Tampilkan sebagai kartu' : 'Tampilkan sebagai tabel';
+    b.innerHTML = isTable
+      ? '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>';
+  }
+
+  document.querySelectorAll('#gt-dock .ps-dock-btn').forEach(function (b) {
+    b.addEventListener('click', function () { if (gt.tab === b.dataset.tab) return; gt.tab = b.dataset.tab; gt.q = ''; document.getElementById('gt-search').value = ''; gtRender(true); });
+  });
+  document.getElementById('gt-search').addEventListener('input', function (e) { gt.q = e.target.value.trim().toLowerCase(); gtRender(false); });
+  document.getElementById('gt-viewBtn').addEventListener('click', function () {
+    gt.view = gt.view === 'table' ? 'card' : 'table';
+    try { localStorage.setItem('gt_view', gt.view); } catch (e) {}
+    gtRender(true);
+  });
+  document.getElementById('gt-slipBtn').addEventListener('click', function () { var per = genioGetPeriode(); gtOpenSlip(per, slipOf(per)); });
+  ['gt-slipClose', 'gt-slipOk'].forEach(function (id) { document.getElementById(id).addEventListener('click', gtCloseSlip); });
+  document.getElementById('gt-slipModal').addEventListener('click', function (e) { if (e.target === this) gtCloseSlip(); });
+  window.addEventListener('resize', function () { if (genioIsModuleVisible('gaji-tutor')) gtSyncDock(); });
+  window.addEventListener('genio:periode', function () { if (genioIsModuleVisible('gaji-tutor')) gtLoad(); else gt.loaded = false; });
+
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['gaji-tutor'] = function () { gtSyncDock(); gtLoad(); };
+})();
+</script>
+</div>
