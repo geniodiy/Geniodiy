@@ -913,6 +913,83 @@
     if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
   }
 
+  // Tombol x di semua kolom pencarian (input teks berplaceholder "Cari..."), termasuk yang dibuat belakangan.
+  // Menghapus isi lalu memicu event input supaya filter halaman ikut diperbarui.
+  (function genioSearchClear() {
+    var tracked = [];
+    var ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    var css = document.createElement('style');
+    css.textContent = '.genio-clear{position:absolute; z-index:3; width:20px; height:20px; padding:0; border:0; border-radius:50%; background:#E7E9F3; color:#5B6078; display:none; align-items:center; justify-content:center; cursor:pointer; transition:background .15s ease, transform .1s ease;}' +
+      '.genio-clear:hover{background:#D5D9EA; color:#20233A;} .genio-clear:active{transform:scale(.9);}' +
+      '.genio-clear.is-on{display:inline-flex;}';
+    document.head.appendChild(css);
+
+    function isSearch(el) {
+      if (!el || el.tagName !== 'INPUT' || el._genioClear) return false;
+      var t = (el.getAttribute('type') || 'text').toLowerCase();
+      if (t === 'search') return true;
+      return t === 'text' && /^cari/i.test(el.getAttribute('placeholder') || '');
+    }
+    function place(rec) {
+      var el = rec.input, b = rec.btn, host = rec.host;
+      var on = !!el.value && el.offsetParent !== null && !el.disabled && !el.readOnly;
+      b.classList.toggle('is-on', on);
+      if (!on) return;
+      var cs = getComputedStyle(el), borderless = !(parseFloat(cs.borderTopWidth) > 0);
+      if (borderless && host.clientHeight > el.offsetHeight) {
+        // Input tanpa border di dalam kotak pembungkus (label): tombol menempel di sisi kanan kotak
+        b.style.left = (host.clientWidth - 30) + 'px';
+        b.style.top = ((host.clientHeight - 20) / 2) + 'px';
+      } else {
+        var ir = el.getBoundingClientRect(), hr = host.getBoundingClientRect();
+        b.style.left = (ir.right - hr.left - host.clientLeft - 28) + 'px';
+        b.style.top = (ir.top - hr.top - host.clientTop + (ir.height - 20) / 2) + 'px';
+      }
+    }
+    function attach(el) {
+      if (!isSearch(el) || !el.parentNode) return;
+      el._genioClear = true;
+      var host = el.parentNode;
+      if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'genio-clear'; b.tabIndex = -1;
+      b.setAttribute('aria-label', 'Hapus pencarian'); b.title = 'Hapus pencarian';
+      b.innerHTML = ICON;
+      host.appendChild(b);
+      var pr = parseFloat(getComputedStyle(el).paddingRight) || 0;
+      if (pr < 34) el.style.paddingRight = '34px';
+      var rec = { input: el, btn: b, host: host };
+      tracked.push(rec);
+      b.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      b.addEventListener('click', function () {
+        el.value = '';
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+        place(rec);
+        try { el.focus(); } catch (e) {}
+      });
+      ['input', 'focus', 'change'].forEach(function (ev) { el.addEventListener(ev, function () { place(rec); }); });
+      place(rec);
+    }
+    function scan(root) {
+      if (root.nodeType !== 1) return;
+      if (root.tagName === 'INPUT') attach(root);
+      else if (root.querySelectorAll) root.querySelectorAll('input').forEach(attach);
+    }
+    function start() {
+      scan(document.body);
+      new MutationObserver(function (muts) { muts.forEach(function (m) { m.addedNodes.forEach(scan); }); }).observe(document.body, { childList: true, subtree: true });
+      // Nilai bisa diisi lewat kode (mis. tombol Detail) tanpa event input, jadi disinkronkan berkala
+      setInterval(function () {
+        if (document.hidden) return;
+        tracked = tracked.filter(function (r) { return r.input.isConnected; });
+        tracked.forEach(place);
+      }, 350);
+      window.addEventListener('resize', function () { tracked.forEach(place); });
+    }
+    if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+  })();
+
   function genioGetPeriode() {
     var v = null;
     try { v = sessionStorage.getItem('genio_periode'); } catch (e) {}
