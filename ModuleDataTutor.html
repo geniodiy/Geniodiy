@@ -296,7 +296,7 @@
         <div class="gx-step-title"><span class="gx-step" id="dt-stepData">2</span>Data diri</div>
         <div class="gx-row"><label for="dt-nama">Nama lengkap <em class="gx-req">wajib</em></label><input type="text" id="dt-nama"></div>
         <div class="gx-2col">
-          <div class="gx-row"><label for="dt-email">Email <em class="gx-req">wajib</em></label><input type="email" id="dt-email"></div>
+          <div class="gx-row"><label for="dt-email">Email <em class="gx-req">wajib</em></label><input type="email" id="dt-email"><div id="dt-emailHint" hidden style="font-size:10px; color:var(--ink-soft); margin-top:5px; line-height:1.45;">Mengubah email langsung mengganti email untuk masuk. Beri tahu tutor alamat barunya.</div></div>
           <div class="gx-row"><label for="dt-noWa">WhatsApp</label><input type="tel" id="dt-noWa" placeholder="08xxxxxxxxxx"></div>
         </div>
         <div id="dt-passwordWrap" hidden>
@@ -1034,6 +1034,7 @@
     document.getElementById('dt-editId').value = id || '';
     document.getElementById('dt-nama').value = u.nama || '';
     document.getElementById('dt-email').value = u.email || '';
+    document.getElementById('dt-emailHint').hidden = isNew;
     document.getElementById('dt-noWa').value = tp.no_wa || u.no_hp || '';
     document.getElementById('dt-keahlian').value = (tp.keahlian || []).join(', ');
     document.getElementById('dt-pendidikan').value = tp.pendidikan_terakhir || '';
@@ -1087,10 +1088,15 @@
         dtLoadAll();
         return;
       }
+      // Ganti email login lewat Edge Function (Auth + tabel users), bukan sekadar mengubah tabel users
+      var oldTutor = dtState.tutorList.find(function (x) { return x.id === id; }) || {};
+      if (email.toLowerCase() !== String(oldTutor.email || '').toLowerCase()) {
+        await genioAdminUsers({ action: 'update_email', user_id: id, email: email });
+      }
       await supaRest('users?id=eq.' + id, s.access_token, {
         method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
         body: JSON.stringify({
-          nama: nama, email: email, no_hp: document.getElementById('dt-noWa').value.trim() || null,
+          nama: nama, no_hp: document.getElementById('dt-noWa').value.trim() || null,
           jenis_kelamin: genderEl ? genderEl.value : null, status: statusEl ? statusEl.value : 'aktif'
         })
       });

@@ -232,7 +232,7 @@
 
         <div class="gx-step-title"><span class="gx-step">1</span>Data diri</div>
         <div class="gx-row"><label for="kp-nama">Nama lengkap <em class="gx-req">wajib</em></label><input type="text" id="kp-nama"></div>
-        <div class="gx-row"><label for="kp-email">Email <em class="gx-req">wajib</em></label><input type="email" id="kp-email" autocomplete="off"></div>
+        <div class="gx-row"><label for="kp-email">Email <em class="gx-req">wajib</em></label><input type="email" id="kp-email" autocomplete="off"><div class="kp-email-hint" id="kp-emailHint" hidden style="font-size:10px; color:var(--ink-soft); margin-top:5px; line-height:1.45;">Mengubah email langsung mengganti email untuk masuk. Beri tahu pengguna alamat barunya.</div></div>
         <div id="kp-passwordWrap" hidden>
           <div class="gx-row"><label for="kp-password">Password awal <em class="gx-req">wajib</em></label><input type="text" id="kp-password" autocomplete="off" placeholder="Minimal 6 karakter"></div>
           <div class="gx-note" style="margin:-2px 0 6px;"><i class="ph ph-key" aria-hidden="true"></i><span>Berikan password ini ke pemilik akun. Mereka bisa menggantinya sendiri di menu Profil.</span></div>
@@ -750,6 +750,7 @@
     document.getElementById('kp-statusWrap').hidden = isNew;
     document.getElementById('kp-password').value = '';
     document.getElementById('kp-email').disabled = false;
+    document.getElementById('kp-emailHint').hidden = isNew;
     document.getElementById('kp-saveBtn').textContent = isNew ? 'Tambah' : 'Simpan';
     document.getElementById('kp-editId').value = id || '';
     var saOpt = document.querySelector('#kp-roleOpts .kp-opt[data-val="super_admin"]');
@@ -811,10 +812,16 @@
         kpLoadAll();
         return;
       }
+      // Ganti email login lewat Edge Function (Auth + tabel users), bukan sekadar mengubah tabel users
+      var oldUser = kpState.userList.find(function (x) { return x.id === id; }) || {};
+      if (email.toLowerCase() !== String(oldUser.email || '').toLowerCase()) {
+        await genioAdminUsers({ action: 'update_email', user_id: id, email: email });
+        if (s && s.user_id === id) { s.email = email.toLowerCase(); genioSaveSession(s); }
+      }
       await supaRest('users?id=eq.' + id, s.access_token, {
         method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
         body: JSON.stringify({
-          nama: nama, email: email, role: role,
+          nama: nama, role: role,
           unit_id: role === 'kepala_unit' ? unitId : null,
           status: statusEl ? statusEl.value : 'aktif'
         })

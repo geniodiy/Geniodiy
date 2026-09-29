@@ -668,6 +668,7 @@
   // ===== Kelola akun lewat Edge Function "admin-users" (kunci admin Supabase tidak ada di browser) =====
   // payload: { action: 'create', nama, email, password, role, unit_id, jenis_kelamin, no_hp, tutor_profile }
   //       atau { action: 'delete', user_id }
+  //       atau { action: 'update_email', user_id, email }  (ganti email login, hanya manajer / super admin, HRD untuk tutor)
   async function genioAdminUsers(payload, _isRetry) {
     var s = genioGetSession();
     if (!s) throw new Error('Sesi habis, silakan masuk ulang.');

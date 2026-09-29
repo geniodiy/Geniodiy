@@ -839,6 +839,13 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
   - Genio News.
 - **Belum diuji dengan akun HRD asli.**
 
+### [v5] Ganti email hanya oleh admin (30 Sep 2026)
+- Pengguna **tidak bisa** mengganti email sendiri; kolom email di Profil tetap terkunci.
+- **Manajer / super admin** mengganti email lewat **Kelola User > Edit pengguna**, **HRD** lewat **Data Tutor > Edit tutor** (tutor saja). Kepala unit tidak punya akses.
+- Diproses Edge Function `admin-users` aksi `update_email`: mengganti email login di Supabase Auth dan salinan di `public.users` sekaligus, tanpa email verifikasi (tidak butuh SMTP). Kalau salah satu gagal, email login dikembalikan.
+- Sebelumnya edit email di dua halaman itu hanya mengubah tabel `users`, sehingga email login tidak ikut berganti.
+- **Perlu redeploy Edge Function `admin-users`** setelah kode ini dipakai.
+
 ### [v5] Fase 4a: Presensi tutor (dikerjakan 28 Sep 2026)
 - **Dock tutor:** Beranda, Presensi, Gaji, Profil. Tidak ada menu Lainnya. Genio News nanti cukup tampil di Beranda.
 - **Beranda tutor** masih panel "sedang dikembangkan" (Fase 4b). Gaji tutor sudah (Fase 4c, lihat di bawah).

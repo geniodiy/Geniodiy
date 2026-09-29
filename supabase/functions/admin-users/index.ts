@@ -6,6 +6,7 @@
 // Aksi:
 //   { action: "create", nama, email, password, role, unit_id?, jenis_kelamin?, no_hp?, tutor_profile? }
 //   { action: "delete", user_id }   (juga dipakai untuk menolak pendaftar tutor)
+//   { action: "update_email", user_id, email }   (ganti email login + salinan di public.users, tanpa email verifikasi)
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const CORS = {
@@ -133,6 +134,32 @@ Deno.serve(async (req) => {
       return json({ ok: true, warning: "Data terhapus, tapi akun login gagal dihapus: " + aErr.message });
     }
     return json({ ok: true });
+  }
+
+  // 4. Ganti email login pengguna (Auth + public.users). Hanya pihak yang berhak mengelola role target.
+  if (body.action === "update_email") {
+    const userId = clean(body.user_id);
+    const email = (clean(body.email) || "").toLowerCase();
+    if (!userId) return fail("Akun tidak ditemukan");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail("Email tidak valid");
+
+    const { data: target } = await admin.from("users").select("id, role, email").eq("id", userId).maybeSingle();
+    if (!target) return fail("Akun tidak ditemukan", 404);
+    if (!canManage(caller.role, target.role)) return fail("Anda tidak boleh mengubah email akun dengan role ini", 403);
+    if ((target.email || "").toLowerCase() === email) return json({ ok: true, unchanged: true });
+
+    const { error: eErr } = await admin.auth.admin.updateUserById(userId, { email, email_confirm: true });
+    if (eErr) {
+      const msg = /already|registered|exists|duplicate/i.test(eErr.message || "") ? "Email itu sudah dipakai akun lain" : (eErr.message || "Gagal mengganti email login");
+      return fail(msg);
+    }
+    const { error: uErr } = await admin.from("users").update({ email }).eq("id", userId);
+    if (uErr) {
+      // kembalikan email login supaya Auth dan tabel users tidak berbeda
+      if (target.email) await admin.auth.admin.updateUserById(userId, { email: target.email, email_confirm: true });
+      return fail("Gagal menyimpan email baru: " + uErr.message);
+    }
+    return json({ ok: true, email });
   }
 
   return fail("Aksi tidak dikenal");
