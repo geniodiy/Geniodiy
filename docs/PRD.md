@@ -880,10 +880,13 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Perlu tindakan:** perlu revisi, jadwal hari ini, menunggu diperiksa, slip belum dibayar. Kartu membuka Presensi dengan filter yang sesuai, atau tab Riwayat slip di Gaji.
 - **Sesi hari ini:** laporan yang harus direvisi, jadwal hari ini yang belum dilapor, dan sesi fleksibel minggu ini. Tombol Revisi dan Isi presensi (juga di highlight) membuka form di atas Beranda tanpa pindah tab (`window.genioPresensiTutor.open`); popup Presensi tutor dipindah ke `body`. Setelah terkirim, Beranda dimuat ulang (event `genio:presensi-tutor`).
 - **Tab bar tutor** (Presensi: Sesi dan laporan / Jadwal lengkap dan filter Perlu tindakan / Menunggu / Selesai; Gaji: Rincian / Riwayat slip; Beranda: Pertemuan / Gaji) bisa ditahan lalu digeser (`genioBindScrub` di Config). Ganti tab, filter, atau tampilan tidak melompat ke atas (`genioKeepScroll`).
-- **Tren mengajar 3 bulan:**
+- **Tren mengajar 3 bulan** (garis + kotak bulan):
   - Pertemuan atau gaji.
+  - Garis bergradasi biru dengan area lembut, nilai di tiap titik, dan titik bulan terpilih berdenyut.
   - Garis putus-putus abu-abu untuk 3 bulan sebelumnya.
-  - Crosshair dan tooltip.
+  - Crosshair dan tooltip; kotak bulan di bawahnya ikut menyala.
+  - Tiga kotak bulan berisi angka dan selisih persen dari bulan sebelumnya (bulan terpilih berlatar biru tua).
+  - Di desktop setinggi kartu Sesi hari ini.
 - **Genio News:** ketuk untuk membuka tautannya.
 - **Belum diuji dengan akun tutor asli.**
 

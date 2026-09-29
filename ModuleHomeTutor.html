@@ -23,7 +23,22 @@
   .hmt-tip b{display:block; font-size:11.5px; font-weight:700; color:var(--ink);}
   .hmt-tip span{color:var(--ink-soft);}
   .hmt-tip.show{opacity:1;}
-  .hmt-legend{display:flex; gap:14px; font-size:10px; color:var(--ink-soft); margin-top:4px;}
+  .hmt-tiles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px;}
+  .hmt-tile{border-radius:12px; padding:9px 11px; background:linear-gradient(160deg,#FFFFFF,#F1F4FF); border:1px solid #E3E8FB; min-width:0; transition:transform .15s ease, box-shadow .15s ease;}
+  .hmt-tile:hover, .hmt-tile.is-hot{transform:translateY(-2px); box-shadow:0 10px 20px -14px rgba(28,26,175,.55);}
+  .hmt-tile small{display:block; font-size:10px; color:var(--ink-soft);}
+  .hmt-tile b{display:block; font-size:15px; font-weight:700; margin-top:2px; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .hmt-tile .d{display:inline-block; margin-top:5px; font-size:10px; font-weight:600; padding:1px 8px; border-radius:999px; background:#E9F7EF; color:#1E8E5A;}
+  .hmt-tile .d.dn{background:#FDEAEA; color:#D4070F;} .hmt-tile .d.fl{background:#EEF0F6; color:#6B7089;}
+  .hmt-tile.is-cur{background:linear-gradient(135deg,#070833 0%,#101075 55%,#3B3FE0 100%); border-color:transparent; box-shadow:0 12px 24px -16px rgba(28,26,175,.8);}
+  .hmt-tile.is-cur small{color:rgba(255,255,255,.72);} .hmt-tile.is-cur b{color:#fff;}
+  .hmt-tile.is-cur .d{background:rgba(255,255,255,.16); color:#fff;} .hmt-tile.is-cur .d.up{background:rgba(124,240,195,.22); color:#7CF0C3;} .hmt-tile.is-cur .d.dn{background:rgba(255,156,148,.22); color:#FF9C94;}
+  @keyframes hmtPulse{0%{transform:scale(.6); opacity:.9;} 100%{transform:scale(1.9); opacity:0;}}
+  .hmt-halo{transform-box:fill-box; transform-origin:center; animation:hmtPulse 2.2s ease-out infinite;}
+  @keyframes hmtFade{from{opacity:0;} to{opacity:1;}}
+  .hmt-fadein{animation:hmtFade .8s ease .25s both;}
+  @media (prefers-reduced-motion: reduce){ .hmt-halo, .hmt-fadein{animation:none !important;} .hmt-tile{transition:none;} }
+  .hmt-legend{display:flex; gap:14px; font-size:10px; color:var(--ink-soft); margin-top:12px;}
   .hmt-legend i{display:inline-block; width:14px; height:0; border-top:2px solid var(--blue); vertical-align:middle; margin-right:5px;}
   .hmt-legend i.g{border-top:2px dashed #C9CCDA;}
   .hmt-sum{display:flex; gap:18px; flex-wrap:wrap; margin-top:2px;}
@@ -56,7 +71,7 @@
     #hmtWrap .kuh-2{align-items:stretch;}
     #hmtWrap .kuh-2 > .kuh-card{display:flex; flex-direction:column;}
     #hmtWrap .hmt-sesi #hmtSesiList{flex:1;}
-    #hmtWrap .hmt-trend .hmt-chart{flex:1; height:auto; min-height:170px;}
+    #hmtWrap .hmt-trend .hmt-chart{flex:1; height:auto; min-height:130px;}
   }
   @media (max-width:899px){
     #hmtActs{grid-template-columns:repeat(2, minmax(0,1fr));}
@@ -121,6 +136,7 @@
         </div>
         <div class="hmt-sum" id="hmtTrendSum"></div>
         <div class="hmt-chart" id="hmtChart"><svg id="hmtChartSvg" aria-hidden="true"></svg><div class="hmt-tip" id="hmtTip"></div></div>
+        <div class="hmt-tiles" id="hmtTiles"></div>
         <div class="hmt-legend" id="hmtLegend"></div>
       </div>
     </div>
@@ -347,7 +363,7 @@
     }
   }
 
-  // Tren 3 bulan: pertemuan atau gaji, garis abu putus-putus = 3 bulan sebelumnya
+  // Tren 3 bulan: pertemuan atau gaji. Garis bergradasi + nilai di tiap titik + kotak bulan dengan selisih dari bulan sebelumnya.
   function hmtRenderTrend() {
     var per = genioGetPeriode(), m = hmt.metric, cur = [], prev = [], labels = [];
     for (var i = -2; i <= 0; i++) {
@@ -357,32 +373,49 @@
     }
     var hasPrev = prev.some(function (v) { return v > 0; });
     var fmt = function (v) { return m === 'sesi' ? v + ' sesi' : rp(v); };
+    var fmtS = function (v) { return m === 'sesi' ? String(v) : rpShort(v).replace('Rp ', ''); };
     var total = cur.reduce(function (a, v) { return a + v; }, 0);
     document.getElementById('hmtTrendSum').innerHTML = '<div><b>' + (m === 'sesi' ? total + ' sesi' : rpShort(total)) + '</b>Total 3 bulan</div><div><b>' + (m === 'sesi' ? String(Math.round(total / 3 * 10) / 10).replace('.', ',') + ' sesi' : rpShort(total / 3)) + '</b>Rata-rata per bulan</div>';
     document.getElementById('hmtTrendSub').textContent = perLabel(perShift(per, -2)) + ' sampai ' + perLabel(per);
     document.getElementById('hmtLegend').innerHTML = '<span><i></i>3 bulan ini</span>' + (hasPrev ? '<span><i class="g"></i>3 bulan sebelumnya</span>' : '');
-    var box = document.getElementById('hmtChart'), W = box.clientWidth || 500, H = box.clientHeight || 170, pl = 8, pr = 8, pt = 14, pb = 22;
-    var max = Math.max.apply(null, cur.concat(hasPrev ? prev : [])) || 1; max *= 1.15;
+
+    // Kotak bulan: selisih dibanding bulan sebelumnya (bulan pertama dibanding bulan tepat sebelumnya)
+    document.getElementById('hmtTiles').innerHTML = cur.map(function (v, i) {
+      var base = i === 0 ? prev[2] : cur[i - 1], d;
+      if (base > 0) { var pc = Math.round((v - base) / base * 100); d = '<span class="d ' + (pc > 0 ? 'up' : pc < 0 ? 'dn' : 'fl') + '">' + (pc > 0 ? '▲ ' : pc < 0 ? '▼ ' : '') + Math.abs(pc) + '%</span>'; }
+      else d = '<span class="d fl">' + (v > 0 ? 'Baru' : 'Belum ada') + '</span>';
+      return '<div class="hmt-tile' + (i === 2 ? ' is-cur' : '') + '" data-i="' + i + '"><small>' + labels[i] + '</small><b>' + (m === 'sesi' ? v + ' sesi' : rpShort(v)) + '</b>' + d + '</div>';
+    }).join('');
+
+    var box = document.getElementById('hmtChart'), W = box.clientWidth || 500, H = box.clientHeight || 150, pl = 22, pr = 22, pt = 30, pb = 22;
+    var max = Math.max.apply(null, cur.concat(hasPrev ? prev : [])) || 1; max *= 1.1;
     var x = function (i) { return pl + i * (W - pl - pr) / 2; }, y = function (v) { return pt + (1 - v / max) * (H - pt - pb); };
     var P = cur.map(function (v, i) { return [x(i), y(v)]; }), G = prev.map(function (v, i) { return [x(i), y(v)]; });
-    var grid = [0, 1, 2, 3].map(function (k) { var yy = pt + k * (H - pt - pb) / 3; return '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + yy + '" y2="' + yy + '" stroke="#EEF0F6"></line>'; }).join('');
+    var grid = [0, 1, 2].map(function (k) { var yy = pt + k * (H - pt - pb) / 2; return '<line x1="0" x2="' + W + '" y1="' + yy + '" y2="' + yy + '" stroke="#EEF0F6" stroke-dasharray="' + (k === 2 ? '0' : '3 5') + '"></line>'; }).join('');
     var line = monoPath(P);
     var svg = document.getElementById('hmtChartSvg');
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    svg.innerHTML = grid +
-      (hasPrev ? '<path d="' + monoPath(G) + '" fill="none" stroke="#C9CCDA" stroke-width="1.6" stroke-dasharray="4 4"></path>' : '') +
-      '<path d="' + line + ' L' + P[2][0] + ' ' + (H - pb) + ' L' + P[0][0] + ' ' + (H - pb) + ' Z" fill="rgba(28,26,175,.07)"></path>' +
-      '<path class="hmt-tl" d="' + line + '" fill="none" stroke="#1C1AAF" stroke-width="2.2" stroke-linecap="round"></path>' +
-      P.map(function (pp, i) { return '<circle cx="' + pp[0] + '" cy="' + pp[1] + '" r="3.5" fill="#fff" stroke="#1C1AAF" stroke-width="2"></circle>'; }).join('') +
-      labels.map(function (l, i) { return '<text x="' + x(i) + '" y="' + (H - 5) + '" text-anchor="' + (i === 0 ? 'start' : i === 2 ? 'end' : 'middle') + '" font-size="10" fill="#8A8EA5" font-family="Plus Jakarta Sans, sans-serif">' + l + '</text>'; }).join('') +
-      '<line class="hmt-x" x1="0" x2="0" y1="' + pt + '" y2="' + (H - pb) + '" stroke="#C9CCDA" stroke-dasharray="3 3" opacity="0"></line>';
+    svg.innerHTML =
+      '<defs><linearGradient id="hmtArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3B3FE0" stop-opacity=".26"></stop><stop offset="1" stop-color="#3B3FE0" stop-opacity="0"></stop></linearGradient>' +
+      '<linearGradient id="hmtStroke" gradientUnits="userSpaceOnUse" x1="' + pl + '" y1="0" x2="' + (W - pr) + '" y2="0"><stop offset="0" stop-color="#7C86FF"></stop><stop offset="1" stop-color="#1C1AAF"></stop></linearGradient></defs>' +
+      grid +
+      (hasPrev ? '<path d="' + monoPath(G) + '" fill="none" stroke="#C4C8DC" stroke-width="1.6" stroke-dasharray="4 4"></path>' : '') +
+      '<path class="hmt-fadein" d="' + line + ' L' + P[2][0] + ' ' + (H - pb) + ' L' + P[0][0] + ' ' + (H - pb) + ' Z" fill="url(#hmtArea)"></path>' +
+      '<path class="hmt-tl" d="' + line + '" fill="none" stroke="url(#hmtStroke)" stroke-width="3" stroke-linecap="round"></path>' +
+      '<line class="hmt-x" x1="0" x2="0" y1="' + pt + '" y2="' + (H - pb) + '" stroke="#B9BEE0" stroke-dasharray="3 3" opacity="0"></line>' +
+      '<g class="hmt-fadein">' +
+        '<circle class="hmt-halo" cx="' + P[2][0] + '" cy="' + P[2][1] + '" r="8" fill="rgba(28,26,175,.25)"></circle>' +
+        P.map(function (pp, i) { return '<circle cx="' + pp[0] + '" cy="' + pp[1] + '" r="' + (i === 2 ? 5.5 : 4.5) + '" fill="' + (i === 2 ? '#1C1AAF' : '#fff') + '" stroke="' + (i === 2 ? '#fff' : '#5B63F0') + '" stroke-width="2.4"></circle>'; }).join('') +
+        P.map(function (pp, i) { return '<text x="' + pp[0] + '" y="' + (pp[1] - 12) + '" text-anchor="' + (i === 0 ? 'start' : i === 2 ? 'end' : 'middle') + '" font-size="11" font-weight="700" fill="' + (i === 2 ? '#1C1AAF' : '#4A4F6B') + '" font-family="Plus Jakarta Sans, sans-serif">' + fmtS(cur[i]) + '</text>'; }).join('') +
+      '</g>';
     var tl = svg.querySelector('.hmt-tl');
     if (!HMT_REDUCED && tl.getTotalLength) {
       var L = tl.getTotalLength(); tl.style.strokeDasharray = L; tl.style.strokeDashoffset = L;
-      requestAnimationFrame(function () { tl.style.transition = 'stroke-dashoffset .8s cubic-bezier(.16,1,.3,1)'; tl.style.strokeDashoffset = 0; });
+      requestAnimationFrame(function () { tl.style.transition = 'stroke-dashoffset .9s cubic-bezier(.16,1,.3,1)'; tl.style.strokeDashoffset = 0; });
     }
-    // Crosshair + tooltip
-    var tip = document.getElementById('hmtTip'), xl = svg.querySelector('.hmt-x');
+    // Crosshair + tooltip; kotak bulan ikut menyala
+    var tip = document.getElementById('hmtTip'), xl = svg.querySelector('.hmt-x'), tiles = document.querySelectorAll('#hmtTiles .hmt-tile');
+    var off = function () { xl.setAttribute('opacity', 0); tip.classList.remove('show'); tiles.forEach(function (t) { t.classList.remove('is-hot'); }); };
     box.onmousemove = function (e) {
       var r = box.getBoundingClientRect(), mx = e.clientX - r.left, i = Math.max(0, Math.min(2, Math.round((mx - pl) / ((W - pl - pr) / 2))));
       xl.setAttribute('x1', x(i)); xl.setAttribute('x2', x(i)); xl.setAttribute('opacity', 1);
@@ -390,8 +423,10 @@
       tip.classList.add('show');
       var half = tip.offsetWidth / 2;
       tip.style.left = Math.max(half, Math.min(W - half, x(i))) + 'px';
+      tip.style.top = Math.max(0, P[i][1] - 58) + 'px';
+      tiles.forEach(function (t, k) { t.classList.toggle('is-hot', k === i); });
     };
-    box.onmouseleave = function () { xl.setAttribute('opacity', 0); tip.classList.remove('show'); };
+    box.onmouseleave = off;
   }
 
   // Bantuan jadwal: WhatsApp ke kepala unit (atau manajer kalau belum ada kontrak) dengan pesan siap kirim
