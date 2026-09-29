@@ -906,13 +906,9 @@
     bar.addEventListener('pointercancel', end);
   }
 
-  // Render ulang daftar tanpa melompat ke atas: tahan tinggi minimum supaya posisi scroll tetap.
+  // Render ulang daftar tanpa melompat ke atas: simpan posisi scroll lalu kembalikan (tanpa mengunci tinggi daftar).
   function genioKeepScroll(el, fn) {
     var y = window.scrollY;
-    if (el) {
-      var top = el.getBoundingClientRect().top + y;
-      el.style.minHeight = Math.max(0, y + window.innerHeight - top) + 'px';
-    }
     fn();
     if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
   }
