@@ -50,6 +50,26 @@
   #prfEditModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
   #prfEditModal.show{opacity:1;}
   @media (prefers-reduced-motion: reduce){ #prfEditModal{transition:none;} }
+  /* ===== Popup ganti email (kode verifikasi) ===== */
+  #prfEmailModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease; z-index:80;}
+  #prfEmailModal.show{opacity:1;}
+  #prfEmailModal [hidden]{display:none !important;}
+  #prfEmailModal .gx-body{padding-top:14px;}
+  #prfEmailModal .prf-code{font-size:24px !important; font-weight:700 !important; height:52px !important; letter-spacing:.42em !important; text-align:center !important;}
+  #prfEmailModal #prfEmStep2 .gx-note{margin-bottom:14px;}
+  #prfEmailModal #prfEmAlert{margin-bottom:12px;}
+  @media (prefers-reduced-motion: reduce){ #prfEmailModal{transition:none;} }
+  .prf-em-cur{display:flex; align-items:center; gap:8px; background:var(--surface); border-radius:9px; padding:8px 11px; font-size:11.5px; color:var(--ink); min-width:0;}
+  .prf-em-cur i{color:var(--ink-soft); font-size:14px; flex:none;}
+  .prf-em-cur span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0;}
+  .prf-code{width:100%; box-sizing:border-box; height:50px; text-align:center; font-family:var(--font); font-size:24px; font-weight:700; letter-spacing:.42em; padding-left:.42em; border:1px solid var(--border); border-radius:10px; background:var(--surface); color:var(--ink); outline:none; font-variant-numeric:tabular-nums; transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;}
+  .prf-code::placeholder{color:#C4C8D8; letter-spacing:.42em;}
+  .prf-code:focus{border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .prf-em-meta{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; font-size:10.5px; color:var(--ink-soft);}
+  .prf-em-link{border:0; background:none; padding:0; font-family:var(--font); font-size:10.5px; font-weight:600; color:var(--blue); cursor:pointer;}
+  .prf-em-link:disabled{color:var(--ink-soft); font-weight:500; cursor:default;}
+  .prf-em-to{font-weight:600; color:var(--ink); word-break:break-all;}
+  .prf-em-link-row{margin-top:6px; text-align:right;}
   .prf-pe-photo{display:flex; align-items:center; gap:14px; padding:2px 0 4px;}
   .prf-pe-av{position:relative; width:60px; height:60px; flex:none;}
   #prfEditPhoto{display:none; width:60px; height:60px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 3px #fff, 0 0 0 4px var(--border);}
@@ -136,7 +156,7 @@
       <div>
         <div class="prf-sec">Kontak</div>
         <div class="prf-card">
-          <div class="prf-row"><span class="ic"><i class="ph ph-envelope-simple" aria-hidden="true"></i></span><span class="tx"><span>Email</span><b id="prfDetailEmail">-</b></span><button type="button" class="prf-act" id="prfCopyEmail" title="Salin email" aria-label="Salin email"><i class="ph ph-copy" aria-hidden="true"></i></button></div>
+          <div class="prf-row"><span class="ic"><i class="ph ph-envelope-simple" aria-hidden="true"></i></span><span class="tx"><span>Email</span><b id="prfDetailEmail">-</b></span><button type="button" class="prf-act" id="prfChangeEmail" title="Ganti email" aria-label="Ganti email"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button><button type="button" class="prf-act" id="prfCopyEmail" title="Salin email" aria-label="Salin email"><i class="ph ph-copy" aria-hidden="true"></i></button></div>
           <div class="prf-row"><span class="ic"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></span><span class="tx"><span>Nomor WhatsApp</span><b id="prfDetailHp">-</b></span><a class="prf-act is-wa" id="prfWaLink" href="#" target="_blank" rel="noopener noreferrer" title="Buka WhatsApp" aria-label="Buka WhatsApp" hidden><i class="ph ph-chat-circle" aria-hidden="true"></i></a></div>
           <div class="prf-row"><span class="ic"><i class="ph ph-gender-intersex" aria-hidden="true"></i></span><span class="tx"><span>Jenis kelamin</span><b id="prfDetailGender">-</b></span></div>
         </div>
@@ -192,6 +212,39 @@
     </div>
   </div>
 
+  <!-- Popup ganti email: kode verifikasi 6 angka dikirim ke email baru -->
+  <div class="modal-overlay" id="prfEmailModal" hidden>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-envelope-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;">
+          <h3>Ganti email</h3>
+          <p class="gx-sub" id="prfEmSub">Email baru dipakai untuk masuk.</p>
+        </div>
+        <button type="button" class="gx-close" id="prfEmClose" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="gx-body">
+        <div id="prfEmAlert" class="alert alert-error" hidden></div>
+        <div id="prfEmStep1">
+          <div class="gx-row"><label>Email sekarang</label><div class="prf-em-cur"><i class="ph ph-envelope-simple" aria-hidden="true"></i><span id="prfEmOld">-</span></div></div>
+          <div class="gx-row"><label for="prfEmNew">Email baru <em class="gx-req">wajib</em></label><input type="email" id="prfEmNew" autocomplete="email" inputmode="email" placeholder="nama@email.com"></div>
+          <div class="gx-row"><label for="prfEmPw">Password saat ini <em class="gx-req">wajib</em></label><input type="password" id="prfEmPw" autocomplete="current-password"></div>
+          <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span>Kami mengirim kode 6 angka ke email baru. Email lama tetap dipakai sampai kode dimasukkan.</span></div>
+        </div>
+        <div id="prfEmStep2" hidden>
+          <div class="gx-note" style="margin-top:0;"><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i><span id="prfEmCodeNote">-</span></div>
+          <div class="gx-row"><label for="prfEmCode">Kode verifikasi</label><input type="text" id="prfEmCode" class="prf-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" aria-label="Kode verifikasi 6 angka"></div>
+          <div class="prf-em-meta"><span id="prfEmCd"></span><button type="button" class="prf-em-link" id="prfEmResend">Kirim ulang kode</button></div>
+          <div class="prf-em-link-row"><button type="button" class="prf-em-link" id="prfEmBack">Salah email? Ubah</button></div>
+        </div>
+      </div>
+      <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline" id="prfEmCancel">Batal</button>
+        <button type="button" class="btn btn-primary" id="prfEmAction">Kirim kode</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Popup edit profil -->
   <div class="modal-overlay" id="prfEditModal" hidden>
     <div class="modal-sheet gx-sheet">
@@ -232,7 +285,7 @@
           </div>
         </div>
         <div class="gx-row"><label for="prfEditHp">Nomor WhatsApp</label><input type="tel" id="prfEditHp" inputmode="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></div>
-        <div class="gx-row"><label for="prfEditEmail">Email <em class="gx-opt">untuk masuk</em></label><input type="email" id="prfEditEmail" disabled></div>
+        <div class="gx-row"><label for="prfEditEmail">Email <em class="gx-opt">untuk masuk</em></label><input type="email" id="prfEditEmail" disabled><div class="prf-em-link-row"><button type="button" class="prf-em-link" id="prfEditChangeEmail">Ganti email</button></div></div>
 
         <div id="prfTutorSec" hidden>
           <div class="gx-step-title"><span class="gx-step">2</span>Data mengajar</div>
@@ -701,6 +754,171 @@
     }
   }
 
+  // ===== Ganti email dengan kode verifikasi (Supabase Auth: email_change OTP) =====
+  var prfEm = { step: 1, newEmail: '', oldEmail: '', second: false, busy: false, cd: 0, timer: null };
+  function prfEmFail(msg) {
+    var el = document.getElementById('prfEmAlert');
+    el.textContent = msg; el.hidden = false;
+  }
+  function prfEmSetStep(step) {
+    prfEm.step = step;
+    document.getElementById('prfEmStep1').hidden = step !== 1;
+    document.getElementById('prfEmStep2').hidden = step === 1;
+    document.getElementById('prfEmAction').textContent = step === 1 ? 'Kirim kode' : 'Verifikasi';
+    document.getElementById('prfEmSub').textContent = step === 1 ? 'Email baru dipakai untuk masuk.' : 'Masukkan kode 6 angka dari email.';
+    document.getElementById('prfEmAlert').hidden = true;
+  }
+  function prfEmBusy(on, label) {
+    prfEm.busy = on;
+    var b = document.getElementById('prfEmAction');
+    b.disabled = on;
+    if (on) b.textContent = label || 'Memproses...';
+    else b.textContent = prfEm.step === 1 ? 'Kirim kode' : 'Verifikasi';
+  }
+  function prfEmStartCd(sec) {
+    clearInterval(prfEm.timer);
+    prfEm.cd = sec;
+    document.getElementById('prfEmCd').textContent = 'Belum menerima kode?';
+    var tick = function () {
+      var r = document.getElementById('prfEmResend');
+      if (prfEm.cd > 0) { r.textContent = 'Kirim ulang (' + prfEm.cd + ' dtk)'; r.disabled = true; prfEm.cd--; }
+      else { r.textContent = 'Kirim ulang kode'; r.disabled = false; clearInterval(prfEm.timer); }
+    };
+    tick(); prfEm.timer = setInterval(tick, 1000);
+  }
+  function prfAuthMsg(data, fallback) {
+    var m = String((data && (data.msg || data.error_description || data.message || data.error)) || '');
+    if (/already (been )?registered|already exists|email_exists/i.test(m)) return 'Email itu sudah dipakai akun lain.';
+    if (/rate limit|too many|over_email_send_rate_limit|over_request_rate_limit/i.test(m)) return 'Terlalu sering meminta kode. Tunggu sebentar lalu coba lagi.';
+    if (/invalid.*email|unable to validate email/i.test(m)) return 'Format email tidak valid.';
+    if (/expired|invalid/i.test(m)) return 'Kode salah atau sudah kedaluwarsa.';
+    return m || fallback;
+  }
+  async function prfAuthCall(method, path, token, body) {
+    var res = await fetch(SUPABASE_URL + '/auth/v1/' + path, {
+      method: method,
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + token },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    var data = null;
+    try { data = await res.json(); } catch (e) {}
+    return { ok: res.ok, status: res.status, data: data };
+  }
+  function prfOpenEmail() {
+    var session = genioGetSession();
+    if (!session) return;
+    prfEm.oldEmail = session.email || ''; prfEm.newEmail = ''; prfEm.second = false;
+    document.getElementById('prfEmOld').textContent = prfEm.oldEmail || '-';
+    document.getElementById('prfEmNew').value = '';
+    document.getElementById('prfEmPw').value = '';
+    document.getElementById('prfEmCode').value = '';
+    clearInterval(prfEm.timer);
+    prfEmSetStep(1); prfEmBusy(false);
+    prfShowModal(document.getElementById('prfEmailModal'));
+    setTimeout(function () { document.getElementById('prfEmNew').focus(); }, 320);
+  }
+  function prfCloseEmail() {
+    if (prfEm.busy) return;
+    clearInterval(prfEm.timer);
+    prfHideModal(document.getElementById('prfEmailModal'));
+  }
+  async function prfEmSend() {
+    var session = genioGetSession(); if (!session) return;
+    var email = document.getElementById('prfEmNew').value.trim().toLowerCase();
+    var pw = document.getElementById('prfEmPw').value;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { prfEmFail('Format email baru tidak valid.'); return; }
+    if (email === String(session.email || '').toLowerCase()) { prfEmFail('Email baru sama dengan email sekarang.'); return; }
+    if (!pw) { prfEmFail('Isi password saat ini.'); return; }
+    document.getElementById('prfEmAlert').hidden = true;
+    prfEmBusy(true, 'Mengirim kode...');
+    try {
+      var auth;
+      try { auth = await supaAuth('token?grant_type=password', { email: session.email, password: pw }); }
+      catch (e) { throw new Error('Password saat ini salah.'); }
+      session.access_token = auth.access_token;
+      session.refresh_token = auth.refresh_token || session.refresh_token;
+      genioSaveSession(session);
+      var r = await prfAuthCall('PUT', 'user', session.access_token, { email: email });
+      if (!r.ok) throw new Error(prfAuthMsg(r.data, 'Gagal mengirim kode.'));
+      prfEm.newEmail = email; prfEm.second = false;
+      document.getElementById('prfEmCode').value = '';
+      document.getElementById('prfEmCodeNote').innerHTML = 'Kode 6 angka dikirim ke <span class="prf-em-to">' + genioEscapeHtml(email) + '</span>. Cek kotak masuk dan folder spam.';
+      prfEmSetStep(2); prfEmStartCd(60);
+      setTimeout(function () { document.getElementById('prfEmCode').focus(); }, 60);
+    } catch (err) {
+      prfEmFail(err.message || 'Gagal mengirim kode.');
+    } finally { prfEmBusy(false); }
+  }
+  async function prfEmResend() {
+    var session = genioGetSession(); if (!session || prfEm.busy || prfEm.cd > 0) return;
+    document.getElementById('prfEmAlert').hidden = true;
+    try {
+      var r = await prfAuthCall('POST', 'resend', session.access_token, { type: 'email_change', email: prfEm.newEmail });
+      if (!r.ok) throw new Error(prfAuthMsg(r.data, 'Gagal mengirim ulang kode.'));
+      genioToast('Kode dikirim ulang', 'success');
+      prfEmStartCd(60);
+    } catch (err) { prfEmFail(err.message); }
+  }
+  // Satu kode bisa berasal dari email baru atau (mode konfirmasi ganda) email lama, jadi dicoba ke dua alamat
+  async function prfEmVerifyCode(code) {
+    var lastErr = null, tried = [prfEm.newEmail, prfEm.oldEmail];
+    for (var i = 0; i < tried.length; i++) {
+      if (!tried[i]) continue;
+      var r = await fetch(SUPABASE_URL + '/auth/v1/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+        body: JSON.stringify({ type: 'email_change', email: tried[i], token: code })
+      });
+      var data = null; try { data = await r.json(); } catch (e) {}
+      if (r.ok) return data || {};
+      lastErr = data;
+      if (/rate limit|too many/i.test(JSON.stringify(data || {}))) break;
+    }
+    throw new Error(prfAuthMsg(lastErr, 'Kode salah atau sudah kedaluwarsa.'));
+  }
+  async function prfEmVerify() {
+    var session = genioGetSession(); if (!session) return;
+    var code = document.getElementById('prfEmCode').value.replace(/\D/g, '');
+    if (code.length !== 6) { prfEmFail('Kode terdiri dari 6 angka.'); return; }
+    document.getElementById('prfEmAlert').hidden = true;
+    prfEmBusy(true, 'Memverifikasi...');
+    try {
+      var out = await prfEmVerifyCode(code);
+      var token = out.access_token || session.access_token;
+      if (out.access_token) { session.access_token = out.access_token; session.refresh_token = out.refresh_token || session.refresh_token; genioSaveSession(session); }
+      var u = await prfAuthCall('GET', 'user', token);
+      var pending = u.ok && u.data && u.data.new_email;
+      if (pending) {
+        // Konfirmasi ganda: masih menunggu kode dari email satunya
+        prfEm.second = true;
+        document.getElementById('prfEmCode').value = '';
+        document.getElementById('prfEmCodeNote').innerHTML = 'Satu kode lagi diperlukan. Masukkan kode yang dikirim ke <span class="prf-em-to">' + genioEscapeHtml(prfEm.oldEmail) + '</span> (email lama).';
+        prfEmStartCd(60);
+        return;
+      }
+      await prfEmDone(token);
+    } catch (err) {
+      prfEmFail(err.message || 'Gagal memverifikasi kode.');
+    } finally { prfEmBusy(false); }
+  }
+  async function prfEmDone(token) {
+    var session = genioGetSession();
+    var email = prfEm.newEmail;
+    session.email = email;
+    genioSaveSession(session);
+    // Salin email ke tabel users (tampilan dan daftar pengguna); gagal di sini tidak membatalkan pergantian di Auth
+    try {
+      await supaRest('users?id=eq.' + session.user_id, session.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ email: email }) });
+    } catch (e) { /* diperbaiki otomatis saat profil dibuka lagi */ }
+    clearInterval(prfEm.timer);
+    prfEm.busy = false;
+    prfHideModal(document.getElementById('prfEmailModal'));
+    document.getElementById('prfEditEmail').value = email;
+    genioToast('Email diganti ke ' + email, 'success');
+    await prfLoadDetail();
+    if (typeof loadLainnyaData === 'function') { try { loadLainnyaData(); } catch (e) {} }
+  }
+
   async function prfSaveEdit() {
     if (prfEdit.saving) return;
     var session = genioGetSession();
@@ -802,13 +1020,29 @@
   }
 
   document.getElementById('prfEditProfileBtn').addEventListener('click', prfOpenEdit);
+  document.getElementById('prfChangeEmail').addEventListener('click', prfOpenEmail);
+  document.getElementById('prfEditChangeEmail').addEventListener('click', prfOpenEmail);
+  document.getElementById('prfEmClose').addEventListener('click', prfCloseEmail);
+  document.getElementById('prfEmCancel').addEventListener('click', prfCloseEmail);
+  document.getElementById('prfEmailModal').addEventListener('click', function (e) { if (e.target === this) prfCloseEmail(); });
+  document.getElementById('prfEmAction').addEventListener('click', function () { if (prfEm.busy) return; (prfEm.step === 1 ? prfEmSend : prfEmVerify)(); });
+  document.getElementById('prfEmResend').addEventListener('click', prfEmResend);
+  document.getElementById('prfEmBack').addEventListener('click', function () { if (prfEm.busy) return; clearInterval(prfEm.timer); prfEmSetStep(1); });
+  document.getElementById('prfEmCode').addEventListener('input', function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 6);
+    if (this.value.length === 6 && !prfEm.busy) prfEmVerify();
+  });
+  ['prfEmNew', 'prfEmPw', 'prfEmCode'].forEach(function (id) {
+    document.getElementById(id).addEventListener('keydown', function (e) { if (e.key === 'Enter' && !prfEm.busy) { e.preventDefault(); (prfEm.step === 1 ? prfEmSend : prfEmVerify)(); } });
+  });
   document.getElementById('prfEditCloseX').addEventListener('click', prfCloseEdit);
   document.getElementById('prfEditCancel').addEventListener('click', prfCloseEdit);
   document.getElementById('prfEditSave').addEventListener('click', prfSaveEdit);
   document.getElementById('prfEditModal').addEventListener('click', function (e) { if (e.target === this) prfCloseEdit(); });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (!document.getElementById('prfCropModal').hidden) prfCloseCrop();
+    if (!document.getElementById('prfEmailModal').hidden) prfCloseEmail();
+    else if (!document.getElementById('prfCropModal').hidden) prfCloseCrop();
     else if (!document.getElementById('prfEditModal').hidden) prfCloseEdit();
   });
   document.getElementById('prfPwToggle').addEventListener('click', function () {
