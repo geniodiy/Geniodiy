@@ -839,14 +839,6 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
   - Genio News.
 - **Belum diuji dengan akun HRD asli.**
 
-### [v5] Ganti email dengan kode verifikasi (30 Sep 2026)
-- **Untuk semua peran** (manajer, kepala unit, HRD, tutor): tombol pensil di baris Email halaman Profil, atau tautan "Ganti email" di popup Edit profil.
-- **Alur:** email baru + password saat ini (dicek ulang) > Supabase mengirim kode 6 angka ke email baru > pengguna memasukkan kode di popup > email diganti. Kode dicek lewat `POST /auth/v1/verify` (`type: email_change`).
-- **Konfirmasi ganda:** kalau "Secure email change" aktif di Supabase, aplikasi otomatis meminta satu kode lagi dari email lama.
-- **Sinkron ke `users.email`:** aplikasi menyalinnya dari browser setelah verifikasi. Trigger database yang lebih kuat sudah disiapkan di `supabase/migrations/20260930_sync_email_from_auth.sql` (belum dipasang).
-- **Perlu diatur di dashboard Supabase:** template email berisi `{{ .Token }}` (lihat `docs/EMAIL_KODE_VERIFIKASI.md`), masa berlaku kode 10 menit, dan SMTP sendiri.
-- **Belum diuji dengan akun asli.**
-
 ### [v5] Fase 4a: Presensi tutor (dikerjakan 28 Sep 2026)
 - **Dock tutor:** Beranda, Presensi, Gaji, Profil. Tidak ada menu Lainnya. Genio News nanti cukup tampil di Beranda.
 - **Beranda tutor** masih panel "sedang dikembangkan" (Fase 4b). Gaji tutor sudah (Fase 4c, lihat di bawah).
