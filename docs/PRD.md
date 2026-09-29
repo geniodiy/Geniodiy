@@ -901,7 +901,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
   - Panel samping: mengajar, transport, visit, denda telat, dan rekening.
   - Tombol **Lihat slip gaji**. Kalau slip belum dibuat, tombolnya jadi **Lihat estimasi slip**.
 - **Tab Rincian bulan ini:**
-  - Kartu per siswa: jumlah sesi, visit, jam, denda, dan total dibayar. Tombol "Lihat detail" membuka rincian di dalam kartu itu saja (kartu lain tetap tampil): sesi dikelompokkan per mapel dan jenis (reguler atau visit), mapel yang sama ditulis sekali dengan jumlah sesi, subtotal, tanggal, dan denda.
+  - Kartu per siswa dan jenis: satu anak bisa punya kartu "N Diterima" dan kartu "N Visit" yang terpisah (pill di pojok kanan atas). Isinya chip mapel dan jam, total dibayar, dan rumus uang saja (mis. "Rp 250.000 + Rp 40.000 − Rp 1.500"; kartu visit tanpa rumus). Tombol "Detail" pindah ke tampilan tabel dengan pencarian nama anak itu.
   - Tabel per sesi: mengajar, transport, denda, dan dibayar, dengan baris total.
 - **Tab Riwayat slip:** slip per periode dari `slip_gaji`, status sudah atau belum dibayar dengan tanggal transfer.
 - **Lihat slip:** preview HTML dari `previewSlipGajiHtml` di `Code.gs` (template yang sama dengan PDF slip), ditambah Unduh PDF bila sudah ada.
