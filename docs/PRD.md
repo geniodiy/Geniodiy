@@ -906,6 +906,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Tab Riwayat slip:** slip per periode dari `slip_gaji`, status sudah atau belum dibayar dengan tanggal transfer.
 - **Lihat slip:** preview HTML dari `previewSlipGajiHtml` di `Code.gs` (template yang sama dengan PDF slip), ditambah Unduh PDF bila sudah ada.
 - **Belum diuji dengan akun tutor asli.**
+- **Panel kanan highlight (opsi J):** cincin komposisi penghasilan (porsi mengajar, transport, visit; angka tengah persen mengajar), daftar nominal termasuk denda telat, kartu rekening berikon bank, dan tombol Lihat slip gaji.
 
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
 1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
