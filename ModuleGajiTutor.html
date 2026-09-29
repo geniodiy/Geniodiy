@@ -70,6 +70,7 @@
   .gt-act{margin-top:auto; padding-top:12px;}
   .gt-btn{width:100%; display:inline-flex !important; align-items:center; justify-content:center; gap:6px; cursor:pointer;}
   .gt-tbtn{width:104px; height:28px !important;}
+  .pc2-status.gt-st{width:88px; box-sizing:border-box; justify-content:center;}
   .pc2-status.is-done i{display:none;}
   .pc2-status.is-done .ph-fill{font-size:12px;}
 
@@ -413,8 +414,8 @@
     var trs = rs.map(function (p, i) {
       var k = p.kontrak_tutor || {}, x = parts(p), nama = ktSiswa(k).nama || '-';
       var st = p.status === 'visit'
-        ? '<span class="pc2-status is-done" style="--st:#2B59D9; background:#EAF0FF;"><i></i><span class="ph-fill ph-check-circle" aria-hidden="true"></span>Visit</span>'
-        : '<span class="pc2-status is-done" style="--st:#1E8E5A; background:#E9F7EF;"><i></i><span class="ph-fill ph-check-circle" aria-hidden="true"></span>Diterima</span>';
+        ? '<span class="pc2-status is-done gt-st" style="--st:#2B59D9; background:#EAF0FF;"><i></i><span class="ph-fill ph-check-circle" aria-hidden="true"></span>Visit</span>'
+        : '<span class="pc2-status is-done gt-st" style="--st:#1E8E5A; background:#E9F7EF;"><i></i><span class="ph-fill ph-check-circle" aria-hidden="true"></span>Diterima</span>';
       return '<tr><td class="gt-stk gt-stk-no">' + (i + 1) + '</td><td class="gt-stk gt-stk-a">' + tglTabel(p.tanggal) + '</td>' +
         '<td class="gt-stk gt-stk-b" title="' + esc(nama) + '"><b>' + esc(nama) + '</b></td>' +
         '<td style="white-space:nowrap;">' + esc(k.mapel || '-') + '</td><td style="white-space:nowrap;">' + esc(jam5(p.jam)) + '</td>' +
