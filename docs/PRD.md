@@ -867,7 +867,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Profil tutor:** baris unit tidak ditampilkan, karena tutor tidak terikat unit mana pun.
 - **Foto tutor di semua role:** pemilih tutor di form kontrak tutor dan di "Isi presensi untuk tutor" sekarang ikut menampilkan foto profil, atau inisial kalau belum ada foto.
 - **Belum diuji dengan akun tutor asli.**
-- **Sorotan laporan ditolak:** kartu punya bayangan merah yang berdenyut pelan (±2,8 dtk, tanpa garis tepi merah), dan di tabel hanya pill status "Perlu revisi" yang berkedip merah samar. Mode kurangi gerakan: bayangan statis, tanpa kedip.
+- **Sorotan laporan ditolak:** kartu punya bayangan merah yang berdenyut pelan (±2,8 dtk, tanpa garis tepi merah), (lebih rapat di HP), dan di tabel hanya pill status "Perlu revisi" yang berkedip: latarnya memudar hampir transparan lalu kembali ke warna asli. Mode kurangi gerakan: bayangan statis, tanpa kedip.
 
 ### [v5] Fase 4b: Beranda tutor (dikerjakan 28 Sep 2026, opsi B)
 - **Halaman:** `ModuleHomeTutor.html`, panel `home-tutor`. Memakai kelas `.kuh-*` dari Home kepala unit.
