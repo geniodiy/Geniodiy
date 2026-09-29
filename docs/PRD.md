@@ -886,7 +886,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
   - Garis bergradasi biru dengan area lembut, nilai di tiap titik, dan titik bulan terpilih berdenyut.
   - Garis putus-putus abu-abu untuk 3 bulan sebelumnya.
   - Crosshair dan tooltip; kotak bulan di bawahnya ikut menyala.
-  - Tiga kotak bulan berisi angka dan selisih persen dari bulan sebelumnya (bulan terpilih berlatar biru tua).
+  - Tiga kotak bulan berisi angka dan selisih persen dari bulan sebelumnya (semua bulan berlatar sama).
   - Di desktop setinggi kartu Sesi hari ini.
 - **Genio News:** ketuk untuk membuka tautannya.
 - **Belum diuji dengan akun tutor asli.**
