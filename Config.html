@@ -914,6 +914,149 @@
     if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
   }
 
+  // ===== Pagination tabel (berlaku di semua tabel data; footer dipasang otomatis) =====
+  // Setiap tabel data dipotong per halaman di browser: baris di luar halaman disembunyikan, nomor urut tetap berlanjut.
+  // Footer: info data, pilihan baris per halaman (10/25/50/100, disimpan terpisah HP dan layar lebar), tombol pertama, sebelumnya,
+  // nomor halaman, berikutnya, terakhir. Kembali ke halaman 1 saat jumlah data berubah (cari, filter). Tidak tampil kalau data <= 10.
+  (function genioPager() {
+    var TABLES = 'table.dt-table,table.gj-table,table.gt-table,table.jdw-table,table.kp-table,table.ku-table,table.ktr-table,table.ops-table,table.os-table,table.pkt-table,table.ps-table,table.tg-table';
+    var SIZES = [10, 25, 50, 100], states = {};
+    var css = document.createElement('style');
+    css.textContent =
+      '.genio-pg-hide{display:none !important;}' +
+      '.genio-pg{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--border); font-family:var(--font); font-size:11px; color:var(--ink-soft);}' +
+      '.genio-pg b{color:var(--ink); font-weight:600;}' +
+      '.genio-pg-l{display:flex; align-items:center; gap:14px; flex-wrap:wrap; min-width:0;}' +
+      '.genio-pg-per{display:inline-flex; align-items:center; gap:8px;}' +
+      '.genio-pg-sel{height:30px; border:1px solid var(--border); border-radius:8px; background:#fff url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\' viewBox=\'0 0 10 6\'%3E%3Cpath d=\'M1 1l4 4 4-4\' fill=\'none\' stroke=\'%236b7080\' stroke-width=\'1.6\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/%3E%3C/svg%3E") no-repeat right 9px center; color:var(--ink); font:600 11px var(--font); padding:0 26px 0 10px; appearance:none; -webkit-appearance:none; cursor:pointer;}' +
+      '.genio-pg-sel:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(28,26,175,.12);}' +
+      '.genio-pg-r{display:flex; align-items:center; gap:4px; flex-wrap:wrap;}' +
+      '.genio-pg-b{min-width:30px; height:30px; padding:0 8px; border:1px solid var(--border); border-radius:8px; background:#fff; color:var(--ink); font:500 11px var(--font); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-variant-numeric:tabular-nums; transition:background .15s ease, border-color .15s ease;}' +
+      '.genio-pg-b:hover{background:var(--surface);}' +
+      '.genio-pg-b svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}' +
+      '.genio-pg-b.is-on{background:var(--blue); border-color:var(--blue); color:#fff; font-weight:600; cursor:default;}' +
+      '.genio-pg-b:disabled{opacity:.4; cursor:default; pointer-events:none;}' +
+      '.genio-pg-dots{min-width:20px; text-align:center;}' +
+      '@media (max-width:640px){ .genio-pg{padding:12px; justify-content:center;} .genio-pg-l{justify-content:center;} .genio-pg-r{justify-content:center;} }';
+    document.head.appendChild(css);
+
+    var I = {
+      first: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg>',
+      prev: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
+      next: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>',
+      last: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>'
+    };
+    function wide() { return window.matchMedia ? window.matchMedia('(min-width:768px)').matches : window.innerWidth >= 768; }
+    function getSize() {
+      try { var v = parseInt(localStorage.getItem('genio_pager_size@' + (wide() ? 'wide' : 'mobile')), 10); if (SIZES.indexOf(v) !== -1) return v; } catch (e) {}
+      return wide() ? 25 : 10;
+    }
+    function saveSize(n) { try { localStorage.setItem('genio_pager_size@' + (wide() ? 'wide' : 'mobile'), String(n)); } catch (e) {} }
+    function dataRows(table) {
+      var out = [], body = table.tBodies && table.tBodies[0];
+      if (!body) return out;
+      for (var i = 0; i < body.rows.length; i++) {
+        var r = body.rows[i];
+        if (r.cells.length === 1 && r.cells[0].colSpan > 1) continue; // baris kosong "tidak ada data"
+        out.push(r);
+      }
+      return out;
+    }
+    function keyOf(table) {
+      var panel = table.closest('[data-module]'), host = table.closest('[id]');
+      return (panel ? panel.getAttribute('data-module') : '') + '|' + (host ? host.id : '') + '|' + table.className;
+    }
+    function tokens(page, pages) {
+      if (pages <= 7) { var a = []; for (var i = 1; i <= pages; i++) a.push(i); return a; }
+      var t = [1];
+      if (page > 3) t.push('…');
+      for (var p = Math.max(2, page - 1); p <= Math.min(pages - 1, page + 1); p++) t.push(p);
+      if (page < pages - 2) t.push('…');
+      t.push(pages);
+      return t;
+    }
+    function build(table) {
+      var st = table._genioPg;
+      var rows = dataRows(table), total = rows.length, size = getSize();
+      var key = st.key, sv = states[key] || (states[key] = { page: 1, n: total });
+      if (sv.n !== total) { sv.page = 1; sv.n = total; }
+      var pages = Math.max(1, Math.ceil(total / size));
+      sv.page = Math.max(1, Math.min(pages, sv.page));
+      st.rows = rows; st.size = size; st.sv = sv;
+      var from = (sv.page - 1) * size, to = Math.min(total, from + size);
+      rows.forEach(function (r, i) { r.classList.toggle('genio-pg-hide', total > SIZES[0] && (i < from || i >= to)); });
+      var card = table.closest('.ps-table-card, [class$="-table-card"]') || table.parentElement.parentElement;
+      var foot = st.foot;
+      if (total <= SIZES[0]) { if (foot && foot.parentNode) foot.parentNode.removeChild(foot); st.foot = null; return; }
+      if (!foot) {
+        foot = document.createElement('div'); foot.className = 'genio-pg'; foot.setAttribute('role', 'navigation'); foot.setAttribute('aria-label', 'Halaman tabel');
+        foot.addEventListener('click', function (e) {
+          var b = e.target.closest && e.target.closest('[data-pg]'); if (!b || b.disabled) return;
+          var act = b.getAttribute('data-pg'), cur = st.sv.page, maxP = Math.max(1, Math.ceil(st.rows.length / st.size));
+          var np = act === 'first' ? 1 : act === 'prev' ? cur - 1 : act === 'next' ? cur + 1 : act === 'last' ? maxP : parseInt(act, 10);
+          go(table, np, true);
+        });
+        foot.addEventListener('change', function (e) {
+          if (!e.target.classList.contains('genio-pg-sel')) return;
+          saveSize(parseInt(e.target.value, 10));
+          st.sv.page = 1; build(table);
+        });
+        st.foot = foot;
+      }
+      if (foot.parentNode !== card) card.appendChild(foot);
+      var tk = tokens(sv.page, pages);
+      foot.innerHTML =
+        '<div class="genio-pg-l"><span>Menampilkan <b>' + (from + 1) + '-' + to + '</b> dari <b>' + total + '</b> data</span>' +
+        '<label class="genio-pg-per">Baris per halaman <select class="genio-pg-sel" aria-label="Baris per halaman">' + SIZES.map(function (n) { return '<option value="' + n + '"' + (n === size ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></label></div>' +
+        '<div class="genio-pg-r">' +
+        '<button type="button" class="genio-pg-b" data-pg="first" aria-label="Halaman pertama" title="Halaman pertama"' + (sv.page === 1 ? ' disabled' : '') + '>' + I.first + '</button>' +
+        '<button type="button" class="genio-pg-b" data-pg="prev" aria-label="Halaman sebelumnya" title="Sebelumnya"' + (sv.page === 1 ? ' disabled' : '') + '>' + I.prev + '</button>' +
+        tk.map(function (t) { return t === '…' ? '<span class="genio-pg-dots">…</span>' : '<button type="button" class="genio-pg-b' + (t === sv.page ? ' is-on' : '') + '" data-pg="' + t + '"' + (t === sv.page ? ' aria-current="page"' : '') + ' aria-label="Halaman ' + t + '">' + t + '</button>'; }).join('') +
+        '<button type="button" class="genio-pg-b" data-pg="next" aria-label="Halaman berikutnya" title="Berikutnya"' + (sv.page === pages ? ' disabled' : '') + '>' + I.next + '</button>' +
+        '<button type="button" class="genio-pg-b" data-pg="last" aria-label="Halaman terakhir" title="Halaman terakhir"' + (sv.page === pages ? ' disabled' : '') + '>' + I.last + '</button></div>';
+    }
+    function go(table, page, scroll) {
+      var st = table._genioPg; if (!st) return;
+      st.sv.page = page; build(table);
+      if (scroll) {
+        var card = table.closest('.ps-table-card, [class$="-table-card"]') || table.parentElement, r = card.getBoundingClientRect();
+        if (r.top < 60) window.scrollTo({ top: window.scrollY + r.top - 76, behavior: 'smooth' });
+      }
+    }
+    function attach(table) {
+      if (!table.isConnected) return;
+      if (!table._genioPg) table._genioPg = { key: keyOf(table), foot: null };
+      build(table);
+    }
+    // Dipakai fitur "lihat di daftar": pindah ke halaman yang memuat baris itu
+    window.genioPagerReveal = function (el) {
+      var tr = el && el.closest && el.closest('tr'), table = tr && tr.closest('table');
+      if (!table || !table._genioPg || !tr.classList.contains('genio-pg-hide')) return;
+      var idx = table._genioPg.rows.indexOf(tr);
+      if (idx >= 0) go(table, Math.floor(idx / table._genioPg.size) + 1, false);
+    };
+    // Semua fitur "gulir ke baris" (setelah simpan, lihat di daftar, dll) otomatis membuka halaman yang memuat barisnya
+    var origScroll = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = function () { try { window.genioPagerReveal(this); } catch (e) {} return origScroll.apply(this, arguments); };
+    var queue = [], scheduled = false;
+    function flush() { scheduled = false; var q = queue; queue = []; q.forEach(attach); }
+    function push(t) { if (queue.indexOf(t) === -1) queue.push(t); if (!scheduled) { scheduled = true; requestAnimationFrame(flush); } }
+    new MutationObserver(function (muts) {
+      muts.forEach(function (m) {
+        if (m.target.nodeType === 1 && m.target.closest && !m.target.classList.contains('genio-pg')) {
+          var tb = m.target.closest('tbody'); var tt = tb && tb.closest('table');
+          if (tt && tt.matches(TABLES)) push(tt);
+        }
+        m.addedNodes.forEach(function (n) {
+          if (n.nodeType !== 1 || (n.classList && n.classList.contains('genio-pg'))) return;
+          if (n.matches && n.matches(TABLES)) push(n);
+          else if (n.querySelectorAll) n.querySelectorAll(TABLES).forEach(push);
+        });
+      });
+    }).observe(document.body || document.documentElement, { childList: true, subtree: true });
+    document.querySelectorAll(TABLES).forEach(push);
+  })();
+
   // Tombol x di semua kolom pencarian (input teks berplaceholder "Cari..."), termasuk yang dibuat belakangan.
   // Menghapus isi lalu memicu event input supaya filter halaman ikut diperbarui.
   (function genioSearchClear() {

@@ -846,6 +846,9 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - Sebelumnya edit email di dua halaman itu hanya mengubah tabel `users`, sehingga email login tidak ikut berganti.
 - **Perlu redeploy Edge Function `admin-users`** setelah kode ini dipakai.
 
+### [v5] Pagination tabel (semua modul)
+- Semua tabel data punya footer otomatis dari `Config.html` (`genioPager`): info posisi, pilihan baris per halaman (10/25/50/100), tombol pertama, sebelumnya, nomor halaman, berikutnya, terakhir. Pilihan disimpan terpisah untuk HP dan layar lebar. Kembali ke halaman 1 saat jumlah data berubah (cari, filter). Footer tidak tampil kalau data 10 atau kurang. Berlaku di Kelola user, Data tutor, Gaji, Gaji tutor, Jadwal, Kelola unit, Kontrak, Operasional, Ortu dan siswa, Paket belajar, Presensi, Presensi tutor, dan Tagihan. Tampilan kartu tidak dipaginasi.
+
 ### [v5] Fase 4a: Presensi tutor (dikerjakan 28 Sep 2026)
 - **Dock tutor:** Beranda, Presensi, Gaji, Profil. Tidak ada menu Lainnya. Genio News nanti cukup tampil di Beranda.
 - **Beranda tutor** masih panel "sedang dikembangkan" (Fase 4b). Gaji tutor sudah (Fase 4c, lihat di bawah).
