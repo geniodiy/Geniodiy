@@ -78,6 +78,11 @@
   .hmt-sesi-badge{background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px;}
   #hmtSesiList.kuh-jm-anim .home-jm-dot{animation:homeJmDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 15ms);}
   @media (prefers-reduced-motion: reduce){ #hmtSesiList.kuh-jm-anim .home-jm-dot{animation:none;} }
+  /* Titik jadwal tutor dibuat kecil; saat diketuk membesar sedikit (.is-picked di Config.html) */
+  #hmtSesiList .home-jm-dot{width:6px; height:6px; box-shadow:0 0 0 1.5px #fff;}
+  #hmtSesiList .home-jm-dot::after{inset:-7px;}
+  #hmtSesiList .home-jm-dot.is-late{box-shadow:0 0 0 1.5px #fff, 0 0 0 2.75px #FFC46B;}
+  #hmtSesiList .home-jm-dot.is-done{box-shadow:0 0 0 1.5px #fff, 0 0 0 2.75px #7CD9A8;}
   #hmtSlotPop{grid-template-columns:minmax(0,1fr);}
   .hmt-slot{min-width:0; box-sizing:border-box; border:1px solid var(--border); border-radius:12px; padding:11px 12px; background:#fff;}
   .hmt-slot-top{display:flex; align-items:center; gap:9px; min-width:0;}
@@ -674,17 +679,15 @@
     var nToday = items.filter(function (i) { return i.row === 'today'; }).length, nYest = items.filter(function (i) { return i.row === 'yest' && i.st === 'late'; }).length, nFlex = items.filter(function (i) { return i.row === 'flex'; }).length;
     document.getElementById('hmtSesiBadge').textContent = items.length + ' sesi';
     var sub = [nToday + ' hari ini']; if (nYest) sub.push(nYest + ' kemarin belum lapor'); if (nFlex) sub.push(nFlex + ' fleksibel');
-    document.getElementById('hmtSesiSub').textContent = sub.join(' · ') + ' · ketuk titik untuk detail';
-    if (!items.length) {
-      el.innerHTML = '<div class="kuh-empty">Tidak ada sesi hari ini, kemarin, maupun jadwal fleksibel.</div>';
-      legend.innerHTML = '';
-      return;
-    }
-    var jams = Object.keys(items.reduce(function (a, i) { a[i.jam] = 1; return a; }, {})).sort(function (a, b) { return a === 'Bebas' ? 1 : b === 'Bebas' ? -1 : a < b ? -1 : 1; });
+    document.getElementById('hmtSesiSub').textContent = (items.length ? sub.join(' · ') + ' · ketuk titik untuk detail' : 'Belum ada sesi terjadwal');
+    var jamSet = {}; items.forEach(function (i) { jamSet[i.jam] = 1; });
+    if (!items.length) ['08:00', '10:00', '13:00', '15:30', '19:00'].forEach(function (j) { jamSet[j] = 1; });
+    jamSet['Bebas'] = 1;
+    var jams = Object.keys(jamSet).sort(function (a, b) { return a === 'Bebas' ? 1 : b === 'Bebas' ? -1 : a < b ? -1 : 1; });
     var yd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
     var rows = [{ key: 'today', label: 'Hari ini', sub: HMT_HARI_L[now.getDay()] }];
-    if (items.some(function (i) { return i.row === 'yest'; })) rows.push({ key: 'yest', label: 'Kemarin', sub: HMT_HARI_L[yd.getDay()] });
-    if (nFlex) rows.push({ key: 'flex', label: 'Fleksibel', sub: 'minggu ini' });
+    rows.push({ key: 'yest', label: 'Kemarin', sub: HMT_HARI_L[yd.getDay()] });
+    rows.push({ key: 'flex', label: 'Fleksibel', sub: 'minggu ini' });
     var n = 0;
     var html = '<div class="kuh-jm-grid" style="grid-template-columns:auto repeat(' + jams.length + ', minmax(40px, 1fr));"><div></div>';
     jams.forEach(function (j) { html += '<div class="home-jm-head">' + esc(j) + '</div>'; });
