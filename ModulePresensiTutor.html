@@ -7,17 +7,6 @@
   .pt-toolbar{display:flex; flex-direction:column; gap:12px;}
   .pt-toolbar .ps-search-sec{margin:0;}
   #pt-viewBtn{position:relative; width:34px; height:34px; color:var(--ink);}
-  #pt-isiBtn{
-    height:34px; padding:0 14px; border-radius:9px; width:100%;
-    background:#fff; color:var(--blue); border:1px solid #fff;
-    font-family:var(--font); font-size:11.5px; font-weight:600; white-space:nowrap; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; gap:6px;
-    transition:background .15s ease, transform .1s ease;
-  }
-  #pt-isiBtn i{font-size:14px;}
-  #pt-isiBtn:hover{background:var(--blue-tint);}
-  #pt-isiBtn:active{transform:scale(.97);}
-  #pt-isiBtn:focus-visible{outline:2px solid #fff; outline-offset:2px;}
 
   .pt-sec{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; min-width:0;}
   /* Filter tiga bagian di tengah: angka di atas, label dengan titik warna di bawah */
@@ -229,7 +218,6 @@
           <div><i style="background:#FFC46B;"></i>Menunggu <b id="pt-stPending">0</b></div>
         </div>
       </div>
-      <button id="pt-isiBtn" type="button"><i class="ph ph-plus" aria-hidden="true"></i><span>Isi presensi</span></button>
     </div>
   </div>
 
@@ -1214,7 +1202,6 @@
     genioSaveViewPref('pt_view', pt.view);
     ptRerender();
   });
-  document.getElementById('pt-isiBtn').addEventListener('click', function () { ptOpenPicker('new'); });
   document.getElementById('pt-pickSearch').addEventListener('input', function (e) { ptRenderPicker(e.target.value.trim().toLowerCase()); });
   ['pt-pickClose', 'pt-pickCancel'].forEach(function (id) { document.getElementById(id).addEventListener('click', function () { ptHide(document.getElementById('pt-pickModal')); }); });
   document.getElementById('pt-fKontrakBtn').addEventListener('click', function () { if (!this.disabled) ptOpenPicker('field'); });

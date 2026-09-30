@@ -134,7 +134,6 @@
         <div class="kuh-deltarow" id="hmtDelta"></div>
         <svg class="kuh-spark" id="hmtSpark" viewBox="0 0 600 74" preserveAspectRatio="none" aria-hidden="true"></svg>
         <div class="kuh-months" id="hmtMonths"></div>
-        <button type="button" class="hmt-btn" id="hmtIsiBtn"><i class="ph ph-plus" aria-hidden="true"></i>Isi presensi</button>
       </div>
       <div class="kuh-hs">
         <div class="hmt-side">
@@ -779,7 +778,6 @@
     if (window.genioDashboardShowModule) window.genioDashboardShowModule('presensi');
   }
 
-  document.getElementById('hmtIsiBtn').addEventListener('click', function () { hmtGo({ action: 'pick' }); });
   document.querySelectorAll('#hmtActs .kuh-act').forEach(function (b) {
     b.addEventListener('click', function () {
       if (b.dataset.go === 'gaji') { window.genioGajiTutorTab = 'slip'; if (window.genioDashboardShowModule) window.genioDashboardShowModule('gaji'); }
