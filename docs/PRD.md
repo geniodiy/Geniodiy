@@ -859,6 +859,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
     - **Menunggu:** laporan yang belum diperiksa.
     - **Selesai:** diterima atau visit pada periode header, dengan centang hijau.
   - **Tab Jadwal lengkap:**
+    - **Jadwal mingguan** di atas daftar, seperti kepala unit tetapi hanya jadwal tutor itu: satu titik satu sesi, warna per siswa, kolom fleksibel di depan. Ketuk titik membuka popup dengan tombol **Chat (nama kepala unit)** (WhatsApp, kepala unit dari unit kontrak lewat RPC `tutor_kontak_bantuan`), **Isi presensi**, dan panah detail yang menggulir dan menyorot kartu atau baris kontrak yang sesuai di bawahnya.
     - Per kontrak aktif: jadwal acuan dan pertemuan bulan ini dibanding estimasi.
     - Estimasi pertemuan = jumlah sesi per minggu × 4.
     - Estimasi fee bulan ini, dengan rincian mengajar dan transport per sesi.
