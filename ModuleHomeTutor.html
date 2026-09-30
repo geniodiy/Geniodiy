@@ -67,6 +67,16 @@
   .hmt-rev-row .t b small{font-size:10.5px; font-weight:400; color:var(--ink-soft); margin-left:4px;}
   .hmt-rev-row .t span{display:block; font-size:11px; color:#B4232A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .hmt-rev-row .t span i{margin-right:3px;}
+  .hmt-rev-ok .hmt-rev-n{background:linear-gradient(160deg,#7CF0C3,#1E8E5A);}
+  .hmt-ok-ring{width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 6px rgba(255,255,255,.12);}
+  .hmt-ok-ring svg polyline{stroke-dasharray:24; stroke-dashoffset:24; animation:hmtTick .6s .15s cubic-bezier(.16,1,.3,1) forwards;}
+  @keyframes hmtTick{to{stroke-dashoffset:0;}}
+  @media (prefers-reduced-motion: reduce){ .hmt-ok-ring svg polyline{animation:none; stroke-dashoffset:0;} }
+  .hmt-ok-b{display:flex; flex-direction:column; justify-content:center; gap:3px; padding:14px 18px;}
+  .hmt-ok-b b{font-size:13px; font-weight:600; color:#1E8E5A;}
+  .hmt-ok-b span{font-size:11.5px; color:var(--ink-soft);}
+  .hmt-act-ok .ic{background:#E9F7EF !important; color:#1E8E5A !important;}
+  .hmt-act-ok .t b{color:#1E8E5A;}
   .hmt-rev-hint{font-size:10.5px; color:var(--ink-soft); margin-top:6px;}
   @media (max-width:899px){
     .hmt-rev{grid-template-columns:minmax(0,1fr);}
@@ -148,7 +158,7 @@
     </div>
 
     <div class="kuh-acts" id="hmtActs">
-      <button type="button" class="kuh-act" data-go="tindakan"><span class="ic r"><i class="ph ph-pencil-simple" aria-hidden="true"></i></span><div class="t"><b id="hmtActRev">0</b><span>Perlu revisi</span><small id="hmtActRevSub">Laporan ditolak</small></div></button>
+      <button type="button" class="kuh-act" data-go="tindakan" id="hmtActRevTile"><span class="ic r" id="hmtActRevIc"><i class="ph ph-pencil-simple" aria-hidden="true"></i></span><div class="t"><b id="hmtActRev">0</b><span>Perlu revisi</span><small id="hmtActRevSub">Laporan ditolak</small></div></button>
       <button type="button" class="kuh-act" data-go="tindakan"><span class="ic"><i class="ph ph-calendar-check" aria-hidden="true"></i></span><div class="t"><b id="hmtActHari">0</b><span>Jadwal hari ini</span><small id="hmtActHariSub">-</small></div></button>
       <button type="button" class="kuh-act" data-go="menunggu"><span class="ic a"><i class="ph ph-hourglass-medium" aria-hidden="true"></i></span><div class="t"><b id="hmtActWait">0</b><span>Menunggu diperiksa</span><small>Laporan terkirim</small></div></button>
       <button type="button" class="kuh-act" data-go="gaji"><span class="ic"><i class="ph ph-wallet" aria-hidden="true"></i></span><div class="t"><b id="hmtActSlip">Rp 0</b><span>Slip belum dibayar</span><small id="hmtActSlipSub">-</small></div></button>
@@ -163,6 +173,10 @@
             <div class="hmt-rev-list" id="hmtRevList"></div>
             <div class="hmt-rev-hint" id="hmtRevHint" hidden>Geser di dalam kartu untuk melihat semua</div>
           </div>
+        </div>
+        <div class="kuh-card hmt-rev hmt-rev-ok" id="hmtRevOk" hidden>
+          <div class="hmt-rev-n"><span class="hmt-ok-ring"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 12.5 10 17 19 7.5"/></svg></span></div>
+          <div class="hmt-rev-b hmt-ok-b"><b>Semua laporan aman</b><span>Tidak ada laporan yang ditolak. Terima kasih sudah melapor dengan rapi.</span></div>
         </div>
         <div class="kuh-card hmt-sesi">
           <div class="kuh-sec"><div style="display:flex; align-items:center; gap:6px;"><h4>Sesi hari ini</h4><span class="hmt-sesi-badge" id="hmtSesiBadge">-</span></div><span id="hmtSesiSub">Hari ini, kemarin, dan fleksibel</span></div>
@@ -623,6 +637,13 @@
     var rows = hmt.presensi.filter(function (p) { return p.status === 'ditolak'; }).sort(function (a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); });
     var card = document.getElementById('hmtRevCard');
     card.hidden = !rows.length;
+    document.getElementById('hmtRevOk').hidden = !!rows.length;
+    // Kotak "Perlu revisi" di deretan atas: hijau bercentang kalau tidak ada laporan ditolak
+    var tile = document.getElementById('hmtActRevTile');
+    tile.classList.toggle('hmt-act-ok', !rows.length);
+    document.getElementById('hmtActRevIc').classList.toggle('r', !!rows.length);
+    document.getElementById('hmtActRevIc').innerHTML = rows.length ? '<i class="ph ph-pencil-simple" aria-hidden="true"></i>' : '<i class="ph-fill ph-check-circle" aria-hidden="true"></i>';
+    document.getElementById('hmtActRevSub').textContent = rows.length ? 'Laporan ditolak' : 'Tidak ada laporan ditolak';
     if (!rows.length) return;
     document.getElementById('hmtRevN').textContent = rows.length;
     document.getElementById('hmtRevHint').hidden = rows.length < 4;
