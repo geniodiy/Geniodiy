@@ -165,6 +165,33 @@
     body:has(.modal-overlay.show) .genio-fab-m, body:has(.modal-overlay.show) #genioFabD{opacity:0; pointer-events:none;}
     @media (prefers-reduced-motion:reduce){ .genio-fab-m, #genioFabD, .genio-fab-btn{transition:none;} }
 
+
+    /* ===== Menu tambah cepat + (kepala unit dan manajer): roda di HP, kartu daftar di desktop ===== */
+    .qa-backdrop{position:fixed; inset:0; z-index:44; background:rgba(20,22,43,.42); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .22s ease;}
+    .qa-backdrop.is-open{opacity:1; pointer-events:auto;}
+    .qa-wheel{position:absolute; left:50%; top:4px; width:320px; height:170px; margin-left:-160px; margin-top:-160px; z-index:1; overflow:visible; pointer-events:none; transform-origin:160px 160px; transform:scale(.2); opacity:0; transition:transform .32s cubic-bezier(.16,1,.3,1), opacity .2s ease; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
+    .qa-wheel.is-open{transform:none; opacity:1; pointer-events:none;}
+    .qa-wheel path{fill:#fff; stroke:#E7E9F3; stroke-width:1.5; cursor:pointer; pointer-events:none; transition:fill .15s ease; outline:none;}
+    .qa-wheel.is-open path{pointer-events:auto;}
+    .qa-wheel path:hover, .qa-wheel path:focus-visible, .qa-wheel path:active{fill:#EEEEFB;}
+    .qa-items{position:absolute; left:50%; top:-24px; width:0; height:0; z-index:2; pointer-events:none;}
+    .qa-item{position:absolute; width:64px; margin-left:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--blue); text-align:center; opacity:0; transform:scale(.6); transition:transform .28s cubic-bezier(.16,1,.3,1), opacity .2s ease; transition-delay:calc(var(--i) * 25ms); pointer-events:none;}
+    .qa-items.is-open .qa-item{opacity:1; transform:none;}
+    .qa-item i{display:block; line-height:1;}
+    .qa-item span{font-family:var(--font); font-weight:500; white-space:nowrap; line-height:1.1;}
+    .genio-fab-btn.is-open{transform:rotate(45deg);}
+    .genio-fab-btn{transition:transform .25s cubic-bezier(.16,1,.3,1);}
+    .qa-card{position:fixed; right:28px; bottom:108px; z-index:46; width:250px; background:#fff; border:1px solid var(--border); border-radius:18px; padding:8px; box-shadow:0 24px 50px -16px rgba(20,22,43,.5); opacity:0; transform:translateY(10px) scale(.98); transform-origin:bottom right; pointer-events:none; transition:opacity .2s ease, transform .25s cubic-bezier(.16,1,.3,1); display:none;}
+    .qa-card.is-open{opacity:1; transform:none; pointer-events:auto;}
+    .qa-card-t{font-size:11px; font-weight:600; color:var(--ink-soft); padding:8px 10px 6px;}
+    .qa-row{display:flex; align-items:center; gap:11px; width:100%; height:42px; padding:0 10px; border:0; border-radius:12px; background:none; cursor:pointer; font-family:var(--font); font-size:12.5px; font-weight:500; color:var(--ink); text-align:left; transition:background .15s ease;}
+    .qa-row:hover, .qa-row:focus-visible{background:#EEEEFB; outline:none;}
+    .qa-row .qi{width:30px; height:30px; border-radius:50%; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; flex:none;}
+    .qa-row .ql{flex:1;}
+    .qa-row .qc{color:var(--ink-soft); font-size:13px;}
+    @media (min-width:900px){ .qa-card{display:block;} .qa-wheel, .qa-items{display:none;} }
+    @media (prefers-reduced-motion:reduce){ .qa-wheel, .qa-item, .qa-card, .qa-backdrop, .genio-fab-btn{transition:none;} }
+
     .dock-badge{
       position:absolute; top:-5px; right:-9px;
       min-width:16px; height:16px; padding:0 4px;
@@ -207,6 +234,7 @@
       background:var(--blue-tint); color:var(--blue);
     }
     .menu-row .mr-badge svg{width:15px; height:15px; display:block;}
+    .menu-row .mr-badge i{font-size:16px; line-height:1; display:block;}
     .menu-row .mr-label{flex:1; font-size:12.5px; font-weight:500; color:var(--ink);}
     .menu-row .mr-info{font-size:11px; font-weight:500; color:var(--ink-soft); white-space:nowrap; font-variant-numeric:tabular-nums;}
     .menu-row .mr-soon{
@@ -549,6 +577,103 @@
         fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPicker(); } });
       })();
     }
+
+    // ===== Menu tambah cepat (kepala unit dan manajer): tombol + di bottom bar (HP) atau pill kanan bawah (desktop) =====
+    (function () {
+      var IS_MGR = !IS_TUTOR && !IS_HRD && !IS_KU;
+      if (!IS_KU && !IS_MGR) return;
+      var dockEl = document.getElementById('interactiveDock'), wrapEl = document.querySelector('.dock-wrap');
+      if (!dockEl || !wrapEl) return;
+      // key, ikon (peta ikon tunggal), label, modul tujuan, tombol tambah di modul itu
+      var ALL = {
+        presensi: ['check-circle', 'Presensi', 'presensi', 'ps-openWakilBtn'],
+        siswa: ['student', 'Siswa', 'ortu-siswa', 'os-addBtn'],
+        operasional: ['receipt', 'Operasional', 'operasional', 'ops-addBtn'],
+        kontrak: ['file-text', 'Kontrak', 'kontrak', 'ktr-addBtn'],
+        jadwal: ['calendar-blank', 'Jadwal', 'jadwal', 'jdw-addBtn'],
+        tutor: ['chalkboard-teacher', 'Tutor', 'data-tutor', 'dt-pendaftaranToggle'],
+        paket: ['books', 'Paket', 'paket-belajar', 'pkt-addBtn']
+      };
+      var KEYS = IS_KU ? ['presensi', 'siswa', 'operasional', 'kontrak', 'jadwal'] : ['presensi', 'siswa', 'operasional', 'kontrak', 'jadwal', 'tutor', 'paket'];
+      var PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+      var open = false;
+
+      var btns = dockEl.querySelectorAll('.dock-btn');
+      var gap = document.createElement('div'); gap.className = 'dock-fab-gap'; gap.setAttribute('aria-hidden', 'true');
+      dockEl.insertBefore(gap, btns[2] || null);
+      dockEl.style.position = 'relative'; dockEl.style.zIndex = '2';
+
+      var backdrop = document.createElement('div'); backdrop.className = 'qa-backdrop'; document.body.appendChild(backdrop);
+      var fm = document.createElement('button'); fm.type = 'button'; fm.id = 'genioFabM'; fm.className = 'genio-fab-m genio-fab-btn';
+      fm.setAttribute('aria-label', 'Tambah'); fm.setAttribute('aria-haspopup', 'true'); fm.setAttribute('aria-expanded', 'false'); fm.innerHTML = PLUS; wrapEl.appendChild(fm);
+      var fd = document.createElement('div'); fd.id = 'genioFabD'; fd.setAttribute('role', 'button'); fd.tabIndex = 0; fd.setAttribute('aria-label', 'Tambah'); fd.setAttribute('aria-haspopup', 'true'); fd.setAttribute('aria-expanded', 'false');
+      fd.innerHTML = '<span class="genio-fab-btn" id="genioFabDBtn">' + PLUS + '</span><span class="genio-fab-lbl" id="genioFabDLbl">Tambah</span>';
+      document.body.appendChild(fd);
+      var fdBtn = fd.querySelector('.genio-fab-btn'), fdLbl = fd.querySelector('.genio-fab-lbl');
+
+      // Roda (HP): sektor setengah lingkaran di belakang bottom bar
+      var n = KEYS.length, Ro = 150, st = 180 / n;
+      var iconR = n > 5 ? 106 : 98, iconPx = n > 5 ? 16 : 20, labelPx = n > 5 ? 8 : 9;
+      function pt(a, r) { return [r * Math.cos(a * Math.PI / 180), -r * Math.sin(a * Math.PI / 180)]; }
+      var NS = 'http://www.w3.org/2000/svg';
+      var wheel = document.createElementNS(NS, 'svg'); wheel.setAttribute('class', 'qa-wheel'); wheel.setAttribute('viewBox', '-160 -160 320 170'); wheel.setAttribute('aria-hidden', 'true');
+      var items = document.createElement('div'); items.className = 'qa-items';
+      KEYS.forEach(function (k, i) {
+        var a1 = 180 - i * st, a2 = 180 - (i + 1) * st, p1 = pt(a1, Ro), p2 = pt(a2, Ro), p3 = pt(a2, 1), p4 = pt(a1, 1);
+        var path = document.createElementNS(NS, 'path');
+        path.setAttribute('d', 'M' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + ' A' + Ro + ' ' + Ro + ' 0 0 1 ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1) + ' L' + p3[0].toFixed(1) + ' ' + p3[1].toFixed(1) + ' L' + p4[0].toFixed(1) + ' ' + p4[1].toFixed(1) + ' Z');
+        path.setAttribute('role', 'button'); path.setAttribute('tabindex', '-1'); path.setAttribute('aria-label', 'Tambah ' + ALL[k][1]);
+        path.addEventListener('click', function () { choose(k); });
+        path.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(k); } });
+        wheel.appendChild(path);
+        var mid = pt(180 - (i + 0.5) * st, iconR);
+        var el = document.createElement('div'); el.className = 'qa-item'; el.style.setProperty('--i', i);
+        el.style.left = mid[0].toFixed(1) + 'px'; el.style.top = (4 + mid[1]).toFixed(1) + 'px';
+        el.innerHTML = '<i class="ph-fill ph-' + ALL[k][0] + '" style="font-size:' + iconPx + 'px" aria-hidden="true"></i><span style="font-size:' + labelPx + 'px">' + ALL[k][1] + '</span>';
+        items.appendChild(el);
+      });
+      wrapEl.appendChild(wheel); wrapEl.appendChild(items);
+
+      // Kartu daftar (desktop)
+      var card = document.createElement('div'); card.className = 'qa-card'; card.setAttribute('role', 'menu');
+      card.innerHTML = '<div class="qa-card-t">Tambah baru</div>' + KEYS.map(function (k) {
+        return '<button type="button" class="qa-row" role="menuitem" data-k="' + k + '"><span class="qi"><i class="ph ph-' + ALL[k][0] + '" aria-hidden="true"></i></span><span class="ql">' + ALL[k][1] + '</span><i class="ph ph-caret-right qc" aria-hidden="true"></i></button>';
+      }).join('');
+      card.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.qa-row'); if (b) choose(b.getAttribute('data-k')); });
+      document.body.appendChild(card);
+
+      // Buka modul tujuan lalu tekan tombol tambahnya setelah daftar selesai dimuat
+      function goAdd(k) {
+        var c = ALL[k]; if (!c) return;
+        if (window.genioDashboardShowModule) window.genioDashboardShowModule(c[2]);
+        var tries = 0;
+        (function wait() {
+          var panel = document.querySelector('.module-panel[data-module="' + c[2] + '"]'), btn = document.getElementById(c[3]);
+          var loading = panel && /Memuat/.test(panel.textContent || '');
+          if (btn && panel && !panel.hidden && !loading) { setTimeout(function () { btn.click(); }, 180); return; }
+          if (++tries < 30) setTimeout(wait, 150);
+          else if (btn) btn.click();
+        })();
+      }
+      function setOpen(v) {
+        open = v;
+        backdrop.classList.toggle('is-open', v); wheel.classList.toggle('is-open', v); items.classList.toggle('is-open', v); card.classList.toggle('is-open', v);
+        fm.classList.toggle('is-open', v); fdBtn.classList.toggle('is-open', v);
+        fm.setAttribute('aria-expanded', String(v)); fd.setAttribute('aria-expanded', String(v));
+        fm.setAttribute('aria-label', v ? 'Tutup' : 'Tambah'); fdLbl.textContent = v ? 'Tutup' : 'Tambah';
+        wrapEl.style.zIndex = v ? '45' : '';
+        dockEl.style.pointerEvents = v ? 'none' : '';
+        document.body.classList.toggle('qa-open', v);
+      }
+      function choose(k) { setOpen(false); goAdd(k); }
+      fm.addEventListener('click', function () { setOpen(!open); });
+      fd.addEventListener('click', function () { setOpen(!open); });
+      fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } });
+      backdrop.addEventListener('click', function () { setOpen(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) setOpen(false); });
+      window.addEventListener('resize', function () { if (open) setOpen(false); });
+    })();
+
     if (IS_KU) {
       // Kepala unit: posisi ke-3 dock = Jadwal mengajar (tidak punya menu Gaji)
       var navGaji = document.getElementById('nav-gaji');
@@ -563,18 +688,10 @@
 
     // ===== Ikon minimalis untuk tiap item menu (line-icon, konsisten gaya bottom nav) =====
     var MENU_ICONS = {
-      people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7.5" r="3.2"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><path d="M16 4.8a3.2 3.2 0 0 1 0 6.2"/><path d="M20 20c0-2.8-1.8-5-4-5.8"/></svg>',
-      doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>',
-      card: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><path d="M2 10h20"/></svg>',
-      person: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/></svg>',
-      monitor: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>',
-      home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 3.5l8 7V19.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5v-9z"/></svg>',
-      check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>',
-      calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-      layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>',
-      shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.5 3 7 7 8 4-1 7-3.5 7-8V6l-7-3z"/></svg>',
-      news: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>',
-      gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>'
+      // Peta ikon tunggal (samakan di semua halaman): siswa student, kontrak file-text, jadwal calendar-blank, tagihan credit-card,
+      // tutor chalkboard-teacher, operasional receipt, unit buildings, paket belajar books, user user-gear, news newspaper, pengaturan gear, presensi check-circle
+      people: '<i class="ph ph-student" aria-hidden="true"></i>', doc: '<i class="ph ph-file-text" aria-hidden="true"></i>', calendar: '<i class="ph ph-calendar-blank" aria-hidden="true"></i>', card: '<i class="ph ph-credit-card" aria-hidden="true"></i>', person: '<i class="ph ph-chalkboard-teacher" aria-hidden="true"></i>', monitor: '<i class="ph ph-receipt" aria-hidden="true"></i>',
+      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>'
     };
 
     // ===== Konfigurasi menu "Lainnya" — satu-satunya sumber data untuk:

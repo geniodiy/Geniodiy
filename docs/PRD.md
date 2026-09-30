@@ -846,6 +846,10 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - Sebelumnya edit email di dua halaman itu hanya mengubah tabel `users`, sehingga email login tidak ikut berganti.
 - **Perlu redeploy Edge Function `admin-users`** setelah kode ini dipakai.
 
+### [v5] Menu tambah cepat dan peta ikon
+- Kepala unit dan manajer punya tombol + di bottom bar (HP) dan pill "Tambah" di kanan bawah (desktop). HP: roda setengah lingkaran muncul dari balik bottom bar. Desktop: kartu daftar "Tambah baru". Kepala unit: presensi, siswa, operasional, kontrak, jadwal. Manajer dan super admin ditambah tutor dan paket. Tiap pilihan membuka modulnya lalu menekan tombol tambah modul itu. Ditutup lewat ×, ketuk di luar, atau Esc. HRD belum memakai menu ini.
+- Ikon disamakan per konsep di seluruh aplikasi (dock, menu Lainnya, Home, popup): presensi check-circle, siswa student, kontrak file-text, jadwal calendar-blank, operasional receipt, tagihan credit-card, tutor chalkboard-teacher, paket belajar books, unit buildings, user user-gear, news newspaper, pengaturan gear. Menu Lainnya sekarang memakai ikon Phosphor yang sama dengan modul.
+
 ### [v5] Tombol + isi presensi tutor
 - Tutor: tombol + bulat biru (stroke putih) di tengah bottom bar pada HP, pill putih "Isi presensi" dengan tombol + di kiri pada pojok kanan bawah desktop. Keduanya membuka pemilih sesi, tampil di semua halaman tutor, dan menghilang saat popup terbuka. Tombol Isi presensi di highlight Beranda dan Presensi dihapus. Bottom bar dibuat lebih ringkas (maks 350px) dan latar tombol dock bulat penuh di HP dan desktop.
 
