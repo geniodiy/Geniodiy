@@ -233,6 +233,9 @@
     </div>
   </div>
 
+  <!-- Jadwal mingguan: selalu tampil di bawah highlight, di tab mana pun -->
+  <div class="pt-week" id="pt-week" hidden></div>
+
   <!-- Tab + cari + ganti tampilan -->
   <div class="pt-toolbar">
     <div class="ps-dock" id="pt-dock">
@@ -250,7 +253,6 @@
   </div>
 
   <div class="pt-sec" id="pt-sec"></div>
-  <div class="pt-week" id="pt-week" hidden></div>
   <div id="pt-list"></div>
   <div class="genio-pop" id="pt-slotPop" hidden></div>
 
@@ -547,8 +549,7 @@
 
     var sec = document.getElementById('pt-sec');
     var list = document.getElementById('pt-list');
-    var weekEl = document.getElementById('pt-week');
-    if (pt.tab !== 'jadwal') weekEl.hidden = true;
+    ptRenderWeek(animate);
     if (pt.tab === 'sesi') {
       var F = [['tindakan', 'Perlu tindakan', tindakan.length], ['menunggu', 'Menunggu', menunggu.length], ['selesai', 'Selesai', selesai.length]];
       var FC = { tindakan: '#1C1AAF', menunggu: '#C27400', selesai: '#1E8E5A' };
@@ -573,7 +574,6 @@
     } else {
       sec.classList.remove('is-seg');
       sec.innerHTML = '<div style="min-width:0;"><div class="ps-section-title">Jadwal mengajar aktif</div><div class="ps-section-sub">Jadwal sebagai acuan. Pertemuan dan fee bulan ' + esc(st.range.label) + ' adalah estimasi.</div></div>';
-      ptRenderWeek(animate);
       var ks = pt.kontrak.filter(function (k) { return !pt.q || (ktSiswa(k).nama + ' ' + k.mapel + ' ' + ktUnit(k)).toLowerCase().indexOf(pt.q) !== -1; });
       if (!ks.length) {
         list.className = 'pt-grid';
@@ -705,6 +705,7 @@
   function ptGotoKontrak(id) {
     var find = function () { return document.querySelector('#pt-list [data-kontrak="' + id + '"]'); };
     var t = find();
+    if (!t && pt.tab !== 'jadwal') { pt.tab = 'jadwal'; ptRender(false); t = find(); }
     if (!t && pt.q) {
       pt.q = ''; var inp = document.getElementById('pt-search'); inp.value = ''; inp.dispatchEvent(new Event('input', { bubbles: true }));
       t = find();
