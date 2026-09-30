@@ -78,11 +78,6 @@
   .hmt-sesi-badge{background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px;}
   #hmtSesiList.kuh-jm-anim .home-jm-dot{animation:homeJmDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 15ms);}
   @media (prefers-reduced-motion: reduce){ #hmtSesiList.kuh-jm-anim .home-jm-dot{animation:none;} }
-  /* Titik jadwal tutor dibuat kecil; saat diketuk membesar sedikit (.is-picked di Config.html) */
-  #hmtSesiList .home-jm-dot{width:6px; height:6px; box-shadow:0 0 0 1.5px #fff;}
-  #hmtSesiList .home-jm-dot::after{inset:-7px;}
-  #hmtSesiList .home-jm-dot.is-late{box-shadow:0 0 0 1.5px #fff, 0 0 0 2.75px #FFC46B;}
-  #hmtSesiList .home-jm-dot.is-done{box-shadow:0 0 0 1.5px #fff, 0 0 0 2.75px #7CD9A8;}
   #hmtSlotPop{grid-template-columns:minmax(0,1fr);}
   .hmt-slot{min-width:0; box-sizing:border-box; border:1px solid var(--border); border-radius:12px; padding:11px 12px; background:#fff;}
   .hmt-slot-top{display:flex; align-items:center; gap:9px; min-width:0;}
