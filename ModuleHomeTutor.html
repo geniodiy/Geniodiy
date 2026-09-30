@@ -13,33 +13,11 @@
   .hmt-go:hover{filter:brightness(1.08);}
   .hmt-sesi .kuh-ses .jam.is-rev{color:#D4070F;}
   .hmt-sesi .kuh-ses .jam.is-flx{color:#5B3FD1;}
-  .hmt-trend .kuh-sec{align-items:flex-start;}
-  .hmt-tabs{display:grid; grid-template-columns:1fr 1fr; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:3px;}
-  .hmt-tabs button{height:26px; padding:0 10px; border:0; border-radius:7px; background:transparent; color:var(--ink-soft); font-family:var(--font); font-size:10.5px; font-weight:500; cursor:pointer;}
-  .hmt-tabs button.on{background:#fff; color:var(--ink); font-weight:600; box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border);}
-  .hmt-chart{position:relative; height:170px; margin-top:6px;}
-  .hmt-chart svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible;}
-  .hmt-tip{position:absolute; top:0; transform:translateX(-50%); background:#fff; border:1px solid var(--border); border-radius:9px; padding:6px 9px; font-size:10.5px; white-space:nowrap; pointer-events:none; box-shadow:0 8px 20px -10px rgba(20,22,43,.3); opacity:0; transition:opacity .12s ease;}
-  .hmt-tip b{display:block; font-size:11.5px; font-weight:700; color:var(--ink);}
-  .hmt-tip span{color:var(--ink-soft);}
-  .hmt-tip.show{opacity:1;}
-  .hmt-tiles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px;}
-  .hmt-tile{border-radius:12px; padding:9px 11px; background:linear-gradient(160deg,#FFFFFF,#F1F4FF); border:1px solid #E3E8FB; min-width:0; transition:transform .15s ease, box-shadow .15s ease;}
-  .hmt-tile:hover, .hmt-tile.is-hot{transform:translateY(-2px); box-shadow:0 10px 20px -14px rgba(28,26,175,.55);}
-  .hmt-tile small{display:block; font-size:10px; color:var(--ink-soft);}
-  .hmt-tile b{display:block; font-size:15px; font-weight:700; margin-top:2px; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .hmt-tile .d{display:inline-block; margin-top:5px; font-size:10px; font-weight:600; padding:1px 8px; border-radius:999px; background:#E9F7EF; color:#1E8E5A;}
-  .hmt-tile .d.dn{background:#FDEAEA; color:#D4070F;} .hmt-tile .d.fl{background:#EEF0F6; color:#6B7089;}
+  /* Tren mengajar: layout sama dengan "Trend progress unit" (kelas .ht-* dari ModuleHome.html) */
+  .hmt-trend .ht-chart{height:200px; flex:none;}
+  @media (max-width:899px){ .hmt-trend .ht-chart{height:170px;} }
+  .hmt-range button.is-on{color:var(--ink); font-weight:600;}
   @keyframes hmtPulse{0%{transform:scale(.6); opacity:.9;} 100%{transform:scale(1.9); opacity:0;}}
-  .hmt-halo{transform-box:fill-box; transform-origin:center; animation:hmtPulse 2.2s ease-out infinite;}
-  @keyframes hmtFade{from{opacity:0;} to{opacity:1;}}
-  .hmt-fadein{animation:hmtFade .8s ease .25s both;}
-  @media (prefers-reduced-motion: reduce){ .hmt-halo, .hmt-fadein{animation:none !important;} .hmt-tile{transition:none;} }
-  .hmt-legend{display:flex; gap:14px; font-size:10px; color:var(--ink-soft); margin-top:12px;}
-  .hmt-legend i{display:inline-block; width:14px; height:0; border-top:2px solid var(--blue); vertical-align:middle; margin-right:5px;}
-  .hmt-legend i.g{border-top:2px dashed #C9CCDA;}
-  .hmt-sum{display:flex; gap:18px; flex-wrap:wrap; margin-top:2px;}
-  .hmt-sum div{font-size:10.5px; color:var(--ink-soft);} .hmt-sum b{display:block; font-size:18px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums;}
   /* Kartu ringkasan: gradasi biru muda, bantuan jadwal di pita hijau bawah */
   /* Panel kanan highlight: pola sama dengan highlight modul lain (cincin + daftar + tombol putih) */
   #hmtWrap .kuh-hs{padding:0; background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); display:flex; flex-direction:column; justify-content:center; min-width:0;}
@@ -77,7 +55,6 @@
     #hmtWrap .kuh-2{align-items:stretch;}
     #hmtWrap .kuh-2 > .kuh-card{display:flex; flex-direction:column;}
     #hmtWrap .hmt-sesi #hmtSesiList{flex:1;}
-    #hmtWrap .hmt-trend .hmt-chart{flex:1; height:auto; min-height:130px;}
   }
   @media (max-width:899px){
     #hmtActs{grid-template-columns:repeat(2, minmax(0,1fr));}
@@ -138,18 +115,37 @@
         <div id="hmtSesiList"><div class="kuh-empty">Memuat...</div></div>
         <button type="button" class="kuh-seemore" id="hmtSesiMore">Buka presensi</button>
       </div>
-      <div class="kuh-card hmt-trend">
-        <div class="kuh-sec">
-          <div><h4>Tren mengajar</h4><div style="font-size:10.5px; color:var(--ink-soft); margin-top:2px;" id="hmtTrendSub">3 bulan terakhir</div></div>
-          <div class="hmt-tabs" role="tablist">
-            <button type="button" class="on" data-m="sesi" role="tab">Pertemuan</button>
-            <button type="button" data-m="gaji" role="tab">Gaji</button>
+      <div class="kuh-card ht-card hmt-trend">
+        <div class="ht-head">
+          <div style="min-width:0;">
+            <div class="kuh-sec" style="margin:0;"><h4>Tren mengajar</h4></div>
+            <div class="ht-sub" id="hmtTrendSub">-</div>
+          </div>
+          <div id="hmtTrendRange" class="ht-range">
+            <div id="hmtTrendGlider" class="ht-range-glider"></div>
+            <button type="button" class="hmt-range" data-range="3">3 bln</button>
+            <button type="button" class="hmt-range" data-range="6">6 bln</button>
+            <button type="button" class="hmt-range" data-range="12">12 bln</button>
           </div>
         </div>
-        <div class="hmt-sum" id="hmtTrendSum"></div>
-        <div class="hmt-chart" id="hmtChart"><svg id="hmtChartSvg" aria-hidden="true"></svg><div class="hmt-tip" id="hmtTip"></div></div>
-        <div class="hmt-tiles" id="hmtTiles"></div>
-        <div class="hmt-legend" id="hmtLegend"></div>
+        <div class="ht-tabs" id="hmtTrendTabs" role="tablist">
+          <button type="button" class="hmt-metric ht-tab" data-metric="sesi" role="tab">Pertemuan</button>
+          <button type="button" class="hmt-metric ht-tab" data-metric="gaji" role="tab">Gaji</button>
+        </div>
+        <div class="ht-hero">
+          <span class="ht-num" id="hmtTrendHeroVal">-</span>
+          <span class="ht-delta" id="hmtTrendHeroDelta"></span>
+          <span class="ht-note" id="hmtTrendHeroNote"></span>
+        </div>
+        <div class="ht-legend">
+          <span><i></i>Periode ini</span>
+          <span id="hmtTrendGhostLegend"><i class="is-ghost"></i><span id="hmtTrendGhostLabel">Periode sebelumnya</span></span>
+        </div>
+        <div id="hmtTrendChartWrap" class="ht-chart">
+          <svg id="hmtTrendSvg" viewBox="0 0 340 140" aria-label="Grafik tren mengajar" role="img"></svg>
+          <div id="hmtTrendTooltip" class="ht-tip"></div>
+        </div>
+        <div class="ht-foot" id="hmtTrendFooter"></div>
       </div>
     </div>
 
@@ -180,7 +176,7 @@
   var HMT_COLORS = ['#3B5BDB', '#7048E8', '#1098AD', '#D6336C', '#0CA678', '#F76707', '#5C7CFA', '#AE3EC9'];
   var HMT_KT = 'id,mapel,fee_mengajar,uang_transport,unit_id,units(nama_unit),kontrak_siswa(siswa(id,nama,jenjang)),jadwal(id,hari,jam_mulai)';
   var HMT_PRES = 'id,kontrak_tutor_id,tanggal,jam,status,nominal_dibayar,denda,terlambat,metode_input,catatan_approval,kontrak_tutor(id,mapel,fee_mengajar,uang_transport,units(nama_unit),kontrak_siswa(siswa(id,nama,jenjang)))';
-  var hmt = { kontrak: [], presensi: [], slips: [], profile: null, kontak: null, metric: 'sesi', loading: false };
+  var hmt = { kontrak: [], presensi: [], slips: [], profile: null, kontak: null, metric: 'sesi', range: 6, loading: false };
 
   function esc(s) { return genioEscapeHtml(s == null ? '' : String(s)); }
   function rp(n) { return 'Rp ' + Math.round(n || 0).toLocaleString('id-ID'); }
@@ -245,7 +241,7 @@
     hmtRenderGreeting(s);
     try {
       var per = genioGetPeriode();
-      var from = perShift(per, -5) + '-01';
+      var from = perShift(per, -23) + '-01'; // 12 bulan + 12 bulan pembanding
       var nowIso = new Date().toISOString();
       var res = await Promise.all([
         supaRest('kontrak_tutor?tutor_id=eq.' + s.user_id + '&status=eq.aktif&select=' + HMT_KT, s.access_token),
@@ -401,70 +397,123 @@
     }
   }
 
-  // Tren 3 bulan: pertemuan atau gaji. Garis bergradasi + nilai di tiap titik + kotak bulan dengan selisih dari bulan sebelumnya.
-  function hmtRenderTrend() {
-    var per = genioGetPeriode(), m = hmt.metric, cur = [], prev = [], labels = [];
-    for (var i = -2; i <= 0; i++) {
-      var p = perShift(per, i), q = perShift(per, i - 3), a = monthStats(p), b = monthStats(q);
-      cur.push(m === 'sesi' ? a.sesi : a.gaji); prev.push(m === 'sesi' ? b.sesi : b.gaji);
-      labels.push(GENIO_BULAN[+p.split('-')[1] - 1]);
-    }
-    var hasPrev = prev.some(function (v) { return v > 0; });
-    var fmt = function (v) { return m === 'sesi' ? v + ' sesi' : rp(v); };
-    var fmtS = function (v) { return m === 'sesi' ? String(v) : rpShort(v).replace('Rp ', ''); };
-    var total = cur.reduce(function (a, v) { return a + v; }, 0);
-    document.getElementById('hmtTrendSum').innerHTML = '<div><b>' + (m === 'sesi' ? total + ' sesi' : rpShort(total)) + '</b>Total 3 bulan</div><div><b>' + (m === 'sesi' ? String(Math.round(total / 3 * 10) / 10).replace('.', ',') + ' sesi' : rpShort(total / 3)) + '</b>Rata-rata per bulan</div>';
-    document.getElementById('hmtTrendSub').textContent = perLabel(perShift(per, -2)) + ' sampai ' + perLabel(per);
-    document.getElementById('hmtLegend').innerHTML = '<span><i></i>3 bulan ini</span>' + (hasPrev ? '<span><i class="g"></i>3 bulan sebelumnya</span>' : '');
+  // Tren mengajar: sama dengan "Trend progress unit" (3/6/12 bulan, garis periode sebelumnya, tooltip, ringkasan), datanya milik tutor
+  function trendVal(p, metric) {
+    var t = monthStats(p);
+    if (metric === 'sesi') return t.sesi;
+    var sl = hmt.slips.find(function (x) { return x.periode === p; });
+    return sl && sl.status === 'sudah_dibayar' && +sl.total_gaji ? +sl.total_gaji : t.gaji;
+  }
+  function trendFmt(metric, v) { return metric === 'sesi' ? Math.round(v) + ' sesi' : rp(v); }
+  function trendFmtShort(metric, v) { return metric === 'sesi' ? Math.round(v) + ' sesi' : rpShort(v); }
+  function pctText(cur, prev) {
+    if (!prev) return null;
+    var pc = (cur - prev) / Math.abs(prev) * 100;
+    return { text: (pc >= 0 ? '+' : '') + pc.toFixed(1).replace('.', ',') + '%', up: pc >= 0 };
+  }
+  function monthShort(key) { return HMT_BLN[+key.split('-')[1] - 1]; }
 
-    // Kotak bulan: selisih dibanding bulan sebelumnya (bulan pertama dibanding bulan tepat sebelumnya)
-    document.getElementById('hmtTiles').innerHTML = cur.map(function (v, i) {
-      var base = i === 0 ? prev[2] : cur[i - 1], d;
-      if (base > 0) { var pc = Math.round((v - base) / base * 100); d = '<span class="d ' + (pc > 0 ? 'up' : pc < 0 ? 'dn' : 'fl') + '">' + (pc > 0 ? '▲ ' : pc < 0 ? '▼ ' : '') + Math.abs(pc) + '%</span>'; }
-      else d = '<span class="d fl">' + (v > 0 ? 'Baru' : 'Belum ada') + '</span>';
-      return '<div class="hmt-tile' + (i === 2 ? ' is-cur' : '') + '" data-i="' + i + '"><small>' + labels[i] + '</small><b>' + (m === 'sesi' ? v + ' sesi' : rpShort(v)) + '</b>' + d + '</div>';
+  function hmtRenderTrend(animate) {
+    if (animate === undefined) animate = true;
+    var per = genioGetPeriode(), metric = hmt.metric, n = hmt.range;
+    var keys = []; for (var i = -23; i <= 0; i++) keys.push(perShift(per, i));
+    var vals = keys.slice(-n).map(function (k) { return trendVal(k, metric); });
+    var periods = keys.slice(-n);
+    var prevKeys = keys.slice(-2 * n, -n);
+    var prevRaw = prevKeys.map(function (k) { return trendVal(k, metric); });
+    var prev = prevKeys.length === n && prevRaw.some(function (v) { return v !== 0; }) ? prevRaw : null;
+    var li = n - 1;
+
+    document.querySelectorAll('.hmt-metric').forEach(function (b) {
+      var on = b.dataset.metric === metric;
+      b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('.hmt-range').forEach(function (b) { b.classList.toggle('is-on', +b.dataset.range === n); });
+    var glider = document.getElementById('hmtTrendGlider'), rb = document.querySelector('.hmt-range[data-range="' + n + '"]');
+    if (glider && rb && rb.offsetWidth) { glider.style.width = rb.offsetWidth + 'px'; glider.style.left = rb.offsetLeft + 'px'; }
+
+    document.getElementById('hmtTrendSub').textContent = monthShort(periods[0]) + ' ' + periods[0].slice(0, 4) + ' - ' + monthShort(periods[li]) + ' ' + periods[li].slice(0, 4);
+    var heroEl = document.getElementById('hmtTrendHeroVal');
+    if (animate && typeof homeRevealValue === 'function') homeRevealValue(heroEl, trendFmt(metric, vals[li])); else heroEl.textContent = trendFmt(metric, vals[li]);
+    var mom = n > 1 ? pctText(vals[li], vals[li - 1]) : null;
+    var deltaEl = document.getElementById('hmtTrendHeroDelta');
+    deltaEl.textContent = mom ? mom.text : '';
+    deltaEl.className = 'ht-delta' + (mom ? (mom.up ? ' is-up' : ' is-down') : '');
+    document.getElementById('hmtTrendHeroNote').textContent = mom ? 'vs ' + GENIO_BULAN[+periods[li - 1].split('-')[1] - 1] : '';
+    document.getElementById('hmtTrendGhostLegend').style.display = prev ? '' : 'none';
+    document.getElementById('hmtTrendGhostLabel').textContent = n + ' bulan sebelumnya';
+
+    var wrap = document.getElementById('hmtTrendChartWrap'), svg = document.getElementById('hmtTrendSvg');
+    var W = wrap.clientWidth || 340, H = wrap.clientHeight || 140;
+    var pl = 4, pr = 4, pt = 12, pb = 20;
+    var allv = vals.concat(prev || []);
+    var maxV = Math.max.apply(null, allv), minV = Math.min(0, Math.min.apply(null, allv));
+    if (maxV === minV) maxV = minV + 1;
+    maxV = maxV + (maxV - minV) * 0.08;
+    var x = function (i) { return n > 1 ? pl + i * (W - pl - pr) / (n - 1) : W / 2; };
+    var y = function (v) { return pt + (1 - (v - minV) / (maxV - minV)) * (H - pt - pb); };
+    var P = vals.map(function (v, i) { return [x(i), y(v)]; });
+    var line = monoPath(P), base = H - pb, labelEvery = n > 6 ? 2 : 1;
+    var grid = [0.33, 0.66, 1].map(function (f) { var gy = pt + (1 - f) * (H - pt - pb); return '<line x1="0" x2="' + W + '" y1="' + gy.toFixed(1) + '" y2="' + gy.toFixed(1) + '" stroke="#EEF0F6"/>'; }).join('');
+    var labels = periods.map(function (p, i) {
+      if (i !== li && i % labelEvery) return '';
+      var anchor = i === 0 ? 'start' : (i === li ? 'end' : 'middle');
+      return '<text class="ht-axis" x="' + x(i).toFixed(1) + '" y="' + (H - 4) + '" text-anchor="' + anchor + '"' + (i === li ? ' style="font-weight:600; fill:#14162B;"' : '') + '>' + monthShort(p) + '</text>';
     }).join('');
-
-    var box = document.getElementById('hmtChart'), W = box.clientWidth || 500, H = box.clientHeight || 150, pl = 22, pr = 22, pt = 30, pb = 22;
-    var max = Math.max.apply(null, cur.concat(hasPrev ? prev : [])) || 1; max *= 1.1;
-    var x = function (i) { return pl + i * (W - pl - pr) / 2; }, y = function (v) { return pt + (1 - v / max) * (H - pt - pb); };
-    var P = cur.map(function (v, i) { return [x(i), y(v)]; }), G = prev.map(function (v, i) { return [x(i), y(v)]; });
-    var grid = [0, 1, 2].map(function (k) { var yy = pt + k * (H - pt - pb) / 2; return '<line x1="0" x2="' + W + '" y1="' + yy + '" y2="' + yy + '" stroke="#EEF0F6" stroke-dasharray="' + (k === 2 ? '0' : '3 5') + '"></line>'; }).join('');
-    var line = monoPath(P);
-    var svg = document.getElementById('hmtChartSvg');
+    var ghost = prev ? '<path d="' + monoPath(prev.map(function (v, i) { return [x(i), y(v)]; })) + '" fill="none" stroke="#B9BDD6" stroke-width="1.5" stroke-dasharray="4 4"/>' : '';
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     svg.innerHTML =
-      '<defs><linearGradient id="hmtArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3B3FE0" stop-opacity=".26"></stop><stop offset="1" stop-color="#3B3FE0" stop-opacity="0"></stop></linearGradient>' +
-      '<linearGradient id="hmtStroke" gradientUnits="userSpaceOnUse" x1="' + pl + '" y1="0" x2="' + (W - pr) + '" y2="0"><stop offset="0" stop-color="#7C86FF"></stop><stop offset="1" stop-color="#1C1AAF"></stop></linearGradient></defs>' +
-      grid +
-      (hasPrev ? '<path d="' + monoPath(G) + '" fill="none" stroke="#C4C8DC" stroke-width="1.6" stroke-dasharray="4 4"></path>' : '') +
-      '<path class="hmt-fadein" d="' + line + ' L' + P[2][0] + ' ' + (H - pb) + ' L' + P[0][0] + ' ' + (H - pb) + ' Z" fill="url(#hmtArea)"></path>' +
-      '<path class="hmt-tl" d="' + line + '" fill="none" stroke="url(#hmtStroke)" stroke-width="3" stroke-linecap="round"></path>' +
-      '<line class="hmt-x" x1="0" x2="0" y1="' + pt + '" y2="' + (H - pb) + '" stroke="#B9BEE0" stroke-dasharray="3 3" opacity="0"></line>' +
-      '<g class="hmt-fadein">' +
-        '<circle class="hmt-halo" cx="' + P[2][0] + '" cy="' + P[2][1] + '" r="8" fill="rgba(28,26,175,.25)"></circle>' +
-        P.map(function (pp, i) { return '<circle cx="' + pp[0] + '" cy="' + pp[1] + '" r="' + (i === 2 ? 5.5 : 4.5) + '" fill="' + (i === 2 ? '#1C1AAF' : '#fff') + '" stroke="' + (i === 2 ? '#fff' : '#5B63F0') + '" stroke-width="2.4"></circle>'; }).join('') +
-        P.map(function (pp, i) { return '<text x="' + pp[0] + '" y="' + (pp[1] - 12) + '" text-anchor="' + (i === 0 ? 'start' : i === 2 ? 'end' : 'middle') + '" font-size="11" font-weight="700" fill="' + (i === 2 ? '#1C1AAF' : '#4A4F6B') + '" font-family="Plus Jakarta Sans, sans-serif">' + fmtS(cur[i]) + '</text>'; }).join('') +
-      '</g>';
-    var tl = svg.querySelector('.hmt-tl');
-    if (!HMT_REDUCED && tl.getTotalLength) {
-      var L = tl.getTotalLength(); tl.style.strokeDasharray = L; tl.style.strokeDashoffset = L;
-      requestAnimationFrame(function () { tl.style.transition = 'stroke-dashoffset .9s cubic-bezier(.16,1,.3,1)'; tl.style.strokeDashoffset = 0; });
+      '<defs><linearGradient id="hmtTrendFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1C1AAF" stop-opacity=".2"/><stop offset="1" stop-color="#1C1AAF" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="hmtTrendStroke" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#6E7BF2"/><stop offset="1" stop-color="#1C1AAF"/></linearGradient></defs>' +
+      grid + '<line x1="0" x2="' + W + '" y1="' + base + '" y2="' + base + '" stroke="#E3E5F0"/>' + ghost +
+      '<path d="' + line + ' L' + x(li).toFixed(1) + ',' + base + ' L' + x(0).toFixed(1) + ',' + base + ' Z" fill="url(#hmtTrendFill)"/>' +
+      '<path id="hmtTrendLine" d="' + line + '" fill="none" stroke="url(#hmtTrendStroke)" stroke-width="2.5" stroke-linecap="round"/>' +
+      '<line id="hmtTrendCross" x1="0" x2="0" y1="' + pt + '" y2="' + base + '" stroke="#1C1AAF" stroke-opacity=".3" stroke-dasharray="3 3" style="display:none;"/>' +
+      '<circle cx="' + P[li][0].toFixed(1) + '" cy="' + P[li][1].toFixed(1) + '" r="4" fill="#1C1AAF" style="transform-box:fill-box; transform-origin:center;' + (HMT_REDUCED ? '' : ' animation:hmtPulse 2.2s ease-out infinite;') + '"/>' +
+      '<circle cx="' + P[li][0].toFixed(1) + '" cy="' + P[li][1].toFixed(1) + '" r="4" fill="#1C1AAF" stroke="#fff" stroke-width="2"/>' +
+      '<circle id="hmtTrendHoverDot" r="4.5" fill="#1C1AAF" stroke="#fff" stroke-width="2" style="display:none;"/>' + labels;
+
+    var lineEl = document.getElementById('hmtTrendLine');
+    if (animate && !HMT_REDUCED && lineEl.getTotalLength) {
+      var len = lineEl.getTotalLength();
+      lineEl.style.strokeDasharray = len; lineEl.style.strokeDashoffset = len;
+      lineEl.getBoundingClientRect();
+      lineEl.style.transition = 'stroke-dashoffset .9s cubic-bezier(.16,1,.3,1)';
+      lineEl.style.strokeDashoffset = '0';
     }
-    // Crosshair + tooltip; kotak bulan ikut menyala
-    var tip = document.getElementById('hmtTip'), xl = svg.querySelector('.hmt-x'), tiles = document.querySelectorAll('#hmtTiles .hmt-tile');
-    var off = function () { xl.setAttribute('opacity', 0); tip.classList.remove('show'); tiles.forEach(function (t) { t.classList.remove('is-hot'); }); };
-    box.onmousemove = function (e) {
-      var r = box.getBoundingClientRect(), mx = e.clientX - r.left, i = Math.max(0, Math.min(2, Math.round((mx - pl) / ((W - pl - pr) / 2))));
-      xl.setAttribute('x1', x(i)); xl.setAttribute('x2', x(i)); xl.setAttribute('opacity', 1);
-      tip.innerHTML = '<b>' + fmt(cur[i]) + '</b><span>' + labels[i] + (hasPrev ? ' · sebelumnya ' + fmt(prev[i]) : '') + '</span>';
-      tip.classList.add('show');
-      var half = tip.offsetWidth / 2;
-      tip.style.left = Math.max(half, Math.min(W - half, x(i))) + 'px';
-      tip.style.top = Math.max(0, P[i][1] - 58) + 'px';
-      tiles.forEach(function (t, k) { t.classList.toggle('is-hot', k === i); });
+
+    var tip = document.getElementById('hmtTrendTooltip'), cross = document.getElementById('hmtTrendCross'), hdot = document.getElementById('hmtTrendHoverDot');
+    function show(i) {
+      cross.setAttribute('x1', P[i][0]); cross.setAttribute('x2', P[i][0]); cross.style.display = '';
+      hdot.setAttribute('cx', P[i][0]); hdot.setAttribute('cy', P[i][1]); hdot.style.display = '';
+      var ch = i ? pctText(vals[i], vals[i - 1]) : null;
+      tip.innerHTML = perLabel(periods[i]) + '<br><b>' + trendFmt(metric, vals[i]) + '</b>' +
+        (ch ? ' <span class="' + (ch.up ? 'is-up' : 'is-down') + '">' + ch.text + '</span>' : '') +
+        (prev ? '<br><span class="is-soft">Periode lalu ' + trendFmtShort(metric, prev[i]) + '</span>' : '');
+      tip.style.display = 'block';
+      var tw = tip.offsetWidth, th = tip.offsetHeight;
+      tip.style.left = Math.max(0, Math.min(W - tw, P[i][0] - tw / 2)) + 'px';
+      tip.style.top = Math.max(-th, P[i][1] - th - 12) + 'px';
+    }
+    function hide() { tip.style.display = 'none'; cross.style.display = 'none'; hdot.style.display = 'none'; }
+    svg.onpointermove = function (e) {
+      var r = svg.getBoundingClientRect(), step = n > 1 ? (W - pl - pr) / (n - 1) : 1;
+      show(Math.max(0, Math.min(li, Math.round((e.clientX - r.left - pl) / step))));
     };
-    box.onmouseleave = off;
+    svg.onpointerleave = hide;
+    hide();
+
+    var sum = vals.reduce(function (a, v) { return a + v; }, 0);
+    var maxIdx = vals.indexOf(Math.max.apply(null, vals)), third;
+    if (prev) {
+      var cmp = pctText(sum, prev.reduce(function (a, v) { return a + v; }, 0));
+      third = '<div><div class="l">vs periode lalu</div><div class="v' + (cmp ? (cmp.up ? ' is-up' : ' is-down') : '') + '">' + (cmp ? cmp.text : '-') + '</div></div>';
+    } else {
+      third = '<div><div class="l">Total ' + n + ' bulan</div><div class="v">' + trendFmtShort(metric, sum) + '</div></div>';
+    }
+    document.getElementById('hmtTrendFooter').innerHTML =
+      '<div><div class="l">Rata-rata / bulan</div><div class="v">' + trendFmtShort(metric, sum / n) + '</div></div>' +
+      '<div><div class="l">Tertinggi</div><div class="v">' + trendFmtShort(metric, vals[maxIdx]) + ' <span style="font-weight:500; color:var(--ink-soft);">' + monthShort(periods[maxIdx]) + '</span></div></div>' + third;
   }
 
   // Bantuan jadwal: WhatsApp ke kepala unit (atau manajer kalau belum ada kontrak) dengan pesan siap kirim
@@ -543,20 +592,15 @@
       else hmtGo({ action: 'filter', filter: b.dataset.go });
     });
   });
-  function hmtSetMetric(m) {
-    if (!m) return;
-    var changed = hmt.metric !== m;
-    hmt.metric = m;
-    document.querySelectorAll('.hmt-tabs button').forEach(function (x) { x.classList.toggle('on', x.dataset.m === m); });
-    if (changed) hmtRenderTrend();
-  }
-  document.querySelectorAll('.hmt-tabs button').forEach(function (b) {
-    b.addEventListener('click', function () { hmtSetMetric(b.dataset.m); });
-  });
-  genioBindScrub(document.querySelector('.hmt-tabs'), { btnSel: 'button', attr: 'data-m', activeClass: 'on', current: function () { return hmt.metric; }, pick: hmtSetMetric });
+  function hmtSetMetric(m) { if (!m || hmt.metric === m) return; hmt.metric = m; hmtRenderTrend(); }
+  function hmtSetRange(r) { r = parseInt(r, 10); if (!r || hmt.range === r) return; hmt.range = r; hmtRenderTrend(); }
+  document.querySelectorAll('.hmt-metric').forEach(function (b) { b.addEventListener('click', function () { hmtSetMetric(b.dataset.metric); }); });
+  document.querySelectorAll('.hmt-range').forEach(function (b) { b.addEventListener('click', function () { hmtSetRange(b.dataset.range); }); });
+  genioBindScrub(document.getElementById('hmtTrendTabs'), { btnSel: '.hmt-metric', attr: 'data-metric', activeClass: 'is-on', current: function () { return hmt.metric; }, pick: hmtSetMetric });
+  genioBindScrub(document.getElementById('hmtTrendRange'), { btnSel: '.hmt-range', attr: 'data-range', activeClass: 'is-on', glider: function () { return document.getElementById('hmtTrendGlider'); }, current: function () { return String(hmt.range); }, pick: hmtSetRange });
   // Setelah presensi dikirim dari Beranda, segarkan angka di Beranda
   window.addEventListener('genio:presensi-tutor', function () { if (genioIsModuleVisible('home-tutor')) setTimeout(hmtLoad, 400); });
-  window.addEventListener('resize', function () { if (genioIsModuleVisible('home-tutor') && hmt.kontrak) hmtRenderTrend(); });
+  window.addEventListener('resize', function () { if (genioIsModuleVisible('home-tutor') && hmt.kontrak) hmtRenderTrend(false); });
   window.addEventListener('genio:periode', function () { if (genioIsModuleVisible('home-tutor')) hmtLoad(); });
 
   window.genioModuleHandlers = window.genioModuleHandlers || {};
