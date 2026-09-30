@@ -117,6 +117,7 @@
   .dt-table .dt-who span{display:block; font-size:10px; color:var(--ink-soft); white-space:nowrap;}
   .dt-table .dt-who span.dt-g{display:inline; font-size:9.5px;}
   .dt-table .dt-who span.dt-g.is-l{color:#3B4BD8;} .dt-table .dt-who span.dt-g.is-p{color:#C2366A;}
+  .dt-table .dt-col-email{white-space:nowrap; max-width:220px; overflow:hidden; text-overflow:ellipsis; color:var(--ink-soft);}
   .dt-table .dt-chips{display:flex; gap:4px; flex-wrap:nowrap;}
   .dt-table .dt-act{text-align:right; white-space:nowrap;}
   .dt-table .dt-act .dt-table-icon-btn{margin-left:4px;}
@@ -254,7 +255,7 @@
   <div class="dt-search-sec" style="display:flex; gap:8px; margin-bottom:12px;">
     <div style="flex:1; position:relative;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="dt-searchInput" placeholder="Cari nama tutor, mapel, pendidikan, rekening..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
+      <input type="text" id="dt-searchInput" placeholder="Cari nama, email, mapel, pendidikan, rekening..." style="width:100%; height:32px; border:1px solid var(--border); border-radius:8px; padding:0 12px 0 34px; font-family:var(--font); font-size:11.5px; background:#fff; box-sizing:border-box;">
     </div>
     <button id="dt-filterBtn" type="button" aria-label="Filter" style="position:relative; width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:none;">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
@@ -743,6 +744,7 @@
     var q = dtState.search;
     var tp = u.tutor_profile || {};
     if ((u.nama || '').toLowerCase().indexOf(q) !== -1) return true;
+    if ((u.email || '').toLowerCase().indexOf(q) !== -1) return true;
     if ((tp.pendidikan_terakhir || '').toLowerCase().indexOf(q) !== -1) return true;
     if ((tp.no_rekening || '').toLowerCase().indexOf(q) !== -1) return true;
     return (tp.keahlian || []).some(function (k) { return k.toLowerCase().indexOf(q) !== -1; });
@@ -805,6 +807,12 @@
         if (gA > gB) return dir === 'asc' ? 1 : -1;
         return 0;
       }
+      if (field === 'email') {
+        var eA = (a.email || '').toLowerCase(), eB = (b.email || '').toLowerCase();
+        if (eA < eB) return dir === 'asc' ? -1 : 1;
+        if (eA > eB) return dir === 'asc' ? 1 : -1;
+        return 0;
+      }
       if (field === 'pendidikan') {
         var pA = ((a.tutor_profile && a.tutor_profile.pendidikan_terakhir) || '').toLowerCase();
         var pB = ((b.tutor_profile && b.tutor_profile.pendidikan_terakhir) || '').toLowerCase();
@@ -865,7 +873,8 @@
         : '<span class="dt-muted">Belum diisi</span>';
       return '<tr class="dt-table-row" data-id="' + u.id + '">' +
         '<td class="dt-no dt-stk dt-stk-no">' + (idx + 1) + '</td>' +
-        '<td class="dt-stk dt-stk-nama"><div class="dt-who">' + dtAvatar(u) + '<div style="min-width:0;"><b>' + dtEscape(u.nama || '-') + dtGenderTag(u.jenis_kelamin) + '</b>' + (u.email ? '<span>' + dtEscape(u.email) + '</span>' : '') + '</div></div></td>' +
+        '<td class="dt-stk dt-stk-nama"><div class="dt-who">' + dtAvatar(u) + '<div style="min-width:0;"><b>' + dtEscape(u.nama || '-') + dtGenderTag(u.jenis_kelamin) + '</b></div></div></td>' +
+        '<td class="dt-col-email" title="' + dtEscape(u.email || '') + '">' + (u.email ? dtEscape(u.email) : '<span class="dt-muted">-</span>') + '</td>' +
         '<td style="white-space:nowrap; font-variant-numeric:tabular-nums;">' + (tp.no_wa || u.no_hp ? dtEscape(tp.no_wa || u.no_hp) : '<span class="dt-muted">-</span>') + '</td>' +
         '<td><div class="dt-chips">' + dtChips(tp.keahlian, 3) + '</div></td>' +
         '<td style="white-space:nowrap;">' + (tp.pendidikan_terakhir ? dtEscape(tp.pendidikan_terakhir) : '<span class="dt-muted">-</span>') + '</td>' +
@@ -886,6 +895,7 @@
       '<thead><tr>' +
         '<th class="dt-no dt-stk dt-stk-no">No</th>' +
         th('nama', 'Nama tutor', ' dt-stk dt-stk-nama') +
+        th('email', 'Email') +
         '<th>WhatsApp</th>' +
         '<th>Mapel</th>' +
         th('pendidikan', 'Pendidikan') +
