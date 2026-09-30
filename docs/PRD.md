@@ -854,12 +854,12 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
     - Angka utama: jumlah perlu tindakan, dengan batang presensi per minggu (amber = ada laporan telat).
     - Ring status bulan ini.
     - Tombol **Isi presensi**: pilih siswa, lalu isi form.
-  - **Tab Sesi dan laporan**, dengan filter:
+  - **Tab Progres presensi**, dengan filter:
     - **Perlu tindakan:** laporan ditolak (Revisi laporan) di paling atas, lalu jadwal hari ini dan sesi fleksibel minggu ini yang belum dilapor.
     - **Menunggu:** laporan yang belum diperiksa.
     - **Selesai:** diterima atau visit pada periode header, dengan centang hijau.
   - **Tab Jadwal lengkap:**
-    - **Jadwal mingguan** tampil tepat di bawah highlight, di tab mana pun (Sesi dan laporan maupun Jadwal lengkap). Panah detail di popup pindah ke tab Jadwal lengkap lalu menyorot kontraknya. seperti kepala unit tetapi hanya jadwal tutor itu: satu titik satu sesi, warna per siswa, kolom fleksibel di depan. Ketuk titik membuka popup dengan tombol **Chat (nama kepala unit)** (WhatsApp, kepala unit dari unit kontrak lewat RPC `tutor_kontak_bantuan`), **Isi presensi**, dan panah detail yang menggulir dan menyorot kartu atau baris kontrak yang sesuai di bawahnya.
+    - **Jadwal mingguan** tampil tepat di bawah highlight, di tab mana pun (Progres presensi maupun Jadwal lengkap). Panah detail di popup pindah ke tab Jadwal lengkap lalu menyorot kontraknya. seperti kepala unit tetapi hanya jadwal tutor itu: satu titik satu sesi, warna per siswa, kolom fleksibel di depan. Ketuk titik membuka popup dengan tombol **Chat (nama kepala unit)** (WhatsApp, kepala unit dari unit kontrak lewat RPC `tutor_kontak_bantuan`), **Isi presensi**, dan panah detail yang menggulir dan menyorot kartu atau baris kontrak yang sesuai di bawahnya.
     - Per kontrak aktif: jadwal acuan dan pertemuan bulan ini dibanding estimasi.
     - Estimasi pertemuan = jumlah sesi per minggu × 4.
     - Estimasi fee bulan ini, dengan rincian mengajar dan transport per sesi.
@@ -890,7 +890,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Laporan ditolak** (kartu terpisah, hanya muncul kalau ada): angka jumlah di panel kiri gradien merah, daftar laporan (siswa, mapel, tanggal, catatan penolakan, tombol Revisi) maksimal sekitar 3 baris lalu digeser. Desktop: di atas Sesi hari ini dengan lebar sama (kolom kiri, Tren mengajar di kanan).
 - **Tanpa laporan ditolak:** kartu merah diganti kartu hijau "Semua laporan aman" dengan centang besar (menggambar sendiri), dan kotak Perlu revisi di deretan atas jadi hijau bercentang dengan angka 0.
 - **Sesi hari ini:** grid jam seperti Home kepala unit (`.kuh-jm-*`, `.home-jm-*`) berisi jadwal tutor itu saja: baris Hari ini, Kemarin (kalau ada jadwal), dan Fleksibel (kolom Bebas). Titik berwarna per siswa, cincin hijau = sudah lapor, amber = belum lapor. Titik dibuka jadi popup: Chat (kepala unit dari unit kontrak, RPC `tutor_kontak_bantuan`) dan Isi presensi (Revisi kalau ditolak) lewat `window.genioPresensiTutor.open`; popup Presensi tutor dipindah ke `body`. Setelah terkirim, Beranda dimuat ulang (event `genio:presensi-tutor`).
-- **Tab bar tutor** (Presensi: Sesi dan laporan / Jadwal lengkap dan filter Perlu tindakan / Menunggu / Selesai; Gaji: Rincian / Riwayat slip; Beranda: Pertemuan / Gaji) bisa ditahan lalu digeser (`genioBindScrub` di Config). Ganti tab, filter, atau tampilan tidak melompat ke atas (`genioKeepScroll`).
+- **Tab bar tutor** (Presensi: Progres presensi / Jadwal lengkap dan filter Perlu tindakan / Menunggu / Selesai; Gaji: Rincian / Riwayat slip; Beranda: Pertemuan / Gaji) bisa ditahan lalu digeser (`genioBindScrub` di Config). Ganti tab, filter, atau tampilan tidak melompat ke atas (`genioKeepScroll`).
 - **Tren mengajar 3 bulan** (garis + kotak bulan):
   - Pertemuan atau gaji.
   - Garis bergradasi biru dengan area lembut, nilai di tiap titik, dan titik bulan terpilih berdenyut.
