@@ -806,7 +806,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Lainnya:** Data ortu & siswa, Kontrak, Tagihan, Data tutor (hanya lihat), Operasional, Genio News, Profil.
 - **Home (`ModuleHomeUnit.html`, opsi B):**
   - Sapaan dengan foto dan nama.
-  - Highlight unit: omset sebagai angka utama dengan tren 6 bulan. Kartu putih berisi siswa aktif, pertemuan, pengeluaran (honor dari presensi + operasional), dan laba dengan margin.
+  - Highlight unit: omset sebagai angka utama dengan tren 6 bulan. Panel kanan transparan (bukan kartu putih): gauge setengah lingkaran margin dengan laba bersih di tengah (mint, koral kalau rugi), tumpukan avatar siswa aktif, titik sesi, dan pita koral pengeluaran (honor dari presensi + operasional).
   - Perlu tindakan: presensi menunggu, tagihan belum lunas, presensi telat, siswa belum ada tutor.
   - Sesi hari ini dengan status lapor dan tombol WA.
   - Tutor di unit ini (sesi, telat, ditolak).
@@ -831,7 +831,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
   - Presensi tanpa tombol approval, isi untuk tutor, ubah status, maupun hapus.
 - **Home (`ModuleHomeUnit.html` mode HRD, opsi B):**
   - Total gaji tutor bulan ini (dari `presensi.nominal_dibayar`) dengan batang 3 bulan.
-  - Kartu putih: tutor aktif, pertemuan, tutor telat lapor, dan siswa baru bulan ini.
+  - Panel kanan transparan dengan pola yang sama: gauge persentase tutor mengajar dari tutor aktif, tumpukan avatar tutor yang mengajar, titik sesi, serta pil tutor telat lapor dan siswa baru bulan ini.
   - Perlu tindakan: pendaftar menunggu, tutor aktif tanpa jadwal, tutor telat lapor, siswa belum ada tutor.
   - Sesi Hari ini semua unit.
   - Kinerja tutor semua unit.

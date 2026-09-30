@@ -33,18 +33,40 @@
   .kuh-delta.is-flat{color:rgba(255,255,255,.75); background:rgba(255,255,255,.1);}
   .kuh-spark{margin-top:12px; height:74px; width:100%; display:block; overflow:visible;}
   .kuh-months{display:flex; justify-content:space-between; font-size:9.5px; color:rgba(255,255,255,.5); margin-top:2px;}
-  .kuh-hs{padding:12px; min-width:0;}
-  .kuh-wcard{background:#fff; border-radius:14px; padding:14px 16px; color:var(--ink); display:flex; flex-direction:column; gap:9px; height:100%; box-sizing:border-box; justify-content:center; box-shadow:0 10px 30px -18px rgba(0,0,0,.5);}
-  .kuh-wcard .r{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:11px; color:var(--ink-soft); min-width:0;}
-  .kuh-wcard .r > span{display:flex; align-items:center; min-width:0;}
-  .kuh-wcard .r b{color:var(--ink); font-weight:700; font-size:12px; white-space:nowrap;}
-  .kuh-wcard .r b.c{color:#D4070F;} .kuh-wcard .r b.m{color:#1E8E5A;} .kuh-wcard .r b.m.is-neg{color:#D4070F;}
-  .kuh-wcard .ic{display:inline-flex; width:22px; height:22px; border-radius:7px; align-items:center; justify-content:center; background:var(--surface); color:var(--ink-soft); font-size:12px; margin-right:7px; flex:none;}
-  .kuh-wcard hr{border:none; border-top:1px solid #EEF0F6; margin:2px 0;}
-  .kuh-mbar{height:6px; border-radius:6px; background:#EEF0F6; overflow:hidden;}
-  .kuh-mbar i{display:block; height:100%; width:0; background:#1E8E5A; border-radius:6px; transition:width .8s cubic-bezier(.16,1,.3,1);}
-  .kuh-wcard small{font-size:10px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-
+  /* Panel kanan highlight: gauge margin + baris ikon (pola sama dengan highlight modul lain, tanpa kartu putih) */
+  .kuh-hs{padding:0; background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); display:flex; flex-direction:column; justify-content:center; min-width:0;}
+  .kuh-hsi{padding:14px 16px; display:flex; flex-direction:column; gap:10px; min-width:0;}
+  .kuh-gauge{position:relative; width:100%; max-width:200px; align-self:center;}
+  .kuh-gauge svg{display:block; width:100%; overflow:visible;}
+  .kuh-g-track{fill:none; stroke:rgba(255,255,255,.12); stroke-width:9; stroke-linecap:round;}
+  .kuh-g-arc{fill:none; stroke:#7CF0C3; stroke-width:9; stroke-linecap:round; transition:stroke-dasharray .9s cubic-bezier(.16,1,.3,1);}
+  .kuh-g-arc.is-neg{stroke:#FF9C94;}
+  .kuh-g-dot{fill:#fff; stroke:#7CF0C3; stroke-width:3; transition:opacity .3s ease;}
+  .kuh-g-dot.is-neg{stroke:#FF9C94;}
+  .kuh-g-tick{stroke:rgba(255,255,255,.35); stroke-width:1;}
+  .kuh-gauge .mid{position:absolute; left:0; right:0; bottom:13%; text-align:center; line-height:1.15; pointer-events:none;}
+  .kuh-gauge .mid b{display:block; font-size:16px; font-weight:800; letter-spacing:-.01em; color:#fff; white-space:nowrap;}
+  .kuh-gauge .mid b.is-neg{color:#FF9C94;}
+  .kuh-gauge .mid small{display:block; font-size:9.5px; color:rgba(255,255,255,.66); white-space:nowrap;}
+  .kuh-g-row{display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.08); border-radius:12px; padding:8px 10px; min-width:0;}
+  .kuh-g-row .t{min-width:0; flex:1;}
+  .kuh-g-row .t b{display:block; font-size:12px; font-weight:800; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kuh-g-row .t small{display:block; font-size:10px; color:rgba(255,255,255,.6); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;}
+  .kuh-g-row > i{font-size:18px; flex:none;}
+  .kuh-g-row.is-cost{background:rgba(255,156,148,.12);} .kuh-g-row.is-cost .t b{color:#FF9C94;}
+  .kuh-g-row.is-warn{background:rgba(255,196,107,.12);} .kuh-g-row.is-warn .t b{color:#FFC46B;}
+  .kuh-g-row.is-good .t b{color:#7CF0C3;}
+  .kuh-g-pair{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px;}
+  .kuh-g-stack{display:flex; flex:none;}
+  .kuh-g-stack .av{width:26px; height:26px; border-radius:50%; color:#fff; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-left:-5px; box-shadow:0 0 0 2px #17178f; overflow:hidden; flex:none;}
+  .kuh-g-stack .av:first-child{margin-left:0;}
+  .kuh-g-stack .av.more{background:rgba(255,255,255,.2);}
+  .kuh-g-dots{display:flex; gap:4px; flex:none; max-width:118px; flex-wrap:wrap;}
+  .kuh-g-dots span{width:10px; height:10px; border-radius:50%; background:#7CF0C3;}
+  .kuh-g-dots span.off{background:rgba(255,255,255,.18);}
+  .kuh-g-dots span{animation:kuhGDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 40ms);}
+  @keyframes kuhGDot{from{opacity:0; transform:scale(.3);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .kuh-g-arc{transition:none;} .kuh-g-dots span{animation:none;} }
   .kuh-hb[hidden], .kuh-acts[hidden]{display:none !important;}
   /* HRD: batang gaji 3 bulan di highlight */
   .kuh-bars{display:flex; align-items:flex-end; gap:14px; height:88px; margin-top:14px;}
@@ -143,7 +165,7 @@
   @keyframes kuhReveal{from{transform:scaleX(0);} to{transform:scaleX(1);}}
 
   @media (max-width:899px){
-    .kuh-hb{grid-template-columns:1fr;} .kuh-hs{padding:0 12px 12px;}
+    .kuh-hb{grid-template-columns:1fr;} .kuh-hs{border-left:0; border-top:1px solid rgba(255,255,255,.1);}
     .kuh-num{font-size:28px;}
     .kuh-acts{grid-template-columns:repeat(2, minmax(0,1fr));}
     .kuh-2{grid-template-columns:1fr;}
@@ -175,14 +197,11 @@
         <div class="kuh-months" id="kuhSparkMonths"></div>
       </div>
       <div class="kuh-hs">
-        <div class="kuh-wcard">
-          <div class="r"><span><i class="ic ph ph-student" aria-hidden="true"></i>Siswa aktif</span><b id="kuhSiswa">0</b></div>
-          <div class="r"><span><i class="ic ph ph-calendar-check" aria-hidden="true"></i>Pertemuan</span><b id="kuhSesi">0 sesi</b></div>
-          <div class="r"><span><i class="ic ph ph-arrow-circle-down" aria-hidden="true"></i>Pengeluaran</span><b class="c" id="kuhPengeluaran">Rp 0</b></div>
-          <hr>
-          <div class="r"><span><i class="ic ph ph-wallet" aria-hidden="true"></i>Laba bersih</span><b class="m" id="kuhLaba">Rp 0</b></div>
-          <div class="kuh-mbar"><i id="kuhMarginBar"></i></div>
-          <small id="kuhMarginText">-</small>
+        <div class="kuh-hsi">
+          <div class="kuh-gauge"><svg viewBox="0 0 140 84" aria-hidden="true"><path class="kuh-g-track" d="M16 74 A54 54 0 0 1 124 74"/><line class="kuh-g-tick" x1="28.0" y1="74.0" x2="24.0" y2="74.0"/><line class="kuh-g-tick" x1="40.3" y1="44.3" x2="37.5" y2="41.5"/><line class="kuh-g-tick" x1="70.0" y1="32.0" x2="70.0" y2="28.0"/><line class="kuh-g-tick" x1="99.7" y1="44.3" x2="102.5" y2="41.5"/><line class="kuh-g-tick" x1="112.0" y1="74.0" x2="116.0" y2="74.0"/><path class="kuh-g-arc" id="kuhGaugeArc" d="M16 74 A54 54 0 0 1 124 74" stroke-dasharray="0 170"/><circle class="kuh-g-dot" id="kuhGaugeDot" r="6" cx="16" cy="74"/></svg><div class="mid"><b id="kuhLaba">Rp 0</b><small id="kuhMarginPct">laba bersih</small></div></div>
+          <div class="kuh-g-row"><div class="kuh-g-stack" id="kuhSiswaStack"></div><div class="t"><b><span id="kuhSiswa">0</span> siswa aktif</b><small>bulan ini</small></div><i class="ph ph-student" style="color:#9DB4FF" aria-hidden="true"></i></div>
+          <div class="kuh-g-row"><div class="kuh-g-dots" id="kuhSesiDots"></div><div class="t"><b id="kuhSesi">0 sesi</b><small>pertemuan</small></div><i class="ph ph-calendar-check" style="color:#7CF0C3" aria-hidden="true"></i></div>
+          <div class="kuh-g-row is-cost"><i class="ph ph-arrow-circle-down" style="color:#FF9C94" aria-hidden="true"></i><div class="t"><b><span id="kuhPengeluaran">Rp 0</span> keluar</b><small id="kuhMarginText">-</small></div></div>
         </div>
       </div>
     </div>
@@ -196,13 +215,14 @@
         <div class="kuh-bars" id="kuhHrdBars" aria-hidden="true"></div>
       </div>
       <div class="kuh-hs">
-        <div class="kuh-wcard">
-          <div class="r"><span><i class="ic ph ph-chalkboard-teacher" aria-hidden="true"></i>Tutor aktif</span><b id="kuhHrdTutor">0 tutor</b></div>
-          <div class="r"><span><i class="ic ph ph-calendar-check" aria-hidden="true"></i>Pertemuan</span><b id="kuhHrdSesi">0 sesi</b></div>
-          <div class="r"><span><i class="ic ph ph-clock-countdown" aria-hidden="true"></i>Tutor telat lapor</span><b class="a" id="kuhHrdTelat">0 tutor</b></div>
-          <hr>
-          <div class="r"><span><i class="ic ph ph-student" aria-hidden="true"></i>Siswa baru bulan ini</span><b class="m" id="kuhHrdSiswaBaru">0 siswa</b></div>
-          <small id="kuhHrdAvg">-</small>
+        <div class="kuh-hsi">
+          <div class="kuh-gauge"><svg viewBox="0 0 140 84" aria-hidden="true"><path class="kuh-g-track" d="M16 74 A54 54 0 0 1 124 74"/><line class="kuh-g-tick" x1="28.0" y1="74.0" x2="24.0" y2="74.0"/><line class="kuh-g-tick" x1="40.3" y1="44.3" x2="37.5" y2="41.5"/><line class="kuh-g-tick" x1="70.0" y1="32.0" x2="70.0" y2="28.0"/><line class="kuh-g-tick" x1="99.7" y1="44.3" x2="102.5" y2="41.5"/><line class="kuh-g-tick" x1="112.0" y1="74.0" x2="116.0" y2="74.0"/><path class="kuh-g-arc" id="kuhHrdGaugeArc" d="M16 74 A54 54 0 0 1 124 74" stroke-dasharray="0 170"/><circle class="kuh-g-dot" id="kuhHrdGaugeDot" r="6" cx="16" cy="74"/></svg><div class="mid"><b id="kuhHrdTutor">0 tutor</b><small id="kuhHrdGaugeSub">tutor aktif</small></div></div>
+          <div class="kuh-g-row"><div class="kuh-g-stack" id="kuhHrdStack"></div><div class="t"><b><span id="kuhHrdMengajar">0</span> tutor mengajar</b><small>bulan ini</small></div><i class="ph ph-chalkboard-teacher" style="color:#9DB4FF" aria-hidden="true"></i></div>
+          <div class="kuh-g-row"><div class="kuh-g-dots" id="kuhHrdSesiDots"></div><div class="t"><b id="kuhHrdSesi">0 sesi</b><small id="kuhHrdAvg">-</small></div><i class="ph ph-calendar-check" style="color:#7CF0C3" aria-hidden="true"></i></div>
+          <div class="kuh-g-pair">
+            <div class="kuh-g-row is-warn"><div class="t"><b id="kuhHrdTelat">0 tutor</b><small>telat lapor</small></div><i class="ph ph-clock-countdown" style="color:#FFC46B" aria-hidden="true"></i></div>
+            <div class="kuh-g-row is-good"><div class="t"><b id="kuhHrdSiswaBaru">0 siswa</b><small>siswa baru</small></div><i class="ph ph-student" style="color:#7CF0C3" aria-hidden="true"></i></div>
+          </div>
         </div>
       </div>
     </div>
@@ -324,6 +344,27 @@
       var ks = r && r.kontrak_tutor && r.kontrak_tutor.kontrak_siswa;
       return parseFloat((ks && ks.harga) || 0) || 0;
     }
+    // Gauge setengah lingkaran: frac 0..1 mengisi busur, titik putih di ujungnya
+    function kuhGauge(arcId, dotId, frac, neg) {
+      var arc = document.getElementById(arcId), dot = document.getElementById(dotId), L = Math.PI * 54;
+      frac = Math.max(0, Math.min(1, frac || 0));
+      arc.classList.toggle('is-neg', !!neg); dot.classList.toggle('is-neg', !!neg);
+      dot.setAttribute('cx', (70 - 54 * Math.cos(frac * Math.PI)).toFixed(1));
+      dot.setAttribute('cy', (74 - 54 * Math.sin(frac * Math.PI)).toFixed(1));
+      arc.setAttribute('stroke-dasharray', '0 170');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { arc.setAttribute('stroke-dasharray', (frac * L).toFixed(1) + ' 170'); }); });
+    }
+    // Tumpukan avatar (maks 3 + sisanya) dan deretan titik sesi diambil dari data asli
+    function kuhStack(el, people) {
+      var shown = people.slice(0, 3);
+      el.innerHTML = shown.map(function (p) { return '<span class="av" style="background:' + colorFor(p.id || p.nama) + '" title="' + esc(p.nama) + '">' + genioAvatarInner(p.nama, p.foto, genioInitials(p.nama)) + '</span>'; }).join('') +
+        (people.length > 3 ? '<span class="av more">+' + (people.length - 3) + '</span>' : '') + (!people.length ? '<span class="av more">0</span>' : '');
+    }
+    function kuhDots(el, n) {
+      var on = Math.min(n, 8), total = Math.max(on, 5), h = '';
+      for (var i = 0; i < total; i++) h += '<span class="' + (i < on ? '' : 'off') + '" style="--i:' + i + '"></span>';
+      el.innerHTML = h;
+    }
     function reveal(el, text) {
       if (typeof homeRevealValue === 'function') homeRevealValue(el, text); else el.textContent = text;
     }
@@ -401,7 +442,7 @@
         q('presensi?select=tanggal,nominal_dibayar,kontrak_tutor(tutor_id,kontrak_siswa(harga))&status=in.(diterima,visit)' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
         isHrd ? none() : q('operasional?select=tanggal,nominal' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
         q('presensi?select=status,terlambat,denda,kontrak_tutor(tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url))' + u + '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end),
-        q('kontrak_siswa?select=id,siswa_id,status,tanggal_mulai,tanggal_selesai,kontrak_tutor(id,status)' + u),
+        q('kontrak_siswa?select=id,siswa_id,status,tanggal_mulai,tanggal_selesai,siswa(nama),kontrak_tutor(id,status)' + u),
         q('presensi?select=id,created_at&status=eq.pending' + u + '&order=created_at.asc'),
         isHrd ? none() : q('invoice?select=nominal&status=eq.belum_lunas' + u),
         q('kontrak_tutor?select=id,tutor_id,mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),kontrak_siswa!inner(status,siswa(nama,orangtua(no_hp)),paket_belajar(nama_paket),units(nama_unit)),jadwal(id,hari,jam_mulai,jam_selesai)&status=eq.aktif&kontrak_siswa.status=eq.aktif' + u),
@@ -449,9 +490,11 @@
         if (k.tanggal_mulai && k.tanggal_mulai > mEnd) return;
         if (k.tanggal_selesai && k.tanggal_selesai < mStart) return;
         if (k.status === 'selesai' && !k.tanggal_selesai) return;
-        siswaSet[k.siswa_id] = true;
+        siswaSet[k.siswa_id] = (k.siswa && k.siswa.nama) || 'Siswa';
       });
       reveal(document.getElementById('kuhSiswa'), String(Object.keys(siswaSet).length));
+      kuhStack(document.getElementById('kuhSiswaStack'), Object.keys(siswaSet).map(function (id) { return { id: id, nama: siswaSet[id] }; }));
+      kuhDots(document.getElementById('kuhSesiDots'), cur.sesi);
       reveal(document.getElementById('kuhSesi'), cur.sesi + ' sesi');
       var pengeluaran = cur.gaji + cur.ops;
       reveal(document.getElementById('kuhPengeluaran'), rpShort(pengeluaran));
@@ -459,8 +502,9 @@
       labaEl.classList.toggle('is-neg', cur.laba < 0);
       reveal(labaEl, rpShort(cur.laba));
       var margin = cur.omset > 0 ? cur.laba / cur.omset * 100 : 0;
-      document.getElementById('kuhMarginBar').style.width = Math.max(0, Math.min(100, margin)).toFixed(1) + '%';
-      document.getElementById('kuhMarginText').textContent = (cur.omset > 0 ? 'Margin ' + margin.toFixed(0) + '%' : 'Margin -') + ' · honor tutor ' + rpShort(cur.gaji) + ' + operasional ' + rpShort(cur.ops);
+      kuhGauge('kuhGaugeArc', 'kuhGaugeDot', margin / 100, cur.laba < 0);
+      document.getElementById('kuhMarginPct').textContent = cur.omset > 0 ? 'laba bersih · margin ' + margin.toFixed(0) + '%' : 'laba bersih · margin -';
+      document.getElementById('kuhMarginText').textContent = 'Honor tutor ' + rpShort(cur.gaji) + ' + operasional ' + rpShort(cur.ops);
 
       kuhRenderSpark(periode);
 
@@ -733,6 +777,15 @@
       reveal(document.getElementById('kuhHrdTelat'), telatCount + ' tutor');
       reveal(document.getElementById('kuhHrdSiswaBaru'), (siswaBaru.length ? '+' : '') + siswaBaru.length + ' siswa');
       var mengajar = cur.tutor || 0;
+      var pengajar = {};
+      presMonth.forEach(function (r) { var kt = r.kontrak_tutor; if (kt && kt.tutor_id && !pengajar[kt.tutor_id]) pengajar[kt.tutor_id] = { id: kt.tutor_id, nama: (kt.users && kt.users.nama) || 'Tutor', foto: kt.users && kt.users.foto_profil_url }; });
+      var pengajarList = Object.keys(pengajar).map(function (k) { return pengajar[k]; });
+      document.getElementById('kuhHrdMengajar').textContent = mengajar;
+      kuhStack(document.getElementById('kuhHrdStack'), pengajarList);
+      kuhDots(document.getElementById('kuhHrdSesiDots'), cur.sesi);
+      var pctAktif = aktif.length ? mengajar / aktif.length : 0;
+      kuhGauge('kuhHrdGaugeArc', 'kuhHrdGaugeDot', pctAktif, false);
+      document.getElementById('kuhHrdGaugeSub').textContent = aktif.length ? 'tutor aktif · ' + Math.round(pctAktif * 100) + '% mengajar' : 'tutor aktif';
       document.getElementById('kuhHrdAvg').textContent = mengajar ? 'Rata-rata ' + Math.round(cur.sesi / mengajar) + ' sesi per tutor · ' + mengajar + ' tutor mengajar' : 'Belum ada sesi bulan ini';
 
       function setAct(id, n, sub) {
