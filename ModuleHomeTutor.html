@@ -50,15 +50,60 @@
   .hmt-help-row .t small{display:block; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .hmt-mine{flex:none; font-style:normal; font-size:9.5px; font-weight:600; padding:2px 8px; border-radius:999px; background:var(--blue-tint); color:var(--blue);}
   .hmt-help-row .wa{color:#1E8E5A; font-size:18px; flex:none;}
-  /* Desktop: Sesi hari ini dan Tren mengajar setinggi sama; grafik memakai sisa tinggi */
+  /* Kolom kiri: laporan ditolak (kalau ada) di atas, sesi hari ini di bawah, lebar sama */
+  .hmt-col{display:flex; flex-direction:column; gap:14px; min-width:0;}
+  .hmt-col > .hmt-sesi{flex:1;}
+  .hmt-rev{padding:0 !important; overflow:hidden; display:grid; grid-template-columns:auto minmax(0,1fr);}
+  .hmt-rev[hidden]{display:none !important;}
+  .hmt-rev-n{background:linear-gradient(160deg,#FF9C94,#D4070F); color:#fff; padding:14px 20px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-width:96px;}
+  .hmt-rev-n b{font-size:28px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums;}
+  .hmt-rev-n span{font-size:10.5px; opacity:.92;}
+  .hmt-rev-b{padding:12px 16px; min-width:0;}
+  .hmt-rev-list{display:grid; gap:6px; max-height:172px; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin;}
+  .hmt-rev-row{display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px; background:var(--surface); min-width:0;}
+  .hmt-rev-row .av{width:28px; height:28px; border-radius:50%; color:#fff; font-size:10px; font-weight:600; display:flex; align-items:center; justify-content:center; flex:none; overflow:hidden;}
+  .hmt-rev-row .t{min-width:0; flex:1;}
+  .hmt-rev-row .t b{display:block; font-size:12px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .hmt-rev-row .t b small{font-size:10.5px; font-weight:400; color:var(--ink-soft); margin-left:4px;}
+  .hmt-rev-row .t span{display:block; font-size:11px; color:#B4232A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .hmt-rev-row .t span i{margin-right:3px;}
+  .hmt-rev-hint{font-size:10.5px; color:var(--ink-soft); margin-top:6px;}
+  @media (max-width:899px){
+    .hmt-rev{grid-template-columns:minmax(0,1fr);}
+    .hmt-rev-n{flex-direction:row; justify-content:flex-start; gap:8px; padding:10px 16px;}
+    .hmt-rev-n b{font-size:22px;}
+    .hmt-rev-row .t b small{display:block; margin:0;}
+  }
+  /* Sesi hari ini: grid jam seperti kepala unit (pakai .kuh-jm-* dan .home-jm-*), titik per siswa */
+  .hmt-sesi-badge{background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px;}
+  #hmtSesiList.kuh-jm-anim .home-jm-dot{animation:homeJmDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 15ms);}
+  @media (prefers-reduced-motion: reduce){ #hmtSesiList.kuh-jm-anim .home-jm-dot{animation:none;} }
+  #hmtSlotPop{grid-template-columns:minmax(0,1fr);}
+  .hmt-slot{min-width:0; box-sizing:border-box; border:1px solid var(--border); border-radius:12px; padding:11px 12px; background:#fff;}
+  .hmt-slot-top{display:flex; align-items:center; gap:9px; min-width:0;}
+  .hmt-slot-av{width:30px; height:30px; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:600; flex:none; overflow:hidden;}
+  .hmt-slot-who{min-width:0; flex:1;}
+  .hmt-slot-who b{display:block; font-size:12px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .hmt-slot-who span{display:block; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;}
+  .hmt-slot-time{font-size:11.5px; font-weight:600; color:var(--ink); white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums;}
+  .hmt-slot-time small{display:block; font-size:10px; font-weight:500; color:var(--ink-soft);}
+  .hmt-slot-time small.is-late{color:#C27400;} .hmt-slot-time small.is-ok{color:#1E8E5A;} .hmt-slot-time small.is-no{color:#D4070F;}
+  .hmt-slot-act{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:6px; margin-top:9px;}
+  .hmt-slot-btn{height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink); font:inherit; font-size:10.5px; font-weight:600; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; overflow:hidden; padding:0 8px; cursor:pointer; min-width:0;}
+  .hmt-slot-btn span{overflow:hidden; text-overflow:ellipsis; min-width:0;}
+  .hmt-slot-btn i{font-size:13px; flex:none;}
+  .hmt-slot-wa i{color:#14A44D;} .hmt-slot-wa:hover{background:#E9F7EF; border-color:#BFE8D0;}
+  .hmt-slot-isi{background:var(--blue); border-color:var(--blue); color:#fff;} .hmt-slot-isi:hover{filter:brightness(1.08);}
+  .hmt-slot-isi:disabled{background:var(--surface); border-color:var(--border); color:var(--ink-soft); cursor:default; filter:none;}
+  /* Desktop: kolom kiri dan Tren mengajar setinggi sama; grafik memakai sisa tinggi */
   @media (min-width:900px){
     #hmtWrap .kuh-2{align-items:stretch;}
-    #hmtWrap .kuh-2 > .kuh-card{display:flex; flex-direction:column;}
-    #hmtWrap .hmt-sesi #hmtSesiList{flex:1;}
+    #hmtWrap .kuh-2 > .kuh-card, #hmtWrap .hmt-sesi{display:flex; flex-direction:column;}
+    #hmtWrap .hmt-sesi .kuh-jm-wrap{flex:1;}
+    #hmtWrap .hmt-rev{display:grid;}
   }
   @media (max-width:899px){
     #hmtActs{grid-template-columns:repeat(2, minmax(0,1fr));}
-    .hmt-sesi .kuh-ses .who span{white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;}
   }
   @media (prefers-reduced-motion: reduce){ .hmt-btn, .hmt-tip{transition:none;} }
 </style>
@@ -110,10 +155,20 @@
     </div>
 
     <div class="kuh-2">
-      <div class="kuh-card hmt-sesi">
-        <div class="kuh-sec"><h4>Sesi hari ini</h4><span id="hmtSesiSub">Revisi, jadwal hari ini, dan fleksibel</span></div>
-        <div id="hmtSesiList"><div class="kuh-empty">Memuat...</div></div>
-        <button type="button" class="kuh-seemore" id="hmtSesiMore">Buka presensi</button>
+      <div class="hmt-col">
+        <div class="kuh-card hmt-rev" id="hmtRevCard" hidden>
+          <div class="hmt-rev-n"><b id="hmtRevN">0</b><span>perlu revisi</span></div>
+          <div class="hmt-rev-b">
+            <div class="kuh-sec" style="margin-bottom:6px;"><h4>Laporan ditolak</h4><span>Kirim ulang agar bisa dihitung ke gaji</span></div>
+            <div class="hmt-rev-list" id="hmtRevList"></div>
+            <div class="hmt-rev-hint" id="hmtRevHint" hidden>Geser di dalam kartu untuk melihat semua</div>
+          </div>
+        </div>
+        <div class="kuh-card hmt-sesi">
+          <div class="kuh-sec"><div style="display:flex; align-items:center; gap:6px;"><h4>Sesi hari ini</h4><span class="hmt-sesi-badge" id="hmtSesiBadge">-</span></div><span id="hmtSesiSub">Hari ini, kemarin, dan fleksibel</span></div>
+          <div class="kuh-jm-wrap"><div id="hmtSesiList"><div class="kuh-empty">Memuat...</div></div></div>
+          <div class="kuh-jm-legend" id="hmtSesiLegend"></div>
+        </div>
       </div>
       <div class="kuh-card ht-card hmt-trend">
         <div class="ht-head">
@@ -149,6 +204,8 @@
       </div>
     </div>
 
+    <div class="genio-pop" id="hmtSlotPop" hidden></div>
+
     <div class="modal-overlay" id="hmtHelpModal" hidden>
       <div class="modal-sheet gx-sheet gx-sm">
         <div class="gx-head">
@@ -174,7 +231,7 @@
   var HMT_HARI_L = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
   var HMT_BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
   var HMT_COLORS = ['#3B5BDB', '#7048E8', '#1098AD', '#D6336C', '#0CA678', '#F76707', '#5C7CFA', '#AE3EC9'];
-  var HMT_KT = 'id,mapel,fee_mengajar,uang_transport,unit_id,units(nama_unit),kontrak_siswa(siswa(id,nama,jenjang)),jadwal(id,hari,jam_mulai)';
+  var HMT_KT = 'id,mapel,fee_mengajar,uang_transport,durasi_menit,unit_id,units(nama_unit),kontrak_siswa(siswa(id,nama,jenjang)),jadwal(id,hari,jam_mulai,jam_selesai)';
   var HMT_PRES = 'id,kontrak_tutor_id,tanggal,jam,status,nominal_dibayar,denda,terlambat,metode_input,catatan_approval,kontrak_tutor(id,mapel,fee_mengajar,uang_transport,units(nama_unit),kontrak_siswa(siswa(id,nama,jenjang)))';
   var hmt = { kontrak: [], presensi: [], slips: [], profile: null, kontak: null, metric: 'sesi', range: 6, loading: false };
 
@@ -242,10 +299,11 @@
     try {
       var per = genioGetPeriode();
       var from = perShift(per, -23) + '-01'; // 12 bulan + 12 bulan pembanding
+      var upTo = iso(new Date()) > perEnd(per) ? iso(new Date()) : perEnd(per); // sesi hari ini dan kemarin harus ikut walau periode lama dipilih
       var nowIso = new Date().toISOString();
       var res = await Promise.all([
         supaRest('kontrak_tutor?tutor_id=eq.' + s.user_id + '&status=eq.aktif&select=' + HMT_KT, s.access_token),
-        supaRest('presensi?select=' + HMT_PRES + '&or=(status.in.(pending,ditolak),and(tanggal.gte.' + from + ',tanggal.lte.' + perEnd(per) + '))&order=tanggal.desc', s.access_token),
+        supaRest('presensi?select=' + HMT_PRES + '&or=(status.in.(pending,ditolak),and(tanggal.gte.' + from + ',tanggal.lte.' + upTo + '))&order=tanggal.desc', s.access_token),
         supaRest('slip_gaji?tutor_id=eq.' + s.user_id + '&select=periode,total_gaji,status,tanggal_dibayar&order=periode.desc&limit=24', s.access_token),
         supaRest('tutor_profile?user_id=eq.' + s.user_id + '&select=nama_bank,no_rekening', s.access_token),
         hmt.kontak ? Promise.resolve(hmt.kontak) : supaRest('rpc/tutor_kontak_bantuan', s.access_token, { method: 'POST', body: '{}' }).catch(function () { return []; }),
@@ -316,26 +374,8 @@
     document.getElementById('hmtActSlip').textContent = rpShort(unpaid.reduce(function (a, x) { return a + (+x.total_gaji || 0); }, 0));
     document.getElementById('hmtActSlipSub').textContent = unpaid.length ? unpaid.map(function (x) { return perLabel(x.periode); }).join(', ') : 'Semua sudah dibayar';
 
-    // Sesi hari ini
-    var list = document.getElementById('hmtSesiList');
-    list.innerHTML = tindakan.length ? tindakan.map(function (it, i) {
-      var sw = ktSiswa(it.k), nama = sw.nama || '-';
-      var jam = it.kind === 'revisi' ? '<div class="jam is-rev">Revisi<small>' + esc(tglPendek(it.p.tanggal)) + '</small></div>'
-        : it.kind === 'flex' ? '<div class="jam is-flx">Fleksibel<small>' + it.done + ' dari ' + it.total + '</small></div>'
-        : '<div class="jam">' + jam5(it.j.jam_mulai) + '<small>Acuan</small></div>';
-      var sub = it.kind === 'revisi' ? 'Ditolak: ' + (it.p.catatan_approval || 'lihat catatan') : (it.k.mapel || '-') + ' · Unit ' + ktUnit(it.k) + (it.kind === 'flex' ? ' · minggu ini' : '');
-      var btn = it.kind === 'revisi' ? '<button type="button" class="hmt-go act" data-i="' + i + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Revisi</button>'
-        : '<button type="button" class="hmt-go act" data-i="' + i + '"><i class="ph ph-plus" aria-hidden="true"></i>Isi presensi</button>';
-      return '<div class="kuh-ses" style="--i:' + i + '">' + jam + '<span class="av" style="background:' + colorFor(sw.id) + '">' + genioAvatarInner(nama, null, genioInitials(nama)) + '</span>' +
-        '<div class="who"><b>' + esc(nama) + '</b><span title="' + esc(sub) + '">' + esc(sub) + '</span></div>' + btn + '</div>';
-    }).join('') : '<div class="kuh-empty">Semua sudah dilaporkan. Tidak ada revisi, jadwal hari ini, atau sesi fleksibel.</div>';
-    list.querySelectorAll('[data-i]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var it = tindakan[+b.dataset.i]; if (!it) return;
-        if (it.kind === 'revisi') hmtGo({ action: 'revisi', presensiId: it.p.id });
-        else hmtGo({ action: 'isi', kontrakId: it.k.id, jadwalId: it.j ? it.j.id : null, flex: it.kind === 'flex' });
-      });
-    });
+    hmtRenderRevisi();
+    hmtRenderSesi();
     var wrap = document.getElementById('hmtWrap');
     if (!HMT_REDUCED) { wrap.classList.remove('kuh-anim'); void wrap.offsetWidth; wrap.classList.add('kuh-anim'); }
     hmtRenderTrend();
@@ -577,6 +617,142 @@
   document.getElementById('hmtHelpClose').addEventListener('click', hmtHideHelp);
   document.getElementById('hmtHelpModal').addEventListener('click', function (e) { if (e.target === this) hmtHideHelp(); });
 
+
+  // ===== Laporan ditolak (terpisah dari jadwal) =====
+  function hmtRenderRevisi() {
+    var rows = hmt.presensi.filter(function (p) { return p.status === 'ditolak'; }).sort(function (a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); });
+    var card = document.getElementById('hmtRevCard');
+    card.hidden = !rows.length;
+    if (!rows.length) return;
+    document.getElementById('hmtRevN').textContent = rows.length;
+    document.getElementById('hmtRevHint').hidden = rows.length < 4;
+    var list = document.getElementById('hmtRevList');
+    list.innerHTML = rows.map(function (p) {
+      var k = p.kontrak_tutor || {}, sw = ktSiswa(k), nama = sw.nama || '-';
+      return '<div class="hmt-rev-row"><span class="av" style="background:' + colorFor(sw.id) + '">' + genioAvatarInner(nama, null, genioInitials(nama)) + '</span>' +
+        '<div class="t"><b title="' + esc(nama) + '">' + esc(nama) + '<small>' + esc((k.mapel || '-') + ' · ' + tglPendek(p.tanggal)) + '</small></b>' +
+        '<span title="' + esc(p.catatan_approval || '') + '"><i class="ph ph-chat-text" aria-hidden="true"></i>' + esc(p.catatan_approval || 'Lihat catatan di laporan') + '</span></div>' +
+        '<button type="button" class="hmt-go" data-id="' + p.id + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Revisi</button></div>';
+    }).join('');
+    list.querySelectorAll('[data-id]').forEach(function (b) { b.addEventListener('click', function () { hmtGo({ action: 'revisi', presensiId: b.dataset.id }); }); });
+  }
+
+  // ===== Sesi hari ini, kemarin, dan fleksibel (grid seperti kepala unit, hanya jadwal tutor ini) =====
+  var HMT_ST = { ok: ['Sudah lapor', 'is-ok'], wait: ['Menunggu diperiksa', 'is-ok'], no: ['Ditolak', 'is-no'], late: ['Belum lapor', 'is-late'], live: ['Berlangsung', ''], next: ['Akan datang', ''], flex: ['Fleksibel', ''] };
+  function hmtMin(t) { var x = String(t || '00:00').split(':'); return (+x[0]) * 60 + (+x[1] || 0); }
+  function hmtJam(t) { return t ? String(t).slice(0, 5) : ''; }
+  function hmtSesiItems() {
+    var now = new Date(), nowMin = now.getHours() * 60 + now.getMinutes();
+    var yest = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    var days = [{ row: 'today', date: iso(now), code: HMT_HARI[now.getDay()] }, { row: 'yest', date: iso(yest), code: HMT_HARI[yest.getDay()] }];
+    var ws = iso(weekStart(now)), today = iso(now), out = [];
+    hmt.kontrak.forEach(function (k) {
+      var js = (k.jadwal || []).slice().sort(function (a, b) { return String(a.jam_mulai).localeCompare(String(b.jam_mulai)); });
+      days.forEach(function (d) {
+        var pres = hmt.presensi.filter(function (p) { return p.kontrak_tutor_id === k.id && p.tanggal === d.date; }).sort(function (a, b) { return String(a.jam).localeCompare(String(b.jam)); });
+        js.filter(function (j) { return j.hari === d.code; }).forEach(function (j, n) {
+          var m = pres[n], st;
+          var end = j.jam_selesai && j.jam_selesai !== '00:00:00' ? hmtMin(j.jam_selesai) : hmtMin(j.jam_mulai) + (+k.durasi_menit || 90);
+          if (m) st = m.status === 'pending' ? 'wait' : m.status === 'ditolak' ? 'no' : 'ok';
+          else if (d.row === 'yest' || nowMin >= end) st = 'late';
+          else st = nowMin >= hmtMin(j.jam_mulai) ? 'live' : 'next';
+          out.push({ row: d.row, jam: hmtJam(j.jam_mulai), k: k, j: j, st: st, p: m || null, date: d.date });
+        });
+      });
+      var fl = js.filter(function (j) { return j.hari === 'fleksibel'; });
+      if (fl.length) {
+        var week = hmt.presensi.filter(function (p) { return p.kontrak_tutor_id === k.id && p.status !== 'ditolak' && p.tanggal >= ws && p.tanggal <= today; }).length;
+        var done = Math.max(0, week - Math.min(week, js.length - fl.length));
+        fl.forEach(function (j, n) { out.push({ row: 'flex', jam: 'Bebas', k: k, j: j, st: n < done ? 'ok' : 'flex', p: null }); });
+      }
+    });
+    return out;
+  }
+  function hmtRenderSesi() {
+    var el = document.getElementById('hmtSesiList'), legend = document.getElementById('hmtSesiLegend');
+    var items = hmtSesiItems(), now = new Date();
+    var nToday = items.filter(function (i) { return i.row === 'today'; }).length, nYest = items.filter(function (i) { return i.row === 'yest' && i.st === 'late'; }).length, nFlex = items.filter(function (i) { return i.row === 'flex'; }).length;
+    document.getElementById('hmtSesiBadge').textContent = items.length + ' sesi';
+    var sub = [nToday + ' hari ini']; if (nYest) sub.push(nYest + ' kemarin belum lapor'); if (nFlex) sub.push(nFlex + ' fleksibel');
+    document.getElementById('hmtSesiSub').textContent = sub.join(' · ') + ' · ketuk titik untuk detail';
+    if (!items.length) {
+      el.innerHTML = '<div class="kuh-empty">Tidak ada sesi hari ini, kemarin, maupun jadwal fleksibel.</div>';
+      legend.innerHTML = '';
+      return;
+    }
+    var jams = Object.keys(items.reduce(function (a, i) { a[i.jam] = 1; return a; }, {})).sort(function (a, b) { return a === 'Bebas' ? 1 : b === 'Bebas' ? -1 : a < b ? -1 : 1; });
+    var yd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    var rows = [{ key: 'today', label: 'Hari ini', sub: HMT_HARI_L[now.getDay()] }];
+    if (items.some(function (i) { return i.row === 'yest'; })) rows.push({ key: 'yest', label: 'Kemarin', sub: HMT_HARI_L[yd.getDay()] });
+    if (nFlex) rows.push({ key: 'flex', label: 'Fleksibel', sub: 'minggu ini' });
+    var n = 0;
+    var html = '<div class="kuh-jm-grid" style="grid-template-columns:auto repeat(' + jams.length + ', minmax(40px, 1fr));"><div></div>';
+    jams.forEach(function (j) { html += '<div class="home-jm-head">' + esc(j) + '</div>'; });
+    rows.forEach(function (r) {
+      html += '<div class="kuh-jm-row' + (r.key === 'today' ? ' is-today' : '') + '">' + r.label + '<small>' + esc(r.sub) + '</small></div>';
+      jams.forEach(function (j) {
+        var m = items.filter(function (i) { return i.row === r.key && i.jam === j; });
+        var t = r.key === 'today' ? ' is-today' : '';
+        if (!m.length) { html += '<div class="home-jm-cell' + t + '"></div>'; return; }
+        html += '<div class="home-jm-cell has-dots' + t + '" data-genio-pop-trigger role="button" tabindex="0" data-row="' + r.key + '" data-jam="' + esc(j) + '" aria-label="' + esc(r.label + ' ' + j + ', ' + m.length + ' sesi') + '">' + m.map(function (i) {
+          var ring = i.st === 'late' ? ' is-late' : (i.st === 'ok' || i.st === 'wait') ? ' is-done' : '';
+          return '<span class="home-jm-dot genio-pop-dot' + ring + '" data-idx="' + items.indexOf(i) + '" style="background:' + colorFor(ktSiswa(i.k).id) + '; --i:' + Math.min(n++, 60) + ';" title="' + esc(ktSiswa(i.k).nama) + '"></span>';
+        }).join('') + '</div>';
+      });
+    });
+    el.innerHTML = html + '</div>';
+    if (!HMT_REDUCED) { el.classList.remove('kuh-jm-anim'); void el.offsetWidth; el.classList.add('kuh-jm-anim'); }
+    el.querySelectorAll('.home-jm-cell.has-dots').forEach(function (cell) {
+      function open(e) {
+        if (e) e.stopPropagation();
+        var dot = e && e.target.closest && e.target.closest('.home-jm-dot');
+        var dots = cell.querySelectorAll('.home-jm-dot');
+        if (!dot && dots.length === 1) dot = dots[0];
+        if (dot) hmtOpenSlot([items[+dot.dataset.idx]], dot);
+        else hmtOpenSlot(items.filter(function (i) { return i.row === cell.dataset.row && i.jam === cell.dataset.jam; }), cell);
+      }
+      cell.addEventListener('click', open);
+      cell.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(e); } });
+    });
+    var seen = {}, leg = '';
+    items.forEach(function (i) { var sw = ktSiswa(i.k); if (sw.id && !seen[sw.id]) { seen[sw.id] = 1; leg += '<span class="home-jm-leg"><i style="background:' + colorFor(sw.id) + ';"></i>' + esc(sw.nama || '-') + '</span>'; } });
+    legend.innerHTML = leg + '<span class="st"><i class="done"></i>Sudah lapor</span><span class="st"><i class="late"></i>Belum lapor</span>';
+  }
+  // Kepala unit dari unit kontrak itu; kalau tidak ada, kepala unit unit tutor, lalu siapa pun yang punya nomor
+  function hmtKepala(k) {
+    var all = (hmt.kontak || []).filter(function (c) { return String(c.no_hp || '').replace(/\D/g, ''); });
+    var kep = all.filter(function (c) { return c.role === 'kepala_unit'; });
+    return kep.filter(function (c) { return k.unit_id && c.unit_id === k.unit_id; })[0] || kep.filter(function (c) { return c.unit_saya; })[0] || kep[0] || all[0] || null;
+  }
+  function hmtOpenSlot(rows, anchor) {
+    var pop = document.getElementById('hmtSlotPop');
+    if (!rows.length) return;
+    var me = genioGetSession() || {};
+    pop.innerHTML = rows.map(function (r, i) {
+      var k = r.k, j = r.j, sw = ktSiswa(k), kc = hmtKepala(k), flex = j.hari === 'fleksibel', st = HMT_ST[r.st];
+      var hariTxt = r.row === 'yest' ? 'kemarin' : r.row === 'today' ? 'hari ini' : '';
+      var txt = 'Halo ' + hmtSapaan(kc) + ', saya ' + (me.nama || 'tutor') + ', tutor Genio Institute. Saya izin menanyakan jadwal mengajar ' + (sw.nama || 'siswa') + ' (' + (k.mapel || '-') + ')' + (flex ? ', jadwal fleksibel minggu ini' : ', ' + hariTxt + ' jam ' + jam5(j.jam_mulai)) + '. Terima kasih.';
+      var primary = r.st === 'no' ? '<button type="button" class="hmt-slot-btn hmt-slot-isi"><i class="ph ph-pencil-simple" aria-hidden="true"></i><span>Revisi</span></button>'
+        : (r.st === 'ok' || r.st === 'wait') ? '<button type="button" class="hmt-slot-btn hmt-slot-isi" disabled><i class="ph ph-check" aria-hidden="true"></i><span>' + (r.st === 'ok' ? 'Sudah dilaporkan' : 'Menunggu') + '</span></button>'
+        : '<button type="button" class="hmt-slot-btn hmt-slot-isi"><i class="ph ph-plus" aria-hidden="true"></i><span>Isi presensi</span></button>';
+      return '<div class="hmt-slot" data-i="' + i + '"><div class="hmt-slot-top"><span class="hmt-slot-av" style="background:' + colorFor(sw.id) + ';">' + genioAvatarInner(sw.nama || '-', null, genioInitials(sw.nama || '-')) + '</span>' +
+        '<div class="hmt-slot-who"><b>' + esc(sw.nama || '-') + '</b><span>' + esc((k.mapel || '-') + ' · Unit ' + ktUnit(k)) + '</span></div>' +
+        '<span class="hmt-slot-time">' + (flex ? 'Fleksibel' : esc(jam5(j.jam_mulai))) + '<small class="' + st[1] + '">' + st[0] + '</small></span></div>' +
+        '<div class="hmt-slot-act"><a class="hmt-slot-btn hmt-slot-wa" data-has="' + (kc ? 1 : 0) + '" href="' + (kc ? hmtWaLink(kc.no_hp, txt) : '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i><span>' + esc(kc ? 'Chat ' + hmtSapaan(kc) : 'Chat kepala unit') + '</span></a>' + primary + '</div></div>';
+    }).join('');
+    pop.querySelectorAll('.hmt-slot').forEach(function (it) {
+      var r = rows[+it.dataset.i];
+      it.querySelector('.hmt-slot-wa').addEventListener('click', function (e) { if (this.dataset.has !== '1') { e.preventDefault(); genioToast('Nomor WhatsApp kepala unit belum tersedia', 'error'); } });
+      var b = it.querySelector('.hmt-slot-isi');
+      if (!b.disabled) b.addEventListener('click', function () {
+        genioClosePop(pop);
+        if (r.st === 'no' && r.p) hmtGo({ action: 'revisi', presensiId: r.p.id });
+        else hmtGo({ action: 'isi', kontrakId: r.k.id, jadwalId: r.j.id, flex: r.j.hari === 'fleksibel' });
+      });
+    });
+    genioOpenPop(pop, anchor);
+  }
+
   // Isi presensi dan revisi dibuka di atas Beranda (form milik modul Presensi tutor); filter tetap pindah ke tab Presensi
   function hmtGo(opts) {
     if (opts.action !== 'filter' && window.genioPresensiTutor) { window.genioPresensiTutor.open(opts); return; }
@@ -585,7 +761,6 @@
   }
 
   document.getElementById('hmtIsiBtn').addEventListener('click', function () { hmtGo({ action: 'pick' }); });
-  document.getElementById('hmtSesiMore').addEventListener('click', function () { hmtGo({ action: 'filter', filter: 'tindakan' }); });
   document.querySelectorAll('#hmtActs .kuh-act').forEach(function (b) {
     b.addEventListener('click', function () {
       if (b.dataset.go === 'gaji') { window.genioGajiTutorTab = 'slip'; if (window.genioDashboardShowModule) window.genioDashboardShowModule('gaji'); }
