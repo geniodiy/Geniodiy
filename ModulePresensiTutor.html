@@ -88,6 +88,15 @@
   #pt-formModal, #pt-pickModal, #pt-lapModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
   #pt-formModal.show, #pt-pickModal.show, #pt-lapModal.show{opacity:1;}
   #pt-pickModal{z-index:75;}
+  /* Pindah antara pemilih siswa dan form: satu kartu yang isinya bergeser, tanpa tutup lalu buka popup baru */
+  body #pt-pickModal.pt-swap-in, body #pt-formModal.pt-swap-in, body #pt-pickModal.pt-swap-out, body #pt-formModal.pt-swap-out,
+  body #pt-pickModal.pt-swap-in .modal-sheet, body #pt-formModal.pt-swap-in .modal-sheet, body #pt-pickModal.pt-swap-out .modal-sheet, body #pt-formModal.pt-swap-out .modal-sheet{transition:none !important;}
+  body #pt-pickModal.pt-swap-out, body #pt-formModal.pt-swap-out{background:transparent !important;}
+  body #pt-pickModal.pt-swap-in.show .modal-sheet.gx-sheet, body #pt-formModal.pt-swap-in.show .modal-sheet.gx-sheet{animation:ptSwapIn .3s cubic-bezier(.16,1,.3,1) both !important;}
+  body #pt-pickModal.pt-swap-out.show .modal-sheet.gx-sheet, body #pt-formModal.pt-swap-out.show .modal-sheet.gx-sheet{animation:ptSwapOut .2s ease both !important;}
+  @keyframes ptSwapIn{from{translate:calc(var(--pt-sw, 1) * 40px) 0; opacity:0;}}
+  @keyframes ptSwapOut{to{translate:calc(var(--pt-sw, 1) * -40px) 0; opacity:0;}}
+  @media (prefers-reduced-motion:reduce){ @keyframes ptSwapIn{from{opacity:0;}} @keyframes ptSwapOut{to{opacity:0;}} }
   .pt-textarea{width:100%; box-sizing:border-box; min-height:84px; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:8px 11px; font-family:var(--font); font-size:11.5px; line-height:1.5; resize:vertical; color:var(--ink); outline:none; transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;}
   .pt-textarea:focus{border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
   .pt-field-sub{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px;}
@@ -899,13 +908,29 @@
   // ===== Modal =====
   function ptShow(el) { el.hidden = false; el.style.display = 'flex'; requestAnimationFrame(function () { el.classList.add('show'); }); }
   function ptHide(el) { el.classList.remove('show'); setTimeout(function () { el.hidden = true; el.style.display = 'none'; }, 280); }
+  // Ganti isi popup di tempat: kartu lama bergeser keluar, kartu baru bergeser masuk (dir 1 = maju, -1 = kembali)
+  function ptSwap(fromEl, toEl, dir) {
+    [fromEl, toEl].forEach(function (e) { e.style.setProperty('--pt-sw', dir < 0 ? -1 : 1); });
+    toEl.classList.add('pt-swap-in'); toEl.hidden = false; toEl.style.display = 'flex'; toEl.classList.add('show');
+    fromEl.classList.add('pt-swap-out');
+    setTimeout(function () { fromEl.classList.remove('show', 'pt-swap-out'); fromEl.hidden = true; fromEl.style.display = 'none'; }, 200);
+    setTimeout(function () { toEl.classList.remove('pt-swap-in'); }, 320);
+  }
+  function ptFormOpen() { var f = document.getElementById('pt-formModal'); return !f.hidden && f.classList.contains('show'); }
+  // Tutup pemilih: kalau dibuka dari kolom siswa di form, kembali ke form
+  function ptClosePick() {
+    var pick = document.getElementById('pt-pickModal');
+    if (pt.pickFor === 'field' && pt.form && !ptFormOpen()) ptSwap(pick, document.getElementById('pt-formModal'), -1);
+    else ptHide(pick);
+  }
 
   // Pemilih siswa
   function ptOpenPicker(forWhat) {
     pt.pickFor = forWhat;
     document.getElementById('pt-pickSearch').value = '';
     ptRenderPicker('');
-    ptShow(document.getElementById('pt-pickModal'));
+    if (forWhat === 'field' && ptFormOpen()) ptSwap(document.getElementById('pt-formModal'), document.getElementById('pt-pickModal'), -1);
+    else ptShow(document.getElementById('pt-pickModal'));
   }
   function ptRenderPicker(q) {
     var code = PT_HARI[new Date().getDay()];
@@ -936,10 +961,13 @@
     el.querySelectorAll('[data-kt]').forEach(function (b) {
       b.addEventListener('click', function () {
         var k = pt.kontrak.find(function (x) { return x.id === b.dataset.kt; });
-        ptHide(document.getElementById('pt-pickModal'));
-        if (!k) return;
-        if (pt.pickFor === 'field' && pt.form) { ptSetFormKontrak(k, null, true); }
-        else setTimeout(function () { ptOpenForm({ mode: 'new', k: k }); }, 200);
+        var pick = document.getElementById('pt-pickModal');
+        if (!k) { ptHide(pick); return; }
+        if (pt.pickFor === 'field' && pt.form) {
+          ptSetFormKontrak(k, null, true);
+          if (ptFormOpen()) ptHide(pick); else ptSwap(pick, document.getElementById('pt-formModal'), 1);
+        }
+        else ptOpenForm({ mode: 'new', k: k }, pick);
       });
     });
   }
@@ -980,7 +1008,7 @@
     }
     document.getElementById('pt-fLate').hidden = !late;
   }
-  function ptOpenForm(opts) {
+  function ptOpenForm(opts, fromEl) {
     pt.form = { mode: opts.mode, k: null, p: opts.p || null, foto: null, catatan: null };
     var isRev = opts.mode === 'revisi';
     document.getElementById('pt-fAlert').hidden = true;
@@ -1026,7 +1054,8 @@
     }
     document.getElementById('pt-fTanggal').max = todayIso();
     ptCheckLate();
-    ptShow(document.getElementById('pt-formModal'));
+    if (fromEl && !fromEl.hidden) ptSwap(fromEl, document.getElementById('pt-formModal'), 1);
+    else ptShow(document.getElementById('pt-formModal'));
   }
 
   // ===== Foto: HEIC dikonversi di browser, lalu dikecilkan jadi JPEG =====
@@ -1203,13 +1232,13 @@
     ptRerender();
   });
   document.getElementById('pt-pickSearch').addEventListener('input', function (e) { ptRenderPicker(e.target.value.trim().toLowerCase()); });
-  ['pt-pickClose', 'pt-pickCancel'].forEach(function (id) { document.getElementById(id).addEventListener('click', function () { ptHide(document.getElementById('pt-pickModal')); }); });
+  ['pt-pickClose', 'pt-pickCancel'].forEach(function (id) { document.getElementById(id).addEventListener('click', ptClosePick); });
   document.getElementById('pt-fKontrakBtn').addEventListener('click', function () { if (!this.disabled) ptOpenPicker('field'); });
   ['pt-fClose', 'pt-fCancel'].forEach(function (id) { document.getElementById(id).addEventListener('click', function () { ptHide(document.getElementById('pt-formModal')); }); });
   ['pt-lapClose', 'pt-lapOk'].forEach(function (id) { document.getElementById(id).addEventListener('click', function () { ptHide(document.getElementById('pt-lapModal')); }); });
   ['pt-formModal', 'pt-pickModal', 'pt-lapModal'].forEach(function (id) {
     var el = document.getElementById(id);
-    el.addEventListener('click', function (e) { if (e.target === el) ptHide(el); });
+    el.addEventListener('click', function (e) { if (e.target === el) { if (id === 'pt-pickModal') ptClosePick(); else ptHide(el); } });
   });
   document.getElementById('pt-fTanggal').addEventListener('change', ptCheckLate);
   document.getElementById('pt-fJam').addEventListener('change', ptCheckLate);
@@ -1257,6 +1286,10 @@
     open: function (opts) {
       window.genioPresensiTutorPending = opts;
       if (!ptTryPending()) ptLoad();
+    },
+    // Tutup semua popup presensi tutor sekaligus (dipakai tombol x di bottom bar)
+    close: function () {
+      ['pt-pickModal', 'pt-formModal', 'pt-lapModal'].forEach(function (id) { var el = document.getElementById(id); if (el && !el.hidden) ptHide(el); });
     }
   };
   window.genioModuleHandlers['presensi-tutor-goto'] = function (filter) { pt.tab = 'sesi'; pt.filter = filter || 'tindakan'; if (pt.loaded) ptRender(true); };

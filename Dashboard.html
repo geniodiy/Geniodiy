@@ -139,7 +139,7 @@
        Role dengan tombol + (tutor, kepala unit, HRD): latar bar digambar SVG dengan cekungan di tengah tempat tombol + duduk. */
     .content{padding-bottom:calc(120px + env(safe-area-inset-bottom));}
     .dock-wrap{bottom:calc(14px + env(safe-area-inset-bottom));}
-    .dock-wrap .ios-glass-dock{height:64px; padding:0 8px; align-items:stretch;}
+    .dock-wrap .ios-glass-dock{height:64px; padding:0 8px; align-items:stretch; border-radius:22px;}
     .dock-wrap .dock-glider{display:none;}
     .dock-wrap .dock-btn{justify-content:flex-start; padding:13px 0 0; border-radius:0; gap:3px;}
     .dock-wrap .dock-btn:focus-visible{outline-offset:-4px; border-radius:12px;}
@@ -606,11 +606,12 @@
         var W = dockEl.clientWidth, H = dockEl.clientHeight || 64;
         if (!W || W === lastW) return;
         lastW = W;
-        var R = H / 2, c = W / 2;
+        var R = Math.min(22, H / 2), c = W / 2; // sudut bar membulat seperti referensi, bukan pil penuh
         svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
         // Bahu melengkung halus di kiri-kanan, lalu busur 36px mengelilingi tombol + (pusat tombol 4px di atas tepi bar)
         path.setAttribute('d', 'M' + R + ',0 H' + (c - 56) + ' C' + (c - 46) + ',0 ' + (c - 36) + ',3 ' + (c - 33) + ',10 A36,36 0 0 0 ' + (c + 33) + ',10 C' + (c + 36) + ',3 ' + (c + 46) + ',0 ' + (c + 56) + ',0 H' + (W - R) +
-          ' A' + R + ',' + R + ' 0 0 1 ' + (W - R) + ',' + H + ' H' + R + ' A' + R + ',' + R + ' 0 0 1 ' + R + ',0 Z');
+          ' A' + R + ',' + R + ' 0 0 1 ' + W + ',' + R + ' V' + (H - R) + ' A' + R + ',' + R + ' 0 0 1 ' + (W - R) + ',' + H +
+          ' H' + R + ' A' + R + ',' + R + ' 0 0 1 0,' + (H - R) + ' V' + R + ' A' + R + ',' + R + ' 0 0 1 ' + R + ',0 Z');
       }
       draw();
       if (window.ResizeObserver) new ResizeObserver(draw).observe(dockEl);
@@ -648,6 +649,7 @@
           return Array.prototype.some.call(document.querySelectorAll('.modal-overlay.show'), function (el) { return !PT[el.id]; });
         }
         function closeAll() {
+          if (window.genioPresensiTutor && window.genioPresensiTutor.close) { window.genioPresensiTutor.close(); return; }
           for (var id in PT) {
             var el = document.getElementById(id);
             if (el && !el.hidden) { var c = document.getElementById(PT[id]); if (c) c.click(); }
