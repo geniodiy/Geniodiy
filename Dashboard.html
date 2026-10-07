@@ -21,14 +21,16 @@
       position:sticky; top:0; z-index:60;
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       height:56px; padding:0 16px;
-      background:rgba(255,255,255,.94);
-      -webkit-backdrop-filter:saturate(180%) blur(16px);
-      backdrop-filter:saturate(180%) blur(16px);
+      /* Kaca B: kanvas tembus 72% + blur, isi halaman samar terlihat saat lewat di bawahnya */
+      background:rgba(245,246,251,.72);
+      -webkit-backdrop-filter:blur(18px) saturate(160%);
+      backdrop-filter:blur(18px) saturate(160%);
       border-bottom:1px solid transparent;
       transition:border-color .2s ease, box-shadow .2s ease;
     }
     #genioSharedHeader.scrolled{
-      border-bottom-color:var(--border);
+      background:rgba(245,246,251,.84);
+      border-bottom-color:rgba(227,229,240,.8);
       box-shadow:0 8px 24px -18px rgba(20,22,43,.35);
     }
 
@@ -141,8 +143,15 @@
     .content{padding-bottom:calc(104px + env(safe-area-inset-bottom));}
     .dock-wrap{bottom:calc(14px + env(safe-area-inset-bottom)); max-width:340px;}
     .dock-wrap .ios-glass-dock{height:60px; padding:6px; box-sizing:border-box; align-items:stretch; border-radius:999px;
-      background:#ECEEF5; border:1px solid #fff;
+      background:rgba(236,238,245,.72); border:1px solid rgba(255,255,255,.7);
+      -webkit-backdrop-filter:blur(18px) saturate(160%); backdrop-filter:blur(18px) saturate(160%);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 18px 36px -16px rgba(20,22,43,.32), 0 2px 6px rgba(20,22,43,.05);}
+    .dock-wrap .dock-btn:not(.dock-active){color:#6B6F86;}
+    /* Tanpa dukungan blur: kembali ke warna padat */
+    @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+      .dock-wrap .ios-glass-dock{background:#ECEEF5; border-color:#fff;}
+      #genioSharedHeader{background:rgba(255,255,255,.96);}
+    }
     .dock-wrap .dock-glider{top:6px; bottom:6px; background:#fff; box-shadow:0 1px 2px rgba(20,22,43,.06), 0 6px 14px -6px rgba(20,22,43,.18);}
     .dock-wrap .dock-btn{flex:1 1 0; padding:0; justify-content:center; color:#8A8EA6;}
     .dock-wrap .dock-btn.dock-active{color:var(--ink);}
@@ -188,7 +197,8 @@
       #genioFabD .genio-fab-btn{position:relative; z-index:2;}
       #genioFabD .genio-fab-lbl{
         height:44px; display:flex; align-items:center; padding:0 22px 0 42px; margin-left:-30px; border-radius:999px;
-        background:#fff; border:1px solid var(--border); color:var(--ink); font:600 12px var(--font); white-space:nowrap;
+        background:rgba(245,246,251,.72); border:1px solid rgba(255,255,255,.75); color:var(--ink); font:600 12px var(--font); white-space:nowrap;
+        -webkit-backdrop-filter:blur(18px) saturate(160%); backdrop-filter:blur(18px) saturate(160%);
         box-shadow:0 12px 28px -10px rgba(20,22,43,.25), 0 2px 8px rgba(20,22,43,.06);
       }
       #genioFabD:hover .genio-fab-btn{transform:scale(1.06);}
