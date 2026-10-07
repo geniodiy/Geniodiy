@@ -199,6 +199,18 @@
   .gx-seg .is-on[data-val="P"]{background:#FFEFF3 !important; color:#C2366A !important; border-color:#C2366A !important;}
   .gx-seg .is-on[data-val="aktif"] i{background:#1E8E5A;} .gx-seg .is-on[data-val="nonaktif"] i{background:#D4070F;}
   .gx-seg + .gx-row, .gx-row + .gx-seg{margin-top:10px;}
+  /* Pemilih tanggal dan jam bersama (gaya sama dengan Operasional dan Jadwal) */
+  .gx-dp-nav{display:flex; align-items:center; justify-content:space-between; gap:6px; margin:14px 0 10px;}
+  .gx-dp-nav button{width:30px; height:30px; border-radius:50%; border:1px solid #fff; background:#ECEEF5; color:var(--ink); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; padding:0; box-shadow:inset 0 1px 0 rgba(255,255,255,.9);}
+  .gx-dp-nav button:hover{background:#E3E6F0;}
+  .gx-dp-nav span{flex:1; text-align:center; font-size:12px; font-weight:600; color:var(--ink);}
+  .gx-dp-week{display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;}
+  .gx-dp-week span{text-align:center; font-size:10px; font-weight:500; color:var(--ink-soft); padding:3px 0;}
+  .gx-tp-wrap{display:flex; align-items:flex-end; justify-content:center; gap:10px; margin:12px 0 4px;}
+  .gx-tp-col{display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .gx-tp-col > span{font-size:10.5px; color:var(--ink-soft);}
+  .gx-tp-col > div{width:64px; background:var(--surface); border:1px solid var(--border); border-radius:12px;}
+  .gx-tp-sep{font-size:14px; font-weight:600; color:var(--ink); padding-bottom:62px;}
   /* Pilihan di form (status, jenis kelamin, role, jenjang) ikut skema track dan thumb:
      wadah rel abu muda, pilihan aktif jadi pil putih terangkat dengan warna arti pada teks dan titiknya */
   .gx-seg, .kp-opt-row, .pkt-opt-row{background:#ECEEF5; border:1px solid #fff; padding:3px; gap:3px !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.9);}

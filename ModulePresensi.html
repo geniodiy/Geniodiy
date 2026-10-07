@@ -330,6 +330,9 @@
   /* ===== Popup filter: pakai gaya form isi presensi ===== */
   #ps-filterModal .pw-sheet{max-width:440px !important; padding:0 !important; display:flex; flex-direction:column; max-height:88vh; overflow:hidden;}
   #ps-filterModal .pw-head{display:flex; align-items:center; gap:11px; padding:16px 18px 12px; border-bottom:1px solid var(--border);}
+  .pse-head{display:flex; align-items:flex-start; gap:10px; margin-bottom:12px;}
+  .pse-head h3{margin:0 0 3px !important; font-size:15px !important; font-weight:500 !important;}
+  .pse-head .pse-sub{margin:0 !important;}
   #ps-filterModal .pw-head-ico{width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
   #ps-filterModal .pw-head h3{font-size:13.5px !important; font-weight:600 !important; margin:0 !important; line-height:1.3;}
   #ps-filterModal .pw-sub{font-size:10.5px !important; color:var(--ink-soft) !important; margin:2px 0 0 !important;}
@@ -876,8 +879,10 @@
   <!-- Modal Tolak (Popup Alasan Penolakan) -->
   <div class="modal-overlay" id="ps-tolakModal" hidden style="z-index:75;">
     <div class="modal-sheet" style="max-width:360px;">
-      <h3>Tolak presensi</h3>
-      <p class="pse-sub">Jelaskan alasan penolakan supaya tutor tahu apa yang perlu diperbaiki.</p>
+      <div class="pse-head">
+        <span class="gx-head-ico is-danger"><i class="ph ph-x-circle" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Tolak presensi</h3><p class="pse-sub">Jelaskan alasan penolakan supaya tutor tahu apa yang perlu diperbaiki.</p></div>
+      </div>
       <div id="ps-tolakAlert" class="alert alert-error" hidden></div>
       <div class="field">
         <label for="ps-tolakCatatan" class="pse-label">Catatan penolakan <em class="pse-req">wajib</em></label>
@@ -913,14 +918,14 @@
           <div class="ps-wakil-row">
             <label>Unit atau cabang</label>
             <button type="button" class="ps-filter-row-btn pf-field" data-picker="unit" style="width:100%;">
-              <span id="ps-filterUnitSummary">Semua Unit</span>
+              <span id="ps-filterUnitSummary">Semua unit</span>
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
             </button>
           </div>
           <div class="ps-wakil-row">
             <label>Metode input</label>
             <button type="button" class="ps-filter-row-btn pf-field" data-picker="metode" style="width:100%;">
-              <span id="ps-filterMetodeSummary">Semua Metode</span>
+              <span id="ps-filterMetodeSummary">Semua metode</span>
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
             </button>
           </div>
@@ -931,21 +936,21 @@
           <div class="ps-wakil-row">
             <label>Tutor</label>
             <button type="button" class="ps-filter-row-btn pf-field" data-picker="tutor" style="width:100%;">
-              <span id="ps-filterTutorSummary">Semua Tutor</span>
+              <span id="ps-filterTutorSummary">Semua tutor</span>
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
             </button>
           </div>
           <div class="ps-wakil-row">
             <label>Siswa</label>
             <button type="button" class="ps-filter-row-btn pf-field" data-picker="siswa" style="width:100%;">
-              <span id="ps-filterSiswaSummary">Semua Siswa</span>
+              <span id="ps-filterSiswaSummary">Semua siswa</span>
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
             </button>
           </div>
           <div class="ps-wakil-row">
             <label>Orang tua</label>
             <button type="button" class="ps-filter-row-btn pf-field" data-picker="ortu" style="width:100%;">
-              <span id="ps-filterOrtuSummary">Semua Orang Tua</span>
+              <span id="ps-filterOrtuSummary">Semua orang tua</span>
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
             </button>
           </div>
@@ -970,10 +975,13 @@
 
   <!-- Popup Picker (dipakai bergantian oleh Unit/Metode/Tutor/Siswa/Ortu) -->
   <div class="modal-overlay" id="ps-pickerModal" hidden style="z-index:70;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="ps-pickerTitle">Pilih</h3>
-      <div id="ps-pickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions">
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-list-checks" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="ps-pickerTitle">Pilih</h3><p class="gx-sub">Bisa pilih lebih dari satu bila tersedia.</p></div>
+      </div>
+      <div class="gx-body"><div id="ps-pickerList"></div></div>
+      <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="ps-pickerCancelBtn">Batal</button>
         <button type="button" class="btn btn-primary" id="ps-pickerDoneBtn">Selesai</button>
       </div>
@@ -982,15 +990,15 @@
 
   <!-- Modal Konfirmasi Hapus Presensi -->
   <div class="modal-overlay" id="ps-deleteConfirmModal" hidden>
-    <div class="modal-sheet" style="max-width:340px;">
-      <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,59,48,.12); color:#ff3b30; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-confirm">
+        <span class="gx-head-ico is-danger"><i class="ph ph-trash" aria-hidden="true"></i></span>
+        <h3>Hapus presensi ini?</h3>
+        <p>Presensi yang ditolak ini akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.</p>
       </div>
-      <h3 style="text-align:center; margin:0 0 4px;">Hapus Presensi Ini?</h3>
-      <p style="font-size:10px; color:var(--ink-soft); margin:0 0 14px; text-align:center;">Presensi yang ditolak ini akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.</p>
-      <div class="modal-actions">
+      <div class="modal-actions gx-foot" style="border-top:none;">
         <button type="button" class="btn btn-outline" id="ps-deleteCancelBtn">Batal</button>
-        <button type="button" class="btn btn-primary" id="ps-deleteConfirmBtn" style="background:var(--red);">Ya, Hapus</button>
+        <button type="button" class="btn btn-primary is-danger" id="ps-deleteConfirmBtn">Ya, hapus</button>
       </div>
     </div>
   </div>
@@ -998,7 +1006,10 @@
   <!-- Modal Edit Status Presensi (khusus Riwayat, Manajer) -->
   <div class="modal-overlay" id="ps-editStatusModal" hidden>
     <div class="modal-sheet pse-sheet">
-      <h3>Ubah status presensi</h3>
+      <div class="pse-head">
+        <span class="gx-head-ico"><i class="ph ph-pencil-simple" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Ubah status presensi</h3><p class="pse-sub">Pilih status baru untuk presensi ini.</p></div>
+      </div>
       <div class="pse-note"><i class="ph ph-info" aria-hidden="true"></i><span>Nominal dihitung ulang memakai aturan Pengaturan yang berlaku <b>sekarang</b>, bukan aturan saat presensi terjadi.</span></div>
       <div id="ps-editStatusAlert" class="alert alert-error" hidden></div>
 
@@ -1034,26 +1045,24 @@
 
   <!-- Popup Kalender (Tanggal) -->
   <div class="modal-overlay" id="ps-datePickerModal" hidden style="z-index:75;">
-    <div class="modal-sheet" style="max-width:300px;">
-      <h3 style="text-align:center; margin:0 0 8px;">Pilih Tanggal</h3>
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-        <button type="button" id="ps-dpPrevYear" style="background:var(--surface); border:none; width:24px; height:24px; border-radius:6px; cursor:pointer; color:var(--ink); font-size:11px;">&laquo;</button>
-        <button type="button" id="ps-dpPrevMonth" style="background:var(--surface); border:none; width:24px; height:24px; border-radius:6px; cursor:pointer; color:var(--ink); font-size:13px;">&lsaquo;</button>
-        <span id="ps-dpMonthYear" style="font-size:11px; font-weight:500; color:var(--ink);">-</span>
-        <button type="button" id="ps-dpNextMonth" style="background:var(--surface); border:none; width:24px; height:24px; border-radius:6px; cursor:pointer; color:var(--ink); font-size:13px;">&rsaquo;</button>
-        <button type="button" id="ps-dpNextYear" style="background:var(--surface); border:none; width:24px; height:24px; border-radius:6px; cursor:pointer; color:var(--ink); font-size:11px;">&raquo;</button>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-calendar-blank" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Pilih tanggal</h3><p class="gx-sub">Tanggal pelaksanaan sesi.</p></div>
+        <button type="button" class="gx-close" id="ps-dpCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-      <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:3px;">
-        <span style="text-align:center; font-size:9px; font-weight:500; color:var(--ink-soft); padding:2px 0;">Min</span>
-        <span style="text-align:center; font-size:9px; font-weight:500; color:var(--ink-soft); padding:2px 0;">Sen</span>
-        <span style="text-align:center; font-size:9px; font-weight:500; color:var(--ink-soft); padding:2px 0;">Sel</span>
-        <span style="text-align:center; font-size:9px; font-weight:500; color:var(--ink-soft); padding:2px 0;">Rab</span>
-        <span style="text-align:center; font-size:9px; font-weight:500; color:var(--ink-soft); padding:2px 0;">Kam</span>
-        <span style="text-align:center; font-size:9px; font-weight:500; color:var(--ink-soft); padding:2px 0;">Jum</span>
-        <span style="text-align:center; font-size:9px; font-weight:500; color:var(--ink-soft); padding:2px 0;">Sab</span>
+      <div class="gx-body">
+        <div class="gx-dp-nav">
+          <button type="button" id="ps-dpPrevYear" aria-label="Tahun sebelumnya"><i class="ph ph-caret-double-left" aria-hidden="true"></i></button>
+          <button type="button" id="ps-dpPrevMonth" aria-label="Bulan sebelumnya"><i class="ph ph-caret-left" aria-hidden="true"></i></button>
+          <span id="ps-dpMonthYear">-</span>
+          <button type="button" id="ps-dpNextMonth" aria-label="Bulan berikutnya"><i class="ph ph-caret-right" aria-hidden="true"></i></button>
+          <button type="button" id="ps-dpNextYear" aria-label="Tahun berikutnya"><i class="ph ph-caret-double-right" aria-hidden="true"></i></button>
+        </div>
+        <div class="gx-dp-week"><span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span></div>
+        <div id="ps-dpGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px;"></div>
       </div>
-      <div id="ps-dpGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:10px;"></div>
-      <div class="modal-actions">
+      <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="ps-dpCancelBtn">Batal</button>
       </div>
     </div>
@@ -1061,14 +1070,19 @@
 
   <!-- Popup Pilih Jam -->
   <div class="modal-overlay" id="ps-timePickerModal" hidden style="z-index:75;">
-    <div class="modal-sheet" style="max-width:260px;">
-      <h3 style="text-align:center; margin:0 0 8px;">Pilih Jam Mulai</h3>
-      <div style="display:flex; gap:8px; justify-content:center; align-items:center; margin:4px 0 12px;">
-        <div id="ps-tpHourList" style="height:140px; overflow-y:auto; width:60px; border:1px solid var(--border); border-radius:8px; scroll-snap-type:y mandatory;"></div>
-        <span style="font-size:14.5px; font-weight:500; color:var(--ink);">:</span>
-        <div id="ps-tpMinuteList" style="height:140px; overflow-y:auto; width:60px; border:1px solid var(--border); border-radius:8px; scroll-snap-type:y mandatory;"></div>
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-clock" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3>Pilih jam mulai</h3><p class="gx-sub">Waktu dalam WIB.</p></div>
       </div>
-      <div class="modal-actions">
+      <div class="gx-body">
+        <div class="gx-tp-wrap">
+          <div class="gx-tp-col"><span>Jam</span><div id="ps-tpHourList" style="height:140px; overflow-y:auto; scroll-snap-type:y mandatory;"></div></div>
+          <span class="gx-tp-sep">:</span>
+          <div class="gx-tp-col"><span>Menit</span><div id="ps-tpMinuteList" style="height:140px; overflow-y:auto; scroll-snap-type:y mandatory;"></div></div>
+        </div>
+      </div>
+      <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="ps-tpCancelBtn">Batal</button>
         <button type="button" class="btn btn-primary" id="ps-tpConfirmBtn">Pilih</button>
       </div>
@@ -1077,14 +1091,16 @@
 
   <!-- Popup Pilih Tutor/Kontrak (dengan search bar) — dipakai di form Isi Presensi untuk Tutor -->
   <div class="modal-overlay" id="ps-wakilPickerModal" hidden style="z-index:75;">
-    <div class="modal-sheet" style="max-height:80vh; overflow-y:auto;">
-      <h3 id="ps-wakilPickerTitle">Pilih</h3>
-      <div style="position:relative; margin-bottom:8px;">
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="ps-wakilPickerSearchInput" placeholder="Cari..." style="width:100%; border:1px solid var(--border); border-radius:8px; padding:0 10px 0 30px; height:32px; font-family:var(--font); font-size:10.5px; background:#fff; box-sizing:border-box;">
+    <div class="modal-sheet gx-sheet gx-sm">
+      <div class="gx-head">
+        <span class="gx-head-ico"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></span>
+        <div style="min-width:0;"><h3 id="ps-wakilPickerTitle">Pilih</h3><p class="gx-sub">Ketik untuk mencari lebih cepat.</p></div>
       </div>
-      <div id="ps-wakilPickerList" style="margin-bottom:6px;"></div>
-      <div class="modal-actions">
+      <div class="gx-body">
+        <div class="gx-search"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input type="text" id="ps-wakilPickerSearchInput" placeholder="Cari..." aria-label="Cari"></div>
+        <div id="ps-wakilPickerList"></div>
+      </div>
+      <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="ps-wakilPickerCancelBtn">Batal</button>
       </div>
     </div>
@@ -2324,11 +2340,11 @@
   var psUnitsLoaded = false;
 
   var PS_FILTER_DEFS = {
-    unit: { title: 'Pilih Unit / Cabang', multi: false, allLabel: 'Semua Unit' },
-    metode: { title: 'Pilih Metode Input', multi: false, allLabel: 'Semua Metode' },
-    tutor: { title: 'Pilih Tutor', multi: true, allLabel: 'Semua Tutor' },
-    siswa: { title: 'Pilih Siswa', multi: true, allLabel: 'Semua Siswa' },
-    ortu: { title: 'Pilih Orang Tua', multi: true, allLabel: 'Semua Orang Tua' }
+    unit: { title: 'Pilih unit atau cabang', multi: false, allLabel: 'Semua unit' },
+    metode: { title: 'Pilih metode input', multi: false, allLabel: 'Semua metode' },
+    tutor: { title: 'Pilih tutor', multi: true, allLabel: 'Semua tutor' },
+    siswa: { title: 'Pilih siswa', multi: true, allLabel: 'Semua siswa' },
+    ortu: { title: 'Pilih orang tua', multi: true, allLabel: 'Semua orang tua' }
   };
   var psFilterUnitOptions = [];
   var psPickerCurrentType = null;
@@ -3151,7 +3167,7 @@
     psWakilPickerType = type;
     psWakilPickerSearch = '';
     document.getElementById('ps-wakilPickerSearchInput').value = '';
-    document.getElementById('ps-wakilPickerTitle').textContent = type === 'tutor' ? 'Pilih Tutor' : 'Pilih Kontrak / Jadwal';
+    document.getElementById('ps-wakilPickerTitle').textContent = type === 'tutor' ? 'Pilih tutor' : 'Pilih kontrak dan jadwal';
     psRenderWakilPickerList();
     psWakilPickerModal.hidden = false;
     requestAnimationFrame(function () { psWakilPickerModal.classList.add('show'); });
@@ -3363,6 +3379,7 @@
   document.getElementById('ps-dpPrevYear').addEventListener('click', function () { psDpViewYear--; psRenderDatePicker(); });
   document.getElementById('ps-dpNextYear').addEventListener('click', function () { psDpViewYear++; psRenderDatePicker(); });
   document.getElementById('ps-dpCancelBtn').addEventListener('click', psCloseDatePicker);
+  document.getElementById('ps-dpCloseX').addEventListener('click', psCloseDatePicker);
 
   /* ===== Popup Pilih Jam Mulai — form Isi Presensi untuk Tutor ===== */
   var psTimePickerModal = document.getElementById('ps-timePickerModal');
