@@ -203,15 +203,15 @@
       }
       #genioFabD:hover .genio-fab-btn{transform:scale(1.06);}
       #genioFabD:active .genio-fab-btn{transform:scale(.95);}
-      /* Saat terbuka: tombol menggelinding ke kanan sambil berputar sampai label tertutup, tinggal x.
-         Pill menempel di kanan, jadi label yang menyusut membuat tombol bergeser ke kanan; 225 derajat kira-kira satu gelindingan sejauh lebar label dan berakhir sebagai x. */
+      /* Saat terbuka: tombol menggelinding ke kanan di atas label sambil berputar. Tulisan "Isi presensi" diam di tempat
+         dan tertutup sedikit demi sedikit (label dipotong dari kiri mengikuti posisi tombol), sampai tinggal x di ujung kanan.
+         Jarak gelinding (--roll) dan sudut putar (--spin, berakhir sebagai x) dihitung dari lebar label oleh JS. */
       #genioFabD .genio-fab-btn{transition:transform .6s cubic-bezier(.65,0,.35,1) !important;}
-      #genioFabD .genio-fab-lbl{max-width:220px; overflow:hidden;
-        transition:max-width .6s cubic-bezier(.65,0,.35,1), padding .6s cubic-bezier(.65,0,.35,1), margin .6s cubic-bezier(.65,0,.35,1), opacity .35s ease, border-color .35s ease, box-shadow .35s ease;}
-      #genioFabD.is-rolled .genio-fab-lbl{max-width:0; padding-left:0; padding-right:0; margin-left:0; opacity:0; border-color:transparent; box-shadow:none;}
-      #genioFabD .genio-fab-btn.is-open{transform:rotate(225deg);}
-      #genioFabD:hover .genio-fab-btn.is-open{transform:rotate(225deg) scale(1.06);}
-      #genioFabD:active .genio-fab-btn.is-open{transform:rotate(225deg) scale(.95);}
+      #genioFabD .genio-fab-lbl{clip-path:inset(0 0 0 0 round 999px); transition:clip-path .6s cubic-bezier(.65,0,.35,1), box-shadow .3s ease;}
+      #genioFabD.is-rolled .genio-fab-lbl{clip-path:inset(0 0 0 calc(var(--roll, 104px) + 2px) round 999px); box-shadow:none;}
+      #genioFabD .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg));}
+      #genioFabD:hover .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg)) scale(1.06);}
+      #genioFabD:active .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg)) scale(.95);}
       @media (prefers-reduced-motion:reduce){ #genioFabD .genio-fab-btn, #genioFabD .genio-fab-lbl{transition:none !important;} }
       body.role-tutor .content{padding-bottom:104px !important;}
     }
@@ -610,6 +610,16 @@
       genioRetab('nav-presensi', 'data-tutor', 'Tutor', 'chalkboard-teacher');
       genioRetab('nav-gaji', 'jadwal', 'Jadwal', 'calendar-blank');
     }
+    // Jarak gelinding tombol + desktop: dari kiri label sampai tombol menutup ujung kanan label; sudutnya dibulatkan supaya berakhir sebagai x
+    function genioFabRoll(fd) {
+      var lbl = fd && fd.querySelector('.genio-fab-lbl'), btn = fd && fd.querySelector('.genio-fab-btn');
+      if (!lbl || !btn || !lbl.offsetWidth) return;
+      var d = Math.max(0, lbl.offsetLeft + lbl.offsetWidth - btn.offsetWidth);
+      var deg = d / (Math.PI * btn.offsetWidth) * 360;
+      deg = Math.max(1, Math.round((deg - 45) / 90)) * 90 + 45;
+      fd.style.setProperty('--roll', d.toFixed(0) + 'px'); fd.style.setProperty('--spin', deg + 'deg');
+    }
+
     if (IS_TUTOR) {
       // Tutor: dock Beranda, Presensi, Gaji, Profil (tanpa menu Lainnya)
       genioRetab('nav-home', 'home', 'Beranda', 'house');
@@ -649,6 +659,7 @@
         function sync() {
           var on = !!ptOpenEl() && !otherOpen();
           document.body.classList.toggle('fab-over', on);
+          if (on && !fd.classList.contains('is-rolled')) genioFabRoll(fd);
           fm.classList.toggle('is-open', on); fdBtn.classList.toggle('is-open', on); fd.classList.toggle('is-rolled', on);
           fm.setAttribute('aria-label', on ? 'Tutup' : 'Isi presensi'); fd.setAttribute('aria-label', on ? 'Tutup' : 'Isi presensi');
         }
@@ -792,6 +803,7 @@
       function setOpen(v) {
         open = v;
         backdrop.classList.toggle('is-open', v); wheel.classList.toggle('is-open', v); items.classList.toggle('is-open', v); card.classList.toggle('is-open', v);
+        if (v) genioFabRoll(fd);
         fm.classList.toggle('is-open', v); fdBtn.classList.toggle('is-open', v); fd.classList.toggle('is-rolled', v);
         fm.setAttribute('aria-expanded', String(v)); fd.setAttribute('aria-expanded', String(v));
         fm.setAttribute('aria-label', v ? 'Tutup' : 'Tambah'); fd.setAttribute('aria-label', v ? 'Tutup' : 'Tambah');
