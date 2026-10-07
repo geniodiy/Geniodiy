@@ -199,6 +199,28 @@
   .gx-seg .is-on[data-val="P"]{background:#FFEFF3 !important; color:#C2366A !important; border-color:#C2366A !important;}
   .gx-seg .is-on[data-val="aktif"] i{background:#1E8E5A;} .gx-seg .is-on[data-val="nonaktif"] i{background:#D4070F;}
   .gx-seg + .gx-row, .gx-row + .gx-seg{margin-top:10px;}
+  /* Pilihan di form (status, jenis kelamin, role, jenjang) ikut skema track dan thumb:
+     wadah rel abu muda, pilihan aktif jadi pil putih terangkat dengan warna arti pada teks dan titiknya */
+  .gx-seg, .kp-opt-row, .pkt-opt-row{background:#ECEEF5; border:1px solid #fff; padding:3px; gap:3px !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.9);}
+  .gx-seg{border-radius:999px;}
+  .kp-opt-row, .pkt-opt-row{border-radius:12px;}
+  .gx-seg button, .gx-seg label, .kp-opt, .pkt-opt{
+    background:transparent !important; border:1px solid transparent !important; color:var(--ink-soft) !important; font-weight:500 !important;
+    height:32px !important; transition:background .2s ease, box-shadow .2s ease, color .2s ease;
+  }
+  .gx-seg button, .gx-seg label{border-radius:999px !important;}
+  .kp-opt, .pkt-opt{border-radius:9px !important;}
+  .gx-seg button:hover, .gx-seg label:hover, .kp-opt:hover, .pkt-opt:hover{color:var(--ink) !important;}
+  .gx-seg .is-on, .gx-seg button.is-on, .gx-seg .is-on[data-val], .gx-seg button.is-on[data-val], .kp-opt.is-on, .kp-opt.is-on[data-val], .pkt-opt.is-on, .pkt-opt.is-on[data-val]{
+    background:#fff !important; border-color:transparent !important; font-weight:600 !important;
+    box-shadow:0 1px 2px rgba(20,22,43,.06), 0 6px 14px -6px rgba(20,22,43,.18);
+  }
+  .gx-seg .is-on:not([data-val]), .gx-seg .is-on[data-val="L"], .kp-opt.is-on:not([data-val="aktif"]):not([data-val="nonaktif"]), .pkt-opt.is-on:not([data-val="aktif"]):not([data-val="nonaktif"]){color:var(--blue) !important;}
+  @media (prefers-reduced-motion:reduce){ .gx-seg button, .gx-seg label, .kp-opt, .pkt-opt{transition:none;} }
+  .gx-gender{background:#ECEEF5 !important; border:1px solid #fff !important; border-radius:999px !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.9);}
+  .gx-gender label{border-radius:999px !important;}
+  .gx-gender label b{border-radius:50% !important;}
+  .gx-gender label.is-on{box-shadow:0 1px 2px rgba(20,22,43,.06), 0 6px 14px -6px rgba(20,22,43,.18) !important;}
   .genio-mwrap{grid-column:1/-1; display:flex; align-items:flex-start; width:100%; min-width:0;}
   .genio-mcol{flex:1 1 0; min-width:0; display:flex; flex-direction:column;}
   .genio-mcol > *{margin-bottom:0 !important;}
