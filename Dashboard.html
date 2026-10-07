@@ -581,7 +581,7 @@
     // ===== Menu tambah cepat (kepala unit dan manajer): tombol + di bottom bar (HP) atau pill kanan bawah (desktop) =====
     (function () {
       var IS_MGR = !IS_TUTOR && !IS_HRD && !IS_KU;
-      if (!IS_KU && !IS_MGR && !IS_HRD) return;
+      if (!IS_KU && !IS_HRD) return; // manajer dan super admin tidak memakai tombol + (hanya tutor, kepala unit, HRD)
       var dockEl = document.getElementById('interactiveDock'), wrapEl = document.querySelector('.dock-wrap');
       if (!dockEl || !wrapEl) return;
       // key, ikon (peta ikon tunggal), label, modul tujuan, tombol tambah di modul itu
@@ -595,7 +595,7 @@
         paket: ['books', 'Paket', 'paket-belajar', 'pkt-addBtn']
       };
       // Kepala unit: menu 5 pilihan. HRD: menu 4 pilihan. Manajer dan super admin: langsung isi presensi (seperti tutor), tanpa menu.
-      var DIRECT = IS_MGR;
+      var DIRECT = false;
       var KEYS = IS_KU ? ['presensi', 'siswa', 'operasional', 'kontrak', 'jadwal'] : IS_HRD ? ['tutor', 'siswa', 'kontrak', 'jadwal'] : ['presensi'];
       var PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
       var open = false;

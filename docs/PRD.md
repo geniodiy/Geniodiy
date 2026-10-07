@@ -847,7 +847,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Perlu redeploy Edge Function `admin-users`** setelah kode ini dipakai.
 
 ### [v5] Menu tambah cepat dan peta ikon
-- Tombol + di bottom bar (HP) dan pill di kanan bawah (desktop). Tutor dan manajer/super admin: langsung membuka alur isi presensi, tanpa menu. Kepala unit: menu presensi, siswa, operasional, kontrak, jadwal. HRD: menu tutor, siswa, kontrak, jadwal. Menu berupa roda setengah lingkaran dari balik bottom bar (HP) atau kartu daftar "Tambah baru" (desktop). Tiap pilihan membuka modulnya lalu menekan tombol tambah modul itu. Ditutup lewat ×, ketuk di luar, atau Esc.
+- Tombol + di bottom bar (HP) dan pill di kanan bawah (desktop). Tutor: langsung membuka alur isi presensi, tanpa menu. Manajer dan super admin tidak memakai tombol +. Kepala unit: menu presensi, siswa, operasional, kontrak, jadwal. HRD: menu tutor, siswa, kontrak, jadwal. Menu berupa roda setengah lingkaran dari balik bottom bar (HP) atau kartu daftar "Tambah baru" (desktop). Tiap pilihan membuka modulnya lalu menekan tombol tambah modul itu. Ditutup lewat ×, ketuk di luar, atau Esc.
 - Ikon disamakan per konsep di seluruh aplikasi (dock, menu Lainnya, Home, popup): presensi check-circle, siswa student, kontrak file-text, jadwal calendar-blank, operasional receipt, tagihan credit-card, tutor chalkboard-teacher, paket belajar books, unit buildings, user user-gear, news newspaper, pengaturan gear. Menu Lainnya sekarang memakai ikon Phosphor yang sama dengan modul.
 
 ### [v5] Tombol + isi presensi tutor
