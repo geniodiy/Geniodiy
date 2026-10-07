@@ -167,20 +167,20 @@
       .genio-fab-m:active{transform:scale(.93);}
       .genio-fab-m.is-open:active{transform:rotate(45deg) scale(.93);}
       /* Form presensi tutor berhenti di atas bottom bar dan tombol + */
-      body.role-tutor #pt-formModal:not(.gx-typing), body.role-tutor #pt-pickModal:not(.gx-typing), body.role-tutor #pt-lapModal:not(.gx-typing){padding-bottom:calc(92px + env(safe-area-inset-bottom)) !important;}
-      body.role-tutor #pt-formModal:not(.gx-typing) .modal-sheet.gx-sheet, body.role-tutor #pt-pickModal:not(.gx-typing) .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal:not(.gx-typing) .modal-sheet.gx-sheet{max-height:100% !important;}
+      body.role-tutor #pt-formModal:not(.gx-typing), body.role-tutor #pt-lapModal:not(.gx-typing){padding-bottom:calc(92px + env(safe-area-inset-bottom)) !important;}
+      body.role-tutor #pt-formModal:not(.gx-typing) .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal:not(.gx-typing) .modal-sheet.gx-sheet{max-height:100% !important;}
     }
     /* Selama form presensi tutor terbuka: bar dan tombol + tetap di atas lapisan gelap, + berputar jadi x */
     body.fab-over .dock-wrap{z-index:80;}
     body.fab-over #genioFabD{z-index:80;}
     /* Form muncul dari tombol + dan kembali ke tombol itu (titik asal diatur lewat JS) */
-    body.role-tutor #pt-formModal .modal-sheet.gx-sheet, body.role-tutor #pt-pickModal .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal .modal-sheet.gx-sheet{
+    body.role-tutor #pt-formModal .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal .modal-sheet.gx-sheet{
       transform:scale(.1) !important; opacity:0; transform-origin:var(--fab-ox, 50%) var(--fab-oy, 100%);
       transition:transform .34s cubic-bezier(.16,1,.3,1), opacity .2s ease;
     }
-    body.role-tutor #pt-formModal.show .modal-sheet.gx-sheet, body.role-tutor #pt-pickModal.show .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal.show .modal-sheet.gx-sheet{transform:none !important; opacity:1; animation:none !important;}
+    body.role-tutor #pt-formModal.show .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal.show .modal-sheet.gx-sheet{transform:none !important; opacity:1; animation:none !important;}
     @media (prefers-reduced-motion:reduce){
-      body.role-tutor #pt-formModal .modal-sheet.gx-sheet, body.role-tutor #pt-pickModal .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal .modal-sheet.gx-sheet{transform:none !important; transition:opacity .15s ease;}
+      body.role-tutor #pt-formModal .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal .modal-sheet.gx-sheet{transform:none !important; transition:opacity .15s ease;}
     }
     @media (min-width:900px){
       #genioFabD{display:flex; position:fixed; right:28px; bottom:32px; z-index:45; align-items:center; cursor:pointer;}
@@ -610,7 +610,7 @@
         var fdBtn = fd.querySelector('.genio-fab-btn'), fdLbl = fd.querySelector('.genio-fab-lbl');
 
         // Popup presensi tutor yang ikut tombol + (id popup: tombol tutupnya)
-        var PT = { 'pt-pickModal': 'pt-pickClose', 'pt-formModal': 'pt-fClose', 'pt-lapModal': 'pt-lapClose' };
+        var PT = { 'pt-formModal': 'pt-fClose', 'pt-lapModal': 'pt-lapClose' };
         function ptOpenEl() {
           for (var id in PT) { var el = document.getElementById(id); if (el && !el.hidden && el.classList.contains('show')) return el; }
           return null;

@@ -85,19 +85,25 @@
   .pt-empty span{display:block; font-size:11px; color:var(--ink-soft); margin-top:3px;}
 
   /* Form, pemilih siswa, dan preview laporan (kerangka gx-sheet dari Config.html) */
-  #pt-formModal, #pt-pickModal, #pt-lapModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
-  #pt-formModal.show, #pt-pickModal.show, #pt-lapModal.show{opacity:1;}
-  #pt-pickModal{z-index:75;}
-  /* Pemilih siswa sederhana: judul + tombol kembali, cari, daftar nama */
-  .pt-pick-head{display:flex; align-items:center; gap:8px; padding:16px 16px 4px;}
-  .pt-pick-head h3{margin:0 !important; font-size:14px !important; font-weight:600 !important; color:var(--ink) !important;}
-  .pt-pick-back{width:30px; height:30px; border-radius:50%; border:0; background:var(--surface); color:var(--ink); display:flex; align-items:center; justify-content:center; font-size:15px; cursor:pointer; flex:none;}
-  .pt-pick-back:hover{background:#ECEEF5;}
-  .pt-pick-sheet .gx-body{padding-top:8px !important;}
-  .pt-pick-row{border-radius:10px; padding:9px 8px !important; border-bottom:0 !important;}
+  #pt-formModal, #pt-lapModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
+  #pt-formModal.show, #pt-lapModal.show{opacity:1;}
+  /* Pemilih siswa: dropdown tepat di bawah kolom siswa di dalam form */
+  .pt-dd-row{position:relative;}
+  .pt-dd{position:absolute; left:0; right:0; top:calc(100% - 4px); z-index:6; background:#fff; border:1px solid var(--border); border-radius:12px; padding:6px;
+    box-shadow:0 18px 36px -14px rgba(20,22,43,.3), 0 2px 6px rgba(20,22,43,.05); transform-origin:top center;
+    opacity:0; transform:translateY(-4px) scale(.98); pointer-events:none; visibility:hidden; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1), visibility 0s .2s;}
+  .pt-dd.is-open{opacity:1; transform:none; pointer-events:auto; visibility:visible; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1);}
+  .pt-dd .gx-search{margin:0 0 4px !important;}
+  #pt-fDrop .gx-search input{padding:0 30px 0 32px !important; height:34px !important;}
+  #pt-pickList{max-height:232px; overflow-y:auto; overscroll-behavior:contain;}
+  #pt-fKontrakBtn svg{transition:transform .2s ease;}
+  #pt-fKontrakBtn[aria-expanded="true"] svg{transform:rotate(90deg);}
+  #pt-fKontrakBtn[aria-expanded="true"]{border-color:var(--blue) !important;}
+  .pt-pick-row{border-radius:9px; padding:8px 6px !important; border-bottom:0 !important;}
   .pt-pick-row.is-on{background:var(--blue-tint);}
   .pt-pick-row .pt-pick-r{font-size:10px; font-weight:600; color:var(--blue); white-space:nowrap; flex:none;}
   .pt-pick-row .pt-pick-r i{font-size:16px; display:block;}
+  @media (prefers-reduced-motion:reduce){ .pt-dd, .pt-dd.is-open, #pt-fKontrakBtn svg{transition:none;} }
   /* Bagian form setelah siswa terkunci sampai siswa dipilih */
   #pt-fRest{transition:opacity .25s ease;}
   #pt-fRest.pt-locked{opacity:.4; pointer-events:none; -webkit-user-select:none; user-select:none;}
@@ -105,15 +111,6 @@
   .pt-lock-hint[hidden]{display:none;}
   #pt-fKontrakBtn.pt-need{border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.1);}
   @media (prefers-reduced-motion:reduce){ #pt-fRest{transition:none;} }
-  /* Pindah antara pemilih siswa dan form: satu kartu yang isinya bergeser, tanpa tutup lalu buka popup baru */
-  body #pt-pickModal.pt-swap-in, body #pt-formModal.pt-swap-in, body #pt-pickModal.pt-swap-out, body #pt-formModal.pt-swap-out,
-  body #pt-pickModal.pt-swap-in .modal-sheet, body #pt-formModal.pt-swap-in .modal-sheet, body #pt-pickModal.pt-swap-out .modal-sheet, body #pt-formModal.pt-swap-out .modal-sheet{transition:none !important;}
-  body #pt-pickModal.pt-swap-out, body #pt-formModal.pt-swap-out{background:transparent !important;}
-  body #pt-pickModal.pt-swap-in.show .modal-sheet.gx-sheet, body #pt-formModal.pt-swap-in.show .modal-sheet.gx-sheet{animation:ptSwapIn .3s cubic-bezier(.16,1,.3,1) both !important;}
-  body #pt-pickModal.pt-swap-out.show .modal-sheet.gx-sheet, body #pt-formModal.pt-swap-out.show .modal-sheet.gx-sheet{animation:ptSwapOut .2s ease both !important;}
-  @keyframes ptSwapIn{from{translate:calc(var(--pt-sw, 1) * 40px) 0; opacity:0;}}
-  @keyframes ptSwapOut{to{translate:calc(var(--pt-sw, 1) * -40px) 0; opacity:0;}}
-  @media (prefers-reduced-motion:reduce){ @keyframes ptSwapIn{from{opacity:0;}} @keyframes ptSwapOut{to{opacity:0;}} }
   .pt-textarea{width:100%; box-sizing:border-box; min-height:84px; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:8px 11px; font-family:var(--font); font-size:11.5px; line-height:1.5; resize:vertical; color:var(--ink); outline:none; transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;}
   .pt-textarea:focus{border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
   .pt-field-sub{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px;}
@@ -270,20 +267,6 @@
   <div id="pt-list"></div>
   <div class="genio-pop" id="pt-slotPop" hidden></div>
 
-  <!-- Popup pilih siswa -->
-  <div class="modal-overlay" id="pt-pickModal" hidden>
-    <div class="modal-sheet gx-sheet gx-sm pt-pick-sheet">
-      <div class="pt-pick-head">
-        <button type="button" class="pt-pick-back" id="pt-pickClose" aria-label="Kembali ke form"><i class="ph ph-arrow-left" aria-hidden="true"></i></button>
-        <h3>Pilih siswa</h3>
-      </div>
-      <div class="gx-body">
-        <div class="gx-search"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input type="text" id="pt-pickSearch" placeholder="Cari siswa atau mapel" aria-label="Cari siswa"></div>
-        <div id="pt-pickList"></div>
-      </div>
-    </div>
-  </div>
-
   <!-- Popup isi presensi / revisi laporan -->
   <div class="modal-overlay" id="pt-formModal" hidden>
     <div class="modal-sheet gx-sheet">
@@ -300,12 +283,16 @@
         <div class="gx-note" id="pt-fNote"><i class="ph ph-info" aria-hidden="true"></i><span id="pt-fNoteText"></span></div>
 
         <div class="gx-step-title"><span class="gx-step">1</span>Siswa</div>
-        <div class="gx-row">
+        <div class="gx-row pt-dd-row">
           <label for="pt-fKontrakBtn">Siswa dan mapel <em class="gx-req">wajib</em></label>
-          <button type="button" class="gx-field" id="pt-fKontrakBtn">
+          <button type="button" class="gx-field" id="pt-fKontrakBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="pt-fDrop">
             <span class="pt-field-main"><b id="pt-fKontrakLabel">Pilih siswa...</b><span class="pt-field-sub" id="pt-fKontrakSub"></span></span>
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
           </button>
+          <div class="pt-dd" id="pt-fDrop">
+            <div class="gx-search"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input type="text" id="pt-pickSearch" placeholder="Cari siswa atau mapel" aria-label="Cari siswa"></div>
+            <div id="pt-pickList" role="listbox" aria-label="Daftar siswa"></div>
+          </div>
           <span class="pt-lock-hint" id="pt-fLockHint" hidden><i class="ph ph-lock-simple" aria-hidden="true"></i>Pilih siswa dulu, bagian lain terbuka setelah itu.</span>
         </div>
 
@@ -392,7 +379,7 @@
     tab: 'sesi', filter: 'tindakan', q: '',
     view: genioViewPref('pt_view', 'card'),
     kontrak: [], presensi: [], loaded: false, loading: false,
-    form: null, pickFor: 'new'
+    form: null
   };
 
   // ===== Utilitas =====
@@ -921,29 +908,15 @@
   // ===== Modal =====
   function ptShow(el) { el.hidden = false; el.style.display = 'flex'; requestAnimationFrame(function () { el.classList.add('show'); }); }
   function ptHide(el) { el.classList.remove('show'); setTimeout(function () { el.hidden = true; el.style.display = 'none'; }, 280); }
-  // Ganti isi popup di tempat: kartu lama bergeser keluar, kartu baru bergeser masuk (dir 1 = maju, -1 = kembali)
-  function ptSwap(fromEl, toEl, dir) {
-    [fromEl, toEl].forEach(function (e) { e.style.setProperty('--pt-sw', dir < 0 ? -1 : 1); });
-    toEl.classList.add('pt-swap-in'); toEl.hidden = false; toEl.style.display = 'flex'; toEl.classList.add('show');
-    fromEl.classList.add('pt-swap-out');
-    setTimeout(function () { fromEl.classList.remove('show', 'pt-swap-out'); fromEl.hidden = true; fromEl.style.display = 'none'; }, 200);
-    setTimeout(function () { toEl.classList.remove('pt-swap-in'); }, 320);
-  }
-  function ptFormOpen() { var f = document.getElementById('pt-formModal'); return !f.hidden && f.classList.contains('show'); }
-  // Tutup pemilih: kalau dibuka dari kolom siswa di form, kembali ke form
-  function ptClosePick() {
-    var pick = document.getElementById('pt-pickModal');
-    if (pt.pickFor === 'field' && pt.form && !ptFormOpen()) ptSwap(pick, document.getElementById('pt-formModal'), -1);
-    else ptHide(pick);
-  }
-
-  // Pemilih siswa
-  function ptOpenPicker(forWhat) {
-    pt.pickFor = forWhat;
-    document.getElementById('pt-pickSearch').value = '';
-    ptRenderPicker('');
-    if (forWhat === 'field' && ptFormOpen()) ptSwap(document.getElementById('pt-formModal'), document.getElementById('pt-pickModal'), -1);
-    else ptShow(document.getElementById('pt-pickModal'));
+  // Pemilih siswa: dropdown di bawah kolom siswa
+  function ptDropOpen() { return document.getElementById('pt-fDrop').classList.contains('is-open'); }
+  function ptToggleDrop(open) {
+    var dd = document.getElementById('pt-fDrop'), btn = document.getElementById('pt-fKontrakBtn');
+    if (open) { document.getElementById('pt-pickSearch').value = ''; ptRenderPicker(''); }
+    dd.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    // Fokus ke kotak cari hanya di perangkat bermouse; di HP keyboard tidak langsung muncul
+    if (open && window.matchMedia('(pointer:fine)').matches) setTimeout(function () { document.getElementById('pt-pickSearch').focus(); }, 60);
   }
   function ptRenderPicker(q) {
     var code = PT_HARI[new Date().getDay()];
@@ -963,7 +936,7 @@
       var sw = ktSiswa(it.k), on = it.k.id === curId;
       var sub = (it.k.mapel || '-') + ' · ' + (it.j ? jam5(it.j.jam_mulai) : jadwalText(it.k));
       var right = on ? '<span class="pt-pick-r"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></span>' : (tag ? '<span class="pt-pick-r">' + tag + '</span>' : '');
-      return '<button type="button" class="gx-opt-row pt-pick-row' + (on ? ' is-on' : '') + '" data-kt="' + it.k.id + '">' + avatar(sw.nama || '-') +
+      return '<button type="button" role="option" aria-selected="' + on + '" class="gx-opt-row pt-pick-row' + (on ? ' is-on' : '') + '" data-kt="' + it.k.id + '">' + avatar(sw.nama || '-') +
         '<span class="pt-pick-t"><b>' + esc(sw.nama || '-') + '</b><small>' + esc(sub) + '</small></span>' + right + '</button>';
     };
     // Urutan: jadwal hari ini, fleksibel, lalu siswa lain (tanpa judul kelompok supaya ringkas)
@@ -976,13 +949,8 @@
     el.querySelectorAll('[data-kt]').forEach(function (b) {
       b.addEventListener('click', function () {
         var k = pt.kontrak.find(function (x) { return x.id === b.dataset.kt; });
-        var pick = document.getElementById('pt-pickModal');
-        if (!k) { ptHide(pick); return; }
-        if (pt.pickFor === 'field' && pt.form) {
-          ptSetFormKontrak(k, null, true);
-          if (ptFormOpen()) ptHide(pick); else ptSwap(pick, document.getElementById('pt-formModal'), 1);
-        }
-        else ptOpenForm({ mode: 'new', k: k }, pick);
+        ptToggleDrop(false);
+        if (k && pt.form) ptSetFormKontrak(k, null, true);
       });
     });
   }
@@ -1033,7 +1001,7 @@
     }
     document.getElementById('pt-fLate').hidden = !late;
   }
-  function ptOpenForm(opts, fromEl) {
+  function ptOpenForm(opts) {
     pt.form = { mode: opts.mode, k: null, p: opts.p || null, foto: null, catatan: null };
     var isRev = opts.mode === 'revisi';
     document.getElementById('pt-fAlert').hidden = true;
@@ -1080,8 +1048,8 @@
     }
     document.getElementById('pt-fTanggal').max = todayIso();
     ptCheckLate();
-    if (fromEl && !fromEl.hidden) ptSwap(fromEl, document.getElementById('pt-formModal'), 1);
-    else ptShow(document.getElementById('pt-formModal'));
+    ptToggleDrop(false);
+    ptShow(document.getElementById('pt-formModal'));
   }
 
   // ===== Foto: HEIC dikonversi di browser, lalu dikecilkan jadi JPEG =====
@@ -1258,13 +1226,17 @@
     ptRerender();
   });
   document.getElementById('pt-pickSearch').addEventListener('input', function (e) { ptRenderPicker(e.target.value.trim().toLowerCase()); });
-  document.getElementById('pt-pickClose').addEventListener('click', ptClosePick);
-  document.getElementById('pt-fKontrakBtn').addEventListener('click', function () { if (!this.disabled) ptOpenPicker('field'); });
+  document.getElementById('pt-fKontrakBtn').addEventListener('click', function () { if (!this.disabled) ptToggleDrop(!ptDropOpen()); });
+  // Tutup dropdown saat mengetuk di luar atau menekan Esc
+  document.getElementById('pt-formModal').addEventListener('click', function (e) {
+    if (ptDropOpen() && !e.target.closest('#pt-fDrop') && !e.target.closest('#pt-fKontrakBtn')) ptToggleDrop(false);
+  }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ptDropOpen()) { e.stopPropagation(); ptToggleDrop(false); document.getElementById('pt-fKontrakBtn').focus(); } }, true);
   ['pt-fClose', 'pt-fCancel'].forEach(function (id) { document.getElementById(id).addEventListener('click', function () { ptHide(document.getElementById('pt-formModal')); }); });
   ['pt-lapClose', 'pt-lapOk'].forEach(function (id) { document.getElementById(id).addEventListener('click', function () { ptHide(document.getElementById('pt-lapModal')); }); });
-  ['pt-formModal', 'pt-pickModal', 'pt-lapModal'].forEach(function (id) {
+  ['pt-formModal', 'pt-lapModal'].forEach(function (id) {
     var el = document.getElementById(id);
-    el.addEventListener('click', function (e) { if (e.target === el) { if (id === 'pt-pickModal') ptClosePick(); else ptHide(el); } });
+    el.addEventListener('click', function (e) { if (e.target === el) ptHide(el); });
   });
   document.getElementById('pt-fTanggal').addEventListener('change', ptCheckLate);
   document.getElementById('pt-fJam').addEventListener('change', ptCheckLate);
@@ -1298,7 +1270,7 @@
     ptSyncDock(); ptLoad();
   };
   // Popup dipindah ke body supaya bisa dibuka dari Beranda tanpa pindah tab
-  ['pt-pickModal', 'pt-formModal', 'pt-lapModal', 'pt-slotPop'].forEach(function (id) { var el = document.getElementById(id); if (el && el.parentNode !== document.body) document.body.appendChild(el); });
+  ['pt-formModal', 'pt-lapModal', 'pt-slotPop'].forEach(function (id) { var el = document.getElementById(id); if (el && el.parentNode !== document.body) document.body.appendChild(el); });
   function ptTryPending() {
     var a = window.genioPresensiTutorPending;
     if (!a || !pt.loaded) return false;
@@ -1315,7 +1287,7 @@
     },
     // Tutup semua popup presensi tutor sekaligus (dipakai tombol x di bottom bar)
     close: function () {
-      ['pt-pickModal', 'pt-formModal', 'pt-lapModal'].forEach(function (id) { var el = document.getElementById(id); if (el && !el.hidden) ptHide(el); });
+      ['pt-formModal', 'pt-lapModal'].forEach(function (id) { var el = document.getElementById(id); if (el && !el.hidden) ptHide(el); });
     }
   };
   window.genioModuleHandlers['presensi-tutor-goto'] = function (filter) { pt.tab = 'sesi'; pt.filter = filter || 'tindakan'; if (pt.loaded) ptRender(true); };
