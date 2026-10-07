@@ -237,16 +237,11 @@
   .gx-foot .btn.is-danger{background:var(--red) !important; border-color:var(--red) !important; color:#fff !important;}
   .gx-confirm{padding:22px 20px 6px; text-align:center;}
   .gx-confirm .gx-head-ico{width:44px; height:44px; border-radius:50%; font-size:20px; margin:0 auto 12px;}
-  /* Wadah ikon "timbul" (skema track dan thumb, opsi B): kotak putih terangkat, ikon terisi.
-     Warna ikon tetap dari aturan masing-masing modul (biru, amber, merah, hijau). */
-  .gx-head-ico, .menu-row .mr-badge, .gh-per-ic, .ku-ico, .pkc-ico, .ops-ico, .pgc-ico, .kuh-act .ic,
-  #ps-filterModal .pw-head-ico, #ps-wakilModal .pw-head-ico, #ps-previewModal .pv-ext-ico{
-    background:linear-gradient(180deg, #FFFFFF 0%, #F7F8FC 100%) !important; border:1px solid #E7E9F2;
-    box-shadow:inset 0 1px 0 #fff, 0 1px 2px rgba(20,22,43,.06), 0 5px 12px -6px rgba(20,22,43,.22);
-  }
-  .gx-head-ico i.ph, .menu-row .mr-badge i.ph, .gh-per-ic i.ph, .ku-ico i.ph, .pkc-ico i.ph, .ops-ico i.ph, .pgc-ico i.ph, .kuh-act .ic i.ph,
-  #ps-filterModal .pw-head-ico i.ph, #ps-wakilModal .pw-head-ico i.ph, #ps-previewModal .pv-ext-ico i.ph{font-family:"Phosphor-Fill" !important;}
-  #content.lainnya-split-view .menu-row.is-active .mr-badge{background:var(--blue) !important; border-color:var(--blue); color:#fff;}
+  /* Wadah ikon tonal (opsi G): latar tint datar sesuai arti warna dari tiap modul, tanpa tepi dan bayangan,
+     ikon duotone (garis + isian lembut sewarna). Kelas ikon diganti ke ph-duotone oleh genioDuoIcons di bawah. */
+  .gx-head-ico i.ph-duotone:before, .menu-row .mr-badge i.ph-duotone:before, .gh-per-ic i.ph-duotone:before, .ku-ico i.ph-duotone:before,
+  .pkc-ico i.ph-duotone:before, .ops-ico i.ph-duotone:before, .pgc-ico i.ph-duotone:before, .kuh-act .ic i.ph-duotone:before,
+  #ps-filterModal .pw-head-ico i.ph-duotone:before, #ps-wakilModal .pw-head-ico i.ph-duotone:before, #ps-previewModal .pv-ext-ico i.ph-duotone:before{opacity:.32;}
   .gx-confirm h3{font-size:14px !important; font-weight:600 !important; margin:0 0 4px !important;}
   .gx-confirm p{font-size:11px; color:var(--ink-soft); margin:0 0 6px; line-height:1.5;}
   @media (prefers-reduced-motion: reduce){ .modal-overlay.show .modal-sheet.gx-sheet{animation:none;} }
@@ -1065,6 +1060,29 @@
       });
     }).observe(document.body || document.documentElement, { childList: true, subtree: true });
     document.querySelectorAll(TABLES).forEach(push);
+  })();
+
+  // Ikon di wadah ikon (header popup, tile Home, menu Lainnya, kartu modul) memakai Phosphor duotone, termasuk yang dibuat belakangan
+  (function genioDuoIcons() {
+    var SEL = ['.gx-head-ico', '.menu-row .mr-badge', '.gh-per-ic', '.ku-ico', '.pkc-ico', '.ops-ico', '.pgc-ico', '.kuh-act .ic',
+      '#ps-filterModal .pw-head-ico', '#ps-wakilModal .pw-head-ico', '#ps-previewModal .pv-ext-ico'].map(function (x) { return x + ' i.ph'; }).join(',');
+    function swap(root) {
+      if (!root || !root.querySelectorAll) return;
+      var list = root.querySelectorAll(SEL);
+      for (var i = 0; i < list.length; i++) { list[i].classList.remove('ph'); list[i].classList.add('ph-duotone'); }
+    }
+    function start() {
+      swap(document);
+      new MutationObserver(function (muts) {
+        for (var m = 0; m < muts.length; m++) {
+          var t = muts[m].target;
+          if (t.nodeType === 1 && t.closest && t.closest('.gx-head-ico, .mr-badge, .gh-per-ic, .ku-ico, .pkc-ico, .ops-ico, .pgc-ico, .kuh-act, .pw-head-ico, .pv-ext-ico')) { swap(t.parentNode || t); continue; }
+          var add = muts[m].addedNodes;
+          for (var n = 0; n < add.length; n++) if (add[n].nodeType === 1) swap(add[n].parentNode || add[n]);
+        }
+      }).observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
   })();
 
   // Tombol x di semua kolom pencarian (input teks berplaceholder "Cari..."), termasuk yang dibuat belakangan.
