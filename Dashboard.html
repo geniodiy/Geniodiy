@@ -203,8 +203,16 @@
       }
       #genioFabD:hover .genio-fab-btn{transform:scale(1.06);}
       #genioFabD:active .genio-fab-btn{transform:scale(.95);}
-      #genioFabD .genio-fab-btn.is-open{transform:rotate(45deg);}
-      #genioFabD:hover .genio-fab-btn.is-open{transform:rotate(45deg) scale(1.06);}
+      /* Saat terbuka: tombol menggelinding ke kanan sambil berputar sampai label tertutup, tinggal x.
+         Pill menempel di kanan, jadi label yang menyusut membuat tombol bergeser ke kanan; 225 derajat kira-kira satu gelindingan sejauh lebar label dan berakhir sebagai x. */
+      #genioFabD .genio-fab-btn{transition:transform .6s cubic-bezier(.65,0,.35,1) !important;}
+      #genioFabD .genio-fab-lbl{max-width:220px; overflow:hidden;
+        transition:max-width .6s cubic-bezier(.65,0,.35,1), padding .6s cubic-bezier(.65,0,.35,1), margin .6s cubic-bezier(.65,0,.35,1), opacity .35s ease, border-color .35s ease, box-shadow .35s ease;}
+      #genioFabD.is-rolled .genio-fab-lbl{max-width:0; padding-left:0; padding-right:0; margin-left:0; opacity:0; border-color:transparent; box-shadow:none;}
+      #genioFabD .genio-fab-btn.is-open{transform:rotate(225deg);}
+      #genioFabD:hover .genio-fab-btn.is-open{transform:rotate(225deg) scale(1.06);}
+      #genioFabD:active .genio-fab-btn.is-open{transform:rotate(225deg) scale(.95);}
+      @media (prefers-reduced-motion:reduce){ #genioFabD .genio-fab-btn, #genioFabD .genio-fab-lbl{transition:none !important;} }
       body.role-tutor .content{padding-bottom:104px !important;}
     }
     body:not(.fab-over):has(.modal-overlay.show) .genio-fab-m, body:not(.fab-over):has(.modal-overlay.show) #genioFabD{opacity:0; pointer-events:none;}
@@ -641,9 +649,8 @@
         function sync() {
           var on = !!ptOpenEl() && !otherOpen();
           document.body.classList.toggle('fab-over', on);
-          fm.classList.toggle('is-open', on); fdBtn.classList.toggle('is-open', on);
+          fm.classList.toggle('is-open', on); fdBtn.classList.toggle('is-open', on); fd.classList.toggle('is-rolled', on);
           fm.setAttribute('aria-label', on ? 'Tutup' : 'Isi presensi'); fd.setAttribute('aria-label', on ? 'Tutup' : 'Isi presensi');
-          fdLbl.textContent = on ? 'Tutup' : 'Isi presensi';
         }
         // Titik asal animasi: pusat tombol + relatif terhadap kotak form, supaya form tumbuh dari tombol dan mengecil kembali ke sana
         function setOrigin(el) {
@@ -785,9 +792,9 @@
       function setOpen(v) {
         open = v;
         backdrop.classList.toggle('is-open', v); wheel.classList.toggle('is-open', v); items.classList.toggle('is-open', v); card.classList.toggle('is-open', v);
-        fm.classList.toggle('is-open', v); fdBtn.classList.toggle('is-open', v);
+        fm.classList.toggle('is-open', v); fdBtn.classList.toggle('is-open', v); fd.classList.toggle('is-rolled', v);
         fm.setAttribute('aria-expanded', String(v)); fd.setAttribute('aria-expanded', String(v));
-        fm.setAttribute('aria-label', v ? 'Tutup' : 'Tambah'); fdLbl.textContent = v ? 'Tutup' : 'Tambah';
+        fm.setAttribute('aria-label', v ? 'Tutup' : 'Tambah'); fd.setAttribute('aria-label', v ? 'Tutup' : 'Tambah');
         wrapEl.style.zIndex = v ? '45' : '';
         dockEl.style.pointerEvents = v ? 'none' : '';
         document.body.classList.toggle('qa-open', v);
