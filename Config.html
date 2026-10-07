@@ -523,7 +523,9 @@
     box-shadow:0 24px 56px -18px rgba(20,22,43,.32) !important;
     font-family:var(--font);
   }
-  .modal-overlay .modal-sheet:not([style*="padding:0"]){padding:22px !important;}
+  .modal-overlay .modal-sheet:not([style*="padding:0"]){padding:18px !important;}
+  /* Kerangka gx-sheet sudah punya padding di gx-head, gx-body, gx-foot: jangan ditambah padding sheet (dulu jadi dobel ~40px) */
+  .modal-overlay .modal-sheet.gx-sheet{padding:0 !important;}
   .modal-sheet h3{font-size:15px !important; font-weight:500 !important; letter-spacing:-.01em; color:var(--ink) !important; margin:0 0 6px !important;}
   .modal-sheet > p{font-size:12.5px !important; line-height:1.5 !important; color:var(--ink-soft) !important;}
   .modal-sheet .alert{font-size:12px !important; border-radius:10px !important; padding:10px 12px !important;}
