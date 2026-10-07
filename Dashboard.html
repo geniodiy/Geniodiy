@@ -318,22 +318,24 @@
       .dock-wrap{display:none !important;}
 
       .genio-header-nav-center{display:flex; align-items:center; justify-content:center; flex:1; min-width:0;}
+      /* Tab header desktop = bottom bar HP: track abu muda bertepi putih, pil putih (glider) yang bergeser, ikon terisi ink */
       #genioHeaderNavCenter .ios-glass-dock{
-        background:var(--surface); border:1px solid var(--border); box-shadow:none;
-        border-radius:999px; padding:3px; gap:2px; transform:none !important;
+        background:#ECEEF5; border:1px solid #fff; border-radius:999px; padding:4px; gap:2px; transform:none !important;
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 6px 16px -10px rgba(20,22,43,.25), 0 1px 2px rgba(20,22,43,.04);
       }
       #genioHeaderNavCenter .dock-glider{
-        top:3px; bottom:3px; border-radius:999px; background:#fff;
-        box-shadow:0 1px 2px rgba(20,22,43,.08), 0 0 0 1px var(--border);
+        top:4px; bottom:4px; border-radius:999px; background:#fff;
+        box-shadow:0 1px 2px rgba(20,22,43,.06), 0 6px 14px -6px rgba(20,22,43,.18);
       }
       #genioHeaderNavCenter .dock-btn{
         flex:none; flex-direction:row; gap:8px;
-        height:30px; padding:0 14px; border-radius:999px;
+        height:32px; padding:0 15px; border-radius:999px; color:#8A8EA6;
       }
       #genioHeaderNavCenter .dock-btn:hover{color:var(--ink);}
-      #genioHeaderNavCenter .dock-btn.dock-active{color:var(--blue);}
-      #genioHeaderNavCenter .dock-btn i{font-size:15px;}
+      #genioHeaderNavCenter .dock-btn.dock-active{color:var(--ink);}
+      #genioHeaderNavCenter .dock-btn i{font-size:16px;}
       #genioHeaderNavCenter .dock-label{font-size:12px; font-weight:500;}
+      #genioHeaderNavCenter .dock-btn.dock-active .dock-label{font-weight:600;}
       #genioHeaderNavCenter .dock-badge{top:-7px; right:-9px;}
     }
 
