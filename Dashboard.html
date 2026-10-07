@@ -198,9 +198,8 @@
       #genioFabD .genio-fab-btn{position:relative; z-index:2; width:48px; height:48px; border:0; background:var(--blue); box-shadow:0 8px 18px -6px rgba(28,26,175,.55);}
       #genioFabD .genio-fab-lbl{
         height:44px; display:flex; align-items:center; padding:0 22px 0 38px; margin-left:-26px; border-radius:999px;
-        background:rgba(245,246,251,.72); border:1px solid rgba(255,255,255,.75); color:var(--ink); font:600 12px var(--font); white-space:nowrap;
-        -webkit-backdrop-filter:blur(18px) saturate(160%); backdrop-filter:blur(18px) saturate(160%);
-        box-shadow:0 12px 28px -10px rgba(20,22,43,.25), 0 2px 8px rgba(20,22,43,.06);
+        background:#fff; border:1px solid var(--border); color:var(--ink); font:600 12px var(--font); white-space:nowrap;
+        box-shadow:0 14px 30px -10px rgba(20,22,43,.32), 0 2px 8px rgba(20,22,43,.08);
       }
       #genioFabD:hover .genio-fab-btn{transform:scale(1.06);}
       #genioFabD:active .genio-fab-btn{transform:scale(.95);}
@@ -213,7 +212,17 @@
       #genioFabD .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg));}
       #genioFabD:hover .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg)) scale(1.06);}
       #genioFabD:active .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg)) scale(.95);}
-      @media (prefers-reduced-motion:reduce){ #genioFabD .genio-fab-btn, #genioFabD .genio-fab-lbl{transition:none !important;} }
+      /* Detak santai saat diam: tombol membesar sedikit dua kali lalu istirahat, dengan riak biru tipis yang memudar.
+         Memakai properti scale (bukan transform) supaya tidak bentrok dengan animasi gelinding. */
+      #genioFabD:not(.is-rolled) .genio-fab-btn{animation:genioFabBeat 3.2s ease-in-out 1.5s infinite;}
+      #genioFabD:not(.is-rolled) .genio-fab-btn::after{content:''; position:absolute; inset:0; border-radius:50%; pointer-events:none; animation:genioFabRipple 3.2s ease-out 1.5s infinite;}
+      #genioFabD:hover .genio-fab-btn, #genioFabD:hover .genio-fab-btn::after{animation-play-state:paused;}
+      @keyframes genioFabBeat{0%,22%,100%{scale:1;} 7%{scale:1.08;} 12%{scale:1;} 17%{scale:1.05;}}
+      @keyframes genioFabRipple{0%{box-shadow:0 0 0 0 rgba(28,26,175,.32);} 30%,100%{box-shadow:0 0 0 14px rgba(28,26,175,0);}}
+      @media (prefers-reduced-motion:reduce){
+        #genioFabD .genio-fab-btn, #genioFabD .genio-fab-lbl{transition:none !important;}
+        #genioFabD .genio-fab-btn, #genioFabD .genio-fab-btn::after{animation:none !important;}
+      }
       body.role-tutor .content{padding-bottom:104px !important;}
     }
     body:not(.fab-over):has(.modal-overlay.show) .genio-fab-m, body:not(.fab-over):has(.modal-overlay.show) #genioFabD{opacity:0; pointer-events:none;}
