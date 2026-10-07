@@ -852,6 +852,8 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 
 ### [v5] Tombol + isi presensi tutor
 - Tutor: tombol + bulat biru (stroke putih) di tengah bottom bar pada HP, pill putih "Isi presensi" dengan tombol + di kiri pada pojok kanan bawah desktop. Keduanya membuka pemilih sesi, tampil di semua halaman tutor, dan menghilang saat popup terbuka. Tombol Isi presensi di highlight Beranda dan Presensi dihapus. Bottom bar dibuat lebih ringkas (maks 350px) dan latar tombol dock bulat penuh di HP dan desktop.
+- Bottom bar HP baru: bar mengambang dengan tab sama lebar, ikon 24px, tab aktif berupa ikon terisi dengan garis biru di atasnya (tanpa pil). Tutor, kepala unit, dan HRD: bar punya cekungan di tengah dan tombol + bergradasi biru duduk di cekungan itu. Manajer tetap bar polos tanpa +.
+- Tutor: tombol + tetap tampil selama pemilih sesi, form isi presensi, atau preview laporan terbuka, berputar menjadi x (desktop: label "Tutup"), dan menutup popup saat ditekan. Di HP popup berhenti di atas bottom bar. Popup muncul dari tombol + dan kembali mengecil ke tombol itu saat ditutup.
 
 ### [v5] Pagination tabel (semua modul)
 - Semua tabel data punya footer otomatis dari `Config.html` (`genioPager`): info posisi, pilihan baris per halaman (10/25/50/100), tombol pertama, sebelumnya, nomor halaman, berikutnya, terakhir. Pilihan disimpan terpisah untuk HP dan layar lebar. Kembali ke halaman 1 saat jumlah data berubah (cari, filter). Footer tidak tampil kalau data 10 atau kurang. Berlaku di Kelola user, Data tutor, Gaji, Gaji tutor, Jadwal, Kelola unit, Kontrak, Operasional, Ortu dan siswa, Paket belajar, Presensi, Presensi tutor, dan Tagihan. Tampilan kartu tidak dipaginasi.

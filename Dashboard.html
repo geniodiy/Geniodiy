@@ -135,9 +135,27 @@
     .dock-label{font-size:10px; font-weight:500; white-space:nowrap; line-height:1.1;}
     .dock-btn.dock-active .dock-label{font-weight:500;}
 
-    /* Tombol + isi presensi (khusus tutor): bulat di tengah bottom bar (HP), pill melayang di pojok kanan bawah (desktop) */
+    /* Bottom bar HP: sel sama lebar, tab aktif = ikon terisi + garis biru di atas ikon (tanpa pil).
+       Role dengan tombol + (tutor, kepala unit, HRD): latar bar digambar SVG dengan cekungan di tengah tempat tombol + duduk. */
+    .content{padding-bottom:calc(120px + env(safe-area-inset-bottom));}
+    .dock-wrap{bottom:calc(14px + env(safe-area-inset-bottom));}
+    .dock-wrap .ios-glass-dock{height:64px; padding:0 8px; align-items:stretch;}
+    .dock-wrap .dock-glider{display:none;}
+    .dock-wrap .dock-btn{justify-content:flex-start; padding:13px 0 0; border-radius:0; gap:3px;}
+    .dock-wrap .dock-btn:focus-visible{outline-offset:-4px; border-radius:12px;}
+    .dock-wrap .dock-btn i{font-size:24px;}
+    .dock-wrap .dock-label{font-size:10.5px;}
+    .dock-wrap .dock-btn::before{content:''; position:absolute; top:5px; left:50%; width:24px; height:3px; margin-left:-12px; border-radius:3px; background:var(--blue); transform:scaleX(0); transition:transform .22s cubic-bezier(.16,1,.3,1);}
+    .dock-wrap .dock-btn.dock-active::before{transform:scaleX(1);}
+    .dock-wrap.has-fab .ios-glass-dock{background:none; border:0; box-shadow:none;}
+    .dock-notch{display:none;}
+    .dock-wrap .dock-notch{display:block; position:absolute; left:0; top:0; width:100%; height:100%; z-index:0; overflow:visible; pointer-events:none; filter:drop-shadow(0 14px 22px rgba(20,22,43,.14)) drop-shadow(0 1px 2px rgba(20,22,43,.06));}
+    .dock-notch path{fill:#fff; stroke:var(--border); stroke-width:1;}
+    @media (prefers-reduced-motion:reduce){ .dock-wrap .dock-btn::before{transition:none;} }
+
+    /* Tombol + (tutor, kepala unit, HRD): bulat di cekungan tengah bottom bar (HP), pill melayang di pojok kanan bawah (desktop) */
     .dock-fab-gap{display:none;}
-    .dock-wrap .dock-fab-gap{display:block; flex:0 0 58px;}
+    .dock-wrap .dock-fab-gap{display:block; flex:0 0 78px;}
     .genio-fab-m, #genioFabD{display:none; transition:opacity .2s ease, transform .15s ease;}
     .genio-fab-btn{
       width:56px; height:56px; border-radius:50%; border:5px solid #fff; background:var(--blue); color:#fff; padding:0;
@@ -147,8 +165,27 @@
     .genio-fab-btn svg{width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round;}
     .genio-fab-btn:focus-visible{outline:2px solid var(--blue); outline-offset:3px;}
     @media (max-width:899px){
-      .genio-fab-m{display:flex; position:absolute; left:50%; top:-24px; margin-left:-28px; z-index:3;}
+      .genio-fab-m{display:flex; position:absolute; left:50%; top:-32px; margin-left:-28px; z-index:3; border:0;
+        background:linear-gradient(145deg, #3B3BE0 0%, var(--blue) 60%, #14148F 100%);
+        box-shadow:0 10px 22px -6px rgba(28,26,175,.55), 0 3px 8px rgba(28,26,175,.18);}
+      .genio-fab-m svg{width:24px; height:24px;}
       .genio-fab-m:active{transform:scale(.93);}
+      .genio-fab-m.is-open:active{transform:rotate(45deg) scale(.93);}
+      /* Form presensi tutor berhenti di atas bottom bar dan tombol + */
+      body.role-tutor #pt-formModal:not(.gx-typing), body.role-tutor #pt-pickModal:not(.gx-typing), body.role-tutor #pt-lapModal:not(.gx-typing){padding-bottom:calc(100px + env(safe-area-inset-bottom)) !important;}
+      body.role-tutor #pt-formModal:not(.gx-typing) .modal-sheet.gx-sheet, body.role-tutor #pt-pickModal:not(.gx-typing) .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal:not(.gx-typing) .modal-sheet.gx-sheet{max-height:100% !important;}
+    }
+    /* Selama form presensi tutor terbuka: bar dan tombol + tetap di atas lapisan gelap, + berputar jadi x */
+    body.fab-over .dock-wrap{z-index:80;}
+    body.fab-over #genioFabD{z-index:80;}
+    /* Form muncul dari tombol + dan kembali ke tombol itu (titik asal diatur lewat JS) */
+    body.role-tutor #pt-formModal .modal-sheet.gx-sheet, body.role-tutor #pt-pickModal .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal .modal-sheet.gx-sheet{
+      transform:scale(.1) !important; opacity:0; transform-origin:var(--fab-ox, 50%) var(--fab-oy, 100%);
+      transition:transform .34s cubic-bezier(.16,1,.3,1), opacity .2s ease;
+    }
+    body.role-tutor #pt-formModal.show .modal-sheet.gx-sheet, body.role-tutor #pt-pickModal.show .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal.show .modal-sheet.gx-sheet{transform:none !important; opacity:1; animation:none !important;}
+    @media (prefers-reduced-motion:reduce){
+      body.role-tutor #pt-formModal .modal-sheet.gx-sheet, body.role-tutor #pt-pickModal .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal .modal-sheet.gx-sheet{transform:none !important; transition:opacity .15s ease;}
     }
     @media (min-width:900px){
       #genioFabD{display:flex; position:fixed; right:28px; bottom:32px; z-index:45; align-items:center; cursor:pointer;}
@@ -160,21 +197,23 @@
       }
       #genioFabD:hover .genio-fab-btn{transform:scale(1.06);}
       #genioFabD:active .genio-fab-btn{transform:scale(.95);}
+      #genioFabD .genio-fab-btn.is-open{transform:rotate(45deg);}
+      #genioFabD:hover .genio-fab-btn.is-open{transform:rotate(45deg) scale(1.06);}
       body.role-tutor .content{padding-bottom:104px !important;}
     }
-    body:has(.modal-overlay.show) .genio-fab-m, body:has(.modal-overlay.show) #genioFabD{opacity:0; pointer-events:none;}
+    body:not(.fab-over):has(.modal-overlay.show) .genio-fab-m, body:not(.fab-over):has(.modal-overlay.show) #genioFabD{opacity:0; pointer-events:none;}
     @media (prefers-reduced-motion:reduce){ .genio-fab-m, #genioFabD, .genio-fab-btn{transition:none;} }
 
 
     /* ===== Menu tambah cepat + (kepala unit dan manajer): roda di HP, kartu daftar di desktop ===== */
     .qa-backdrop{position:fixed; inset:0; z-index:44; background:rgba(20,22,43,.42); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .22s ease;}
     .qa-backdrop.is-open{opacity:1; pointer-events:auto;}
-    .qa-wheel{position:absolute; left:50%; top:4px; width:320px; height:170px; margin-left:-160px; margin-top:-160px; z-index:1; overflow:visible; pointer-events:none; transform-origin:160px 160px; transform:scale(.2); opacity:0; transition:transform .32s cubic-bezier(.16,1,.3,1), opacity .2s ease; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
+    .qa-wheel{position:absolute; left:50%; top:-4px; width:320px; height:170px; margin-left:-160px; margin-top:-160px; z-index:1; overflow:visible; pointer-events:none; transform-origin:160px 160px; transform:scale(.2); opacity:0; transition:transform .32s cubic-bezier(.16,1,.3,1), opacity .2s ease; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
     .qa-wheel.is-open{transform:none; opacity:1; pointer-events:none;}
     .qa-wheel path{fill:#fff; stroke:#E7E9F3; stroke-width:1.5; cursor:pointer; pointer-events:none; transition:fill .15s ease; outline:none;}
     .qa-wheel.is-open path{pointer-events:auto;}
     .qa-wheel path:hover, .qa-wheel path:focus-visible, .qa-wheel path:active{fill:#EEEEFB;}
-    .qa-items{position:absolute; left:50%; top:-24px; width:0; height:0; z-index:2; pointer-events:none;}
+    .qa-items{position:absolute; left:50%; top:-32px; width:0; height:0; z-index:2; pointer-events:none;}
     .qa-item{position:absolute; width:64px; margin-left:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--blue); text-align:center; opacity:0; transform:scale(.6); transition:transform .28s cubic-bezier(.16,1,.3,1), opacity .2s ease; transition-delay:calc(var(--i) * 25ms); pointer-events:none;}
     .qa-items.is-open .qa-item{opacity:1; transform:none;}
     .qa-item i{display:block; line-height:1;}
@@ -555,26 +594,107 @@
       genioRetab('nav-presensi', 'data-tutor', 'Tutor', 'chalkboard-teacher');
       genioRetab('nav-gaji', 'jadwal', 'Jadwal', 'calendar-blank');
     }
+    // Latar bottom bar dengan cekungan di tengah untuk tombol + (digambar ulang saat lebar bar berubah)
+    function genioDockNotch(dockEl, wrapEl) {
+      var NS = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'dock-notch'); svg.setAttribute('aria-hidden', 'true');
+      var path = document.createElementNS(NS, 'path'); svg.appendChild(path);
+      dockEl.insertBefore(svg, dockEl.firstChild);
+      wrapEl.classList.add('has-fab');
+      var lastW = 0;
+      function draw() {
+        var W = dockEl.clientWidth, H = dockEl.clientHeight || 64;
+        if (!W || W === lastW) return;
+        lastW = W;
+        var R = H / 2, c = W / 2;
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        // Bahu melengkung halus di kiri-kanan, lalu busur 36px mengelilingi tombol + (pusat tombol 4px di atas tepi bar)
+        path.setAttribute('d', 'M' + R + ',0 H' + (c - 56) + ' C' + (c - 46) + ',0 ' + (c - 36) + ',3 ' + (c - 33) + ',10 A36,36 0 0 0 ' + (c + 33) + ',10 C' + (c + 36) + ',3 ' + (c + 46) + ',0 ' + (c + 56) + ',0 H' + (W - R) +
+          ' A' + R + ',' + R + ' 0 0 1 ' + (W - R) + ',' + H + ' H' + R + ' A' + R + ',' + R + ' 0 0 1 ' + R + ',0 Z');
+      }
+      draw();
+      if (window.ResizeObserver) new ResizeObserver(draw).observe(dockEl);
+      window.addEventListener('resize', draw);
+      requestAnimationFrame(draw);
+    }
+
     if (IS_TUTOR) {
       // Tutor: dock Beranda, Presensi, Gaji, Profil (tanpa menu Lainnya)
       genioRetab('nav-home', 'home', 'Beranda', 'house');
       genioRetab('nav-lainnya', 'profil', 'Profil', 'user-circle');
-      // Tombol + isi presensi: bulat di tengah bottom bar (HP) dan pill melayang di kanan bawah (desktop). Keduanya membuka pemilih sesi.
+      // Tombol + isi presensi: bulat di cekungan tengah bottom bar (HP) dan pill melayang di kanan bawah (desktop).
+      // Sekali tekan membuka pemilih sesi. Selama form presensi terbuka tombol tetap tampil sebagai x dan menutup form bila ditekan.
       (function () {
         var dockEl = document.getElementById('interactiveDock'), wrapEl = document.querySelector('.dock-wrap'), gajiBtn = document.getElementById('nav-gaji');
         if (!dockEl || !wrapEl || !gajiBtn) return;
         var PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
         var gap = document.createElement('div'); gap.className = 'dock-fab-gap'; gap.setAttribute('aria-hidden', 'true');
         dockEl.insertBefore(gap, gajiBtn);
+        genioDockNotch(dockEl, wrapEl);
         var fm = document.createElement('button'); fm.type = 'button'; fm.id = 'genioFabM'; fm.className = 'genio-fab-m genio-fab-btn';
         fm.setAttribute('aria-label', 'Isi presensi'); fm.innerHTML = PLUS; wrapEl.appendChild(fm);
         var fd = document.createElement('div'); fd.id = 'genioFabD'; fd.setAttribute('role', 'button'); fd.tabIndex = 0; fd.setAttribute('aria-label', 'Isi presensi');
         fd.innerHTML = '<span class="genio-fab-btn">' + PLUS + '</span><span class="genio-fab-lbl">Isi presensi</span>';
         document.body.appendChild(fd);
-        function openPicker() { if (window.genioPresensiTutor) window.genioPresensiTutor.open({ action: 'pick' }); }
-        fm.addEventListener('click', openPicker);
-        fd.addEventListener('click', openPicker);
-        fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPicker(); } });
+        var fdBtn = fd.querySelector('.genio-fab-btn'), fdLbl = fd.querySelector('.genio-fab-lbl');
+
+        // Popup presensi tutor yang ikut tombol + (id popup: tombol tutupnya)
+        var PT = { 'pt-pickModal': 'pt-pickClose', 'pt-formModal': 'pt-fClose', 'pt-lapModal': 'pt-lapClose' };
+        function ptOpenEl() {
+          for (var id in PT) { var el = document.getElementById(id); if (el && !el.hidden && el.classList.contains('show')) return el; }
+          return null;
+        }
+        function otherOpen() {
+          return Array.prototype.some.call(document.querySelectorAll('.modal-overlay.show'), function (el) { return !PT[el.id]; });
+        }
+        function closeAll() {
+          for (var id in PT) {
+            var el = document.getElementById(id);
+            if (el && !el.hidden) { var c = document.getElementById(PT[id]); if (c) c.click(); }
+          }
+        }
+        function sync() {
+          var on = !!ptOpenEl() && !otherOpen();
+          document.body.classList.toggle('fab-over', on);
+          fm.classList.toggle('is-open', on); fdBtn.classList.toggle('is-open', on);
+          fm.setAttribute('aria-label', on ? 'Tutup' : 'Isi presensi'); fd.setAttribute('aria-label', on ? 'Tutup' : 'Isi presensi');
+          fdLbl.textContent = on ? 'Tutup' : 'Isi presensi';
+        }
+        // Titik asal animasi: pusat tombol + relatif terhadap kotak form, supaya form tumbuh dari tombol dan mengecil kembali ke sana
+        function setOrigin(el) {
+          var sheet = el.querySelector('.modal-sheet'); if (!sheet) return;
+          var b = (fm.offsetParent ? fm : fdBtn).getBoundingClientRect();
+          if (!b.width) return;
+          var ox = b.left + b.width / 2 - sheet.offsetLeft, oy = b.top + b.height / 2 - sheet.offsetTop;
+          sheet.style.setProperty('--fab-ox', ox.toFixed(0) + 'px'); sheet.style.setProperty('--fab-oy', oy.toFixed(0) + 'px');
+        }
+        var mo = new MutationObserver(function (list) {
+          list.forEach(function (m) {
+            var el = m.target;
+            if (m.attributeName === 'hidden' && PT[el.id] && !el.hidden) setOrigin(el);
+          });
+          sync();
+        });
+        function watch() {
+          var all = document.querySelectorAll('.modal-overlay');
+          Array.prototype.forEach.call(all, function (el) {
+            if (el.__fabWatch) return; el.__fabWatch = true;
+            mo.observe(el, { attributes: true, attributeFilter: ['class', 'hidden'] });
+          });
+        }
+        watch();
+        // Popup modul dimuat belakangan: daftarkan popup baru yang masuk ke body
+        new MutationObserver(watch).observe(document.body, { childList: true });
+
+        function press() {
+          if (ptOpenEl()) { closeAll(); return; }
+          if (window.genioPresensiTutor) window.genioPresensiTutor.open({ action: 'pick' });
+        }
+        fm.addEventListener('click', press);
+        fd.addEventListener('click', press);
+        fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); press(); } });
+        // Pindah tab saat form terbuka: tutup form dulu
+        dockEl.addEventListener('click', function (e) { if (document.body.classList.contains('fab-over') && e.target.closest && e.target.closest('.dock-btn')) closeAll(); }, true);
       })();
     }
 
@@ -604,6 +724,7 @@
       var gap = document.createElement('div'); gap.className = 'dock-fab-gap'; gap.setAttribute('aria-hidden', 'true');
       dockEl.insertBefore(gap, btns[2] || null);
       dockEl.style.position = 'relative'; dockEl.style.zIndex = '2';
+      genioDockNotch(dockEl, wrapEl);
 
       var backdrop = document.createElement('div'); backdrop.className = 'qa-backdrop'; document.body.appendChild(backdrop);
       var fm = document.createElement('button'); fm.type = 'button'; fm.id = 'genioFabM'; fm.className = 'genio-fab-m genio-fab-btn';
