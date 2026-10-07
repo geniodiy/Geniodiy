@@ -206,8 +206,8 @@
       /* Saat terbuka: tombol menggelinding ke kanan di atas label sambil berputar. Tulisan "Isi presensi" diam di tempat
          dan tertutup sedikit demi sedikit (label dipotong dari kiri mengikuti posisi tombol), sampai tinggal x di ujung kanan.
          Jarak gelinding (--roll) dan sudut putar (--spin, berakhir sebagai x) dihitung dari lebar label oleh JS. */
-      #genioFabD .genio-fab-btn{transition:transform .6s cubic-bezier(.65,0,.35,1) !important;}
-      #genioFabD .genio-fab-lbl{clip-path:inset(0 0 0 0 round 999px); transition:clip-path .6s cubic-bezier(.65,0,.35,1), box-shadow .3s ease;}
+      #genioFabD .genio-fab-btn{transition:transform .42s cubic-bezier(.65,0,.35,1) !important;}
+      #genioFabD .genio-fab-lbl{clip-path:inset(0 0 0 0 round 999px); transition:clip-path .42s cubic-bezier(.65,0,.35,1), box-shadow .25s ease;}
       #genioFabD.is-rolled .genio-fab-lbl{clip-path:inset(0 0 0 calc(var(--roll, 104px) + 2px) round 999px); box-shadow:none;}
       #genioFabD .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg));}
       #genioFabD:hover .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg)) scale(1.06);}
