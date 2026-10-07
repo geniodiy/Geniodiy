@@ -237,6 +237,16 @@
   .gx-foot .btn.is-danger{background:var(--red) !important; border-color:var(--red) !important; color:#fff !important;}
   .gx-confirm{padding:22px 20px 6px; text-align:center;}
   .gx-confirm .gx-head-ico{width:44px; height:44px; border-radius:50%; font-size:20px; margin:0 auto 12px;}
+  /* Wadah ikon "timbul" (skema track dan thumb, opsi B): kotak putih terangkat, ikon terisi.
+     Warna ikon tetap dari aturan masing-masing modul (biru, amber, merah, hijau). */
+  .gx-head-ico, .menu-row .mr-badge, .gh-per-ic, .ku-ico, .pkc-ico, .ops-ico, .pgc-ico, .kuh-act .ic,
+  #ps-filterModal .pw-head-ico, #ps-wakilModal .pw-head-ico, #ps-previewModal .pv-ext-ico{
+    background:linear-gradient(180deg, #FFFFFF 0%, #F7F8FC 100%) !important; border:1px solid #E7E9F2;
+    box-shadow:inset 0 1px 0 #fff, 0 1px 2px rgba(20,22,43,.06), 0 5px 12px -6px rgba(20,22,43,.22);
+  }
+  .gx-head-ico i.ph, .menu-row .mr-badge i.ph, .gh-per-ic i.ph, .ku-ico i.ph, .pkc-ico i.ph, .ops-ico i.ph, .pgc-ico i.ph, .kuh-act .ic i.ph,
+  #ps-filterModal .pw-head-ico i.ph, #ps-wakilModal .pw-head-ico i.ph, #ps-previewModal .pv-ext-ico i.ph{font-family:"Phosphor-Fill" !important;}
+  #content.lainnya-split-view .menu-row.is-active .mr-badge{background:var(--blue) !important; border-color:var(--blue); color:#fff;}
   .gx-confirm h3{font-size:14px !important; font-weight:600 !important; margin:0 0 4px !important;}
   .gx-confirm p{font-size:11px; color:var(--ink-soft); margin:0 0 6px; line-height:1.5;}
   @media (prefers-reduced-motion: reduce){ .modal-overlay.show .modal-sheet.gx-sheet{animation:none;} }
