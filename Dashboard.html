@@ -205,7 +205,7 @@
       .modal-overlay.qa-fab .modal-sheet{transform:none !important; transition:opacity .15s ease;}
     }
     @media (min-width:900px){
-      #genioFabD{display:flex; position:fixed; right:28px; bottom:32px; z-index:45; align-items:center; cursor:pointer;}
+      #genioFabD{display:flex; position:fixed; right:28px; bottom:32px; z-index:45; align-items:center; cursor:pointer; touch-action:manipulation; -webkit-user-select:none; user-select:none;}
       /* Tombol bulat sama dengan + di bottom bar HP: biru polos tanpa lingkar putih, bayangan biru lembut */
       #genioFabD .genio-fab-btn{position:relative; z-index:2; width:48px; height:48px; border:0; background:var(--blue); box-shadow:0 2px 4px rgba(20,22,43,.18), 0 10px 22px -6px rgba(28,26,175,.6);}
       #genioFabD .genio-fab-lbl{
@@ -735,8 +735,15 @@
           if (ptOpenEl()) { closeAll(); return; }
           if (window.genioPresensiTutor) window.genioPresensiTutor.open({ action: 'pick' });
         }
-        fm.addEventListener('click', press);
-        fd.addEventListener('click', press);
+        // Sentuhan: jalankan saat jari diangkat (Safari iPad kadang menahan click pertama), click susulan diabaikan
+        [fm, fd].forEach(function (el) {
+          var lastTouch = 0;
+          el.addEventListener('pointerup', function (e) {
+            if (e.pointerType === 'mouse' || e.button > 0) return;
+            lastTouch = Date.now(); e.preventDefault(); press();
+          });
+          el.addEventListener('click', function () { if (Date.now() - lastTouch < 700) return; press(); });
+        });
         fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); press(); } });
         // Esc menutup popup presensi tutor (dropdown siswa yang terbuka ditutup lebih dulu oleh handler-nya sendiri)
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ptOpenEl()) closeAll(); });
@@ -945,8 +952,17 @@
         if (FORM && formShown()) { closeForm(); return; }
         setOpen(!open);
       }
-      fm.addEventListener('click', press);
-      fd.addEventListener('click', press);
+      // Sentuhan (iPad, HP): jalankan saat jari diangkat, jangan menunggu click. Safari iPad kadang menahan click pertama
+      // pada elemen bukan tombol asli; click yang menyusul sesudah pointerup diabaikan supaya tidak terbuka-tutup dua kali.
+      function bindPress(el) {
+        var lastTouch = 0;
+        el.addEventListener('pointerup', function (e) {
+          if (e.pointerType === 'mouse' || e.button > 0) return;
+          lastTouch = Date.now(); e.preventDefault(); press();
+        });
+        el.addEventListener('click', function () { if (Date.now() - lastTouch < 700) return; press(); });
+      }
+      bindPress(fm); bindPress(fd);
       fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); press(); } });
       backdrop.addEventListener('click', function () { setOpen(false); });
       document.addEventListener('keydown', function (e) {
