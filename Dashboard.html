@@ -249,26 +249,31 @@
     /* Roda muncul seperti kipas dari balik bar: busur mulai 0 derajat di kiri lalu menyapu searah jarum jam sampai setengah
        lingkaran penuh (topeng conic dengan sudut --qa-sweep), dan menyapu balik ke kiri saat ditutup */
     @property --qa-sweep{syntax:'<angle>'; inherits:false; initial-value:0deg;}
-    .qa-wheel{position:absolute; left:50%; top:14px; width:320px; height:170px; margin-left:-160px; margin-top:-160px; z-index:1; overflow:visible; pointer-events:none;
+    .qa-wheel{position:absolute; left:50%; top:14px; width:400px; height:200px; margin-left:-200px; margin-top:-200px; z-index:1; overflow:visible; pointer-events:none;
       --qa-sweep:0deg; opacity:0;
-      -webkit-mask-image:conic-gradient(from 270deg at 160px 160px, #000 var(--qa-sweep), transparent 0); mask-image:conic-gradient(from 270deg at 160px 160px, #000 var(--qa-sweep), transparent 0);
-      transition:--qa-sweep .3s cubic-bezier(.55,0,.75,.2), opacity .1s ease .22s; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
+      -webkit-mask-image:conic-gradient(from 270deg at 200px 200px, #000 var(--qa-sweep), transparent 0); mask-image:conic-gradient(from 270deg at 200px 200px, #000 var(--qa-sweep), transparent 0);
+      transition:--qa-sweep .5s cubic-bezier(.32,0,.67,0), opacity .1s ease .44s; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
     .qa-wheel.is-open{--qa-sweep:180deg; opacity:1; pointer-events:none; transition:--qa-sweep .5s cubic-bezier(.33,1,.68,1), opacity .06s ease;}
     .qa-wheel path{fill:#fff; stroke:#E7E9F3; stroke-width:1.5; cursor:pointer; pointer-events:none; transition:fill .15s ease; outline:none;}
     .qa-wheel.is-open path{pointer-events:auto;}
     .qa-wheel path:hover, .qa-wheel path:focus-visible, .qa-wheel path:active{fill:#EEEEFB;}
     .qa-items{position:absolute; left:50%; top:14px; width:0; height:0; z-index:2; pointer-events:none;}
-    .qa-item{position:absolute; width:64px; margin-left:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--blue); text-align:center; opacity:0; transform:scale(.6); transition:transform .2s ease, opacity .14s ease; transition-delay:calc((var(--n) - 1 - var(--i)) * 220ms / var(--n)); pointer-events:none;}
+    /* Wadah roda: ikut kotak bottom bar; saat form dari + terbuka dipindah ke body (fixed, di bawah lapisan form)
+       supaya roda tetap terlihat di belakang form dan di belakang tombol x */
+    .qa-fan{position:absolute; inset:0; pointer-events:none;}
+    .qa-fan.is-lifted{position:fixed; inset:auto; z-index:55;}
+    .qa-fan.is-held .qa-wheel path, .qa-card.is-held, .qa-card.is-held .qa-row{pointer-events:none !important;}
+    .qa-item{position:absolute; width:64px; margin-left:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--blue); text-align:center; opacity:0; transform:scale(.6); transition:transform .24s ease, opacity .2s ease; transition-delay:calc((var(--n) - 1 - var(--i)) * 400ms / var(--n)); pointer-events:none;}
     /* Ikon dan label muncul tepat saat sapuan busur melewati sektornya (kiri ke kanan), hilang berurutan dari kanan saat ditutup */
     .qa-items.is-open .qa-item{opacity:1; transform:none; transition:transform .34s cubic-bezier(.16,1,.3,1), opacity .22s ease; transition-delay:calc(40ms + var(--i) * 300ms / var(--n));}
     .qa-item i{display:block; line-height:1;}
     .qa-item span{font-family:var(--font); font-weight:500; white-space:nowrap; line-height:1.1;}
     .genio-fab-btn.is-open{transform:rotate(45deg);}
     .genio-fab-btn{transition:transform .25s cubic-bezier(.16,1,.3,1);}
-    .qa-card{position:fixed; right:28px; bottom:108px; z-index:46; width:250px; background:#fff; border:1px solid var(--border); border-radius:18px; padding:8px; box-shadow:0 24px 50px -16px rgba(20,22,43,.5); opacity:0; transform:translateY(18px) rotate(6deg) scale(.7); transform-origin:calc(100% - 24px) calc(100% + 52px); pointer-events:none; transition:opacity .18s ease .05s, transform .26s cubic-bezier(.55,0,.75,.2); display:none;}
+    .qa-card{position:fixed; right:28px; bottom:108px; z-index:46; width:250px; background:#fff; border:1px solid var(--border); border-radius:18px; padding:8px; box-shadow:0 24px 50px -16px rgba(20,22,43,.5); opacity:0; transform:translateY(18px) rotate(6deg) scale(.7); transform-origin:calc(100% - 24px) calc(100% + 52px); pointer-events:none; transition:opacity .2s ease .22s, transform .42s cubic-bezier(.32,0,.67,0); display:none;}
     /* Kartu desktop berayun keluar dari tombol + dan baris pilihan muncul berurutan; saat ditutup kembali ke tombol */
     .qa-card.is-open{opacity:1; transform:none; pointer-events:auto; transition:opacity .16s ease, transform .42s cubic-bezier(.16,1,.3,1);}
-    .qa-card .qa-row{opacity:0; transform:translateX(12px); transition:opacity .12s ease, transform .16s ease;}
+    .qa-card .qa-row{opacity:0; transform:translateX(12px); transition:opacity .18s ease, transform .22s ease; transition-delay:calc((var(--n, 4) - 1 - var(--i)) * 50ms);}
     .qa-card.is-open .qa-row{opacity:1; transform:none; transition:opacity .22s ease, transform .32s cubic-bezier(.16,1,.3,1), background .15s ease; transition-delay:calc(90ms + var(--i) * 45ms), calc(90ms + var(--i) * 45ms), 0s;}
     .qa-card-t{font-size:11px; font-weight:600; color:var(--ink-soft); padding:8px 10px 6px;}
     .qa-row{display:flex; align-items:center; gap:11px; width:100%; height:42px; padding:0 10px; border:0; border-radius:12px; background:none; cursor:pointer; font-family:var(--font); font-size:12.5px; font-weight:500; color:var(--ink); text-align:left; transition:background .15s ease;}
@@ -805,7 +810,7 @@
       var iconR = n > 5 ? 108 : 100, iconPx = n > 5 ? 17 : 20, labelPx = n > 5 ? 9 : 10;
       function pt(a, r) { return [r * Math.cos(a * Math.PI / 180), -r * Math.sin(a * Math.PI / 180)]; }
       var NS = 'http://www.w3.org/2000/svg';
-      var wheel = document.createElementNS(NS, 'svg'); wheel.setAttribute('class', 'qa-wheel'); wheel.setAttribute('viewBox', '-160 -160 320 170'); wheel.setAttribute('aria-hidden', 'true');
+      var wheel = document.createElementNS(NS, 'svg'); wheel.setAttribute('class', 'qa-wheel'); wheel.setAttribute('viewBox', '-200 -200 400 200'); // kotak lebih besar dari roda (r 150) supaya bayangannya tidak terpotong wheel.setAttribute('aria-hidden', 'true');
       var items = document.createElement('div'); items.className = 'qa-items'; items.style.setProperty('--n', KEYS.length);
       KEYS.forEach(function (k, i) {
         var a1 = 180 - i * st, a2 = 180 - (i + 1) * st, p1 = pt(a1, Ro), p2 = pt(a2, Ro), p3 = pt(a2, 1), p4 = pt(a1, 1);
@@ -823,10 +828,27 @@
         el.innerHTML = '<i class="ph-fill ph-' + ALL[k][0] + '" style="font-size:' + iconPx + 'px" aria-hidden="true"></i><span style="font-size:' + labelPx + 'px">' + ALL[k][1] + '</span>';
         items.appendChild(el);
       });
-      wrapEl.appendChild(wheel); wrapEl.appendChild(items);
+      var fan = document.createElement('div'); fan.className = 'qa-fan';
+      fan.appendChild(wheel); fan.appendChild(items); wrapEl.appendChild(fan);
+      // Pindahkan roda ke body selama form terbuka (posisi layar tetap sama), kembalikan ke bar setelah selesai
+      var fanBackT = 0;
+      function liftFan() {
+        clearTimeout(fanBackT);
+        if (fan.parentNode === document.body) return;
+        var r = wrapEl.getBoundingClientRect();
+        fan.style.left = r.left + 'px'; fan.style.top = r.top + 'px'; fan.style.width = r.width + 'px'; fan.style.height = r.height + 'px';
+        fan.classList.add('is-lifted'); document.body.appendChild(fan);
+      }
+      function dockFan() {
+        clearTimeout(fanBackT);
+        if (fan.parentNode === wrapEl) return;
+        fan.classList.remove('is-lifted'); fan.style.left = fan.style.top = fan.style.width = fan.style.height = '';
+        wrapEl.appendChild(fan);
+      }
 
       // Kartu daftar (desktop)
       var card = document.createElement('div'); card.className = 'qa-card'; card.setAttribute('role', 'menu');
+      card.style.setProperty('--n', KEYS.length);
       card.innerHTML = '<div class="qa-card-t">Tambah baru</div>' + KEYS.map(function (k, i) {
         return '<button type="button" class="qa-row" role="menuitem" style="--i:' + i + '" data-k="' + k + '"><span class="qi"><i class="ph ph-' + ALL[k][0] + '" aria-hidden="true"></i></span><span class="ql">' + ALL[k][1] + '</span><i class="ph ph-caret-right qc" aria-hidden="true"></i></button>';
       }).join('');
@@ -846,8 +868,10 @@
           else if (btn) btn.click();
         })();
       }
+      var held = false; // pilihan sudah ditekan: roda/kartu tetap tampil di belakang form sampai form ditutup
       function setOpen(v) {
         open = v;
+        if (v) { dockFan(); held = false; fan.classList.remove('is-held'); card.classList.remove('is-held'); }
         backdrop.classList.toggle('is-open', v); wheel.classList.toggle('is-open', v); items.classList.toggle('is-open', v); card.classList.toggle('is-open', v);
         if (v) genioFabRoll(fd);
         fm.classList.toggle('is-open', v); fdBtn.classList.toggle('is-open', v); fd.classList.toggle('is-rolled', v);
@@ -888,17 +912,21 @@
         var el = formEl();
         if (!formMounted()) {
           // Form belum sempat dibuka (modul masih memuat): tunggu, kecuali sudah terlalu lama
-          if (!el || !el.classList.contains('qa-fab')) { if (Date.now() - FORM_T > 15000) FORM = null; return; }
+          if (!el || !el.classList.contains('qa-fab')) { if (Date.now() - FORM_T > 15000) { FORM = null; if (held) release(); } return; }
           el.classList.remove('qa-fab'); el.__qaWasShown = false;
           FORM = null; document.body.classList.remove('fab-over');
+          if (held) release();
           if (!open) { fm.classList.remove('is-open'); fdBtn.classList.remove('is-open'); fd.classList.remove('is-rolled'); fm.setAttribute('aria-label', 'Tambah'); fd.setAttribute('aria-label', 'Tambah'); }
           return;
         }
         var on = formShown() && !otherOpen();
         // fab-over dilepas setelah form benar-benar hilang supaya + tidak turun ke bawah lapisan yang masih memudar
         document.body.classList.toggle('fab-over', on || (document.body.classList.contains('fab-over') && !otherOpen()));
-        if (formShown()) el.__qaWasShown = true;
-        else if (el.__qaWasShown) setOrigin(el, fabCenter()); // menutup: mengecil ke tombol +
+        if (formShown()) { el.__qaWasShown = true; if (held) liftFan(); }
+        else if (el.__qaWasShown) {
+          setOrigin(el, fabCenter()); // menutup: mengecil ke tombol +
+          if (held && open) setOpen(false); // roda menyapu balik bersamaan dengan form mengecil
+        }
         if (open) return;
         if (on && !fd.classList.contains('is-rolled')) genioFabRoll(fd);
         fm.classList.toggle('is-open', on); fdBtn.classList.toggle('is-open', on); fd.classList.toggle('is-rolled', on);
@@ -933,10 +961,21 @@
         var r = src && src.getBoundingClientRect();
         pickPt = r && r.width ? [r.left + r.width / 2, r.top + r.height / 2] : null;
         FORM = ALL[k] && ALL[k][4]; FORM_T = Date.now();
-        setOpen(false); goAdd(k);
+        // Roda/kartu tidak ditutup: tetap tampil (tidak bisa diklik) di belakang form, tombol + tetap x
+        held = true; fan.classList.add('is-held'); card.classList.add('is-held');
+        backdrop.classList.remove('is-open'); wrapEl.style.zIndex = ''; dockEl.style.pointerEvents = '';
+        goAdd(k);
+      }
+      // Form sudah ditutup (atau batal dibuka): roda menyapu balik, lalu kembali ke bar setelah animasinya selesai
+      function release() {
+        held = false;
+        if (open) setOpen(false);
+        fan.classList.remove('is-held'); card.classList.remove('is-held');
+        fanBackT = setTimeout(dockFan, 650);
       }
       function press() {
         if (FORM && formShown()) { closeForm(); return; }
+        if (held) { FORM = null; release(); return; }
         setOpen(!open);
       }
       fm.addEventListener('click', press);
@@ -945,8 +984,9 @@
       backdrop.addEventListener('click', function () { setOpen(false); });
       document.addEventListener('keydown', function (e) {
         if (e.key !== 'Escape') return;
-        if (open) setOpen(false);
-        else if (FORM && formShown() && !otherOpen()) closeForm();
+        if (FORM && formShown() && !otherOpen()) closeForm();
+        else if (held) { FORM = null; release(); }
+        else if (open) setOpen(false);
       });
       var qaW = window.innerWidth;
       window.addEventListener('resize', function () { if (window.innerWidth !== qaW) { qaW = window.innerWidth; if (open) setOpen(false); } });
