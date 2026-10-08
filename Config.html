@@ -977,11 +977,30 @@
   }
 
   // Render ulang daftar tanpa melompat ke atas: simpan posisi scroll lalu kembalikan (tanpa mengunci tinggi daftar).
+  // Tahan tinggi halaman minimal setinggi posisi gulir sekarang, supaya isi tab yang lebih pendek tidak membuat
+  // browser menggulir naik sendiri. Dilepas saat pindah modul (klik dock, tab header, atau menu Lainnya).
+  function genioHoldHeight() {
+    var need = Math.ceil(window.scrollY + window.innerHeight);
+    var cur = parseFloat(document.body.style.minHeight) || 0;
+    if (window.scrollY > 0 && need > cur) document.body.style.minHeight = need + 'px';
+  }
+  function genioReleaseHeight() { document.body.style.minHeight = ''; }
   function genioKeepScroll(el, fn) {
     var y = window.scrollY;
+    genioHoldHeight();
     fn();
     if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
   }
+  (function () {
+    // Semua bar tab segmen dan filter: tahan tinggi sebelum handler modul merender ulang daftar
+    var TABBARS = '.ps-dock, .gj-dock, .ktr-dock, .os-dock, .dt-dock, .kp-dock, .tg-dock, .ht-range, .hu-tabs, .pt-seg, .pt-tabs, .gt-dock, [role=tablist]';
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t || !t.closest) return;
+      if (t.closest('#interactiveDock .dock-btn, #genioHeaderNavCenter .dock-btn, .menu-row[data-goto]')) { genioReleaseHeight(); return; }
+      if (t.closest(TABBARS)) genioHoldHeight();
+    }, true);
+  })();
 
   // ===== Pagination tabel (berlaku di semua tabel data; footer dipasang otomatis) =====
   // Setiap tabel data dipotong per halaman di browser: baris di luar halaman disembunyikan, nomor urut tetap berlanjut.

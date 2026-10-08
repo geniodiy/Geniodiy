@@ -120,7 +120,9 @@
     .dock-glider{
       position:absolute; top:5px; bottom:5px; z-index:1; pointer-events:none;
       border-radius:999px; background:var(--blue-tint);
-      transition:left .32s cubic-bezier(.16,1,.3,1), width .32s cubic-bezier(.16,1,.3,1);
+      /* Bergeser lewat transform (GPU), bukan left: tidak memicu hitung ulang layout dan blur bar kaca tiap frame */
+      left:0; will-change:transform;
+      transition:transform .32s cubic-bezier(.16,1,.3,1), width .32s cubic-bezier(.16,1,.3,1);
     }
     .dock-btn{
       position:relative; z-index:2; flex:1; min-width:0;
@@ -206,10 +208,10 @@
       /* Saat terbuka: tombol menggelinding ke kanan di atas label sambil berputar. Tulisan "Isi presensi" diam di tempat
          dan tertutup sedikit demi sedikit (label dipotong dari kiri mengikuti posisi tombol), sampai tinggal x di ujung kanan.
          Jarak gelinding (--roll) dan sudut putar (--spin, berakhir sebagai x) dihitung dari lebar label oleh JS. */
-      #genioFabD .genio-fab-btn{transition:transform .42s cubic-bezier(.65,0,.35,1) !important;}
+      #genioFabD .genio-fab-btn{transition:transform .42s cubic-bezier(.65,0,.35,1) !important; will-change:transform;}
       /* Bayangan dipasang di wadah (drop-shadow) supaya mengikuti siluet tombol + label dan tidak terpotong clip-path label */
       #genioFabD{filter:drop-shadow(0 1px 2px rgba(20,22,43,.10)) drop-shadow(0 8px 14px rgba(20,22,43,.16));}
-      #genioFabD .genio-fab-lbl{clip-path:inset(0 0 0 0 round 999px); transition:clip-path .42s cubic-bezier(.65,0,.35,1), box-shadow .25s ease;}
+      #genioFabD .genio-fab-lbl{clip-path:inset(0 0 0 0 round 999px); transition:clip-path .42s cubic-bezier(.65,0,.35,1); will-change:clip-path;}
       #genioFabD.is-rolled .genio-fab-lbl{clip-path:inset(0 0 0 calc(var(--roll, 104px) + 2px) round 999px); box-shadow:none;}
       #genioFabD .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg));}
       #genioFabD:hover .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg)) scale(1.06);}
@@ -534,7 +536,7 @@
   <!-- ===== Bottom bar (mobile) / tab di header (desktop) ===== -->
   <nav class="dock-wrap" aria-label="Navigasi utama">
     <div id="interactiveDock" class="ios-glass-dock">
-      <div id="dockGlider" class="dock-glider" style="width:calc(25% - 12px); left:6px;"></div>
+      <div id="dockGlider" class="dock-glider" style="width:calc(25% - 12px); transform:translateX(6px);"></div>
 
       <button id="nav-home" data-tab="home" aria-label="Home" class="dock-btn dock-active">
         <span class="dock-icon">
@@ -665,9 +667,16 @@
             if (el && !el.hidden) { var c = document.getElementById(PT[id]); if (c) c.click(); }
           }
         }
+        // Popup presensi masih terpasang (termasuk saat memudar menutup)
+        function ptMounted() {
+          for (var id in PT) { var el = document.getElementById(id); if (el && !el.hidden) return true; }
+          return false;
+        }
         function sync() {
           var on = !!ptOpenEl() && !otherOpen();
-          document.body.classList.toggle('fab-over', on);
+          // fab-over (tombol di atas lapisan gelap) baru dilepas setelah popup benar-benar hilang, supaya tombol
+          // tidak turun ke bawah lapisan yang masih memudar saat menggelinding balik (penyebab animasi tersendat)
+          document.body.classList.toggle('fab-over', on || (document.body.classList.contains('fab-over') && ptMounted() && !otherOpen()));
           if (on && !fd.classList.contains('is-rolled')) genioFabRoll(fd);
           fm.classList.toggle('is-open', on); fdBtn.classList.toggle('is-open', on); fd.classList.toggle('is-rolled', on);
           fm.setAttribute('aria-label', on ? 'Tutup' : 'Isi presensi'); fd.setAttribute('aria-label', on ? 'Tutup' : 'Isi presensi');
@@ -705,6 +714,8 @@
         fm.addEventListener('click', press);
         fd.addEventListener('click', press);
         fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); press(); } });
+        // Esc menutup popup presensi tutor (dropdown siswa yang terbuka ditutup lebih dulu oleh handler-nya sendiri)
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ptOpenEl()) closeAll(); });
         // Pindah tab saat form terbuka: tutup form dulu
         dockEl.addEventListener('click', function (e) { if (document.body.classList.contains('fab-over') && e.target.closest && e.target.closest('.dock-btn')) closeAll(); }, true);
       })();
@@ -1120,12 +1131,14 @@
       if (idx === -1) idx = 0;
       var isDesktop = window.matchMedia('(min-width:900px)').matches;
       var marginX = isDesktop ? 2 : 4;
+      glider.style.left = '0px';
       if (btn && btn.offsetWidth > 0) {
         glider.style.width = (btn.offsetWidth - marginX * 2) + 'px';
-        glider.style.left = (btn.offsetLeft + marginX) + 'px';
+        glider.style.transform = 'translateX(' + (btn.offsetLeft + marginX) + 'px)';
       } else {
+        var dw = glider.parentElement ? glider.parentElement.clientWidth : 0;
         glider.style.width = 'calc(25% - 8px)';
-        glider.style.left = 'calc(' + (idx * 25) + '% + 4px)';
+        glider.style.transform = 'translateX(' + (dw * idx * 0.25 + 4).toFixed(1) + 'px)';
       }
     }
 
@@ -1170,6 +1183,8 @@
 
     // ===== Router modul =====
     function showModule(name) {
+      // Pindah modul: lepas penahan tinggi halaman dari perpindahan tab sebelumnya
+      if (typeof genioReleaseHeight === 'function') genioReleaseHeight();
       currentActiveModule = name;
       if (typeof genioSyncHeaderPeriode === 'function') genioSyncHeaderPeriode(name);
       var isSub = SUB_MODULES.indexOf(name) !== -1;
@@ -1459,7 +1474,7 @@
         var maxLeft = cachedDockWidth - cachedGliderWidth - 4;
         var clampedPx = Math.max(minLeft, Math.min(maxLeft, centerOffset));
         glider.style.transition = 'none';
-        glider.style.left = clampedPx + 'px';
+        glider.style.transform = 'translateX(' + clampedPx + 'px)';
 
         // Tentukan tab terdekat berdasarkan posisi tombol SEBENARNYA (bukan asumsi 4 kolom
         // sama lebar) — penting karena tombol aktif melebar (flex:1.7), jadi lebarnya nggak rata.
