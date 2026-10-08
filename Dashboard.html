@@ -805,7 +805,7 @@
       var iconR = n > 5 ? 108 : 100, iconPx = n > 5 ? 17 : 20, labelPx = n > 5 ? 9 : 10;
       function pt(a, r) { return [r * Math.cos(a * Math.PI / 180), -r * Math.sin(a * Math.PI / 180)]; }
       var NS = 'http://www.w3.org/2000/svg';
-      var wheel = document.createElementNS(NS, 'svg'); wheel.setAttribute('class', 'qa-wheel'); wheel.setAttribute('viewBox', '-200 -200 400 200'); // kotak lebih besar dari roda (r 150) supaya bayangannya tidak terpotong wheel.setAttribute('aria-hidden', 'true');
+      var wheel = document.createElementNS(NS, 'svg'); wheel.setAttribute('class', 'qa-wheel'); wheel.setAttribute('viewBox', '-200 -200 400 200'); wheel.setAttribute('aria-hidden', 'true'); // kotak lebih besar dari roda (r 150) supaya bayangannya tidak terpotong
       var items = document.createElement('div'); items.className = 'qa-items'; items.style.setProperty('--n', KEYS.length);
       KEYS.forEach(function (k, i) {
         var a1 = 180 - i * st, a2 = 180 - (i + 1) * st, p1 = pt(a1, Ro), p2 = pt(a2, Ro), p3 = pt(a2, 1), p4 = pt(a1, 1);
