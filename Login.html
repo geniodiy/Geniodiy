@@ -33,7 +33,9 @@
     .brand{display:none;}
     .brand-top{display:none; align-items:center; gap:10px; font-size:13px; font-weight:500;}
     .brand-top-name{font-family:var(--font-brand); font-weight:700;}
-    .brand-badge-light{border:1px solid rgba(255,255,255,.45);}
+    /* Di panel biru: logo putih transparan tanpa kotak (LogoWhite.html) */
+    .brand-badge-light{background:none !important; border:0; border-radius:0; width:44px; height:44px;}
+    .brand-badge-light img{object-fit:contain;}
     .brand-copy h1{
       margin:0; font-size:17px; font-weight:700;
       line-height:1.3; letter-spacing:-.015em; max-width:22ch;
@@ -143,7 +145,7 @@
   <main class="auth">
 
     <aside class="brand">
-      <div class="brand-top"><span class="genio-brand-badge brand-badge-light"><img src="<?!= include('Logo'); ?>" alt="Logo Genio"></span><span class="brand-top-name">Genio Institute</span></div>
+      <div class="brand-top"><span class="genio-brand-badge brand-badge-light"><img src="<?!= include('LogoWhite'); ?>" alt="Logo Genio"></span><span class="brand-top-name">Genio Institute</span></div>
       <div class="brand-copy">
         <h1>Kelola kelas dan tutor dari satu tempat.</h1>
         <p>Presensi, kontrak, dan penggajian Genio Institute, tercatat rapi setiap bulan.</p>
