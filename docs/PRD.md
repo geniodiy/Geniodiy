@@ -938,6 +938,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Alasan ditolak (tutor, opsi A):** teks tidak lagi merah. Kartu sesi dan catatan di form revisi memakai kotak abu dengan garis merah 2px di kiri, label kecil "Alasan ditolak" di atas teks hitam. Kolom Keterangan di tabel hitam. Kartu "Laporan ditolak" di beranda: panel angka putih dengan angka merah (tanpa gradasi), alasan abu dengan ikon chat merah kecil.
 - **Contoh laporan pembelajaran (tutor, opsi B):** tombol "Contoh" di kanan label Ringkasan sesi membuka kartu contoh (penanda Materi, Kegiatan, Perkembangan siswa) dengan nama siswa yang dipilih; "Pakai contoh ini" mengisi kolom, dengan konfirmasi kalau kolom sudah berisi.
 - **Sesi hari ini (kepala unit, HRD, manajer):** disamakan dengan beranda tutor: baris Hari ini, Kemarin, dan Fleksibel (minggu ini), dengan tanda sudah/belum lapor per sesi; popup menyebut status kemarin/minggu ini dan pesan pengingat menyesuaikan.
+- **Highlight HRD dan Data Ortu & Siswa (desktop lebih padat):** Home HRD memakai garis tren gaji 6 bulan dan bar "N tutor aktif / X% mengajar bulan ini" (menggantikan gauge). Highlight Data Ortu & Siswa memakai satu batang jenjang bersegmen dengan legenda; panel kanan menampilkan siswa aktif per unit (4 teratas + "N unit lain"), atau per jenis kelamin untuk kepala unit (satu unit).
 - **Lainnya:** kartu profil jadi satu baris ringkas (avatar, nama, peran · unit, tombol panah); seluruh kartu bisa diketuk untuk membuka profil.
 
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)

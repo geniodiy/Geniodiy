@@ -34,10 +34,19 @@
   .ob-dots i{width:10px; height:10px; border-radius:50%; background:#7CF0C3; flex:none;}
   .ob-dots i.is-off{background:rgba(255,255,255,.22);}
   .ob-dots-note{font-size:10px; color:rgba(255,255,255,.5); margin-top:8px;}
+  /* Opsi A: jenjang siswa aktif sebagai satu batang bersegmen + legenda (mengisi lebar), titik siswa disembunyikan */
+  #os-heroDots, #os-heroDotsNote{display:none !important;}
+  .ob-seg{display:flex; gap:3px; height:12px; border-radius:99px; overflow:hidden; margin-top:16px; max-width:640px; background:rgba(255,255,255,.08);}
+  .ob-seg i{display:block; border-radius:3px; transform-origin:left center;}
+  .ob-leg{display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:10px; font-size:10.5px; color:rgba(255,255,255,.72);}
+  .ob-leg span{display:inline-flex; align-items:center; gap:6px; white-space:nowrap;}
+  .ob-leg em{width:8px; height:8px; border-radius:2px; display:inline-block;}
+  .ob-leg b{color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .ob-jj .ob-jj-more{display:block; font-size:10px; color:rgba(255,255,255,.5);}
   .ob-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:10px; min-width:240px;}
   .ob-side-l{font-size:10.5px; color:rgba(255,255,255,.62);}
   .ob-jj{display:grid; gap:6px;}
-  .ob-jj div{display:grid; grid-template-columns:52px minmax(0,1fr) 28px; align-items:center; gap:8px; font-size:10.5px; color:rgba(255,255,255,.75);}
+  .ob-jj div{display:grid; grid-template-columns:64px minmax(0,1fr) 28px; align-items:center; gap:8px; font-size:10.5px; color:rgba(255,255,255,.75);}
   .ob-jj .t{height:6px; border-radius:99px; background:rgba(255,255,255,.08); overflow:hidden;}
   .ob-jj .t i{display:block; height:100%; border-radius:99px; background:#9DB6FF; transform-origin:left center;}
   .ob-jj b{color:#fff; text-align:right; font-weight:700; font-variant-numeric:tabular-nums;}
@@ -178,8 +187,9 @@
   #os-list .os-table tbody tr.os-in td{animation:osFade .35s ease both; animation-delay:calc(var(--i) * 30ms);}
   .ob-dots.os-anim i{animation:osDot .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 12ms);}
   .ob-jj.os-anim .t i{animation:osGrow .8s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 60ms);}
+  .ob-seg.os-anim i{animation:osGrow .8s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 80ms);}
   @media (prefers-reduced-motion: reduce){
-    #os-list .os-card.os-in, #os-list .os-table tbody tr.os-in td, .ob-dots.os-anim i, .ob-jj.os-anim .t i, .os-btn-pop{animation:none !important;}
+    #os-list .os-card.os-in, #os-list .os-table tbody tr.os-in td, .ob-dots.os-anim i, .ob-jj.os-anim .t i, .ob-seg.os-anim i, .os-btn-pop{animation:none !important;}
     .os-card:hover{transform:none;}
   }
 
@@ -211,9 +221,11 @@
       <div class="ob-sub"><span class="is-on" id="os-heroSiswaAktif">0 aktif</span> · <span id="os-heroSiswaNonaktif">0 nonaktif</span></div>
       <div class="ob-dots" id="os-heroDots" aria-hidden="true"></div>
       <div class="ob-dots-note" id="os-heroDotsNote" hidden></div>
+      <div class="ob-seg" id="os-heroSeg" aria-hidden="true"></div>
+      <div class="ob-leg" id="os-heroLeg"></div>
     </div>
     <div class="ob-side">
-      <div class="ob-side-l">Per jenjang (aktif)</div>
+      <div class="ob-side-l" id="os-heroSideLabel">Per unit (aktif)</div>
       <div class="ob-jj" id="os-heroJenjang"></div>
       <button id="os-addBtn" type="button" aria-label="Tambah siswa" class="os-hero-add-btn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah siswa</button>
     </div>
@@ -704,15 +716,44 @@
       var j = OS_JENJANG.indexOf(sw.jenjang) !== -1 ? sw.jenjang : 'Lainnya';
       byJ[j] = (byJ[j] || 0) + 1;
     });
-    var max = Math.max.apply(null, OS_JENJANG.map(function (j) { return byJ[j] || 0; }).concat([1]));
-    var jjEl = document.getElementById('os-heroJenjang');
-    jjEl.innerHTML = OS_JENJANG.map(function (j, idx) {
+    // Kiri: satu batang bersegmen per jenjang (siswa aktif) + legenda angka
+    var JJ_COLOR = { SD: '#7CF0C3', SMP: '#9DB6FF', SMA: '#FFC46B', Lainnya: '#C9D6FF' };
+    var segEl = document.getElementById('os-heroSeg');
+    segEl.innerHTML = OS_JENJANG.map(function (j, idx) {
       var n = byJ[j] || 0;
-      return '<div>' + j + '<span class="t"><i style="width:' + Math.round(n / max * 100) + '%; --i:' + idx + '"></i></span><b>' + n + '</b></div>';
+      return n ? '<i style="flex:' + n + '; background:' + JJ_COLOR[j] + '; --i:' + idx + '" title="' + j + ': ' + n + '"></i>' : '';
+    }).join('');
+    document.getElementById('os-heroLeg').innerHTML = OS_JENJANG.map(function (j) {
+      return '<span><em style="background:' + JJ_COLOR[j] + '"></em>' + j + ' <b>' + (byJ[j] || 0) + '</b></span>';
     }).join('');
 
+    // Kanan: siswa aktif per unit (4 terbanyak). Kalau hanya satu unit (kepala unit), per jenis kelamin.
+    var byU = {};
+    siswaRows.forEach(function (sw) {
+      if (sw.status !== 'aktif') return;
+      var u = (sw.units && sw.units.nama_unit) || 'Tanpa unit';
+      byU[u] = (byU[u] || 0) + 1;
+    });
+    var unitKeys = Object.keys(byU).sort(function (a, b) { return byU[b] - byU[a] || a.localeCompare(b); });
+    var rows, label;
+    if (unitKeys.length > 1) {
+      label = 'Per unit (aktif)';
+      rows = unitKeys.slice(0, 4).map(function (u) { return [u, byU[u]]; });
+    } else {
+      label = 'Per jenis kelamin (aktif)';
+      var L = 0, P = 0;
+      siswaRows.forEach(function (sw) { if (sw.status !== 'aktif') return; if (sw.jenis_kelamin === 'L') L++; else if (sw.jenis_kelamin === 'P') P++; });
+      rows = [['Laki-laki', L], ['Perempuan', P]];
+    }
+    document.getElementById('os-heroSideLabel').textContent = label;
+    var max = Math.max.apply(null, rows.map(function (r) { return r[1]; }).concat([1]));
+    var jjEl = document.getElementById('os-heroJenjang');
+    jjEl.innerHTML = rows.map(function (r, idx) {
+      return '<div><span title="' + osEscape(r[0]) + '" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + osEscape(r[0]) + '</span><span class="t"><i style="width:' + Math.round(r[1] / max * 100) + '%; --i:' + idx + '"></i></span><b>' + r[1] + '</b></div>';
+    }).join('') + (unitKeys.length > 4 ? '<div class="ob-jj-more">+' + (unitKeys.length - 4) + ' unit lain</div>' : '');
+
     if (!OS_REDUCED_MOTION) {
-      [dotsEl, jjEl].forEach(function (el) {
+      [dotsEl, jjEl, segEl].forEach(function (el) {
         el.classList.remove('os-anim'); void el.offsetWidth; el.classList.add('os-anim');
       });
     }
