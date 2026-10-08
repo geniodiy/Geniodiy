@@ -552,7 +552,9 @@
   b,strong{font-weight:500;}
   button, input, select, textarea{font-family:var(--font);}
 
-  .modal-overlay{background:rgba(20,22,43,.38) !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important;}
+  /* Lapisan di belakang semua popup dan form: gelap tipis + blur, supaya halaman di belakang kabur (bar bawah dan tombol +
+     yang dinaikkan di atas lapisan ini tetap tajam). Sama dengan lapisan menu + (.qa-backdrop di Dashboard). */
+  .modal-overlay{background:rgba(20,22,43,.32) !important; -webkit-backdrop-filter:blur(8px) saturate(120%) !important; backdrop-filter:blur(8px) saturate(120%) !important;}
   .modal-overlay .modal-sheet{
     border-radius:18px !important;
     border:1px solid var(--border) !important;
