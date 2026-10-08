@@ -473,7 +473,7 @@ function buildSlipGajiHtml_(d) {
         '<tr>' +
           '<td style="padding:20px 24px; vertical-align:middle;">' +
             '<table><tr>' +
-              (logoUri ? '<td style="vertical-align:middle; padding-right:12px;"><div style="width:40px; height:40px; border-radius:10px; background:#101075; overflow:hidden;"><img src="' + logoUri + '" style="width:40px; height:40px; display:block;"></div></td>' : '') +
+              (logoUri ? '<td style="vertical-align:middle; padding-right:12px;"><div style="width:40px; height:40px; border-radius:10px; background:#1C1AAF; overflow:hidden;"><img src="' + logoUri + '" style="width:40px; height:40px; display:block;"></div></td>' : '') +
               '<td style="vertical-align:middle;">' +
                 '<div style="font-family:Poppins, Helvetica, Arial, sans-serif; font-size:17px; font-weight:800; color:#fff; line-height:1.15;">Genio Institute</div>' +
                 '<div style="font-size:10.5px; color:#C9CAF2; margin-top:2px;">Yogyakarta</div>' +
