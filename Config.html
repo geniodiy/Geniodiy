@@ -298,8 +298,11 @@
   }
   .ps-dock-btn, .gj-dock-btn, .ktr-dock-btn, .os-dock-btn, .dt-dock-btn, .kp-dock-btn, .tg-dock-btn{min-width:0;}
   @media (min-width:900px){
-    #ps-toolbarRow .ps-dock-sec, #gj-toolbarRow .gj-dock-sec, #ktr-toolbarRow .ktr-dock-sec, #os-toolbarRow .os-dock-sec,
-    #dt-toolbarRow .dt-dock-sec, #kp-toolbarRow .kp-dock-sec, .tg-toolbar-row .tg-dock-sec{width:auto !important; min-width:240px;}
+    /* id ganda supaya menang atas lebar tetap (270px dst.) di CSS modul; tombol diberi ruang 14px kiri-kanan */
+    #ps-toolbarRow #ps-dock, #gj-toolbarRow #gj-dock, #ktr-toolbarRow #ktr-dock, #os-toolbarRow #os-dock,
+    #dt-toolbarRow #dt-dock, #kp-toolbarRow #kp-dock, #tg-toolbarRow #tg-dock{width:auto !important; min-width:220px !important; max-width:none !important; flex:none !important;}
+    #ps-toolbarRow #ps-dock .ps-dock-btn, #gj-toolbarRow #gj-dock .gj-dock-btn, #ktr-toolbarRow #ktr-dock .ktr-dock-btn, #os-toolbarRow #os-dock .os-dock-btn,
+    #dt-toolbarRow #dt-dock .dt-dock-btn, #kp-toolbarRow #kp-dock .kp-dock-btn, #tg-toolbarRow #tg-dock .tg-dock-btn{padding:0 14px !important;}
   }
   /* Badge jumlah di bar tab: merah seragam, kecuali tab nonaktif (abu-abu) */
   .ps-count, .gj-count, #ktr-aktifCount, #ktr-nonaktifCount, #os-aktifCount, #os-nonaktifCount, #dt-aktifCount, #dt-nonaktifCount,
