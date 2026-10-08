@@ -1587,10 +1587,8 @@
     var dock = document.getElementById('ps-dock');
     var glider = document.getElementById('ps-dockGlider');
     if (!activeBtn || !dock || !glider) return;
-    var dockRect = dock.getBoundingClientRect();
-    var btnRect = activeBtn.getBoundingClientRect();
-    glider.style.left = (btnRect.left - dockRect.left) + 'px';
-    glider.style.width = btnRect.width + 'px';
+    glider.style.left = activeBtn.offsetLeft + 'px';
+    glider.style.width = activeBtn.offsetWidth + 'px';
   }
 
   function psSwitchTab(tab) {

@@ -291,6 +291,22 @@
   .ps-dock-btn, .gj-dock-btn, .ktr-dock-btn, .os-dock-btn, .dt-dock-btn, .kp-dock-btn, .tg-dock-btn, .ht-range button, .hu-tabs button{border-radius:999px !important;}
   .ps-dock-btn.ps-dock-active, .gj-dock-btn.gj-dock-active, .ktr-dock-btn.ktr-dock-active, .os-dock-btn.os-dock-active,
   .dt-dock-btn.dt-dock-active, .kp-dock-btn.kp-dock-active, .tg-dock-btn.tg-dock-active{color:var(--ink) !important; font-weight:600 !important;}
+  /* Tombol tab dibagi rata (kolom grid selebar tab terpanjang), jadi glider dan geser-tahan selalu pas dengan tab yang dipilih;
+     di desktop lebar bar mengikuti isi agar teks dan badge tidak keluar dari track */
+  .ps-dock, .gj-dock, .ktr-dock, .os-dock, .dt-dock, .kp-dock, .tg-dock{
+    display:grid !important; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); align-items:center;
+  }
+  .ps-dock-btn, .gj-dock-btn, .ktr-dock-btn, .os-dock-btn, .dt-dock-btn, .kp-dock-btn, .tg-dock-btn{min-width:0;}
+  @media (min-width:900px){
+    #ps-toolbarRow .ps-dock-sec, #gj-toolbarRow .gj-dock-sec, #ktr-toolbarRow .ktr-dock-sec, #os-toolbarRow .os-dock-sec,
+    #dt-toolbarRow .dt-dock-sec, #kp-toolbarRow .kp-dock-sec, .tg-toolbar-row .tg-dock-sec{width:auto !important; min-width:240px;}
+  }
+  /* Badge jumlah di semua bar tab: merah seragam */
+  .ps-count, .gj-count, #ktr-aktifCount, #ktr-nonaktifCount, #os-aktifCount, #os-nonaktifCount, #dt-aktifCount, #dt-nonaktifCount,
+  #kp-aktifCount, #kp-nonaktifCount, #tg-tabCountBelum, #tg-tabCountLunas{
+    background:var(--red) !important; color:#fff !important; font-size:9px !important; font-weight:600 !important;
+    padding:1px 6px !important; border-radius:999px !important; line-height:1.4; font-variant-numeric:tabular-nums;
+  }
   /* Tombol tutup popup: bulat, berupa track */
   .gx-close, #ps-filterModal .pf-close, #ps-previewModal .pv-close, #gj-previewModal .pv-close, .pt-pick-back{
     border-radius:50% !important; background:#ECEEF5 !important; border:1px solid #fff !important;
@@ -1076,6 +1092,30 @@
       if (t.closest('#interactiveDock .dock-btn, #genioHeaderNavCenter .dock-btn, .menu-row[data-goto]')) { genioReleaseHeight(); return; }
       if (t.closest(TABBARS)) genioHoldHeight();
     }, true);
+    // Glider ikut ukuran tab: saat jumlah badge berubah, font termuat, atau modul baru tampil (lebar 0 -> N)
+    var DOCKS = ['ps', 'gj', 'ktr', 'os', 'dt', 'kp', 'tg'];
+    function syncGlider(dock) {
+      var p = dock.__gp, g = dock.querySelector('.' + p + '-dock-glider'), a = dock.querySelector('.' + p + '-dock-active');
+      if (!g || !a || !a.offsetWidth || g.style.transition === 'none') return;
+      var l = a.offsetLeft + 'px', w = a.offsetWidth + 'px';
+      if (g.style.left !== l) g.style.left = l;
+      if (g.style.width !== w) g.style.width = w;
+    }
+    function bindDocks() {
+      if (!window.ResizeObserver) return;
+      DOCKS.forEach(function (p) {
+        document.querySelectorAll('.' + p + '-dock').forEach(function (dock) {
+          if (dock.__gro) return;
+          dock.__gp = p;
+          dock.__gro = new ResizeObserver(function () { syncGlider(dock); });
+          dock.__gro.observe(dock);
+          dock.querySelectorAll('.' + p + '-dock-btn').forEach(function (b) { dock.__gro.observe(b); });
+        });
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindDocks); else bindDocks();
+    window.addEventListener('load', bindDocks);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { bindDocks(); document.querySelectorAll('[class$="-dock"]').forEach(function (d) { if (d.__gp) syncGlider(d); }); });
   })();
 
   // ===== Pagination tabel (berlaku di semua tabel data; footer dipasang otomatis) =====
