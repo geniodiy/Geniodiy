@@ -33,6 +33,13 @@
   .hmt-list em{width:7px; height:7px; border-radius:2px; display:inline-block; flex:none;}
   .hmt-list b{margin-left:auto; padding-left:10px; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
   .hmt-hr{border-top:1px solid rgba(255,255,255,.1);}
+  /* Desktop: highlight dirapatkan setelah bantuan jadwal jadi satu baris (garis lebih pendek, padding lebih tipis) */
+  @media (min-width:900px){
+    #hmtWrap .kuh-hm{padding:16px 20px 14px;}
+    #hmtWrap .kuh-num{margin:8px 0 6px;}
+    #hmtWrap .kuh-spark{margin-top:8px; height:52px;}
+    #hmtWrap .hmt-side{padding:14px 18px; gap:10px;}
+  }
   /* Bantuan jadwal: satu baris, pertanyaan di kiri, tombol ringkas di kanan */
   .hmt-help{display:flex; align-items:center; gap:10px; min-width:0; color:#fff;}
   .hmt-help b{flex:1; min-width:0; font-size:11px; font-weight:500; color:rgba(255,255,255,.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
