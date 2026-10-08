@@ -31,7 +31,12 @@
     background:var(--bg-page);
     -webkit-font-smoothing:antialiased;
     -webkit-tap-highlight-color:transparent;
+    cursor:default;
   }
+  /* Kursor seperti aplikasi: panah di area biasa (iPad tidak berubah jadi garis teks di atas tulisan),
+     garis teks hanya di kolom isian, tangan/lengket hanya di elemen yang bisa diklik */
+  input:not([type=button]):not([type=submit]):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):not([type=color]),
+  textarea, [contenteditable=""], [contenteditable="true"]{cursor:text;}
   h1,h2,h3{font-family:var(--font);}
   p{line-height:1.5;}
   a{color:inherit;}
