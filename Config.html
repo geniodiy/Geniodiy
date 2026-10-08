@@ -301,12 +301,14 @@
     #ps-toolbarRow .ps-dock-sec, #gj-toolbarRow .gj-dock-sec, #ktr-toolbarRow .ktr-dock-sec, #os-toolbarRow .os-dock-sec,
     #dt-toolbarRow .dt-dock-sec, #kp-toolbarRow .kp-dock-sec, .tg-toolbar-row .tg-dock-sec{width:auto !important; min-width:240px;}
   }
-  /* Badge jumlah di semua bar tab: merah seragam */
+  /* Badge jumlah di bar tab: merah seragam, kecuali tab nonaktif (abu-abu) */
   .ps-count, .gj-count, #ktr-aktifCount, #ktr-nonaktifCount, #os-aktifCount, #os-nonaktifCount, #dt-aktifCount, #dt-nonaktifCount,
   #kp-aktifCount, #kp-nonaktifCount, #tg-tabCountBelum, #tg-tabCountLunas{
     background:var(--red) !important; color:#fff !important; font-size:9px !important; font-weight:600 !important;
     padding:1px 6px !important; border-radius:999px !important; line-height:1.4; font-variant-numeric:tabular-nums;
   }
+  /* Tab bernada negatif (nonaktif) tetap abu-abu */
+  #ktr-nonaktifCount, #os-nonaktifCount, #dt-nonaktifCount, #kp-nonaktifCount{background:var(--border) !important; color:var(--ink-soft) !important;}
   /* Tombol tutup popup: bulat, berupa track */
   .gx-close, #ps-filterModal .pf-close, #ps-previewModal .pv-close, #gj-previewModal .pv-close, .pt-pick-back{
     border-radius:50% !important; background:#ECEEF5 !important; border:1px solid #fff !important;
