@@ -935,6 +935,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Kartu sesi presensi tutor (HP):** teks bantuan untuk jadwal hari ini/fleksibel dan rincian Mengajar/Transport dihapus. Info terlambat/denda pindah ke baris info. Tombol aksi ringkas (Revisi / Isi presensi / Lihat) sejajar dengan honor. "Alasan ditolak" tetap tampil. Tabel desktop tidak berubah.
 - **Profil (semua role):** baris tanpa ikon. Di HP label di kiri dan nilai di kanan; di desktop label tetap di atas nilai. Bagian Akun disembunyikan karena nama, peran, unit, dan tanggal bergabung sudah ada di kartu atas.
 - **Judul daftar (kepala unit, HRD, manajer, super admin):** chip jumlah (`*-resultCount`) disembunyikan; sub-baris "x aktif · y nonaktif" di highlight Data tutor, Ortu & siswa, Kontrak, dan Kelola user juga disembunyikan.
+- **Alasan ditolak (tutor, opsi A):** teks tidak lagi merah. Kartu sesi dan catatan di form revisi memakai kotak abu dengan garis merah 2px di kiri, label kecil "Alasan ditolak" di atas teks hitam. Kolom Keterangan di tabel hitam. Kartu "Laporan ditolak" di beranda: panel angka putih dengan angka merah (tanpa gradasi), alasan abu dengan ikon chat merah kecil.
 - **Lainnya:** kartu profil jadi satu baris ringkas (avatar, nama, peran · unit, tombol panah); seluruh kartu bisa diketuk untuk membuka profil.
 
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
