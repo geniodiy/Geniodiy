@@ -431,6 +431,11 @@
       var range = monthRange(periode);
       var first24 = shiftMonth(periode, -23);
       var todayKey = today.getFullYear() + '-' + pad(today.getMonth() + 1) + '-' + pad(today.getDate());
+      // Sesi hari ini: presensi sejak awal minggu (Senin) atau kemarin, mana yang lebih awal, untuk baris Kemarin dan Fleksibel
+      var ydD = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+      var wsD = new Date(today.getFullYear(), today.getMonth(), today.getDate() - ((today.getDay() + 6) % 7));
+      var dKey = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+      var yestKey = dKey(ydD), weekKey = dKey(wsD), presFrom = yestKey < weekKey ? yestKey : weekKey;
       var u = isHrd ? '' : '&unit_id=eq.' + unitId; // HRD melihat semua unit
       document.getElementById('kuhOmsetLabel').textContent = 'Omset unit ' + KUH_BULAN[+periode.split('-')[1] - 1];
 
@@ -446,14 +451,14 @@
         q('presensi?select=id,created_at&status=eq.pending' + u + '&order=created_at.asc'),
         isHrd ? none() : q('invoice?select=nominal&status=eq.belum_lunas' + u),
         q('kontrak_tutor?select=id,tutor_id,mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),kontrak_siswa!inner(status,siswa(nama,orangtua(no_hp)),paket_belajar(nama_paket),units(nama_unit)),jadwal(id,hari,jam_mulai,jam_selesai)&status=eq.aktif&kontrak_siswa.status=eq.aktif' + u),
-        q('presensi?select=kontrak_tutor_id,jam,status' + u + '&tanggal=eq.' + todayKey),
+        q('presensi?select=kontrak_tutor_id,jam,status,tanggal' + u + '&tanggal=gte.' + presFrom + '&tanggal=lte.' + todayKey),
         q('genio_news?select=id,judul,gambar_url,tanggal_publish,tombol_kontak_url&status=eq.aktif&tanggal_publish=lte.' + nowIso + '&or=(tanggal_expire.gte.' + nowIso + ',tanggal_expire.is.null)&order=tanggal_publish.desc&limit=3'),
         isHrd ? q('users?role=eq.tutor&select=id,status,created_at&order=created_at.asc') : none(),
         isHrd ? q('siswa?select=id&created_at=gte.' + range.start + '&created_at=lt.' + nextMonthStart) : none()
       ]);
       if (token !== kuhState.loading) return;
       var presHist = res[0], opsHist = res[1], presMonth = res[2], kontrakSiswa = res[3], pending = res[4],
-          unpaid = res[5], ktAktif = res[6], presToday = res[7], news = res[8], tutorUsers = res[9], siswaBaru = res[10];
+          unpaid = res[5], ktAktif = res[6], presRecent = res[7] || [], news = res[8], tutorUsers = res[9], siswaBaru = res[10];
 
       // ===== Agregat per bulan (24 bulan: 12 untuk tren + 12 untuk garis periode sebelumnya) =====
       var byMonth = {};
@@ -528,55 +533,61 @@
       var badge = document.getElementById('bnPresensiBadge');
       if (badge && !isHrd) { badge.textContent = pending.length > 99 ? '99+' : pending.length; badge.hidden = !pending.length; }
 
-      // ===== Sesi hari ini =====
-      var hariKode = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][today.getDay()];
+      // ===== Sesi hari ini: baris Hari ini, Kemarin, Fleksibel (minggu ini), sama dengan beranda tutor =====
+      var HARI_KODE = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+      var hariKode = HARI_KODE[today.getDay()], ydKode = HARI_KODE[ydD.getDay()];
       var nowMin = today.getHours() * 60 + today.getMinutes();
-      var sesi = [], fleks = [];
-      ktAktif.forEach(function (kt) {
-        (kt.jadwal || []).forEach(function (j) {
-          var h = String(j.hari || '').toLowerCase().trim();
-          var item = { kt: kt, jadwalId: j.id, mulai: String(j.jam_mulai || '').slice(0, 5), selesai: String(j.jam_selesai || '').slice(0, 5) };
-          if (h === hariKode) sesi.push(item);
-          else if (!h || h === 'fleksibel') fleks.push(item); // jadwal fleksibel: bisa dilaksanakan kapan saja
-        });
-      });
       var toMin = function (hm) { var p = String(hm || '').split(':'); return (+p[0] || 0) * 60 + (+p[1] || 0); };
-      var belumLapor = 0, sudahLapor = 0;
-      // Status tiap sesi (dipakai titik di grid dan popup)
-      function sesiItem(x, isFleks) {
-        var kt = x.kt, user = kt.users || {}, tp = Array.isArray(user.tutor_profile) ? user.tutor_profile[0] : user.tutor_profile;
-        var ks = kt.kontrak_siswa || {}, siswa = (ks.siswa && ks.siswa.nama) || '-';
-        var ortuHp = ks.siswa && ks.siswa.orangtua && ks.siswa.orangtua.no_hp;
-        var lapor = presToday.filter(function (p) { return p.kontrak_tutor_id === kt.id; });
-        var sameKt = (isFleks ? fleks : sesi).filter(function (y) { return y.kt.id === kt.id; }).length;
-        var match = lapor.find(function (p) { return String(p.jam || '').slice(0, 5) === x.mulai; }) || (sameKt === 1 ? lapor[0] : null);
-        var endMin = x.selesai ? toMin(x.selesai) : toMin(x.mulai) + (kt.durasi_menit || 90);
-        var st;
-        if (match) st = match.status === 'pending' ? 'wait' : match.status === 'ditolak' ? 'no' : 'ok';
-        else if (isFleks) st = 'flex';
-        else if (nowMin >= endMin) st = 'late';
-        else if (nowMin >= toMin(x.mulai)) st = 'live';
-        else st = 'next';
+      var presOn = function (key) { return presRecent.filter(function (p) { return p.tanggal === key; }); };
+      var presT = presOn(todayKey), presY = presOn(yestKey);
+      var belumLapor = 0, items = [];
+      // Info tampilan satu sesi (dipakai titik di grid dan popup)
+      function sesiInfo(kt, j, row, st) {
+        var user = kt.users || {}, tp = Array.isArray(user.tutor_profile) ? user.tutor_profile[0] : user.tutor_profile;
+        var ks = kt.kontrak_siswa || {};
+        var mulai = String(j.jam_mulai || '').slice(0, 5), selesai = String(j.jam_selesai || '').slice(0, 5);
         if (st === 'late') belumLapor++;
-        if (st === 'ok' || st === 'wait') sudahLapor++;
-        var jamKey = isFleks && (!x.mulai || x.mulai === '00:00') ? 'Bebas' : (x.mulai || '-');
         return {
-          id: x.jadwalId, row: isFleks ? 'fleks' : 'today', jam: jamKey, mulai: x.mulai, selesai: x.selesai, st: st,
+          id: j.id, row: row, jam: row === 'fleks' && (!mulai || mulai === '00:00') ? 'Bebas' : (mulai || '-'), mulai: mulai, selesai: selesai, st: st,
           tutorId: kt.tutor_id, tutorNama: user.nama || 'Tutor', tutorFoto: user.foto_profil_url, tutorHp: user.no_hp || (tp && tp.no_wa),
-          ortuHp: ortuHp, siswa: siswa, mapel: kt.mapel || 'Bimbel', durasi: kt.durasi_menit,
-          paket: ks.paket_belajar && ks.paket_belajar.nama_paket,
-          unit: ks.units && ks.units.nama_unit
+          ortuHp: ks.siswa && ks.siswa.orangtua && ks.siswa.orangtua.no_hp, siswa: (ks.siswa && ks.siswa.nama) || '-', mapel: kt.mapel || 'Bimbel', durasi: kt.durasi_menit,
+          paket: ks.paket_belajar && ks.paket_belajar.nama_paket, unit: ks.units && ks.units.nama_unit
         };
       }
-      var items = sesi.map(function (x) { return sesiItem(x, false); }).concat(fleks.map(function (x) { return sesiItem(x, true); }));
+      // Status sesi terjadwal: cocokkan presensi kontrak itu di tanggalnya (per jam, atau satu-satunya bila jadwalnya satu)
+      function stTerjadwal(kt, j, list, pres, isToday) {
+        var mulai = String(j.jam_mulai || '').slice(0, 5);
+        var lapor = pres.filter(function (p) { return p.kontrak_tutor_id === kt.id; });
+        var match = lapor.find(function (p) { return String(p.jam || '').slice(0, 5) === mulai; }) || (list.length === 1 ? lapor[0] : null);
+        if (match) return match.status === 'pending' ? 'wait' : match.status === 'ditolak' ? 'no' : 'ok';
+        if (!isToday) return 'late';
+        var end = j.jam_selesai && String(j.jam_selesai).slice(0, 5) !== '00:00' ? toMin(j.jam_selesai) : toMin(mulai) + (kt.durasi_menit || 90);
+        if (nowMin >= end) return 'late';
+        return nowMin >= toMin(mulai) ? 'live' : 'next';
+      }
+      ktAktif.forEach(function (kt) {
+        var js = (kt.jadwal || []).slice().sort(function (a, b) { return String(a.jam_mulai).localeCompare(String(b.jam_mulai)); });
+        var hariOf = function (j) { var h = String(j.hari || '').toLowerCase().trim(); return h || 'fleksibel'; };
+        var tJ = js.filter(function (j) { return hariOf(j) === hariKode; }), yJ = js.filter(function (j) { return hariOf(j) === ydKode; });
+        var fJ = js.filter(function (j) { return hariOf(j) === 'fleksibel'; });
+        tJ.forEach(function (j) { items.push(sesiInfo(kt, j, 'today', stTerjadwal(kt, j, tJ, presT, true))); });
+        yJ.forEach(function (j) { items.push(sesiInfo(kt, j, 'yest', stTerjadwal(kt, j, yJ, presY, false))); });
+        if (fJ.length) {
+          // Fleksibel: laporan minggu ini (selain yang ditolak) dikurangi jatah sesi terjadwal, sisanya mengisi sesi fleksibel
+          var week = presRecent.filter(function (p) { return p.kontrak_tutor_id === kt.id && p.status !== 'ditolak' && p.tanggal >= weekKey && p.tanggal <= todayKey; }).length;
+          var done = Math.max(0, week - Math.min(week, js.length - fJ.length));
+          fJ.forEach(function (j, n) { items.push(sesiInfo(kt, j, 'fleks', n < done ? 'ok' : 'flex')); });
+        }
+      });
       kuhState.sesiItems = items;
-      kuhRenderSesiGrid(items, KUH_HARI[today.getDay()]);
-      var subParts = [];
-      subParts.push(sesi.length + ' sesi hari ini');
-      if (fleks.length) subParts.push(fleks.length + ' fleksibel');
-      if (belumLapor) subParts.push(belumLapor + ' belum lapor');
+      kuhRenderSesiGrid(items, KUH_HARI[today.getDay()], KUH_HARI[ydD.getDay()]);
+      var nT = items.filter(function (i) { return i.row === 'today'; }).length, nF = items.filter(function (i) { return i.row === 'fleks'; }).length;
+      var nYLate = items.filter(function (i) { return i.row === 'yest' && i.st === 'late'; }).length;
+      var subParts = [nT + ' hari ini'];
+      if (nYLate) subParts.push(nYLate + ' kemarin belum lapor');
+      if (nF) subParts.push(nF + ' fleksibel');
       document.getElementById('kuhSesiBadge').textContent = items.length + ' sesi';
-      document.getElementById('kuhSesiSub').textContent = subParts.join(' · ') + ' · ketuk titik untuk detail';
+      document.getElementById('kuhSesiSub').textContent = items.length ? subParts.join(' · ') + ' · ketuk titik untuk detail' : 'Belum ada sesi terjadwal';
 
       // ===== Tutor di unit ini (bulan terpilih) =====
       var tutors = {};
@@ -616,18 +627,17 @@
       ok: ['Sudah lapor', 'ok'], wait: ['Menunggu verifikasi', 'wait'], no: ['Ditolak', 'no'],
       late: ['Belum lapor', 'late'], live: ['Berlangsung', 'live'], next: ['Akan datang', 'next'], flex: ['Fleksibel', 'next']
     };
-    function kuhRenderSesiGrid(items, hariLabel) {
+    function kuhRenderSesiGrid(items, hariLabel, ydLabel) {
       var el = document.getElementById('kuhSesiList'), legend = document.getElementById('kuhSesiLegend');
       if (!items.length) {
-        el.innerHTML = '<div class="kuh-empty">Tidak ada sesi hari ini maupun jadwal fleksibel.</div>';
+        el.innerHTML = '<div class="kuh-empty">Tidak ada sesi hari ini, kemarin, maupun jadwal fleksibel.</div>';
         legend.innerHTML = '';
         return;
       }
-      var jamSet = {};
+      var jamSet = { Bebas: true };
       items.forEach(function (it) { jamSet[it.jam] = true; });
       var jams = Object.keys(jamSet).sort(function (a, b) { if (a === 'Bebas') return 1; if (b === 'Bebas') return -1; return a < b ? -1 : 1; });
-      var rows = [{ key: 'today', label: 'Hari ini', sub: hariLabel }];
-      if (items.some(function (it) { return it.row === 'fleks'; })) rows.push({ key: 'fleks', label: 'Fleksibel', sub: 'kapan saja' });
+      var rows = [{ key: 'today', label: 'Hari ini', sub: hariLabel }, { key: 'yest', label: 'Kemarin', sub: ydLabel }, { key: 'fleks', label: 'Fleksibel', sub: 'minggu ini' }];
       var dotN = 0;
       var html = '<div class="kuh-jm-grid" style="grid-template-columns:auto repeat(' + jams.length + ', minmax(40px, 1fr));"><div></div>';
       jams.forEach(function (j) { html += '<div class="home-jm-head">' + esc(j) + '</div>'; });
@@ -676,7 +686,8 @@
       var s = genioGetSession() || {};
       kuhSlotModal.innerHTML = rows.map(function (r) {
         var st = KUH_ST[r.st] || KUH_ST.next;
-        var remind = r.st === 'late' ? 'Halo ' + r.tutorNama + ', mohon isi presensi sesi ' + r.mulai + ' dengan ' + r.siswa + ' hari ini. Terima kasih.' : '';
+        var hariTxt = r.row === 'yest' ? 'kemarin' : 'hari ini';
+        var remind = r.st === 'late' ? 'Halo ' + r.tutorNama + ', mohon isi presensi sesi ' + r.mulai + ' dengan ' + r.siswa + ' ' + hariTxt + '. Terima kasih.' : '';
         var tutorWa = waLink(r.tutorHp, remind), ortuWa = waLink(r.ortuHp);
         var extra = [r.unit || s.unit_nama, r.paket].filter(Boolean).map(esc).join(' · ');
         var jamTxt = r.jam === 'Bebas' ? 'Fleksibel' : (r.mulai + (r.selesai ? ' - ' + r.selesai : ''));
@@ -687,7 +698,7 @@
             '<span class="home-slot-time">' + esc(jamTxt) + '</span>' +
           '</div>' +
           '<div class="home-slot-siswa"><i class="ph ph-student" aria-hidden="true"></i><span><b>' + esc(r.siswa) + '</b>' + (extra ? ' · ' + extra : '') + '</span></div>' +
-          '<div class="kuh-slot-st"><span>Status hari ini</span><span class="kuh-chip ' + st[1] + '">' + st[0] + '</span></div>' +
+          '<div class="kuh-slot-st"><span>' + (r.row === 'yest' ? 'Status kemarin' : r.row === 'fleks' ? 'Status minggu ini' : 'Status hari ini') + '</span><span class="kuh-chip ' + st[1] + '">' + st[0] + '</span></div>' +
           '<div class="home-slot-act">' +
             '<a class="home-slot-wa" data-has="' + (tutorWa ? 1 : 0) + '" data-who="tutor" href="' + (tutorWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>' + (r.st === 'late' ? 'Ingatkan tutor' : 'Chat tutor') + '</a>' +
             '<a class="home-slot-wa" data-has="' + (ortuWa ? 1 : 0) + '" data-who="orang tua" href="' + (ortuWa || '#') + '" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Chat ortu</a>' +
