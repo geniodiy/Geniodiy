@@ -244,23 +244,20 @@
 
 
     /* ===== Menu tambah cepat + (kepala unit dan manajer): roda di HP, kartu daftar di desktop ===== */
-    .qa-backdrop{position:fixed; inset:0; z-index:44; background:rgba(20,22,43,.42); opacity:0; pointer-events:none; transition:opacity .25s ease;}
+    .qa-backdrop{position:fixed; inset:0; z-index:44; background:rgba(20,22,43,.42); opacity:0; pointer-events:none; transition:opacity .18s ease;}
     .qa-backdrop.is-open{opacity:1; pointer-events:auto;}
-    /* Roda muncul seperti kipas dari balik bar: busur mulai 0 derajat di kiri lalu menyapu searah jarum jam sampai setengah
-       lingkaran penuh (topeng conic dengan sudut --qa-sweep), dan menyapu balik ke kiri saat ditutup */
-    @property --qa-sweep{syntax:'<angle>'; inherits:false; initial-value:0deg;}
+    /* Roda muncul dengan "pop" singkat dari tombol +: mengembang dari 60% sambil memudar masuk (0,2 detik),
+       mengecil kembali ke + saat ditutup (0,14 detik). Ikon dan label ikut dalam satu gerakan (tanpa urutan). */
     .qa-wheel{position:absolute; left:50%; top:14px; width:400px; height:200px; margin-left:-200px; margin-top:-200px; z-index:1; overflow:visible; pointer-events:none;
-      --qa-sweep:0deg; opacity:0;
-      -webkit-mask-image:conic-gradient(from 270deg at 200px 200px, #000 var(--qa-sweep), transparent 0); mask-image:conic-gradient(from 270deg at 200px 200px, #000 var(--qa-sweep), transparent 0);
-      transition:--qa-sweep .3s cubic-bezier(.32,0,.67,0), opacity .08s ease .26s; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
-    .qa-wheel.is-open{--qa-sweep:180deg; opacity:1; pointer-events:none; transition:--qa-sweep .3s cubic-bezier(.33,1,.68,1), opacity .06s ease;}
+      transform-origin:200px 200px; transform:scale(.6); opacity:0;
+      transition:transform .14s cubic-bezier(.4,0,1,1), opacity .12s ease; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
+    .qa-wheel.is-open{transform:none; opacity:1; pointer-events:none; transition:transform .2s cubic-bezier(.16,1,.3,1), opacity .12s ease;}
     .qa-wheel path{fill:#fff; stroke:#E7E9F3; stroke-width:1.5; cursor:pointer; pointer-events:none; transition:fill .15s ease; outline:none;}
     .qa-wheel.is-open path{pointer-events:auto;}
     .qa-wheel path:hover, .qa-wheel path:focus-visible, .qa-wheel path:active{fill:#EEEEFB;}
-    .qa-items{position:absolute; left:50%; top:14px; width:0; height:0; z-index:2; pointer-events:none;}
-    .qa-item{position:absolute; width:64px; margin-left:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--blue); text-align:center; opacity:0; transform:scale(.6); transition:transform .16s ease, opacity .14s ease; transition-delay:calc((var(--n) - 1 - var(--i)) * 220ms / var(--n)); pointer-events:none;}
-    /* Ikon dan label muncul tepat saat sapuan busur melewati sektornya (kiri ke kanan), hilang berurutan dari kanan saat ditutup */
-    .qa-items.is-open .qa-item{opacity:1; transform:none; transition:transform .26s cubic-bezier(.16,1,.3,1), opacity .16s ease; transition-delay:calc(20ms + var(--i) * 180ms / var(--n));}
+    .qa-items{position:absolute; left:50%; top:14px; width:0; height:0; z-index:2; pointer-events:none; transform:scale(.6); opacity:0; transition:transform .14s cubic-bezier(.4,0,1,1), opacity .12s ease;}
+    .qa-items.is-open{transform:none; opacity:1; transition:transform .2s cubic-bezier(.16,1,.3,1), opacity .16s ease .03s;}
+    .qa-item{position:absolute; width:64px; margin-left:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--blue); text-align:center; pointer-events:none;}
     .qa-item i{display:block; line-height:1;}
     .qa-item span{font-family:var(--font); font-weight:500; white-space:nowrap; line-height:1.1;}
     .genio-fab-btn.is-open{transform:rotate(45deg);}
@@ -279,7 +276,7 @@
     @media (min-width:900px){ .qa-card{display:block;} .qa-wheel, .qa-items{display:none;} }
     @media (prefers-reduced-motion:reduce){
       .qa-wheel, .qa-items, .qa-item, .qa-card, .qa-card .qa-row, .qa-backdrop, .genio-fab-btn{transition:none !important;}
-      .qa-card, .qa-card .qa-row{transform:none !important;}
+      .qa-wheel, .qa-items, .qa-card, .qa-card .qa-row{transform:none !important;}
     }
 
     .dock-badge{
@@ -859,7 +856,7 @@
         // dilepas, bar dan roda yang masih beranimasi turun ke bawah lapisan gelap dalam satu frame (terlihat berkedip).
         clearTimeout(zT);
         if (v) wrapEl.style.zIndex = '45';
-        else zT = setTimeout(function () { if (!open) wrapEl.style.zIndex = ''; }, 380);
+        else zT = setTimeout(function () { if (!open) wrapEl.style.zIndex = ''; }, 260);
         dockEl.style.pointerEvents = v ? 'none' : '';
         document.body.classList.toggle('qa-open', v);
       }
