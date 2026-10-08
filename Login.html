@@ -33,7 +33,7 @@
     .brand{display:none;}
     .brand-top{display:none; align-items:center; gap:10px; font-size:13px; font-weight:500;}
     .brand-top-name{font-family:var(--font-brand); font-weight:700;}
-    .brand-badge-light{background:#fff; border-color:rgba(255,255,255,.4);}
+    .brand-badge-light{border:1px solid rgba(255,255,255,.45);}
     .brand-copy h1{
       margin:0; font-size:17px; font-weight:700;
       line-height:1.3; letter-spacing:-.015em; max-width:22ch;
@@ -143,7 +143,7 @@
   <main class="auth">
 
     <aside class="brand">
-      <div class="brand-top"><span class="genio-brand-badge brand-badge-light"><img src="https://drive.google.com/thumbnail?id=1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ&sz=w500" alt="Logo Genio" onerror="if(this.src.indexOf('lh3')===-1){this.src='https://lh3.googleusercontent.com/d/1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ';}else{var p=this.parentElement;p.textContent='G';p.style.background='var(--blue)';}"></span><span class="brand-top-name">Genio Institute</span></div>
+      <div class="brand-top"><span class="genio-brand-badge brand-badge-light"><img src="<?!= include('Logo'); ?>" alt="Logo Genio"></span><span class="brand-top-name">Genio Institute</span></div>
       <div class="brand-copy">
         <h1>Kelola kelas dan tutor dari satu tempat.</h1>
         <p>Presensi, kontrak, dan penggajian Genio Institute, tercatat rapi setiap bulan.</p>
@@ -155,7 +155,7 @@
       <div class="pane-inner">
 
         <div class="genio-brand pane-brand">
-          <span class="genio-brand-badge"><img src="https://drive.google.com/thumbnail?id=1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ&sz=w500" alt="Logo Genio" onerror="if(this.src.indexOf('lh3')===-1){this.src='https://lh3.googleusercontent.com/d/1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ';}else{var p=this.parentElement;p.textContent='G';p.style.background='var(--blue)';}"></span>
+          <span class="genio-brand-badge"><img src="<?!= include('Logo'); ?>" alt="Logo Genio"></span>
           <div class="genio-brand-text">
             <div class="genio-brand-title"><span class="genio-text-blue">Genio</span> <span class="genio-text-red">Institute</span></div>
             <div class="genio-brand-sub">Yogyakarta</div>

@@ -381,27 +381,14 @@ function deleteDriveFilesByIds(fileIdsOrUrls) {
 }
 
 
-var GENIO_LOGO_FILE_ID = '1MfkdHvS_OxwYsmcA_s9b-IAWIxgQiBpZ';
-
-// Logo di-embed sebagai data URI karena konverter HTML->PDF tidak memuat gambar eksternal.
+// Logo (latar biru tema, PNG 160px) disimpan sebagai data URI di Logo.html, dipakai juga oleh Login dan Dashboard.
+// Di-embed langsung karena konverter HTML->PDF tidak memuat gambar eksternal.
 function getGenioLogoDataUri_() {
-  var cache = CacheService.getScriptCache();
-  var hit = cache.get('genio_logo_uri');
-  if (hit) return hit;
-  var blob = null;
   try {
-    blob = DriveApp.getFileById(GENIO_LOGO_FILE_ID).getThumbnail();
+    return HtmlService.createHtmlOutputFromFile('Logo').getContent().trim();
   } catch (e) {
-    try {
-      blob = UrlFetchApp.fetch('https://drive.google.com/thumbnail?id=' + GENIO_LOGO_FILE_ID + '&sz=w160').getBlob();
-    } catch (e2) {
-      return '';
-    }
+    return '';
   }
-  if (!blob) return '';
-  var uri = 'data:' + (blob.getContentType() || 'image/png') + ';base64,' + Utilities.base64Encode(blob.getBytes());
-  if (uri.length < 95000) cache.put('genio_logo_uri', uri, 21600);
-  return uri;
 }
 
 /**
@@ -486,7 +473,7 @@ function buildSlipGajiHtml_(d) {
         '<tr>' +
           '<td style="padding:20px 24px; vertical-align:middle;">' +
             '<table><tr>' +
-              (logoUri ? '<td style="vertical-align:middle; padding-right:12px;"><div style="width:40px; height:40px; border-radius:10px; background:#fff; overflow:hidden;"><img src="' + logoUri + '" style="width:40px; height:40px; display:block;"></div></td>' : '') +
+              (logoUri ? '<td style="vertical-align:middle; padding-right:12px;"><div style="width:40px; height:40px; border-radius:10px; background:#1C1AAF; overflow:hidden;"><img src="' + logoUri + '" style="width:40px; height:40px; display:block;"></div></td>' : '') +
               '<td style="vertical-align:middle;">' +
                 '<div style="font-family:Poppins, Helvetica, Arial, sans-serif; font-size:17px; font-weight:800; color:#fff; line-height:1.15;">Genio Institute</div>' +
                 '<div style="font-size:10.5px; color:#C9CAF2; margin-top:2px;">Yogyakarta</div>' +
