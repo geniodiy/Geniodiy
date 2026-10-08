@@ -930,6 +930,13 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Belum diuji dengan akun tutor asli.**
 - **Panel kanan highlight (opsi J):** cincin komposisi penghasilan (porsi mengajar, transport, visit; angka tengah persen mengajar), daftar nominal termasuk denda telat, kartu rekening berikon bank, dan tombol Lihat slip gaji.
 
+### [v5] Minimalisasi tampilan semua role (8 Okt 2026)
+- **Beranda tutor:** blok bantuan di highlight jadi satu baris "Jadwal belum muncul?" dengan tombol ringkas "Hubungi kepala unit".
+- **Kartu sesi presensi tutor (HP):** teks bantuan untuk jadwal hari ini/fleksibel dan rincian Mengajar/Transport dihapus. Info terlambat/denda pindah ke baris info. Tombol aksi ringkas (Revisi / Isi presensi / Lihat) sejajar dengan honor. "Alasan ditolak" tetap tampil. Tabel desktop tidak berubah.
+- **Profil (semua role):** baris tanpa ikon. Di HP label di kiri dan nilai di kanan; di desktop label tetap di atas nilai. Bagian Akun disembunyikan karena nama, peran, unit, dan tanggal bergabung sudah ada di kartu atas.
+- **Judul daftar (kepala unit, HRD, manajer, super admin):** chip jumlah (`*-resultCount`) disembunyikan; sub-baris "x aktif · y nonaktif" di highlight Data tutor, Ortu & siswa, Kontrak, dan Kelola user juga disembunyikan.
+- **Lainnya:** kartu profil jadi satu baris ringkas (avatar, nama, peran · unit, tombol panah); seluruh kartu bisa diketuk untuk membuka profil.
+
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
 1. ~~Penggajian: generate slip gaji~~ (selesai, otomatis saat menu Gaji dibuka).
 2. ~~Profil: Edit~~ (selesai). Dibutuhkan semua role. Isinya:

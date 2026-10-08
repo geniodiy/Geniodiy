@@ -57,6 +57,9 @@
   .pt-foot-r{font-size:10px; color:var(--ink-soft); text-align:right; line-height:1.45; min-width:0;}
   .pt-foot-r.is-late{color:#B86E00;}
   .pt-act{margin-top:auto; padding-top:12px;}
+  /* Kartu sesi: tombol ringkas sejajar dengan honor di kanan bawah */
+  .pt-card .pc2-foot.pt-foot-act{margin-top:auto; min-height:0;}
+  .pt-cbtn{width:auto !important; flex:none; height:32px !important; padding:0 14px !important; font-size:11.5px !important;}
   .pt-btn{width:100%; display:inline-flex !important; align-items:center; justify-content:center; gap:6px; cursor:pointer;}
   .pt-tbtn{width:112px; height:28px !important;}
   .pc2-status.pt-st-done{width:88px; box-sizing:border-box; justify-content:center;}
@@ -726,8 +729,9 @@
     return '<div class="pt-empty"><i class="ph ' + m[0] + '"></i><b>' + m[1] + '</b><span>' + m[2] + '</span></div>';
   }
 
-  function ptBtn(kind, idx, table) {
-    var cls = table ? ' pt-tbtn' : '';
+  function ptBtn(kind, idx, table, compact) {
+    var cls = table ? ' pt-tbtn' : compact ? ' pt-cbtn' : '';
+    if (compact) table = true;
     if (kind === 'revisi') return '<button type="button" class="pc2-btn is-setuju pt-btn' + cls + '" data-act="revisi" data-idx="' + idx + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>' + (table ? 'Revisi' : 'Revisi laporan') + '</button>';
     if (kind === 'hari' || kind === 'flex') return '<button type="button" class="pc2-btn is-setuju pt-btn' + cls + '" data-act="isi" data-idx="' + idx + '"><i class="ph ph-plus" aria-hidden="true"></i>Isi presensi</button>';
     return '<button type="button" class="pc2-btn is-visit pt-btn' + cls + '" data-act="lihat" data-idx="' + idx + '"><i class="ph ph-eye" aria-hidden="true"></i>' + (table ? 'Lihat' : 'Lihat laporan') + '</button>';
@@ -740,37 +744,25 @@
   function ptInfo(it) {
     var p = it.p;
     if (it.kind === 'revisi') return '<p class="is-red"><b>Alasan ditolak:</b> ' + esc(p.catatan_approval || 'Tidak ada catatan, hubungi kepala unit.') + '</p>';
-    if (it.kind === 'hari') return '<p>Isi tanggal dan jam sesuai pelaksanaan. Jadwal hanya acuan.</p>';
-    if (it.kind === 'flex') return '<p>Waktu sesi diatur bersama siswa. Isi setelah sesi selesai.</p>';
-    if (it.kind === 'pending') return '<p>Dikirim ' + esc(tsPendek(p.tanggal_input_pertama)) + ', menunggu diperiksa kepala unit atau manajer.</p>';
-    var txt = it.kind === 'visit' ? 'Visit, siswa berhalangan. Dibayar flat ' + rp(PT_VISIT) + '.' : 'Diterima' + (p.approved_at ? ' ' + esc(tsPendek(p.approved_at).replace(/ \d\d\.\d\d$/, '')) : '') + '. Laporan sudah masuk hitungan gaji.';
-    return '<p class="is-ok">' + txt + '</p>';
-  }
-  function ptFootRight(it) {
-    var k = it.k || it.kt || {};
-    if (it.kind === 'diterima' || it.kind === 'visit') {
-      var d = +it.p.denda || 0;
-      return d ? '<div class="pt-foot-r is-late">Terlambat<br>Denda &minus;' + rp(d) + '</div>' : '<div class="pt-foot-r">Tepat waktu</div>';
-    }
-    if (it.kind === 'pending') {
-      var n = [it.p.foto_url, it.p.catatan_pembelajaran_url, it.p.materi_link].filter(Boolean).length;
-      return '<div class="pt-foot-r">' + (it.p.terlambat ? '<span style="color:#B86E00;">Terlambat lapor</span><br>' : '') + '<i class="ph ph-paperclip"></i> ' + n + ' lampiran</div>';
-    }
-    return '<div class="pt-foot-r">Mengajar ' + rp(k.fee_mengajar) + (+k.uang_transport ? '<br>Transport ' + rp(k.uang_transport) : '') + '</div>';
+    if (it.kind === 'hari' || it.kind === 'flex') return '';
+    if (it.kind === 'pending') return '<p>Dikirim ' + esc(tsPendek(p.tanggal_input_pertama)) + ', menunggu diperiksa.' + (p.terlambat ? ' <span style="color:#B86E00;">Terlambat lapor.</span>' : '') + '</p>';
+    var txt = it.kind === 'visit' ? 'Visit, siswa berhalangan. Dibayar flat ' + rp(PT_VISIT) + '.' : 'Diterima' + (p.approved_at ? ' ' + esc(tsPendek(p.approved_at).replace(/ \d\d\.\d\d$/, '')) : '') + '. Masuk hitungan gaji.';
+    var d = +p.denda || 0;
+    return '<p class="is-ok">' + txt + (d ? ' <span style="color:#B86E00;">Terlambat, denda &minus;' + rp(d) + '.</span>' : '') + '</p>';
   }
   function ptSesiCard(it, idx) {
     var stKey = it.kind === 'revisi' ? 'revisi' : it.kind;
     var done = it.kind === 'diterima' || it.kind === 'visit';
     var honorL = done ? 'Honor' : 'Estimasi honor';
     var tglChip = it.kind === 'flex' ? 'Minggu ini' : tglPendek(it.tanggal);
+    var info = ptInfo(it);
     return '<div class="ps-card pc2-card pt-card' + (it.kind === 'revisi' ? ' is-alert' : '') + '">' +
       '<div class="pc2-head">' + avatar(it.nama, done ? it.kind : false) +
         '<div class="pc2-who"><h4>' + esc(it.nama) + '</h4><p>' + esc(it.sub) + '</p></div>' + pill(stKey) + '</div>' +
       '<div class="pc2-chips pt-chips-row"><span class="pc2-chip"><i class="ph ph-calendar-blank" aria-hidden="true"></i>' + esc(tglChip) + '</span>' +
         '<span class="pc2-chip"><i class="ph ph-' + (it.kind === 'flex' ? 'shuffle' : 'clock') + '" aria-hidden="true"></i>' + esc(it.jamText) + '</span></div>' +
-      '<div class="pt-info">' + ptInfo(it) + '</div>' +
-      '<div class="pc2-foot"><div class="pc2-honor"><span>' + honorL + '</span><b>' + rp(ptHonor(it)) + '</b></div>' + ptFootRight(it) + '</div>' +
-      '<div class="pt-act">' + ptBtn(it.kind, idx) + '</div>' +
+      (info ? '<div class="pt-info">' + info + '</div>' : '') +
+      '<div class="pc2-foot pt-foot-act"><div class="pc2-honor"><span>' + honorL + '</span><b>' + rp(ptHonor(it)) + '</b></div>' + ptBtn(it.kind, idx, false, true) + '</div>' +
     '</div>';
   }
   function ptKet(it) {

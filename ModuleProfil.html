@@ -37,10 +37,15 @@
   .prf-row{display:flex; align-items:center; gap:12px; padding:12px 0; min-width:0;}
   .prf-row + .prf-row{border-top:1px solid #EEF0F6;}
   .prf-row[hidden]{display:none;}
-  .prf-row .ic{width:32px; height:32px; border-radius:9px; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:15px; flex:none;}
   .prf-row .tx{min-width:0; flex:1;}
   .prf-row .tx span{display:block; font-size:10.5px; color:var(--ink-soft);}
   .prf-row .tx b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  /* HP: label kiri, nilai kanan. Desktop (kartu dua kolom): label tetap di atas nilai */
+  @media (max-width:899px){
+    .prf-row .tx{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+    .prf-row .tx span{flex:none;}
+    .prf-row .tx b{margin-top:0; min-width:0; text-align:right;}
+  }
   .prf-act{width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:14px; flex:none; cursor:pointer; text-decoration:none; transition:background .15s ease, color .15s ease;}
   .prf-act:hover{background:var(--surface); color:var(--ink);}
   .prf-act.is-wa{color:#14A44D;} .prf-act.is-wa:hover{background:#E9F7EF;}
@@ -136,27 +141,27 @@
       <div>
         <div class="prf-sec">Kontak</div>
         <div class="prf-card">
-          <div class="prf-row"><span class="ic"><i class="ph ph-envelope-simple" aria-hidden="true"></i></span><span class="tx"><span>Email</span><b id="prfDetailEmail">-</b></span><button type="button" class="prf-act" id="prfCopyEmail" title="Salin email" aria-label="Salin email"><i class="ph ph-copy" aria-hidden="true"></i></button></div>
-          <div class="prf-row"><span class="ic"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></span><span class="tx"><span>Nomor WhatsApp</span><b id="prfDetailHp">-</b></span><a class="prf-act is-wa" id="prfWaLink" href="#" target="_blank" rel="noopener noreferrer" title="Buka WhatsApp" aria-label="Buka WhatsApp" hidden><i class="ph ph-chat-circle" aria-hidden="true"></i></a></div>
-          <div class="prf-row"><span class="ic"><i class="ph ph-gender-intersex" aria-hidden="true"></i></span><span class="tx"><span>Jenis kelamin</span><b id="prfDetailGender">-</b></span></div>
+          <div class="prf-row"><span class="tx"><span>Email</span><b id="prfDetailEmail">-</b></span><button type="button" class="prf-act" id="prfCopyEmail" title="Salin email" aria-label="Salin email"><i class="ph ph-copy" aria-hidden="true"></i></button></div>
+          <div class="prf-row"><span class="tx"><span>Nomor WhatsApp</span><b id="prfDetailHp">-</b></span><a class="prf-act is-wa" id="prfWaLink" href="#" target="_blank" rel="noopener noreferrer" title="Buka WhatsApp" aria-label="Buka WhatsApp" hidden><i class="ph ph-chat-circle" aria-hidden="true"></i></a></div>
+          <div class="prf-row"><span class="tx"><span>Jenis kelamin</span><b id="prfDetailGender">-</b></span></div>
         </div>
       </div>
-      <div>
+      <div id="prfAkunSec" hidden>
         <div class="prf-sec">Akun</div>
         <div class="prf-card">
-          <div class="prf-row"><span class="ic"><i class="ph ph-user" aria-hidden="true"></i></span><span class="tx"><span>Nama lengkap</span><b id="prfDetailNama">-</b></span></div>
-          <div class="prf-row"><span class="ic"><i class="ph ph-identification-badge" aria-hidden="true"></i></span><span class="tx"><span>Role</span><b id="prfDetailRole">-</b></span></div>
-          <div class="prf-row" id="prfRowUnit" hidden><span class="ic"><i class="ph ph-buildings" aria-hidden="true"></i></span><span class="tx"><span>Unit</span><b id="prfDetailUnit">-</b></span></div>
-          <div class="prf-row" id="prfRowSince" hidden><span class="ic"><i class="ph ph-calendar-check" aria-hidden="true"></i></span><span class="tx"><span>Bergabung</span><b id="prfDetailSince">-</b></span></div>
+          <div class="prf-row"><span class="tx"><span>Nama lengkap</span><b id="prfDetailNama">-</b></span></div>
+          <div class="prf-row"><span class="tx"><span>Role</span><b id="prfDetailRole">-</b></span></div>
+          <div class="prf-row" id="prfRowUnit" hidden><span class="tx"><span>Unit</span><b id="prfDetailUnit">-</b></span></div>
+          <div class="prf-row" id="prfRowSince" hidden><span class="tx"><span>Bergabung</span><b id="prfDetailSince">-</b></span></div>
         </div>
       </div>
       <div id="prfTutorCard" hidden>
         <div class="prf-sec">Data mengajar</div>
         <div class="prf-card">
-          <div class="prf-row"><span class="ic"><i class="ph ph-books" aria-hidden="true"></i></span><span class="tx"><span>Keahlian</span><b id="prfDetailKeahlian">-</b></span></div>
-          <div class="prf-row"><span class="ic"><i class="ph ph-graduation-cap" aria-hidden="true"></i></span><span class="tx"><span>Pendidikan terakhir</span><b id="prfDetailPendidikan">-</b></span></div>
-          <div class="prf-row"><span class="ic"><i class="ph ph-bank" aria-hidden="true"></i></span><span class="tx"><span>Bank</span><b id="prfDetailBank">-</b></span></div>
-          <div class="prf-row"><span class="ic"><i class="ph ph-credit-card" aria-hidden="true"></i></span><span class="tx"><span>Nomor rekening</span><b id="prfDetailRek">-</b></span></div>
+          <div class="prf-row"><span class="tx"><span>Keahlian</span><b id="prfDetailKeahlian">-</b></span></div>
+          <div class="prf-row"><span class="tx"><span>Pendidikan terakhir</span><b id="prfDetailPendidikan">-</b></span></div>
+          <div class="prf-row"><span class="tx"><span>Bank</span><b id="prfDetailBank">-</b></span></div>
+          <div class="prf-row"><span class="tx"><span>Nomor rekening</span><b id="prfDetailRek">-</b></span></div>
         </div>
       </div>
     </div>

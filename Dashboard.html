@@ -482,22 +482,19 @@
         </button>
       </div>
 
-      <div class="card" style="padding:16px; border:1px solid var(--border); border-radius:16px;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div style="width:44px; height:44px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:15px; flex:none; position:relative;">
+      <!-- Profil ringkas: satu baris (avatar, nama, peran · unit, tombol panah). Badge peran disembunyikan, ID tetap ada -->
+      <div class="card" id="lainnyaProfileCard" role="button" tabindex="0" aria-label="Lihat profil" style="padding:10px 12px; border:1px solid var(--border); border-radius:14px; cursor:pointer;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:11.5px; flex:none; position:relative;">
             <span id="lainnyaAvatar">--</span>
-            <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:var(--green); border:2px solid #fff;"></span>
+            <span style="position:absolute; bottom:-1px; right:-1px; width:10px; height:10px; border-radius:50%; background:var(--green); border:2px solid #fff;"></span>
           </div>
           <div style="min-width:0; flex:1;">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <span style="background:var(--blue-tint); color:var(--blue); font-size:10px; font-weight:600; padding:3px 8px; border-radius:999px;" id="lainnyaRoleBadge">-</span>
-              <span style="font-size:11px; color:var(--green); font-weight:500;">&bull; Aktif</span>
-            </div>
-            <div style="font-size:14.5px; font-weight:600; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lainnyaNama">-</div>
-            <div style="font-size:11.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lainnyaSubtitle">-</div>
+            <span id="lainnyaRoleBadge" hidden>-</span>
+            <div style="font-size:12.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lainnyaNama">-</div>
+            <div style="font-size:10.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lainnyaSubtitle">-</div>
           </div>
-          <button id="lainnyaDetailToggle" style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:6px 11px; font-size:12px; font-weight:500; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:4px; flex:none;">
-            Detail
+          <button id="lainnyaDetailToggle" aria-label="Detail profil" style="width:30px; height:30px; border-radius:50%; background:var(--surface); border:1px solid var(--border); padding:0; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; flex:none;">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
           </button>
         </div>
@@ -946,7 +943,7 @@
     if (genioLogoutRow) genioLogoutRow.addEventListener('click', genioConfirmLogout);
 
     // ===== Kartu Profil & badge menu "Lainnya" — data asli dari Supabase =====
-    var LAINNYA_ROLE_LABELS = { super_admin: 'Super Admin', manajer: 'Manajer', hrd: 'HRD', kepala_unit: 'Kepala Unit', tutor: 'Tutor' };
+    var LAINNYA_ROLE_LABELS = { super_admin: 'Super admin', manajer: 'Manajer', hrd: 'HRD', kepala_unit: 'Kepala unit', tutor: 'Tutor' };
 
     function lainnyaInitials(nama) {
       return (nama || '').split(' ').filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || '—';
@@ -968,8 +965,10 @@
       genioUpdateHeaderUser();
 
       genioSetAvatar(document.getElementById('lainnyaAvatar'), session.nama, session.foto_profil_url, lainnyaInitials(session.nama), true);
-      document.getElementById('lainnyaRoleBadge').textContent = (LAINNYA_ROLE_LABELS[session.role] || session.role).toUpperCase();
+      var roleLbl = LAINNYA_ROLE_LABELS[session.role] || session.role;
+      document.getElementById('lainnyaRoleBadge').textContent = roleLbl;
       document.getElementById('lainnyaNama').textContent = session.nama || '-';
+      document.getElementById('lainnyaSubtitle').textContent = roleLbl;
 
       try {
         var userRows = await supaRest('users?id=eq.' + session.user_id + '&select=no_hp,unit_id,foto_profil_url,units(nama_unit)', token);
@@ -983,18 +982,11 @@
         }
         var unitNama = (me && me.units && me.units.nama_unit) || null;
 
-        var kepalaCount = 0;
-        if (session.role === 'manajer' || session.role === 'super_admin' || session.role === 'hrd') {
-          var kepalaRows = await supaRest('users?role=eq.kepala_unit&select=id', token);
-          kepalaCount = kepalaRows.length;
-        }
-        var subtitle;
-        if (session.role === 'kepala_unit') subtitle = 'Kepala Unit &bull; ' + (unitNama || '-');
-        else if (session.role === 'tutor') subtitle = 'Tutor';
-        else if (session.role === 'hrd') subtitle = 'SDM & Kepegawaian &bull; Yayasan Pusat';
-        else if (session.role === 'super_admin') subtitle = 'Administrator Sistem &bull; Yayasan Pusat';
-        else subtitle = 'Supervisi ' + kepalaCount + ' Kepala Unit &bull; Yayasan Pusat';
-        document.getElementById('lainnyaSubtitle').innerHTML = subtitle;
+        // Satu baris: peran · unit (kepala unit) atau peran · yayasan pusat
+        var subtitle = roleLbl;
+        if (session.role === 'kepala_unit') { if (unitNama) subtitle += ' · ' + unitNama; }
+        else if (session.role !== 'tutor') subtitle += ' · Yayasan pusat';
+        document.getElementById('lainnyaSubtitle').textContent = subtitle;
       } catch (e) {
         genioToast('Gagal memuat sebagian profil: ' + e.message, 'error');
       }
@@ -1050,8 +1042,11 @@
     window.genioModuleHandlers = window.genioModuleHandlers || {};
     window.genioModuleHandlers['lainnya'] = loadLainnyaData;
 
-    document.getElementById('lainnyaDetailToggle').addEventListener('click', function () {
+    document.getElementById('lainnyaProfileCard').addEventListener('click', function () {
       showModule('profile-detail');
+    });
+    document.getElementById('lainnyaProfileCard').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showModule('profile-detail'); }
     });
     document.getElementById('lainnyaRefreshBtn').addEventListener('click', function () {
       this.style.transition = 'transform .5s ease';
