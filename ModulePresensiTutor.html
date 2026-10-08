@@ -123,6 +123,26 @@
   #pt-fKontrakBtn.pt-need{border-color:var(--blue) !important; box-shadow:0 0 0 3px rgba(28,26,175,.1);}
   @media (prefers-reduced-motion:reduce){ #pt-fRest{transition:none;} }
   .pt-textarea{width:100%; box-sizing:border-box; min-height:84px; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:8px 11px; font-family:var(--font); font-size:11.5px; line-height:1.5; resize:vertical; color:var(--ink); outline:none; transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;}
+  /* Contoh ringkasan sesi (opsi B): tombol "Contoh" di kanan label, kartu melayang berisi contoh dan tombol pakai */
+  .pt-ex-row{position:relative;}
+  .pt-ex-btn{position:absolute; right:0; top:-2px; height:20px; padding:0 2px; border:0; background:none; font:600 10.5px var(--font); color:var(--blue); display:inline-flex; align-items:center; gap:4px; cursor:pointer;}
+  .pt-ex-btn i{font-size:12px;} .pt-ex-car{transition:transform .2s ease;}
+  .pt-ex-btn[aria-expanded="true"] .pt-ex-car{transform:rotate(180deg);}
+  .pt-ex-pop{position:absolute; right:0; top:22px; z-index:6; width:min(340px, 100%); box-sizing:border-box; padding:12px; border-radius:12px; background:#fff; border:1px solid var(--border); box-shadow:0 12px 28px -10px rgba(20,22,43,.3);
+    opacity:0; transform:translateY(-4px) scale(.98); transform-origin:top right; pointer-events:none; visibility:hidden; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1), visibility 0s linear .2s;}
+  .pt-ex-pop.is-open{opacity:1; transform:none; pointer-events:auto; visibility:visible; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1), visibility 0s;}
+  .pt-ex-pop b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); margin-bottom:7px;}
+  .pt-ex-tags{display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px;}
+  .pt-ex-tags span{font-size:9.5px; font-weight:600; color:var(--blue); background:var(--blue-tint); border-radius:999px; padding:2px 8px;}
+  .pt-ex-pop p{margin:0; font-size:11px; line-height:1.55; color:var(--ink);}
+  .pt-ex-use{margin-top:10px; width:100%; height:32px; border-radius:9px; border:0; background:var(--blue); color:#fff; font:600 11px var(--font); cursor:pointer;}
+  .pt-ex-use:hover{filter:brightness(1.08);}
+  .pt-ex-ask{margin-top:10px; padding:8px 10px; border-radius:9px; background:#FFF4E0; color:#8A5300; font-size:10.5px; line-height:1.45;}
+  .pt-ex-ask div{display:flex; gap:6px; margin-top:7px;}
+  .pt-ex-ask button{flex:1; height:28px; border-radius:8px; font:600 10.5px var(--font); cursor:pointer;}
+  .pt-ex-no{border:1px solid var(--border); background:#fff; color:var(--ink);}
+  .pt-ex-yes{border:0; background:var(--blue); color:#fff;}
+  @media (prefers-reduced-motion:reduce){ .pt-ex-pop, .pt-ex-car{transition:none !important;} }
   .pt-textarea:focus{border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
   .pt-field-sub{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px;}
   .pt-field-main{min-width:0; display:flex; flex-direction:column;}
@@ -318,8 +338,16 @@
         <div class="gx-note pt-note-warn" id="pt-fLate" hidden style="margin-top:0;"><i class="ph ph-warning-circle" aria-hidden="true"></i><span>Sudah lewat lebih dari 24 jam dari waktu pelaksanaan, laporan ini akan kena denda 2% dari fee mengajar.</span></div>
 
         <div class="gx-step-title"><span class="gx-step">3</span>Laporan pembelajaran</div>
-        <div class="gx-row">
+        <div class="gx-row pt-ex-row">
           <label for="pt-fMateri">Ringkasan sesi <em class="gx-req">wajib</em></label>
+          <button type="button" class="pt-ex-btn" id="pt-fExBtn" aria-expanded="false" aria-controls="pt-fExPop"><i class="ph ph-lightbulb" aria-hidden="true"></i>Contoh<i class="ph ph-caret-down pt-ex-car" aria-hidden="true"></i></button>
+          <div class="pt-ex-pop" id="pt-fExPop" role="dialog" aria-label="Contoh ringkasan sesi">
+            <b>Contoh ringkasan sesi</b>
+            <div class="pt-ex-tags"><span>Materi</span><span>Kegiatan</span><span>Perkembangan siswa</span></div>
+            <p id="pt-fExText"></p>
+            <div class="pt-ex-ask" id="pt-fExAsk" hidden>Ringkasan yang sudah Anda tulis akan diganti.<div><button type="button" class="pt-ex-no" id="pt-fExNo">Batal</button><button type="button" class="pt-ex-yes" id="pt-fExYes">Ganti</button></div></div>
+            <button type="button" class="pt-ex-use" id="pt-fExUse">Pakai contoh ini</button>
+          </div>
           <textarea id="pt-fMateri" class="pt-textarea" rows="3" placeholder="Materi yang dipelajari dan perkembangan siswa selama sesi ini."></textarea>
         </div>
 
@@ -975,10 +1003,33 @@
   function ptLockForm(lock) {
     document.getElementById('pt-fRest').classList.toggle('pt-locked', lock);
     document.getElementById('pt-fRest').setAttribute('aria-disabled', String(lock));
-    ['pt-fTanggal', 'pt-fJam', 'pt-fMateri', 'pt-fFoto', 'pt-fLink', 'pt-fCatatan'].forEach(function (id) { document.getElementById(id).disabled = lock; });
+    ['pt-fTanggal', 'pt-fJam', 'pt-fMateri', 'pt-fExBtn', 'pt-fFoto', 'pt-fLink', 'pt-fCatatan'].forEach(function (id) { document.getElementById(id).disabled = lock; });
     document.getElementById('pt-fLockHint').hidden = !lock;
     document.getElementById('pt-fKontrakBtn').classList.toggle('pt-need', lock);
     document.getElementById('pt-fSave').disabled = lock;
+    if (lock) ptToggleEx(false);
+  }
+
+  // Contoh ringkasan sesi: nama siswa di contoh mengikuti siswa yang dipilih
+  var PT_EX = 'Pertemuan hari ini belajar materi Kesebangunan. Dimulai dengan penjelasan materi kemudian dilanjutkan dengan latihan soal sederhana. {nama} dapat memahami penjelasan materi, namun masih kesulitan saat mengerjakan latihan soal pada bagian soal penerapan.';
+  function ptExText() {
+    var sw = pt.form && pt.form.k ? ktSiswa(pt.form.k) : null;
+    var nama = sw && sw.nama ? String(sw.nama).trim().split(/\s+/)[0] : 'Budi';
+    return PT_EX.replace('{nama}', nama);
+  }
+  function ptExOpen() { return document.getElementById('pt-fExPop').classList.contains('is-open'); }
+  function ptToggleEx(open) {
+    var pop = document.getElementById('pt-fExPop'), btn = document.getElementById('pt-fExBtn');
+    if (open) { document.getElementById('pt-fExText').textContent = ptExText(); document.getElementById('pt-fExAsk').hidden = true; document.getElementById('pt-fExUse').hidden = false; }
+    pop.classList.toggle('is-open', !!open);
+    btn.setAttribute('aria-expanded', String(!!open));
+  }
+  function ptApplyEx() {
+    var ta = document.getElementById('pt-fMateri');
+    ta.value = ptExText();
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    ptToggleEx(false);
+    ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
   }
   function ptSetFormKontrak(k, j, setWaktu) {
     pt.form.k = k;
@@ -1234,6 +1285,16 @@
     if (ptDropOpen() && !e.target.closest('#pt-fDrop') && !e.target.closest('#pt-fKontrakBtn')) ptToggleDrop(false);
   }, true);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ptDropOpen()) { e.stopPropagation(); ptToggleDrop(false); document.getElementById('pt-fKontrakBtn').focus(); } }, true);
+  // Contoh ringkasan: buka/tutup, pakai (konfirmasi dulu kalau kolom sudah berisi), tutup saat ketuk di luar atau Esc
+  document.getElementById('pt-fExBtn').addEventListener('click', function (e) { e.stopPropagation(); ptToggleEx(!ptExOpen()); });
+  document.getElementById('pt-fExUse').addEventListener('click', function () {
+    if (document.getElementById('pt-fMateri').value.trim()) { document.getElementById('pt-fExAsk').hidden = false; this.hidden = true; return; }
+    ptApplyEx();
+  });
+  document.getElementById('pt-fExYes').addEventListener('click', ptApplyEx);
+  document.getElementById('pt-fExNo').addEventListener('click', function () { document.getElementById('pt-fExAsk').hidden = true; document.getElementById('pt-fExUse').hidden = false; });
+  document.addEventListener('click', function (e) { if (ptExOpen() && !e.target.closest('#pt-fExPop, #pt-fExBtn')) ptToggleEx(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ptExOpen()) { e.stopPropagation(); ptToggleEx(false); document.getElementById('pt-fExBtn').focus(); } }, true);
   ['pt-fClose', 'pt-fCancel'].forEach(function (id) { document.getElementById(id).addEventListener('click', function () { ptHide(document.getElementById('pt-formModal')); }); });
   ['pt-lapClose', 'pt-lapOk'].forEach(function (id) { document.getElementById(id).addEventListener('click', function () { ptHide(document.getElementById('pt-lapModal')); }); });
   ['pt-formModal', 'pt-lapModal'].forEach(function (id) {
