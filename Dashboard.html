@@ -181,6 +181,9 @@
       /* Form presensi tutor berhenti di atas bottom bar dan tombol + */
       body.role-tutor #pt-formModal:not(.gx-typing), body.role-tutor #pt-lapModal:not(.gx-typing){padding-bottom:calc(92px + env(safe-area-inset-bottom)) !important;}
       body.role-tutor #pt-formModal:not(.gx-typing) .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal:not(.gx-typing) .modal-sheet.gx-sheet{max-height:100% !important;}
+      /* Form dari menu + (kepala unit, HRD) juga berhenti di atas bar supaya + (x) tetap terlihat */
+      body.fab-over .modal-overlay.qa-fab:not(.gx-typing){padding-bottom:calc(92px + env(safe-area-inset-bottom)) !important;}
+      body.fab-over .modal-overlay.qa-fab:not(.gx-typing) .modal-sheet{max-height:100% !important;}
     }
     /* Selama form presensi tutor terbuka: bar dan tombol + tetap di atas lapisan gelap, + berputar jadi x */
     body.fab-over .dock-wrap{z-index:80;}
@@ -191,8 +194,15 @@
       transition:transform .34s cubic-bezier(.16,1,.3,1), opacity .2s ease;
     }
     body.role-tutor #pt-formModal.show .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal.show .modal-sheet.gx-sheet{transform:none !important; opacity:1; animation:none !important;}
+    /* Form dari menu + (kepala unit, HRD): tumbuh dari pilihan yang ditekan, mengecil kembali ke tombol + saat ditutup */
+    .modal-overlay.qa-fab .modal-sheet{
+      transform:scale(.1) !important; opacity:0; transform-origin:var(--fab-ox, 50%) var(--fab-oy, 100%);
+      transition:transform .36s cubic-bezier(.16,1,.3,1), opacity .2s ease;
+    }
+    .modal-overlay.qa-fab.show .modal-sheet{transform:none !important; opacity:1; animation:none !important;}
     @media (prefers-reduced-motion:reduce){
       body.role-tutor #pt-formModal .modal-sheet.gx-sheet, body.role-tutor #pt-lapModal .modal-sheet.gx-sheet{transform:none !important; transition:opacity .15s ease;}
+      .modal-overlay.qa-fab .modal-sheet{transform:none !important; transition:opacity .15s ease;}
     }
     @media (min-width:900px){
       #genioFabD{display:flex; position:fixed; right:28px; bottom:32px; z-index:45; align-items:center; cursor:pointer;}
@@ -236,20 +246,25 @@
     /* ===== Menu tambah cepat + (kepala unit dan manajer): roda di HP, kartu daftar di desktop ===== */
     .qa-backdrop{position:fixed; inset:0; z-index:44; background:rgba(20,22,43,.42); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .22s ease;}
     .qa-backdrop.is-open{opacity:1; pointer-events:auto;}
-    .qa-wheel{position:absolute; left:50%; top:14px; width:320px; height:170px; margin-left:-160px; margin-top:-160px; z-index:1; overflow:visible; pointer-events:none; transform-origin:160px 160px; transform:scale(.2); opacity:0; transition:transform .32s cubic-bezier(.16,1,.3,1), opacity .2s ease; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
-    .qa-wheel.is-open{transform:none; opacity:1; pointer-events:none;}
+    .qa-wheel{position:absolute; left:50%; top:14px; width:320px; height:170px; margin-left:-160px; margin-top:-160px; z-index:1; overflow:visible; pointer-events:none; transform-origin:160px 160px; transform:rotate(-110deg) scale(.25); opacity:0; transition:transform .3s cubic-bezier(.55,0,.75,.2), opacity .22s ease .06s; filter:drop-shadow(0 18px 24px rgba(20,22,43,.35));}
+    /* Roda berputar searah jarum jam saat muncul dan berputar balik sambil mengecil ke + saat ditutup */
+    .qa-wheel.is-open{transform:none; opacity:1; pointer-events:none; transition:transform .5s cubic-bezier(.16,1,.3,1), opacity .16s ease;}
     .qa-wheel path{fill:#fff; stroke:#E7E9F3; stroke-width:1.5; cursor:pointer; pointer-events:none; transition:fill .15s ease; outline:none;}
     .qa-wheel.is-open path{pointer-events:auto;}
     .qa-wheel path:hover, .qa-wheel path:focus-visible, .qa-wheel path:active{fill:#EEEEFB;}
-    .qa-items{position:absolute; left:50%; top:14px; width:0; height:0; z-index:2; pointer-events:none;}
-    .qa-item{position:absolute; width:64px; margin-left:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--blue); text-align:center; opacity:0; transform:scale(.6); transition:transform .28s cubic-bezier(.16,1,.3,1), opacity .2s ease; transition-delay:calc(var(--i) * 25ms); pointer-events:none;}
-    .qa-items.is-open .qa-item{opacity:1; transform:none;}
+    .qa-items{position:absolute; left:50%; top:14px; width:0; height:0; z-index:2; pointer-events:none; transform:rotate(-110deg) scale(.25); transition:transform .3s cubic-bezier(.55,0,.75,.2);}
+    .qa-items.is-open{transform:none; transition:transform .5s cubic-bezier(.16,1,.3,1);}
+    .qa-item{position:absolute; width:64px; margin-left:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--blue); text-align:center; opacity:0; transform:scale(.6); transition:transform .2s ease, opacity .14s ease; transition-delay:calc((var(--n) - 1 - var(--i)) * 30ms); pointer-events:none;}
+    .qa-items.is-open .qa-item{opacity:1; transform:none; transition:transform .34s cubic-bezier(.16,1,.3,1), opacity .22s ease; transition-delay:calc(120ms + var(--i) * 45ms);}
     .qa-item i{display:block; line-height:1;}
     .qa-item span{font-family:var(--font); font-weight:500; white-space:nowrap; line-height:1.1;}
     .genio-fab-btn.is-open{transform:rotate(45deg);}
     .genio-fab-btn{transition:transform .25s cubic-bezier(.16,1,.3,1);}
-    .qa-card{position:fixed; right:28px; bottom:108px; z-index:46; width:250px; background:#fff; border:1px solid var(--border); border-radius:18px; padding:8px; box-shadow:0 24px 50px -16px rgba(20,22,43,.5); opacity:0; transform:translateY(10px) scale(.98); transform-origin:bottom right; pointer-events:none; transition:opacity .2s ease, transform .25s cubic-bezier(.16,1,.3,1); display:none;}
-    .qa-card.is-open{opacity:1; transform:none; pointer-events:auto;}
+    .qa-card{position:fixed; right:28px; bottom:108px; z-index:46; width:250px; background:#fff; border:1px solid var(--border); border-radius:18px; padding:8px; box-shadow:0 24px 50px -16px rgba(20,22,43,.5); opacity:0; transform:translateY(18px) rotate(6deg) scale(.7); transform-origin:calc(100% - 24px) calc(100% + 52px); pointer-events:none; transition:opacity .18s ease .05s, transform .26s cubic-bezier(.55,0,.75,.2); display:none;}
+    /* Kartu desktop berayun keluar dari tombol + dan baris pilihan muncul berurutan; saat ditutup kembali ke tombol */
+    .qa-card.is-open{opacity:1; transform:none; pointer-events:auto; transition:opacity .16s ease, transform .42s cubic-bezier(.16,1,.3,1);}
+    .qa-card .qa-row{opacity:0; transform:translateX(12px); transition:opacity .12s ease, transform .16s ease;}
+    .qa-card.is-open .qa-row{opacity:1; transform:none; transition:opacity .22s ease, transform .32s cubic-bezier(.16,1,.3,1), background .15s ease; transition-delay:calc(90ms + var(--i) * 45ms), calc(90ms + var(--i) * 45ms), 0s;}
     .qa-card-t{font-size:11px; font-weight:600; color:var(--ink-soft); padding:8px 10px 6px;}
     .qa-row{display:flex; align-items:center; gap:11px; width:100%; height:42px; padding:0 10px; border:0; border-radius:12px; background:none; cursor:pointer; font-family:var(--font); font-size:12.5px; font-weight:500; color:var(--ink); text-align:left; transition:background .15s ease;}
     .qa-row:hover, .qa-row:focus-visible{background:#EEEEFB; outline:none;}
@@ -257,7 +272,10 @@
     .qa-row .ql{flex:1;}
     .qa-row .qc{color:var(--ink-soft); font-size:13px;}
     @media (min-width:900px){ .qa-card{display:block;} .qa-wheel, .qa-items{display:none;} }
-    @media (prefers-reduced-motion:reduce){ .qa-wheel, .qa-item, .qa-card, .qa-backdrop, .genio-fab-btn{transition:none;} }
+    @media (prefers-reduced-motion:reduce){
+      .qa-wheel, .qa-items, .qa-item, .qa-card, .qa-card .qa-row, .qa-backdrop, .genio-fab-btn{transition:none !important;}
+      .qa-wheel, .qa-items, .qa-card, .qa-card .qa-row{transform:none !important;}
+    }
 
     .dock-badge{
       position:absolute; top:-5px; right:-9px;
@@ -728,15 +746,15 @@
       if (!IS_KU && !IS_HRD) return; // manajer dan super admin tidak memakai tombol + (hanya tutor, kepala unit, HRD)
       var dockEl = document.getElementById('interactiveDock'), wrapEl = document.querySelector('.dock-wrap');
       if (!dockEl || !wrapEl) return;
-      // key, ikon (peta ikon tunggal), label, modul tujuan, tombol tambah di modul itu
+      // key, ikon (peta ikon tunggal), label, modul tujuan, tombol tambah di modul itu, popup form yang dibuka tombol itu
       var ALL = {
-        presensi: ['check-circle', 'Presensi', 'presensi', 'ps-openWakilBtn'],
-        siswa: ['student', 'Siswa', 'ortu-siswa', 'os-addBtn'],
-        operasional: ['receipt', 'Operasional', 'operasional', 'ops-addBtn'],
-        kontrak: ['file-text', 'Kontrak', 'kontrak', 'ktr-addBtn'],
-        jadwal: ['calendar-blank', 'Jadwal', 'jadwal', 'jdw-addBtn'],
-        tutor: ['chalkboard-teacher', 'Tutor', 'data-tutor', 'dt-pendaftaranToggle'],
-        paket: ['books', 'Paket', 'paket-belajar', 'pkt-addBtn']
+        presensi: ['check-circle', 'Presensi', 'presensi', 'ps-openWakilBtn', 'ps-wakilModal'],
+        siswa: ['student', 'Siswa', 'ortu-siswa', 'os-addBtn', 'os-modal'],
+        operasional: ['receipt', 'Operasional', 'operasional', 'ops-addBtn', 'ops-modal'],
+        kontrak: ['file-text', 'Kontrak', 'kontrak', 'ktr-addBtn', 'ktr-modal'],
+        jadwal: ['calendar-blank', 'Jadwal', 'jadwal', 'jdw-addBtn', 'jdw-modal'],
+        tutor: ['chalkboard-teacher', 'Tutor', 'data-tutor', 'dt-pendaftaranToggle', 'dt-pendaftaranModal'],
+        paket: ['books', 'Paket', 'paket-belajar', 'pkt-addBtn', 'pkt-modal']
       };
       // Kepala unit: menu 5 pilihan. HRD: menu 4 pilihan. Manajer dan super admin: langsung isi presensi (seperti tutor), tanpa menu.
       var DIRECT = false;
@@ -783,7 +801,7 @@
       function pt(a, r) { return [r * Math.cos(a * Math.PI / 180), -r * Math.sin(a * Math.PI / 180)]; }
       var NS = 'http://www.w3.org/2000/svg';
       var wheel = document.createElementNS(NS, 'svg'); wheel.setAttribute('class', 'qa-wheel'); wheel.setAttribute('viewBox', '-160 -160 320 170'); wheel.setAttribute('aria-hidden', 'true');
-      var items = document.createElement('div'); items.className = 'qa-items';
+      var items = document.createElement('div'); items.className = 'qa-items'; items.style.setProperty('--n', KEYS.length);
       KEYS.forEach(function (k, i) {
         var a1 = 180 - i * st, a2 = 180 - (i + 1) * st, p1 = pt(a1, Ro), p2 = pt(a2, Ro), p3 = pt(a2, 1), p4 = pt(a1, 1);
         var path = document.createElementNS(NS, 'path');
@@ -793,7 +811,7 @@
         path.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(k); } });
         wheel.appendChild(path);
         var mid = pt(180 - (i + 0.5) * st, iconR);
-        var el = document.createElement('div'); el.className = 'qa-item'; el.style.setProperty('--i', i);
+        var el = document.createElement('div'); el.className = 'qa-item'; el.style.setProperty('--i', i); el.setAttribute('data-k', k);
         // Roda tetap menyatu dari balik bottom bar (pusat 14px di bawah tepi atas bar). Ikon + label ditengahkan di titik sektor,
         // lalu sektor pinggir diangkat supaya bawah label tetap 8px di atas bar (tepi bar = -14, tinggi item ±36)
         el.style.left = mid[0].toFixed(1) + 'px'; el.style.top = Math.min(mid[1] - 18, -14 - 8 - 36).toFixed(1) + 'px';
@@ -804,8 +822,8 @@
 
       // Kartu daftar (desktop)
       var card = document.createElement('div'); card.className = 'qa-card'; card.setAttribute('role', 'menu');
-      card.innerHTML = '<div class="qa-card-t">Tambah baru</div>' + KEYS.map(function (k) {
-        return '<button type="button" class="qa-row" role="menuitem" data-k="' + k + '"><span class="qi"><i class="ph ph-' + ALL[k][0] + '" aria-hidden="true"></i></span><span class="ql">' + ALL[k][1] + '</span><i class="ph ph-caret-right qc" aria-hidden="true"></i></button>';
+      card.innerHTML = '<div class="qa-card-t">Tambah baru</div>' + KEYS.map(function (k, i) {
+        return '<button type="button" class="qa-row" role="menuitem" style="--i:' + i + '" data-k="' + k + '"><span class="qi"><i class="ph ph-' + ALL[k][0] + '" aria-hidden="true"></i></span><span class="ql">' + ALL[k][1] + '</span><i class="ph ph-caret-right qc" aria-hidden="true"></i></button>';
       }).join('');
       card.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.qa-row'); if (b) choose(b.getAttribute('data-k')); });
       document.body.appendChild(card);
@@ -834,12 +852,97 @@
         dockEl.style.pointerEvents = v ? 'none' : '';
         document.body.classList.toggle('qa-open', v);
       }
-      function choose(k) { setOpen(false); goAdd(k); }
-      fm.addEventListener('click', function () { setOpen(!open); });
-      fd.addEventListener('click', function () { setOpen(!open); });
-      fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } });
+      // Form yang dibuka dari menu +: tombol + tetap tampil sebagai x di atas lapisan gelap dan menjadi tombol tutupnya
+      // (sama dengan tutor). Form tumbuh dari pilihan yang ditekan dan mengecil kembali ke tombol + saat ditutup.
+      var FORM = null, FORM_T = 0, pickPt = null;
+      function formEl() { return FORM ? document.getElementById(FORM) : null; }
+      function formShown() { var el = formEl(); return !!(el && !el.hidden && el.classList.contains('show')); }
+      function formMounted() { var el = formEl(); return !!(el && !el.hidden); }
+      function otherOpen() {
+        return Array.prototype.some.call(document.querySelectorAll('.modal-overlay.show'), function (el) { return el.id !== FORM; });
+      }
+      function fabCenter() {
+        var b = (fm.offsetParent ? fm : fdBtn).getBoundingClientRect();
+        return b.width ? [b.left + b.width / 2, b.top + b.height / 2] : null;
+      }
+      function setOrigin(el, p) {
+        var sheet = el.querySelector('.modal-sheet'); if (!sheet || !p) return;
+        // Titik relatif terhadap kotak ukuran penuh (offset tidak terpengaruh skala transform)
+        var par = sheet.offsetParent ? sheet.offsetParent.getBoundingClientRect() : { left: 0, top: 0 };
+        var ox = p[0] - par.left - sheet.offsetLeft, oy = p[1] - par.top - sheet.offsetTop;
+        if (!isFinite(ox) || !isFinite(oy)) return;
+        sheet.style.setProperty('--fab-ox', ox.toFixed(0) + 'px'); sheet.style.setProperty('--fab-oy', oy.toFixed(0) + 'px');
+      }
+      function closeForm() {
+        var el = formEl(); if (!el) return;
+        var c = el.querySelector('.gx-close') || el.querySelector('[id$="CancelBtn"], [id$="cancelBtn"], [id$="CloseBtn"]');
+        if (c) c.click();
+      }
+      function syncForm() {
+        if (!FORM) return;
+        var el = formEl();
+        if (!formMounted()) {
+          // Form belum sempat dibuka (modul masih memuat): tunggu, kecuali sudah terlalu lama
+          if (!el || !el.classList.contains('qa-fab')) { if (Date.now() - FORM_T > 15000) FORM = null; return; }
+          el.classList.remove('qa-fab'); el.__qaWasShown = false;
+          FORM = null; document.body.classList.remove('fab-over');
+          if (!open) { fm.classList.remove('is-open'); fdBtn.classList.remove('is-open'); fd.classList.remove('is-rolled'); fm.setAttribute('aria-label', 'Tambah'); fd.setAttribute('aria-label', 'Tambah'); }
+          return;
+        }
+        var on = formShown() && !otherOpen();
+        // fab-over dilepas setelah form benar-benar hilang supaya + tidak turun ke bawah lapisan yang masih memudar
+        document.body.classList.toggle('fab-over', on || (document.body.classList.contains('fab-over') && !otherOpen()));
+        if (formShown()) el.__qaWasShown = true;
+        else if (el.__qaWasShown) setOrigin(el, fabCenter()); // menutup: mengecil ke tombol +
+        if (open) return;
+        if (on && !fd.classList.contains('is-rolled')) genioFabRoll(fd);
+        fm.classList.toggle('is-open', on); fdBtn.classList.toggle('is-open', on); fd.classList.toggle('is-rolled', on);
+        fm.setAttribute('aria-label', on ? 'Tutup' : 'Tambah'); fd.setAttribute('aria-label', on ? 'Tutup' : 'Tambah');
+      }
+      var formMo = new MutationObserver(function (list) {
+        list.forEach(function (m) {
+          var el = m.target;
+          // Form tujuan baru dibuka (hidden dilepas sebelum kelas show ditambah): pasang animasi dari pilihan yang ditekan
+          if (FORM && el.id === FORM && m.attributeName === 'hidden' && !el.hidden && !el.classList.contains('qa-fab') && Date.now() - FORM_T < 15000) {
+            el.classList.add('qa-fab'); document.body.classList.add('fab-over'); // tata letak akhir (di atas bar) dulu, baru hitung titik asal
+            setOrigin(el, pickPt || fabCenter());
+            void el.offsetWidth; // keadaan awal (kecil di titik pilihan) dihitung dulu sebelum kelas show masuk
+          }
+        });
+        syncForm();
+      });
+      function watchForms() {
+        Array.prototype.forEach.call(document.querySelectorAll('.modal-overlay'), function (el) {
+          if (el.__qaWatch) return; el.__qaWatch = true;
+          formMo.observe(el, { attributes: true, attributeFilter: ['class', 'hidden'] });
+        });
+      }
+      watchForms();
+      new MutationObserver(watchForms).observe(document.body, { childList: true });
+      // Pindah tab saat form terbuka: tutup form dulu
+      dockEl.addEventListener('click', function (e) { if (FORM && formShown() && e.target.closest && e.target.closest('.dock-btn')) closeForm(); }, true);
+
+      function choose(k) {
+        // Titik asal animasi form: pusat ikon/baris pilihan yang ditekan
+        var src = (fm.offsetParent ? items : card).querySelector('[data-k="' + k + '"]');
+        var r = src && src.getBoundingClientRect();
+        pickPt = r && r.width ? [r.left + r.width / 2, r.top + r.height / 2] : null;
+        FORM = ALL[k] && ALL[k][4]; FORM_T = Date.now();
+        setOpen(false); goAdd(k);
+      }
+      function press() {
+        if (FORM && formShown()) { closeForm(); return; }
+        setOpen(!open);
+      }
+      fm.addEventListener('click', press);
+      fd.addEventListener('click', press);
+      fd.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); press(); } });
       backdrop.addEventListener('click', function () { setOpen(false); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) setOpen(false); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (open) setOpen(false);
+        else if (FORM && formShown() && !otherOpen()) closeForm();
+      });
       var qaW = window.innerWidth;
       window.addEventListener('resize', function () { if (window.innerWidth !== qaW) { qaW = window.innerWidth; if (open) setOpen(false); } });
     })();
