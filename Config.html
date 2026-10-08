@@ -326,9 +326,14 @@
   .gx-confirm p{font-size:11px; color:var(--ink-soft); margin:0 0 6px; line-height:1.5;}
   @media (prefers-reduced-motion: reduce){ .modal-overlay.show .modal-sheet.gx-sheet{animation:none;} }
   /* Popup kecil melayang yang menempel di elemen yang ditekan (mis. titik jadwal mingguan) */
-  .genio-pop{position:fixed; z-index:96; left:0; top:0; width:min(300px, calc(100vw - 24px)); max-height:420px; overflow-y:auto; overscroll-behavior:contain; display:grid; gap:8px; padding:2px; box-sizing:border-box; opacity:0; transform:translateY(-4px) scale(.97); transform-origin:var(--pop-ox, 50%) top; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1); pointer-events:none;}
+  .genio-pop{position:fixed; z-index:96; left:0; top:0; width:min(320px, calc(100vw - 24px)); max-height:420px; overflow-y:auto; overflow-x:hidden; grid-template-columns:minmax(0,1fr); overscroll-behavior:contain; display:grid; gap:8px; padding:2px; box-sizing:border-box; opacity:0; transform:translateY(-4px) scale(.97); transform-origin:var(--pop-ox, 50%) top; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1); pointer-events:none;}
   .genio-pop[data-place="above"]{transform:translateY(4px) scale(.97); transform-origin:var(--pop-ox, 50%) bottom;}
   .genio-pop.show{opacity:1; transform:none; pointer-events:auto;}
+  /* Isi popup tidak pernah lebih lebar dari kotaknya (Safari menghitung teks nowrap sebagai lebar minimum) */
+  .genio-pop > *{min-width:0; max-width:100%; box-sizing:border-box;}
+  .genio-pop .home-slot-siswa span{flex:1; white-space:normal; overflow-wrap:anywhere; line-height:1.4;}
+  .genio-pop .home-slot-time{flex:none;}
+  .genio-pop .home-slot-act > *{min-width:0;}
   .genio-pop[hidden]{display:none !important;}
   .genio-pop > *{box-shadow:0 12px 32px -10px rgba(20,22,43,.30), 0 2px 6px rgba(20,22,43,.06);}
   .is-picked{transform:scale(1.45) !important; box-shadow:0 0 0 2px #fff, 0 0 0 3.5px currentColor !important; z-index:1; position:relative;}
