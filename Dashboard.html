@@ -903,6 +903,7 @@
         document.body.classList.toggle('fab-over', on || (document.body.classList.contains('fab-over') && !otherOpen()));
         if (formShown()) el.__qaWasShown = true;
         else if (el.__qaWasShown) setOrigin(el, fabCenter()); // menutup: mengecil ke tombol +
+        if (on && open) setOpen(false); // menu + dibuka lagi sebelum form selesai dimuat: tutup supaya tidak menimpa form
         if (open) return;
         if (on && !fd.classList.contains('is-rolled')) genioFabRoll(fd);
         fm.classList.toggle('is-open', on); fdBtn.classList.toggle('is-open', on); fd.classList.toggle('is-rolled', on);
