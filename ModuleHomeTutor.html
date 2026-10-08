@@ -305,13 +305,14 @@
     g.innerHTML = html;
     var arcs = g.querySelectorAll('.hmt-ring-arc');
     requestAnimationFrame(function () { requestAnimationFrame(function () { arcs.forEach(function (a) { a.setAttribute('stroke-dasharray', a.dataset.len + ' ' + C.toFixed(2)); }); }); });
+    // Semua baris selalu tampil (nilai 0 tetap ditulis) supaya panel tidak berubah tinggi dan label tidak hilang
     var row = function (c, l, v) { return '<div><em style="background:' + c + '"></em>' + l + '<b>' + v + '</b></div>'; };
     document.getElementById('hmtSideList').innerHTML =
       row('#7CF0C3', 'Terlaksana', reguler) +
-      (t.visit ? row('#9DB4FF', 'Visit', t.visit) : '') +
-      row('#FFC46B', 'Menunggu', t.pending + ' sesi') +
+      row('#9DB4FF', 'Visit', t.visit || 0) +
+      row('#FFC46B', 'Menunggu', (t.pending || 0) + ' sesi') +
       row('#fff', 'Tepat waktu', tepat) +
-      (t.denda ? row('#FF9C94', 'Denda telat', rp(t.denda)) : '');
+      row('#FF9C94', 'Denda telat', rp(t.denda || 0));
   }
 
   async function hmtLoad() {
