@@ -977,6 +977,82 @@
   }
 
   // Render ulang daftar tanpa melompat ke atas: simpan posisi scroll lalu kembalikan (tanpa mengunci tinggi daftar).
+  // ===== Contoh ringkasan sesi (laporan pembelajaran) =====
+  // Tombol "Contoh" di kanan label kolom ringkasan, membuka kartu melayang berisi contoh laporan dengan nama depan siswa
+  // yang dipilih. "Pakai contoh ini" mengisi kolom (minta konfirmasi dulu kalau kolom sudah berisi). Tutup: ketuk di luar / Esc.
+  // Dipakai form Isi presensi tutor (prefix pt-fEx) dan form presensi mewakili tutor kepala unit/manajer (prefix ps-wEx).
+  var GENIO_EX_LAPORAN = 'Pertemuan hari ini belajar materi Kesebangunan. Dimulai dengan penjelasan materi kemudian dilanjutkan dengan latihan soal sederhana. {nama} dapat memahami penjelasan materi, namun masih kesulitan saat mengerjakan latihan soal pada bagian soal penerapan.';
+  (function () {
+    var css = document.createElement('style');
+    css.textContent =
+      '.gx-ex-row{position:relative;}' +
+      '.gx-ex-btn{position:absolute; right:0; top:-2px; height:20px; padding:0 2px; border:0; background:none; font:600 10.5px var(--font); color:var(--blue); display:inline-flex; align-items:center; gap:4px; cursor:pointer; z-index:1;}' +
+      '.gx-ex-btn[disabled]{opacity:.5; cursor:default;}' +
+      '.gx-ex-btn i{font-size:12px;} .gx-ex-car{transition:transform .2s ease;}' +
+      '.gx-ex-btn[aria-expanded="true"] .gx-ex-car{transform:rotate(180deg);}' +
+      '.gx-ex-pop{position:absolute; right:0; top:22px; z-index:6; width:min(340px, 100%); box-sizing:border-box; padding:12px; border-radius:12px; background:#fff; border:1px solid var(--border); box-shadow:0 12px 28px -10px rgba(20,22,43,.3); text-align:left;' +
+        'opacity:0; transform:translateY(-4px) scale(.98); transform-origin:top right; pointer-events:none; visibility:hidden; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1), visibility 0s linear .2s;}' +
+      '.gx-ex-pop.is-open{opacity:1; transform:none; pointer-events:auto; visibility:visible; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1), visibility 0s;}' +
+      '.gx-ex-pop b{display:block; font-size:11.5px; font-weight:600; color:var(--ink); margin-bottom:7px;}' +
+      '.gx-ex-tags{display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px;}' +
+      '.gx-ex-tags span{font-size:9.5px; font-weight:600; color:var(--blue); background:var(--blue-tint); border-radius:999px; padding:2px 8px;}' +
+      '.gx-ex-pop p{margin:0 !important; padding:0 !important; font-size:11px !important; line-height:1.55 !important; color:var(--ink) !important; font-weight:400 !important;}' +
+      '.gx-ex-ask[hidden], .gx-ex-use[hidden]{display:none !important;}' +
+      '.gx-ex-use{margin-top:10px; width:100%; height:32px; border-radius:9px; border:0; background:var(--blue); color:#fff; font:600 11px var(--font); cursor:pointer;}' +
+      '.gx-ex-use:hover{filter:brightness(1.08);}' +
+      '.gx-ex-ask{margin-top:10px; padding:8px 10px; border-radius:9px; background:#FFF4E0; color:#8A5300; font-size:10.5px; line-height:1.45;}' +
+      '.gx-ex-ask div{display:flex; gap:6px; margin-top:7px;}' +
+      '.gx-ex-ask button{flex:1; height:28px; border-radius:8px; font:600 10.5px var(--font); cursor:pointer;}' +
+      '.gx-ex-no{border:1px solid var(--border); background:#fff; color:var(--ink);}' +
+      '.gx-ex-yes{border:0; background:var(--blue); color:#fff;}' +
+      '@media (prefers-reduced-motion:reduce){ .gx-ex-pop, .gx-ex-car{transition:none !important;} }';
+    document.head.appendChild(css);
+  })();
+  function genioExampleBox(textareaId, prefix, getName) {
+    var ta = document.getElementById(textareaId);
+    if (!ta || document.getElementById(prefix + 'Btn')) return null;
+    var row = ta.parentElement; row.classList.add('gx-ex-row');
+    var lbl = row.querySelector('label');
+    var wrap = document.createElement('div');
+    wrap.innerHTML =
+      '<button type="button" class="gx-ex-btn" id="' + prefix + 'Btn" aria-expanded="false" aria-controls="' + prefix + 'Pop"><i class="ph ph-lightbulb" aria-hidden="true"></i>Contoh<i class="ph ph-caret-down gx-ex-car" aria-hidden="true"></i></button>' +
+      '<div class="gx-ex-pop" id="' + prefix + 'Pop" role="dialog" aria-label="Contoh ringkasan sesi">' +
+        '<b>Contoh ringkasan sesi</b>' +
+        '<div class="gx-ex-tags"><span>Materi</span><span>Kegiatan</span><span>Perkembangan siswa</span></div>' +
+        '<p id="' + prefix + 'Text"></p>' +
+        '<div class="gx-ex-ask" id="' + prefix + 'Ask" hidden>Ringkasan yang sudah Anda tulis akan diganti.<div><button type="button" class="gx-ex-no" id="' + prefix + 'No">Batal</button><button type="button" class="gx-ex-yes" id="' + prefix + 'Yes">Ganti</button></div></div>' +
+        '<button type="button" class="gx-ex-use" id="' + prefix + 'Use">Pakai contoh ini</button>' +
+      '</div>';
+    var btn = wrap.children[0], pop = wrap.children[1];
+    row.insertBefore(btn, lbl ? lbl.nextSibling : row.firstChild);
+    row.insertBefore(pop, btn.nextSibling);
+    var txt = pop.querySelector('p'), ask = pop.querySelector('.gx-ex-ask'), use = pop.querySelector('.gx-ex-use');
+    function text() {
+      var n = '';
+      try { n = String((getName && getName()) || '').trim().split(/\s+/)[0]; } catch (e) {}
+      return GENIO_EX_LAPORAN.replace('{nama}', n || 'Budi');
+    }
+    function isOpen() { return pop.classList.contains('is-open'); }
+    function toggle(open) {
+      if (open) { txt.textContent = text(); ask.hidden = true; use.hidden = false; }
+      pop.classList.toggle('is-open', !!open);
+      btn.setAttribute('aria-expanded', String(!!open));
+    }
+    function apply() {
+      ta.value = text();
+      ta.dispatchEvent(new Event('input', { bubbles: true }));
+      toggle(false);
+      ta.focus(); try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch (e) {}
+    }
+    btn.addEventListener('click', function (e) { e.stopPropagation(); toggle(!isOpen()); });
+    use.addEventListener('click', function () { if (ta.value.trim()) { ask.hidden = false; use.hidden = true; return; } apply(); });
+    pop.querySelector('.gx-ex-yes').addEventListener('click', apply);
+    pop.querySelector('.gx-ex-no').addEventListener('click', function () { ask.hidden = true; use.hidden = false; });
+    document.addEventListener('click', function (e) { if (isOpen() && !pop.contains(e.target) && !btn.contains(e.target)) toggle(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen()) { e.stopPropagation(); toggle(false); btn.focus(); } }, true);
+    return { close: function () { toggle(false); }, isOpen: isOpen };
+  }
+
   // Tahan tinggi halaman minimal setinggi posisi gulir sekarang, supaya isi tab yang lebih pendek tidak membuat
   // browser menggulir naik sendiri. Dilepas saat pindah modul (klik dock, tab header, atau menu Lainnya).
   function genioHoldHeight() {

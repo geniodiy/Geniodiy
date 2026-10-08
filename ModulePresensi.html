@@ -2981,6 +2981,11 @@
   /* ===== Isi Presensi untuk Tutor (diwakilkan) ===== */
   var psWakilKontrakList = [];
   var psWakilTutorsLoaded = false;
+  // Contoh ringkasan sesi (komponen bersama genioExampleBox di Config.html): nama mengikuti siswa dari kontrak yang dipilih
+  var psWakilEx = genioExampleBox('ps-wakilMateri', 'ps-wEx', function () {
+    var k = psWakilKontrakList[document.getElementById('ps-wakilKontrak').value];
+    return k && k.kontrak_siswa && k.kontrak_siswa.siswa ? k.kontrak_siswa.siswa.nama : '';
+  });
 
   function psOpenWakilModal() {
     var modal = document.getElementById('ps-wakilModal');
@@ -2988,6 +2993,7 @@
     requestAnimationFrame(function () { modal.classList.add('show'); });
   }
   function psCloseWakilModal() {
+    if (psWakilEx) psWakilEx.close();
     var modal = document.getElementById('ps-wakilModal');
     modal.classList.remove('show');
     setTimeout(function () { modal.hidden = true; }, 280);
