@@ -539,7 +539,7 @@
     var c = { diterima: 0, visit: 0, ditolak: 0, pending: 0 };
     rows.forEach(function (p) { if (c.hasOwnProperty(p.status)) c[p.status]++; });
     var mandiri = rows.filter(function (p) { return p.metode_input !== 'diwakilkan'; });
-    var ontime = mandiri.length ? Math.round(mandiri.filter(function (p) { return !p.terlambat; }).length / mandiri.length * 100) : 100;
+    var ontime = mandiri.length ? Math.round(mandiri.filter(function (p) { return !p.terlambat; }).length / mandiri.length * 100) : null;
     return { rows: rows, c: c, ontime: ontime, total: rows.length, range: r };
   }
   function doneThisMonth(k) {
@@ -858,7 +858,7 @@
       '<span class="pc-lg"><i style="background:#FF9C94;"></i>Perlu revisi <b>' + rev + '</b></span>' +
       '<span class="pc-lg"><i style="background:#FFFFFF;"></i>Jadwal hari ini <b>' + hari + '</b></span>' +
       '<span class="pc-lg"><i style="background:#C9B8FF;"></i>Fleksibel <b>' + flex + '</b></span>' +
-      '<span class="pc-lg"><i style="background:#7CF0C3;"></i>Tepat waktu <b>' + st.ontime + '%</b></span>';
+      '<span class="pc-lg"><i style="background:#7CF0C3;"></i>Tepat waktu <b>' + (st.ontime == null ? '-' : st.ontime + '%') + '</b></span>';
     // Grafik mingguan bulan ini (amber = ada laporan terlambat)
     var weeks = Math.ceil(st.range.last / 7), counts = [], late = [];
     for (var i = 0; i < weeks; i++) { counts.push(0); late.push(0); }

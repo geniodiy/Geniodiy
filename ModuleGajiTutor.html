@@ -336,7 +336,7 @@
     document.getElementById('gt-heroLegend').innerHTML =
       '<span class="pc-lg"><i style="background:#7CF0C3;"></i>Sesi dibayar <b>' + (t.sesi - t.nVisit) + '</b></span>' +
       '<span class="pc-lg"><i style="background:#9DB4FF;"></i>Visit <b>' + t.nVisit + '</b></span>' +
-      (pending.sesi ? '<span class="pc-lg"><i style="background:#FFC46B;"></i>Menunggu approval <b>' + pending.sesi + ' sesi, ' + rp(pending.dibayar) + '</b></span>' : '');
+      '<span class="pc-lg"><i style="background:#FFC46B;"></i>Menunggu approval <b>' + (pending.sesi ? pending.sesi + ' sesi, ' + rp(pending.dibayar) : '0 sesi') + '</b></span>';
     // Batang 6 bulan (bulan terpilih berwarna mint)
     var months = [];
     for (var i = -5; i <= 0; i++) { var p = periodeShift(per, i); months.push({ p: p, v: sum(monthRows(p, false)).dibayar }); }

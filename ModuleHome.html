@@ -681,6 +681,10 @@
   }
   function homeDeltaBadge(current, previous, dark) {
     var pct, isUp;
+    if (!previous && !current) {
+      // Dua bulan sama-sama 0: tampil netral, bukan "+100%"
+      return '<span style="color:' + (dark ? 'rgba(255,255,255,.7)' : 'var(--ink-soft)') + '; font-weight:500;">0%</span> vs bulan lalu';
+    }
     if (!previous) {
       pct = 100; isUp = true; // tidak ada data bulan lalu -> dianggap naik 100%
     } else {

@@ -576,9 +576,11 @@
       return '<i style="flex:' + counts[r] + '; background:' + (m ? m.shade : 'rgba(255,255,255,.3)') + '; --i:' + i + ';" title="' + kpEscape(m ? m.label : r) + ': ' + counts[r] + '"></i>';
     }).join('');
     if (!KP_REDUCED_MOTION) { bar.classList.remove('kp-anim'); void bar.offsetWidth; bar.classList.add('kp-anim'); }
-    document.getElementById('kp-heroLeg').innerHTML = roles.map(function (r) {
+    // Legenda selalu menampilkan semua role (nilai 0 tetap ditulis), batang hanya role yang ada akunnya
+    var legRoles = KP_ROLE_ORDER.concat(roles.filter(function (r) { return KP_ROLE_ORDER.indexOf(r) === -1; }));
+    document.getElementById('kp-heroLeg').innerHTML = legRoles.map(function (r) {
       var m = KP_ROLE_META[r];
-      return '<span><em style="background:' + (m ? m.shade : 'rgba(255,255,255,.3)') + ';"></em>' + kpEscape(m ? m.label : r) + ' <b>' + counts[r] + '</b></span>';
+      return '<span><em style="background:' + (m ? m.shade : 'rgba(255,255,255,.3)') + ';"></em>' + kpEscape(m ? m.label : r) + ' <b>' + (counts[r] || 0) + '</b></span>';
     }).join('');
 
     var pct = list.length ? Math.round(aktif / list.length * 100) : 0;
