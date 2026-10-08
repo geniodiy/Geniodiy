@@ -172,7 +172,7 @@
     .genio-fab-btn:focus-visible{outline:2px solid var(--blue); outline-offset:3px;}
     @media (max-width:899px){
       .genio-fab-m{display:flex; position:absolute; left:50%; top:50%; width:48px; height:48px; margin:-24px 0 0 -24px; z-index:3; border:0;
-        background:var(--blue); box-shadow:0 8px 18px -6px rgba(28,26,175,.55);}
+        background:var(--blue); box-shadow:0 2px 4px rgba(20,22,43,.18), 0 10px 22px -6px rgba(28,26,175,.6);}
       .genio-fab-m svg{width:22px; height:22px;}
       .genio-fab-m:active{transform:scale(.93);}
       .genio-fab-m.is-open:active{transform:rotate(45deg) scale(.93);}
@@ -195,11 +195,11 @@
     @media (min-width:900px){
       #genioFabD{display:flex; position:fixed; right:28px; bottom:32px; z-index:45; align-items:center; cursor:pointer;}
       /* Tombol bulat sama dengan + di bottom bar HP: biru polos tanpa lingkar putih, bayangan biru lembut */
-      #genioFabD .genio-fab-btn{position:relative; z-index:2; width:48px; height:48px; border:0; background:var(--blue); box-shadow:0 8px 18px -6px rgba(28,26,175,.55);}
+      #genioFabD .genio-fab-btn{position:relative; z-index:2; width:48px; height:48px; border:0; background:var(--blue); box-shadow:0 2px 4px rgba(20,22,43,.18), 0 10px 22px -6px rgba(28,26,175,.6);}
       #genioFabD .genio-fab-lbl{
         height:44px; display:flex; align-items:center; padding:0 22px 0 38px; margin-left:-26px; border-radius:999px;
         background:#fff; border:1px solid var(--border); color:var(--ink); font:600 12px var(--font); white-space:nowrap;
-        box-shadow:0 14px 30px -10px rgba(20,22,43,.32), 0 2px 8px rgba(20,22,43,.08);
+        box-shadow:none;
       }
       #genioFabD:hover .genio-fab-btn{transform:scale(1.06);}
       #genioFabD:active .genio-fab-btn{transform:scale(.95);}
@@ -207,6 +207,8 @@
          dan tertutup sedikit demi sedikit (label dipotong dari kiri mengikuti posisi tombol), sampai tinggal x di ujung kanan.
          Jarak gelinding (--roll) dan sudut putar (--spin, berakhir sebagai x) dihitung dari lebar label oleh JS. */
       #genioFabD .genio-fab-btn{transition:transform .42s cubic-bezier(.65,0,.35,1) !important;}
+      /* Bayangan dipasang di wadah (drop-shadow) supaya mengikuti siluet tombol + label dan tidak terpotong clip-path label */
+      #genioFabD{filter:drop-shadow(0 1px 2px rgba(20,22,43,.10)) drop-shadow(0 8px 14px rgba(20,22,43,.16));}
       #genioFabD .genio-fab-lbl{clip-path:inset(0 0 0 0 round 999px); transition:clip-path .42s cubic-bezier(.65,0,.35,1), box-shadow .25s ease;}
       #genioFabD.is-rolled .genio-fab-lbl{clip-path:inset(0 0 0 calc(var(--roll, 104px) + 2px) round 999px); box-shadow:none;}
       #genioFabD .genio-fab-btn.is-open{transform:translateX(var(--roll, 104px)) rotate(var(--spin, 225deg));}
