@@ -1172,16 +1172,18 @@
         supaRest('presensi?select=id,tanggal,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token),
         supaRest('presensi?select=id,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, token),
         supaRest('presensi?select=id,tanggal,unit_id,kontrak_tutor(users!kontrak_tutor_tutor_id_fkey(nama))&status=eq.pending&order=tanggal.asc', token),
-        supaRest('units?select=id,nama_unit&order=nama_unit.asc', token)
+        supaRest('units?select=id,nama_unit&order=nama_unit.asc', token),
+        supaRest('pemasukan_lain?select=nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token).catch(function () { return []; }),
+        supaRest('pemasukan_lain?select=nominal&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, token).catch(function () { return []; })
       ]);
 
       var slipNow = results[0], slipPrev = results[1],
           opsNow = results[2], opsPrev = results[3],
           pertemuanNow = results[4], pertemuanPrev = results[5], pendingPresensi = results[6], unitList = results[7] || [];
 
-      // Omset = tagihan dari presensi yang sudah di-acc (sesi x harga kontrak).
-      var omset = pertemuanNow.reduce(function (a, r) { return a + homePresensiHarga(r); }, 0);
-      var omsetPrev = pertemuanPrev.reduce(function (a, r) { return a + homePresensiHarga(r); }, 0);
+      // Omset = tagihan dari presensi yang sudah di-acc (sesi x harga kontrak) + pemasukan lain (cetak modul, tes, dll.).
+      var omset = pertemuanNow.reduce(function (a, r) { return a + homePresensiHarga(r); }, 0) + homeSum(results[8] || [], 'nominal');
+      var omsetPrev = pertemuanPrev.reduce(function (a, r) { return a + homePresensiHarga(r); }, 0) + homeSum(results[9] || [], 'nominal');
       var totalGaji = homeSum(slipNow, 'total_gaji');
       var totalGajiPrev = homeSum(slipPrev, 'total_gaji');
       var totalOps = homeSum(opsNow, 'nominal');
@@ -1261,7 +1263,9 @@
         supaRest('presensi?select=unit_id,nominal_dibayar,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, session.access_token),
         supaRest('presensi?select=unit_id,nominal_dibayar,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token),
         supaRest('operasional?select=unit_id,nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, session.access_token),
-        supaRest('operasional?select=unit_id,nominal&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token)
+        supaRest('operasional?select=unit_id,nominal&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token),
+        supaRest('pemasukan_lain?select=unit_id,nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, session.access_token).catch(function () { return []; }),
+        supaRest('pemasukan_lain?select=unit_id,nominal&tanggal=gte.' + prevRange.start + '&tanggal=lte.' + prevRange.end, session.access_token).catch(function () { return []; })
       ]);
       var units = results[0], kontrakSiswaAktif = results[1], kepalaUsers = results[2] || [],
           presensiRows = results[3], presensiRowsPrev = results[4],
@@ -1290,6 +1294,10 @@
       kontrakSiswaAktif.forEach(function (r) { (siswaSets[r.unit_id] = siswaSets[r.unit_id] || {})[r.siswa_id] = true; });
       var now = aggPresensi(presensiRows), prev = aggPresensi(presensiRowsPrev);
       var opsNow = sumOps(opsRows), opsPrev = sumOps(opsRowsPrev);
+      // Pemasukan lain menambah omset unitnya
+      [[results[7] || [], now], [results[8] || [], prev]].forEach(function (pair) {
+        pair[0].forEach(function (r) { var o = pair[1][r.unit_id] = pair[1][r.unit_id] || blank(); o.omset += parseFloat(r.nominal || 0) || 0; });
+      });
 
       homeRekapCache = units.map(function (u) {
         var a = now[u.id] || blank(), b = prev[u.id] || blank();
@@ -1388,15 +1396,18 @@
     var latestRange = homePeriodeRange(periods[periods.length - 1]);
     var periodeListSql = periods.join(',');
 
+    var omsetByMonthPl = {};
     try {
       var results = await Promise.all([
         supaRest('presensi?select=tanggal,nominal_dibayar,' + HOME_OMSET_EMBED + '&status=in.(diterima,visit)&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token),
-        supaRest('operasional?select=tanggal,nominal&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token)
+        supaRest('operasional?select=tanggal,nominal&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token),
+        supaRest('pemasukan_lain?select=tanggal,nominal&tanggal=gte.' + earliestRange.start + '&tanggal=lte.' + latestRange.end, session.access_token).catch(function () { return []; })
       ]);
       var presensiRows = results[0], opsRows = results[1];
+      (results[2] || []).forEach(function (r) { var m = r.tanggal.substring(0, 7); if (omsetByMonthPl[m] === undefined) omsetByMonthPl[m] = 0; omsetByMonthPl[m] += parseFloat(r.nominal || 0); });
 
       var omsetByMonth = {}, gajiByMonth = {}, sesiByMonth = {}, opsByMonth = {};
-      periods.forEach(function (p) { omsetByMonth[p] = 0; gajiByMonth[p] = 0; sesiByMonth[p] = 0; opsByMonth[p] = 0; });
+      periods.forEach(function (p) { omsetByMonth[p] = omsetByMonthPl[p] || 0; gajiByMonth[p] = 0; sesiByMonth[p] = 0; opsByMonth[p] = 0; });
       presensiRows.forEach(function (r) {
         var m = r.tanggal.substring(0, 7);
         if (sesiByMonth[m] !== undefined) { sesiByMonth[m] += 1; gajiByMonth[m] += parseFloat(r.nominal_dibayar || 0); omsetByMonth[m] += homePresensiHarga(r); }

@@ -550,6 +550,7 @@
     <?!= include('ModuleKelolaPengguna'); ?>
     <?!= include('ModuleDataTutor'); ?>
     <?!= include('ModuleOperasional'); ?>
+    <?!= include('ModulePemasukanLain'); ?>
     <?!= include('ModulePengaturan'); ?>
 
   </div>
@@ -624,7 +625,7 @@
     if (typeof genioEnsureSessionProfile === 'function') genioEnsureSessionProfile();
     // Menu Lainnya yang boleh dilihat per role (role yang tidak tercantum melihat semua menu)
     var ROLE_MENU = {
-      kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'data-tutor', 'operasional', 'genio-news'],
+      kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'data-tutor', 'operasional', 'pemasukan-lain', 'genio-news'],
       hrd: ['ortu-siswa', 'kontrak', 'presensi', 'genio-news'],
       tutor: []
     };
@@ -974,7 +975,7 @@
       // Peta ikon tunggal (samakan di semua halaman): siswa student, kontrak file-text, jadwal calendar-blank, tagihan credit-card,
       // tutor chalkboard-teacher, operasional receipt, unit buildings, paket belajar books, user user-gear, news newspaper, pengaturan gear, presensi check-circle
       people: '<i class="ph ph-student" aria-hidden="true"></i>', doc: '<i class="ph ph-file-text" aria-hidden="true"></i>', calendar: '<i class="ph ph-calendar-blank" aria-hidden="true"></i>', card: '<i class="ph ph-credit-card" aria-hidden="true"></i>', person: '<i class="ph ph-chalkboard-teacher" aria-hidden="true"></i>', monitor: '<i class="ph ph-receipt" aria-hidden="true"></i>',
-      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>'
+      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>', coins: '<i class="ph ph-hand-coins" aria-hidden="true"></i>'
     };
 
     // ===== Konfigurasi menu "Lainnya" — satu-satunya sumber data untuk:
@@ -986,7 +987,8 @@
         { key: 'jadwal', icon: 'calendar', label: 'Jadwal Mengajar' },
         { key: 'tagihan', icon: 'card', label: 'Tagihan' },
         { key: 'data-tutor', icon: 'person', label: 'Kelola Tutor' },
-        { key: 'operasional', icon: 'monitor', label: 'Operasional' }
+        { key: 'operasional', icon: 'monitor', label: 'Operasional' },
+        { key: 'pemasukan-lain', icon: 'coins', label: 'Pemasukan lain' }
       ]},
       { label: 'Admin', items: [
         { key: 'kelola-unit', icon: 'home', label: 'Kelola Unit', ready: true },
@@ -1030,6 +1032,7 @@
       'tagihan': ['Tagihan', 'Invoice & receipt'],
       'data-tutor': IS_KU ? ['Data Tutor', 'Daftar tutor'] : ['Kelola Tutor', 'Kelola akun tutor'],
       'operasional': ['Operasional', 'Pengeluaran unit'],
+      'pemasukan-lain': ['Pemasukan lain', 'Biaya di luar les'],
       'kelola-unit': ['Kelola Unit', 'Unit / cabang Genio Institute'],
       'paket-belajar': ['Paket Belajar', 'Master paket belajar'],
       'kelola-pengguna': ['Kelola User', 'Semua akun & role'],
@@ -1133,12 +1136,13 @@
           supaRest('units?select=id', token),
           supaRest('paket_belajar?select=id', token),
           supaRest('users?select=id', token),
-          supaRest('jadwal?select=id', token)
+          supaRest('jadwal?select=id', token),
+          supaRest('pemasukan_lain?select=nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token).catch(function () { return []; })
         ]);
         var siswaRows = results[0], kontrakSiswaRows = results[1], kontrakTutorRows = results[2],
             invoiceRows = results[3], tutorRows = results[4], opsRows = results[5],
             unitRows = results[6], paketRows = results[7], userRows2 = results[8],
-            jadwalRows = results[9] || [];
+            jadwalRows = results[9] || [], plRows = results[10] || [];
 
         var siswaSet = {};
         siswaRows.forEach(function (r) { siswaSet[r.siswa_id] = true; });
@@ -1153,6 +1157,7 @@
 
         lainnyaSetInfo('data-tutor', tutorRows.length + ' Tutor');
         lainnyaSetInfo('operasional', lainnyaFormatRupiah(opsRows.reduce(function (a, r) { return a + parseFloat(r.nominal || 0); }, 0)));
+        lainnyaSetInfo('pemasukan-lain', lainnyaFormatRupiah(plRows.reduce(function (a, r) { return a + parseFloat(r.nominal || 0); }, 0)));
         lainnyaSetInfo('kelola-unit', unitRows.length + ' Unit');
         lainnyaSetInfo('paket-belajar', paketRows.length + ' Program');
         lainnyaSetInfo('kelola-pengguna', userRows2.length + ' User');

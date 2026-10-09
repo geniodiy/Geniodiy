@@ -89,6 +89,8 @@
   .tg-table-icon-btn.tg-lunas-btn{color:#1E8E5A;} .tg-table-icon-btn.tg-lunas-btn:hover{background:#E9F7EF;}
   .tg-table-icon-btn.tg-del-btn:hover{background:var(--red-soft); color:var(--red); border-color:rgba(212,7,15,.25);}
   .tg-siswa-pill{display:inline-flex; align-items:center; gap:4px; background:var(--surface); border-radius:6px; padding:2px 7px; font-size:10.5px; color:var(--ink); white-space:nowrap;}
+  .tg-extra-pill{background:#E9F7EF; color:#1E8E5A;} .tg-extra-pill i{font-size:12px;}
+  .tgc-kid.tg-extra-row b i{color:#1E8E5A; font-size:12px;}
   .tg-siswa-sesi-tag{font-size:9.5px; font-weight:600; color:var(--ink-soft);}
 
   /* ===== Tabel ===== */
@@ -394,6 +396,7 @@
     sortField: 'nominal',
     sortDesc: true,
     rows: [],
+    extras: [], // pemasukan lain (biaya di luar les) periode ini, ikut ditagih per orang tua/sekolah
     unitList: [],
     selectedKey: null,
     candidateRows: []
@@ -576,10 +579,17 @@
         'receipt:receipt(id,tanggal_bayar,pdf_url)' +
         '&periode=eq.' + tgState.periode + unitFilterUrl;
 
+      // Pemasukan lain (cetak modul, tes, simulasi, ...) di bulan yang sama ikut ditagih
+      var extrasUrl = 'pemasukan_lain?select=id,unit_id,orangtua_id,siswa_id,tanggal,keterangan,jumlah,harga_satuan,nominal,status,tanggal_lunas,invoice_id,pdf_url,' +
+        'orangtua(id,nama,no_hp,alamat,pic_nama),siswa(id,nama),units(id,nama_unit,jenis),pemasukan_kategori(nama)' +
+        '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end + unitFilterUrl + '&order=tanggal.asc';
+
       var results = await Promise.all([
         supaRest(presensiUrl, s.access_token),
-        supaRest(invoiceUrl, s.access_token)
+        supaRest(invoiceUrl, s.access_token),
+        supaRest(extrasUrl, s.access_token).catch(function () { return []; })
       ]);
+      tgState.extras = results[2] || [];
 
       var presensiRows = results[0] || [];
       var existingInvoices = results[1] || [];
@@ -693,8 +703,8 @@
       var allBelumInvoices = tgState.rows.filter(function (r) { return r.status === 'belum_lunas'; });
       var allLunasInvoices = tgState.rows.filter(function (r) { return r.status === 'lunas'; });
 
-      var belumGroups = tgGroupRowsByOrtu(allBelumInvoices);
-      var lunasGroups = tgGroupRowsByOrtu(allLunasInvoices);
+      var belumGroups = tgGroupRowsByOrtu(allBelumInvoices, tgExtrasOf('belum_lunas'));
+      var lunasGroups = tgGroupRowsByOrtu(allLunasInvoices, tgExtrasOf('lunas'));
 
       tgRenderHero(tgState.rows, belumGroups, lunasGroups);
 
@@ -871,17 +881,17 @@
       return true;
     });
 
-    // Group by Orang Tua
-    var groups = tgGroupRowsByOrtu(rowsForTab);
+    // Group by Orang Tua (pertemuan les + pemasukan lain)
+    var groups = tgGroupRowsByOrtu(rowsForTab, tgExtrasOf(tab).filter(function (e) { return !unitId || e.unit_id === unitId; }));
 
     // Filter by status cetak dokumen (PDF di Google Drive)
     if (filterCetak === 'sudah_dicetak') {
       groups = groups.filter(function (g) {
-        return g.invoices.some(function (inv) { return !!inv.pdf_url; });
+        return tgHasPdf(g);
       });
     } else if (filterCetak === 'belum_dicetak') {
       groups = groups.filter(function (g) {
-        return g.invoices.every(function (inv) { return !inv.pdf_url; });
+        return !tgHasPdf(g);
       });
     }
 
@@ -890,6 +900,7 @@
       groups = groups.filter(function (g) {
         if (g.ortuNama.toLowerCase().includes(search)) return true;
         if (g.unitNama.toLowerCase().includes(search)) return true;
+        if (g.extras.some(function (e) { return String(e.keterangan || '').toLowerCase().includes(search); })) return true;
         return g.children.some(function (c) {
           return c.nama.toLowerCase().includes(search);
         });
@@ -899,7 +910,17 @@
     return groups;
   }
 
-  function tgGroupRowsByOrtu(rows) {
+  function tgExtrasOf(status) { return (tgState.extras || []).filter(function (e) { return e.status === status; }); }
+  function tgHasPdf(g) {
+    return g.invoices.some(function (inv) { return !!inv.pdf_url; }) || (g.extras || []).some(function (e) { return !!e.pdf_url; });
+  }
+  function tgExtraLabel(e) { return ((e.pemasukan_kategori && e.pemasukan_kategori.nama) || 'Biaya lain') + ': ' + (e.keterangan || '-'); }
+  function tgExtraQty(e) {
+    var j = parseFloat(e.jumlah || 1);
+    return j === 1 ? '' : (Math.round(j * 100) / 100).toLocaleString('id-ID') + ' × ' + tgFormatRp(e.harga_satuan);
+  }
+
+  function tgGroupRowsByOrtu(rows, extras) {
     var map = {};
     rows.forEach(function (r) {
       var ks = r.kontrak_siswa || {};
@@ -929,6 +950,8 @@
           totalSesi: 0,
           totalNominal: 0,
           invoices: [],
+          extras: [],
+          extraNominal: 0,
           childrenMap: {}
         };
       }
@@ -964,6 +987,24 @@
       if (pktNama && c.pakets.indexOf(pktNama) === -1) {
         c.pakets.push(pktNama);
       }
+    });
+
+    // Pemasukan lain masuk ke grup orang tua/sekolah yang sama; kalau bulan itu tidak ada les, grupnya hanya berisi biaya lain
+    (extras || []).forEach(function (e) {
+      var o = e.orangtua || {};
+      var key = o.id || e.orangtua_id;
+      if (!map[key]) {
+        map[key] = {
+          key: key, ortuId: key, ortuNama: o.nama || 'Orang tua', isSekolah: !!(e.units && e.units.jenis === 'sekolah'), picNama: o.pic_nama || '',
+          ortuHp: o.no_hp || '', ortuAlamat: o.alamat || '', unitNama: (e.units && e.units.nama_unit) || '-', unitId: e.unit_id,
+          status: e.status, tanggalLunas: e.tanggal_lunas, totalSesi: 0, totalNominal: 0, invoices: [], extras: [], extraNominal: 0, childrenMap: {}
+        };
+      }
+      var g = map[key];
+      g.extras.push(e);
+      g.extraNominal += parseFloat(e.nominal || 0);
+      g.totalNominal += parseFloat(e.nominal || 0);
+      if (e.tanggal_lunas && (!g.tanggalLunas || new Date(e.tanggal_lunas) > new Date(g.tanggalLunas))) g.tanggalLunas = e.tanggal_lunas;
     });
 
     return Object.values(map).map(function (g) {
@@ -1049,7 +1090,7 @@
   function tgRenderHero(rows, belumGroups, lunasGroups) {
     var total = 0, lunas = 0;
     var units = {};
-    rows.forEach(function (r) {
+    rows.concat(tgState.extras || []).forEach(function (r) {
       var nom = parseFloat(r.nominal || 0);
       total += nom;
       if (r.status === 'lunas') lunas += nom;
@@ -1064,7 +1105,7 @@
 
     document.getElementById('tg-heroPeriode').textContent = 'Total tagihan ' + tgFormatPeriodeLabel(tgState.periode);
     tgCountUpRp(document.getElementById('tg-heroTotal'), total);
-    document.getElementById('tg-heroCount').textContent = (belumGroups.length + lunasGroups.length) + ' orang tua · ' + rows.length + ' tagihan';
+    document.getElementById('tg-heroCount').textContent = (belumGroups.length + lunasGroups.length) + ' orang tua · ' + (rows.length + (tgState.extras || []).length) + ' tagihan';
     document.getElementById('tg-heroLunas').textContent = tgFormatShort(lunas);
     document.getElementById('tg-heroBelum').textContent = tgFormatShort(belum);
     document.getElementById('tg-heroOrtuBelum').textContent = belumGroups.length;
@@ -1098,7 +1139,16 @@
   // ===== Tagihan tambahan: invoice urutan 2 dan seterusnya di bulan yang sama =====
   var TG_BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
   function tgIsTambahan(inv) { return (inv && inv.urutan || 1) > 1; }
-  function tgGroupTambahan(g) { return g.invoices.length > 0 && g.invoices.every(tgIsTambahan); }
+  function tgGroupTambahan(g) {
+    if (g.invoices.length) return g.invoices.every(tgIsTambahan);
+    // Hanya biaya lain: tagihan tambahan kalau tagihan orang tua/sekolah ini di bulan yang sama sudah ada yang lunas
+    if (g.status === 'lunas' || !(g.extras || []).length) return false;
+    return tgLunasEarlier(g);
+  }
+  function tgLunasEarlier(g) {
+    return (tgState.rows || []).some(function (r) { var o = ((r.kontrak_siswa || {}).siswa || {}).ortu || {}; return r.status === 'lunas' && o.id === g.ortuId; }) ||
+      (tgState.extras || []).some(function (e) { return e.status === 'lunas' && e.orangtua_id === g.ortuId && g.extras.indexOf(e) === -1; });
+  }
   function tgFirstInvoiceOf(inv) {
     return (tgState.rows || []).find(function (r) { return r.kontrak_siswa_id === inv.kontrak_siswa_id && (r.urutan || 1) === 1; }) || null;
   }
@@ -1118,6 +1168,10 @@
   }
   // Nomor dokumen grup: invoice/kuitansi biasa tetap seperti sebelumnya; tagihan tambahan diberi akhiran urutan
   function tgDocNo(g, isLunas) {
+    if (!g.invoices.length && (g.extras || []).length) {
+      // Hanya biaya lain: nomor dari catatan pemasukan pertama
+      return (isLunas ? 'REC-' : 'INV-') + String(g.extras[0].id || '').slice(0, 8).toUpperCase() + (tgGroupTambahan(g) ? '-B' : '');
+    }
     var inv = g.invoices[0] || {};
     if (!tgIsTambahan(inv)) {
       return isLunas
@@ -1133,6 +1187,7 @@
   function tgTambahanNote(g) {
     var inv = g.invoices[0] || {}, first = tgFirstInvoiceOf(inv);
     if (!tgGroupTambahan(g)) return '';
+    if (!g.invoices.length) return 'Tagihan tambahan untuk biaya lain yang dicatat setelah tagihan bulan ini lunas.';
     return 'Tagihan tambahan untuk pertemuan setelah tagihan ' + (first ? tgInvNo(first) : 'sebelumnya') + ' lunas' + (first && first.tanggal_lunas ? ' pada ' + tgFormatTgl(first.tanggal_lunas) : '') + '.';
   }
   function tgTambahanTag() { return '<span class="tg-tambahan-tag"><i class="ph ph-plus-circle" aria-hidden="true"></i>Tagihan tambahan</span>'; }
@@ -1146,7 +1201,7 @@
   function tgActionIcons(g, withLunasIcon) {
     var isLunas = g.status === 'lunas';
     var cleanHp = (g.ortuHp || '').replace(/\D/g, '').replace(/^0/, '62');
-    var hasPdf = g.invoices.some(function (inv) { return !!inv.pdf_url; });
+    var hasPdf = tgHasPdf(g);
     var html = '';
     if (cleanHp) {
       html += '<a href="' + tgBuildWaLink(g, cleanHp) + '" target="_blank" rel="noopener noreferrer" class="tg-table-icon-btn is-wa" title="Kirim lewat WhatsApp" aria-label="Kirim lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>';
@@ -1171,11 +1226,11 @@
   function tgRenderTable(groups) {
     var trs = groups.map(function (g, idx) {
       var isLunas = g.status === 'lunas';
-      var hasPdf = g.invoices.some(function (inv) { return !!inv.pdf_url; });
+      var hasPdf = tgHasPdf(g);
       var siswaBadges = g.children.map(function (c) {
         return '<span class="tg-siswa-pill" title="' + tgEscape(c.nama + (c.pakets.length ? ' (' + c.pakets.join(', ') + ')' : '') + ' · ' + c.sesi + ' sesi · ' + tgFormatRp(c.nominal)) + '">' +
           tgEscape(c.nama) + '<span class="tg-siswa-sesi-tag">' + c.sesi + '</span></span>';
-      }).join(' ');
+      }).join(' ') + (g.extras.length ? ' <span class="tg-siswa-pill tg-extra-pill" title="' + tgEscape(g.extras.map(tgExtraLabel).join(', ') + ' · ' + tgFormatRp(g.extraNominal)) + '"><i class="ph ph-hand-coins" aria-hidden="true"></i>Biaya lain<span class="tg-siswa-sesi-tag">' + g.extras.length + '</span></span>' : '');
       return '<tr class="tg-table-row" data-key="' + tgEscape(g.key) + '">' +
         '<td class="tg-no tg-stk tg-stk-no">' + (idx + 1) + '</td>' +
         '<td class="tg-stk tg-stk-ortu">' + tgEscape(g.ortuNama) + (tgGroupTambahan(g) ? tgTambahanTag() : '') + '</td>' +
@@ -1210,6 +1265,9 @@
       var tgl = tgTglList(c.pres);
       return '<div class="tgc-kid"><div style="min-width:0;"><b>' + tgEscape(c.nama) + '</b><span>' + tgEscape(sub) + '</span>' + (tgl ? '<span class="tg-tgl">Pertemuan ' + tgEscape(tgl) + '</span>' : '') + '</div>' +
         '<div class="r"><b>' + tgFormatRp(c.nominal) + '</b></div></div>';
+    }).join('') + g.extras.map(function (e) {
+      return '<div class="tgc-kid tg-extra-row"><div style="min-width:0;"><b><i class="ph ph-hand-coins" aria-hidden="true"></i> ' + tgEscape(tgExtraLabel(e)) + '</b><span>' + tgEscape([tgFormatTgl(e.tanggal), tgExtraQty(e)].filter(Boolean).join(' · ')) + '</span></div>' +
+        '<div class="r"><b>' + tgFormatRp(e.nominal) + '</b></div></div>';
     }).join('');
     var isOpen = !!tgState.openCards[g.key];
     var firstNames = g.children.map(function (c) { return (c.nama || '').trim().split(/\s+/)[0]; }).join(', ');
@@ -1224,7 +1282,7 @@
         tgStatusPill(isLunas) +
       '</div>' +
       '<button type="button" class="tgc-toggle" data-key="' + tgEscape(g.key) + '" aria-expanded="' + isOpen + '">' +
-        '<span class="l">Total ' + g.totalSesi + ' sesi <em>(' + tgEscape(firstNames) + ')</em></span>' +
+        '<span class="l">' + (g.children.length ? 'Total ' + g.totalSesi + ' sesi <em>(' + tgEscape(firstNames) + ')</em>' : 'Biaya lain') + (g.children.length && g.extras.length ? ' <em>+ biaya lain</em>' : '') + '</span>' +
         '<b>' + tgFormatRp(g.totalNominal) + '</b>' +
         '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
       '</button>' +
@@ -1251,8 +1309,8 @@
       listEl.className = '';
       listEl.innerHTML = '<div class="card tg-card" style="padding:28px 14px; text-align:center; color:var(--ink-soft); font-size:11.5px;">' +
         '<i class="ph ph-receipt" aria-hidden="true" style="font-size:26px; opacity:.6;"></i>' +
-        '<div style="font-size:12px; font-weight:600; color:var(--ink); margin-top:6px;">' + (tgState.rows.length ? 'Tidak ada tagihan yang cocok' : 'Belum ada tagihan di periode ini') + '</div>' +
-        '<div style="margin-top:2px;">' + (tgState.rows.length ? 'Ubah filter atau kata kunci pencarian.' : 'Tagihan muncul otomatis dari presensi siswa yang sudah diterima di ' + tgFormatPeriodeLabel(tgState.periode) + '.') + '</div>' +
+        '<div style="font-size:12px; font-weight:600; color:var(--ink); margin-top:6px;">' + (tgState.rows.length || tgState.extras.length ? 'Tidak ada tagihan yang cocok' : 'Belum ada tagihan di periode ini') + '</div>' +
+        '<div style="margin-top:2px;">' + (tgState.rows.length || tgState.extras.length ? 'Ubah filter atau kata kunci pencarian.' : 'Tagihan muncul otomatis dari presensi siswa yang sudah diterima di ' + tgFormatPeriodeLabel(tgState.periode) + '.') + '</div>' +
       '</div>';
       return;
     }
@@ -1296,6 +1354,11 @@
       return '• ' + c.nama + ' (' + c.sesi + ' Sesi' + (tgl ? ', ' + tgl : '') + ')' + (c.pakets.length ? ' - ' + c.pakets.join(', ') : '') + ': ' + tgFormatRp(c.nominal);
     }).join('\n');
     var tambahan = tgGroupTambahan(group);
+    // Biaya lain (pemasukan lain) ikut dirinci; tanpa les, baris siswa dan total sesi tidak ditulis
+    var extraLines = group.extras.length ? '• Biaya lain:\n' + group.extras.map(function (e) {
+      return '   - ' + tgExtraLabel(e) + (tgExtraQty(e) ? ' (' + tgExtraQty(e) + ')' : '') + ': ' + tgFormatRp(e.nominal);
+    }).join('\n') + '\n' : '';
+    var lesLines = group.children.length ? rincian + childrenLines + '\n' + '• Total Sesi: ' + group.totalSesi + ' Pertemuan\n' : '';
 
     var msg = '';
     if (isLunas) {
@@ -1304,8 +1367,7 @@
             '━━━━━━━━━━━━━━━━━━━━\n' +
             '• Periode: ' + tgFormatPeriodeLabel(tgState.periode) + '\n' +
             '• Unit: ' + group.unitNama + '\n' +
-            rincian + childrenLines + '\n' +
-            '• Total Sesi: ' + group.totalSesi + ' Pertemuan\n' +
+            lesLines + extraLines +
             '• *Total Diterima: ' + tgFormatRp(group.totalNominal) + '*\n' +
             '• Tanggal Bayar: ' + tgFormatTgl(group.tanggalLunas) + '\n' +
             '• Status: *LUNAS*\n' +
@@ -1315,12 +1377,11 @@
     } else {
       msg = yth + ',\n\n' +
             (tambahan
-              ? 'Berikut *tagihan tambahan* bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*, untuk pertemuan setelah tagihan sebelumnya lunas:\n'
+              ? 'Berikut *tagihan tambahan* bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*, ' + (group.children.length ? 'untuk pertemuan' : 'untuk biaya') + ' setelah tagihan sebelumnya lunas:\n'
               : 'Berikut rincian tagihan bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*:\n') +
             '━━━━━━━━━━━━━━━━━━━━\n' +
             '• Unit Cabang: ' + group.unitNama + '\n' +
-            rincian + childrenLines + '\n' +
-            '• Total Sesi: ' + group.totalSesi + ' Pertemuan\n' +
+            lesLines + extraLines +
             '• *Total Tagihan: ' + tgFormatRp(group.totalNominal) + '*\n' +
             '• Status: *MENUNGGU PEMBAYARAN*\n' +
             '━━━━━━━━━━━━━━━━━━━━\n' +
@@ -1339,7 +1400,7 @@
     var currentGroups = tgGetFilteredGroups();
     var g = currentGroups.find(function (grp) { return grp.key === key; });
     if (!g) {
-      var allG = tgGroupRowsByOrtu(tgState.rows);
+      var allG = tgGroupRowsByOrtu(tgState.rows.filter(function (r) { return r.status === tgState.tab; }), tgExtrasOf(tgState.tab));
       g = allG.find(function (grp) { return grp.key === key; });
     }
     return g;
@@ -1353,15 +1414,17 @@
     var childListHtml = g.children.map(function (c) {
       var tgl = tgTglList(c.pres);
       return '<div class="tg-sum-row"><span>' + tgEscape(c.nama) + ' · ' + c.sesi + ' sesi' + (tgl ? ' (' + tgEscape(tgl) + ')' : '') + '</span><span>' + tgFormatRp(c.nominal) + '</span></div>';
+    }).join('') + g.extras.map(function (e) {
+      return '<div class="tg-sum-row"><span>' + tgEscape(tgExtraLabel(e)) + (tgExtraQty(e) ? ' (' + tgEscape(tgExtraQty(e)) + ')' : '') + '</span><span>' + tgFormatRp(e.nominal) + '</span></div>';
     }).join('');
 
     var infoBox = document.getElementById('tg-lunasInfoBox');
     infoBox.innerHTML = '<div class="tg-sum">' +
       '<div class="tg-sum-h"><b>' + tgEscape(g.ortuNama) + '</b><span>' + tgEscape(g.unitNama) + '</span></div>' +
       childListHtml +
-      '<div class="tg-sum-tot"><span>Total ' + g.totalSesi + ' sesi</span><b>' + tgFormatRp(g.totalNominal) + '</b></div>' +
+      '<div class="tg-sum-tot"><span>Total' + (g.totalSesi ? ' ' + g.totalSesi + ' sesi' : '') + (g.extras.length ? (g.totalSesi ? ' + ' : ' ') + 'biaya lain' : '') + '</span><b>' + tgFormatRp(g.totalNominal) + '</b></div>' +
     '</div>';
-    document.getElementById('tg-lunasModalSub').textContent = g.invoices.length + ' tagihan, kuitansi dibuat otomatis.';
+    document.getElementById('tg-lunasModalSub').textContent = (g.invoices.length + g.extras.length) + ' tagihan, kuitansi dibuat otomatis.';
 
     var dateInput = document.getElementById('tg-lunasTanggalInput');
     dateInput.value = new Date().toISOString().slice(0, 10);
@@ -1371,7 +1434,7 @@
 
   async function tgSubmitLunas() {
     var g = tgFindGroupByOrtuKey(tgState.selectedKey);
-    if (!g || !g.invoices.length) return;
+    if (!g || (!g.invoices.length && !g.extras.length)) return;
 
     var submitBtn = document.getElementById('tg-lunasSubmitBtn');
     submitBtn.disabled = true;
@@ -1415,7 +1478,14 @@
         });
       }
 
-      genioToast('Pembayaran ' + g.ortuNama + ' (' + g.invoices.length + ' tagihan) ditandai lunas', 'success');
+      // Biaya lain ikut lunas bersama tagihan les-nya (ditautkan ke invoice pertama kalau ada)
+      if (g.extras.length) {
+        await supaRest('pemasukan_lain?id=in.(' + g.extras.map(function (e) { return e.id; }).join(',') + ')', s.access_token, {
+          method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ status: 'lunas', tanggal_lunas: tglIso, invoice_id: (g.invoices[0] && g.invoices[0].id) || null })
+        });
+      }
+      genioToast('Pembayaran ' + g.ortuNama + ' (' + (g.invoices.length + g.extras.length) + ' tagihan) ditandai lunas', 'success');
       tgCloseModal('tg-lunasModal');
       submitBtn.disabled = false;
       submitBtn.textContent = 'Tandai lunas';
@@ -1438,7 +1508,7 @@
 
     tgOpenConfirmModal({
       title: 'Batalkan status lunas?',
-      desc: 'Tagihan ' + g.ortuNama + ' (' + g.invoices.length + ' tagihan) kembali menjadi belum lunas dan kuitansi di Drive dihapus.',
+      desc: 'Tagihan ' + g.ortuNama + ' (' + (g.invoices.length + g.extras.length) + ' tagihan) kembali menjadi belum lunas dan kuitansi di Drive dihapus.',
       okText: 'Ya, batalkan',
       isDanger: true,
       icon: 'ph-arrow-counter-clockwise',
@@ -1451,6 +1521,7 @@
           if (inv.pdf_url && oldPdfUrls.indexOf(inv.pdf_url) === -1) oldPdfUrls.push(inv.pdf_url);
           if (inv.receipt && inv.receipt.pdf_url && oldPdfUrls.indexOf(inv.receipt.pdf_url) === -1) oldPdfUrls.push(inv.receipt.pdf_url);
         });
+        g.extras.forEach(function (e) { if (e.pdf_url && oldPdfUrls.indexOf(e.pdf_url) === -1) oldPdfUrls.push(e.pdf_url); });
 
         if (oldPdfUrls.length && window.google && google.script && google.script.run) {
           google.script.run
@@ -1466,6 +1537,12 @@
             body: JSON.stringify({ status: 'belum_lunas', tanggal_lunas: null, pdf_url: null })
           });
           inv.pdf_url = null;
+        }
+        if (g.extras.length) {
+          await supaRest('pemasukan_lain?id=in.(' + g.extras.map(function (e) { return e.id; }).join(',') + ')', s.access_token, {
+            method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ status: 'belum_lunas', tanggal_lunas: null, invoice_id: null, pdf_url: null })
+          });
         }
         genioToast('Tagihan ' + g.ortuNama + ' kembali menjadi belum lunas', 'info');
         tgLoadAll();
@@ -1533,7 +1610,7 @@
   // =========================================================
 
   async function tgProcessPrintDoc(g, btn) {
-    if (!g || !g.invoices || !g.invoices.length) return;
+    if (!g || ((!g.invoices || !g.invoices.length) && !(g.extras || []).length)) return;
     if (btn && btn.dataset.busy === '1') return;
 
     var driveBtn = document.getElementById('tg-previewDriveBtn');
@@ -1556,6 +1633,7 @@
           break;
         }
       }
+      if (!existingPdfUrl) g.extras.forEach(function (e) { if (!existingPdfUrl && e.pdf_url) existingPdfUrl = e.pdf_url; });
 
       var itemsPayload = g.children.map(function (c) {
         var hgSatuan = c.sesi > 0 ? Math.round(c.nominal / c.sesi) : 0;
@@ -1576,7 +1654,12 @@
 
       var firstInv = g.invoices[0] || {};
       var payload = {
-        id: firstInv.id,
+        id: firstInv.id || (g.extras[0] && g.extras[0].id),
+        // Biaya lain di bawah baris pertemuan les
+        extras: g.extras.map(function (e) {
+          return { tanggal: e.tanggal, kategori: (e.pemasukan_kategori && e.pemasukan_kategori.nama) || 'Biaya lain', keterangan: e.keterangan || '', jumlah: parseFloat(e.jumlah || 1), hargaSatuan: parseFloat(e.harga_satuan || 0), nominal: parseFloat(e.nominal || 0), siswa: (e.siswa && e.siswa.nama) || '' };
+        }),
+        extraNominal: g.extraNominal,
         receiptId: (firstInv.receipt && firstInv.receipt.id) ? firstInv.receipt.id : null,
         oldPdfUrl: existingPdfUrl,
         status: g.status,
@@ -1593,7 +1676,7 @@
         totalSesi: g.totalSesi,
         totalNominal: g.totalNominal,
         items: itemsPayload,
-        siswaList: g.children.map(function (c) { return c.nama; }).join(', '),
+        siswaList: g.children.length ? g.children.map(function (c) { return c.nama; }).join(', ') : g.extras.map(function (e) { return e.siswa && e.siswa.nama; }).filter(function (n, i, arr) { return n && arr.indexOf(n) === i; }).join(', '),
         tanggalLunas: g.tanggalLunas ? tgFormatTgl(g.tanggalLunas) : null,
         identitas: await genioDocIdentity()
       };
@@ -1638,6 +1721,12 @@
         }
       }
 
+      if (g.extras.length) {
+        await supaRest('pemasukan_lain?id=in.(' + g.extras.map(function (e) { return e.id; }).join(',') + ')', s.access_token, {
+          method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ pdf_url: result.url })
+        });
+        g.extras.forEach(function (e) { e.pdf_url = result.url; });
+      }
       genioToast((g.status === 'lunas' ? 'Kuitansi' : 'Invoice') + ' tersimpan di Google Drive', 'success');
 
       if (driveBtn) {
@@ -1658,7 +1747,7 @@
         btn.dataset.busy = '0';
         btn.disabled = false;
         btn.style.opacity = '';
-        var hasPdfNow = g.invoices.some(function (inv) { return !!inv.pdf_url; });
+        var hasPdfNow = tgHasPdf(g);
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span id="tg-previewPrintBtnText">' + (hasPdfNow ? 'Cetak ulang PDF' : 'Cetak PDF') + '</span>';
       }
     }
@@ -1697,6 +1786,15 @@
         '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (inv.jumlah_pertemuan || 0) + ' Sesi</td>' +
         '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea;">' + tgFormatRp(inv.harga_satuan) + '</td>' +
         '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea; font-weight:500;">' + tgFormatRp(inv.nominal) + '</td>' +
+      '</tr>';
+    }).join('') + g.extras.map(function (e, idx) {
+      return '<tr>' +
+        '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (g.invoices.length + idx + 1) + '</td>' +
+        '<td style="padding:8px; border-bottom:1px solid #e5e5ea;"><div style="font-weight:500;">' + tgEscape(tgExtraLabel(e)) + '</div>' +
+          '<div style="font-size:9.5px; color:#8e8e93;">Biaya lain · ' + tgFormatTgl(e.tanggal) + (e.siswa && e.siswa.nama ? ' · ' + tgEscape(e.siswa.nama) : '') + '</div></td>' +
+        '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (Math.round(parseFloat(e.jumlah || 1) * 100) / 100).toLocaleString('id-ID') + '</td>' +
+        '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea;">' + tgFormatRp(e.harga_satuan) + '</td>' +
+        '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea; font-weight:500;">' + tgFormatRp(e.nominal) + '</td>' +
       '</tr>';
     }).join('');
 
@@ -1791,6 +1889,7 @@
         break;
       }
     }
+    if (!existingPdf) g.extras.forEach(function (e) { if (!existingPdf && e.pdf_url) existingPdf = e.pdf_url; });
 
     var driveBtn = document.getElementById('tg-previewDriveBtn');
     if (driveBtn) {

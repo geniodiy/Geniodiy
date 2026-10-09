@@ -768,7 +768,10 @@ function buildInvoiceHtml_(d) {
     : 'INV-' + ((d.id || '').substring(0, 8).toUpperCase()));
   var totalSesi = d.totalSesi || d.jumlahPertemuan || 0;
   var totalNominal = d.totalNominal || d.nominal || 0;
-  var items = (d.items && d.items.length) ? d.items : [{ nama: d.siswaNama, pakets: d.namaPaket, sesi: totalSesi, hargaSatuan: d.hargaSatuan, nominal: totalNominal }];
+  // Pemasukan lain (biaya di luar les) dicetak di bawah baris pertemuan; tagihan bisa berisi biaya lain saja
+  var extras = d.extras || [];
+  var extraTotal = extras.reduce(function (a, e) { return a + (+e.nominal || 0); }, 0);
+  var items = (d.items && d.items.length) ? d.items : (extras.length ? [] : [{ nama: d.siswaNama, pakets: d.namaPaket, sesi: totalSesi, hargaSatuan: d.hargaSatuan, nominal: totalNominal }]);
   // Rincian per pertemuan hanya kalau jumlahnya cocok dengan sesi yang ditagih (data lama bisa tidak lengkap)
   var perPertemuan = items.every(function (it) { return it.pertemuan && it.pertemuan.length && it.pertemuan.length === +(it.sesi || it.jumlahPertemuan || 0); });
   var no = 0, rows = '', harga = {};
@@ -785,12 +788,21 @@ function buildInvoiceHtml_(d) {
         (it.subtext ? '<div class="sub">' + docEsc_(it.subtext) + '</div>' : '') + '</td><td>' + docEsc_(it.sesi || it.jumlahPertemuan || 0) + ' × ' + docRp_(it.hargaSatuan) + '</td><td class="n">' + docRp_(it.nominal) + '</td></tr>';
     }
   });
+  if (extras.length) {
+    var qty = function (e) { var j = +e.jumlah || 1; return j === 1 ? '' : ' (' + String(Math.round(j * 100) / 100).replace('.', ',') + ' × ' + docRp_(e.hargaSatuan) + ')'; };
+    if (items.length) rows += '<tr><td></td><td colspan="4" class="b blue" style="padding-top:3mm; border-bottom:none; font-size:8pt;">Biaya lain</td></tr>';
+    extras.forEach(function (e) {
+      rows += perPertemuan
+        ? '<tr><td class="c">' + (++no) + '</td><td>' + docTglNota_(e.tanggal) + '</td><td>' + docEsc_(e.siswa || '-') + '</td><td>' + docEsc_(e.kategori) + ': ' + docEsc_(e.keterangan) + docEsc_(qty(e)) + '</td><td class="n">' + docRp_(e.nominal) + '</td></tr>'
+        : '<tr><td class="c">' + (++no) + '</td><td colspan="2"><span class="b">' + docEsc_(e.kategori) + '</span> · ' + docEsc_(e.keterangan) + '<div class="sub">' + docEsc_([docTglNota_(e.tanggal), e.siswa].filter(Boolean).join(' · ')) + '</div></td><td>' + docEsc_((+e.jumlah || 1) + ' × ' + docRp_(e.hargaSatuan)) + '</td><td class="n">' + docRp_(e.nominal) + '</td></tr>';
+    });
+  }
   var hargaList = Object.keys(harga);
   var rumus = hargaList.length === 1 && +hargaList[0] > 0 ? totalSesi + ' pertemuan × ' + docRp_(hargaList[0]) : totalSesi + ' pertemuan';
   var title = isLunas ? 'KUITANSI' : 'INVOICE';
-  var subtitle = d.tambahan ? 'Tagihan tambahan' : (isLunas ? 'Bukti pembayaran' : 'Tagihan bimbingan belajar');
+  var subtitle = d.tambahan ? 'Tagihan tambahan' : (isLunas ? 'Bukti pembayaran' : (items.length ? 'Tagihan bimbingan belajar' : 'Tagihan biaya lain'));
   var head = perPertemuan
-    ? '<tr><th class="c" style="width:9mm;">No</th><th style="width:26mm;">Tanggal</th><th>' + (d.isSekolah ? 'Kelompok' : 'Siswa') + '</th><th>Mapel · paket</th><th class="n" style="width:30mm;">Biaya</th></tr>'
+    ? '<tr><th class="c" style="width:9mm;">No</th><th style="width:26mm;">Tanggal</th><th>' + (d.isSekolah ? 'Kelompok' : 'Siswa') + '</th><th>' + (items.length ? 'Mapel · paket' : 'Keterangan') + '</th><th class="n" style="width:30mm;">Biaya</th></tr>'
     : '<tr><th class="c" style="width:9mm;">No</th><th colspan="2">' + (d.isSekolah ? 'Kelompok' : 'Siswa') + ' · paket</th><th style="width:40mm;">Pertemuan</th><th class="n" style="width:32mm;">Subtotal</th></tr>';
   var html =
     docHeader_(idn, title, subtitle) +
@@ -808,7 +820,10 @@ function buildInvoiceHtml_(d) {
     '</tr></table>' +
     '<table class="it"><thead>' + head + '</thead><tbody>' + rows + '</tbody></table>' +
     '<table class="tot">' +
-      '<tr><td class="muted n">' + docEsc_(rumus) + '</td><td style="width:42mm;"></td></tr>' +
+      (extras.length
+        ? (items.length ? '<tr><td class="muted n">' + docEsc_(rumus) + '</td><td class="n muted" style="width:42mm;">' + docRp_(totalNominal - extraTotal) + '</td></tr>' : '') +
+          '<tr><td class="muted n">Biaya lain</td><td class="n muted" style="width:42mm;">' + docRp_(extraTotal) + '</td></tr>'
+        : '<tr><td class="muted n">' + docEsc_(rumus) + '</td><td style="width:42mm;"></td></tr>') +
       '<tr class="last"><td class="n b">' + (isLunas ? '<span class="stamp" style="margin-right:6mm;">LUNAS' + (d.tanggalLunas ? ' · ' + docEsc_(d.tanggalLunas) : '') + '</span>' : '') +
         (isLunas ? 'Total dibayar' : 'Total tagihan') + '</td><td class="n big">' + docRp_(totalNominal) + '</td></tr>' +
     '</table>' +

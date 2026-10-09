@@ -796,6 +796,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 | 6 | Kontrak + Jadwal | Selesai | |
 | 7 | Presensi | Selesai (sisi Manajer), sisi tutor sebagian | PDF Laporan Belajar untuk presensi diwakilkan. Halaman Presensi tutor (isi, revisi, jadwal lengkap) sudah dibuat di Fase 4a. Tab Kirim laporan ke orang tua (satuan dan rekap, link atau file, PDF rekap) selesai 9 Okt 2026. |
 | 8 | Tagihan | Selesai (dengan sinkron otomatis) | Template PDF baru 9 Okt 2026: invoice dan kuitansi gaya nota (Courier), satu baris per pertemuan, rekening dan tanda tangan dari Pengaturan > Identitas dokumen. |
+| 8a | Pemasukan lain | Selesai (9 Okt 2026) | Biaya di luar les (cetak modul, tes, simulasi, kategori bisa diatur manajer), dibebankan ke orang tua/sekolah, ikut di invoice bulanan dan omset Home. |
 | 9 | Operasional | Selesai | |
 | 10 | Penggajian | Selesai (dengan generate otomatis) | Pengeluaran gaji di Home membaca `slip_gaji`, jadi baru terisi setelah menu Gaji bulan itu dibuka. |
 | 11 | Home & Progres | Sebagian | Genio News dipindah ke paling atas. Tambah siswa aktif dan jumlah pertemuan di highlight, pie chart siswa aktif per unit, shortcut tagihan belum lunas. Menu Progres belum ada. |

@@ -462,7 +462,8 @@
         q('presensi?select=kontrak_tutor_id,jam,status,tanggal' + u + '&tanggal=gte.' + presFrom + '&tanggal=lte.' + todayKey),
         q('genio_news?select=id,judul,gambar_url,tanggal_publish,tombol_kontak_url&status=eq.aktif&tanggal_publish=lte.' + nowIso + '&or=(tanggal_expire.gte.' + nowIso + ',tanggal_expire.is.null)&order=tanggal_publish.desc&limit=3'),
         isHrd ? q('users?role=eq.tutor&select=id,status,created_at&order=created_at.asc') : none(),
-        isHrd ? q('siswa?select=id&created_at=gte.' + range.start + '&created_at=lt.' + nextMonthStart) : none()
+        isHrd ? q('siswa?select=id&created_at=gte.' + range.start + '&created_at=lt.' + nextMonthStart) : none(),
+        isHrd ? none() : q('pemasukan_lain?select=tanggal,nominal' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end).catch(function () { return []; })
       ]);
       if (token !== kuhState.loading) return;
       var presHist = res[0], opsHist = res[1], presMonth = res[2], kontrakSiswa = res[3], pending = res[4],
@@ -479,6 +480,11 @@
       opsHist.forEach(function (r) {
         var b = byMonth[String(r.tanggal).slice(0, 7)]; if (!b) return;
         b.ops += parseFloat(r.nominal || 0) || 0;
+      });
+      // Pemasukan lain (cetak modul, tes, dll.) menambah omset bulannya
+      (res[11] || []).forEach(function (r) {
+        var b = byMonth[String(r.tanggal).slice(0, 7)]; if (!b) return;
+        b.omset += parseFloat(r.nominal || 0) || 0;
       });
       kuhState.months = Object.keys(byMonth).sort().map(function (k) { var b = byMonth[k]; b.laba = b.omset - b.gaji - b.ops; b.tutor = Object.keys(b.tutorSet).length; return b; });
 

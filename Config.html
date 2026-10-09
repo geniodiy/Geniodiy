@@ -281,43 +281,43 @@
   /* Minimalis: chip jumlah di judul daftar dan sub-baris "x aktif · y nonaktif" di highlight disembunyikan,
      angkanya sudah ada di badge tab, legenda highlight, dan footer tabel. ID tetap ada untuk hook JS. */
   #ps-resultCount, #jdw-resultCount, #os-resultCount, #ktr-resultCount, #tg-resultCount, #dt-resultCount,
-  #ops-resultCount, #gj-resultCount, #ku-resultCount, #pkt-resultCount, #kp-resultCount,
+  #ops-resultCount, #pl-resultCount, #gj-resultCount, #ku-resultCount, #pkt-resultCount, #kp-resultCount,
   #dt-heroSub, #kp-heroSub, #ktr-heroSub, .ob-sub{display:none !important;}
   /* Skema track dan thumb untuk semua tab segmen modul (sama dengan bottom bar dan tab header):
      rel abu muda bertepi putih, pil putih yang bergeser, kapsul penuh */
-  .ps-dock, .gj-dock, .ktr-dock, .os-dock, .dt-dock, .kp-dock, .tg-dock, .ht-range, .hu-tabs{
+  .ps-dock, .gj-dock, .ktr-dock, .os-dock, .dt-dock, .kp-dock, .tg-dock, .pl-dock, .ht-range, .hu-tabs{
     background:#ECEEF5 !important; border:1px solid #fff !important; border-radius:999px !important;
     box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 1px 2px rgba(20,22,43,.04) !important;
   }
-  .ps-dock-glider, .gj-dock-glider, .ktr-dock-glider, .os-dock-glider, .dt-dock-glider, .kp-dock-glider, .tg-dock-glider, .ht-range-glider{
+  .ps-dock-glider, .gj-dock-glider, .ktr-dock-glider, .os-dock-glider, .dt-dock-glider, .kp-dock-glider, .tg-dock-glider, .pl-dock-glider, .ht-range-glider{
     background:#fff !important; border:0 !important; border-radius:999px !important;
     box-shadow:0 1px 2px rgba(20,22,43,.06), 0 6px 14px -6px rgba(20,22,43,.18) !important;
   }
-  .ps-dock-btn, .gj-dock-btn, .ktr-dock-btn, .os-dock-btn, .dt-dock-btn, .kp-dock-btn, .tg-dock-btn, .ht-range button, .hu-tabs button{border-radius:999px !important;}
+  .ps-dock-btn, .gj-dock-btn, .ktr-dock-btn, .os-dock-btn, .dt-dock-btn, .kp-dock-btn, .tg-dock-btn, .pl-dock-btn, .ht-range button, .hu-tabs button{border-radius:999px !important;}
   .ps-dock-btn.ps-dock-active, .gj-dock-btn.gj-dock-active, .ktr-dock-btn.ktr-dock-active, .os-dock-btn.os-dock-active,
-  .dt-dock-btn.dt-dock-active, .kp-dock-btn.kp-dock-active, .tg-dock-btn.tg-dock-active{color:var(--ink) !important; font-weight:600 !important;}
+  .dt-dock-btn.dt-dock-active, .kp-dock-btn.kp-dock-active, .tg-dock-btn.tg-dock-active, .pl-dock-btn.pl-dock-active{color:var(--ink) !important; font-weight:600 !important;}
   /* Tombol tab dibagi rata (kolom grid selebar tab terpanjang), jadi glider dan geser-tahan selalu pas dengan tab yang dipilih;
      di desktop lebar bar mengikuti isi agar teks dan badge tidak keluar dari track */
-  .ps-dock, .gj-dock, .ktr-dock, .os-dock, .dt-dock, .kp-dock, .tg-dock{
+  .ps-dock, .gj-dock, .ktr-dock, .os-dock, .dt-dock, .kp-dock, .tg-dock, .pl-dock{
     display:grid !important; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); align-items:center;
   }
-  .ps-dock-btn, .gj-dock-btn, .ktr-dock-btn, .os-dock-btn, .dt-dock-btn, .kp-dock-btn, .tg-dock-btn{min-width:0;}
+  .ps-dock-btn, .gj-dock-btn, .ktr-dock-btn, .os-dock-btn, .dt-dock-btn, .kp-dock-btn, .tg-dock-btn, .pl-dock-btn{min-width:0;}
   @media (min-width:900px){
     /* id ganda supaya menang atas lebar tetap (270px dst.) di CSS modul; tombol diberi ruang 14px kiri-kanan */
     #ps-toolbarRow #ps-dock, #gj-toolbarRow #gj-dock, #ktr-toolbarRow #ktr-dock, #os-toolbarRow #os-dock,
-    #dt-toolbarRow #dt-dock, #kp-toolbarRow #kp-dock, #tg-toolbarRow #tg-dock{width:auto !important; min-width:220px !important; max-width:none !important; flex:none !important;}
+    #dt-toolbarRow #dt-dock, #kp-toolbarRow #kp-dock, #tg-toolbarRow #tg-dock, #pl-toolbarRow #pl-dock{width:auto !important; min-width:220px !important; max-width:none !important; flex:none !important;}
     #ps-toolbarRow #ps-dock .ps-dock-btn, #gj-toolbarRow #gj-dock .gj-dock-btn, #ktr-toolbarRow #ktr-dock .ktr-dock-btn, #os-toolbarRow #os-dock .os-dock-btn,
-    #dt-toolbarRow #dt-dock .dt-dock-btn, #kp-toolbarRow #kp-dock .kp-dock-btn, #tg-toolbarRow #tg-dock .tg-dock-btn{padding:0 14px !important;}
+    #dt-toolbarRow #dt-dock .dt-dock-btn, #kp-toolbarRow #kp-dock .kp-dock-btn, #tg-toolbarRow #tg-dock .tg-dock-btn, #pl-toolbarRow #pl-dock .pl-dock-btn{padding:0 14px !important;}
   }
   /* Badge jumlah di bar tab: merah seragam, kecuali tab nonaktif (abu-abu) */
   .ps-count, .gj-count, #ktr-aktifCount, #ktr-nonaktifCount, #os-aktifCount, #os-nonaktifCount, #dt-aktifCount, #dt-nonaktifCount,
-  #kp-aktifCount, #kp-nonaktifCount, #tg-tabCountBelum, #tg-tabCountLunas{
+  #kp-aktifCount, #kp-nonaktifCount, #tg-tabCountBelum, #tg-tabCountLunas, #pl-countBelum, #pl-countLunas{
     background:var(--red) !important; color:#fff !important; font-size:9px !important; font-weight:600 !important;
     padding:1px 6px !important; border-radius:999px !important; line-height:1.4; font-variant-numeric:tabular-nums;
   }
   /* Tab nonaktif dan tab selesai/riwayat (lunas, riwayat) tetap abu-abu; merah hanya untuk yang perlu ditindaklanjuti */
   #ktr-nonaktifCount, #os-nonaktifCount, #dt-nonaktifCount, #kp-nonaktifCount,
-  #tg-tabCountLunas, #ps-riwayatCount, #gj-lunasCount, #gt-countSlip{background:var(--border) !important; color:var(--ink-soft) !important;}
+  #tg-tabCountLunas, #pl-countLunas, #ps-riwayatCount, #gj-lunasCount, #gt-countSlip{background:var(--border) !important; color:var(--ink-soft) !important;}
   /* Tombol tutup popup: bulat, berupa track */
   .gx-close, #ps-filterModal .pf-close, #ps-previewModal .pv-close, #gj-previewModal .pv-close, .pt-pick-back{
     border-radius:50% !important; background:#ECEEF5 !important; border:1px solid #fff !important;
@@ -1171,7 +1171,7 @@
   }
   (function () {
     // Semua bar tab segmen dan filter: tahan tinggi sebelum handler modul merender ulang daftar
-    var TABBARS = '.ps-dock, .gj-dock, .ktr-dock, .os-dock, .dt-dock, .kp-dock, .tg-dock, .ht-range, .hu-tabs, .pt-seg, .pt-tabs, .gt-dock, [role=tablist]';
+    var TABBARS = '.ps-dock, .gj-dock, .ktr-dock, .os-dock, .dt-dock, .kp-dock, .tg-dock, .pl-dock, .ht-range, .hu-tabs, .pt-seg, .pt-tabs, .gt-dock, [role=tablist]';
     document.addEventListener('click', function (e) {
       var t = e.target;
       if (!t || !t.closest) return;
@@ -1179,7 +1179,7 @@
       if (t.closest(TABBARS)) genioHoldHeight();
     }, true);
     // Glider ikut ukuran tab: saat jumlah badge berubah, font termuat, atau modul baru tampil (lebar 0 -> N)
-    var DOCKS = ['ps', 'gj', 'ktr', 'os', 'dt', 'kp', 'tg'];
+    var DOCKS = ['ps', 'gj', 'ktr', 'os', 'dt', 'kp', 'tg', 'pl'];
     function syncGlider(dock) {
       var p = dock.__gp, g = dock.querySelector('.' + p + '-dock-glider'), a = dock.querySelector('.' + p + '-dock-active');
       if (!g || !a || !a.offsetWidth || g.style.transition === 'none') return;
@@ -1209,7 +1209,7 @@
   // Footer: info data, pilihan baris per halaman (10/25/50/100, disimpan terpisah HP dan layar lebar), tombol pertama, sebelumnya,
   // nomor halaman, berikutnya, terakhir. Kembali ke halaman 1 saat jumlah data berubah (cari, filter). Tidak tampil kalau data <= 10.
   (function genioPager() {
-    var TABLES = 'table.dt-table,table.gj-table,table.gt-table,table.jdw-table,table.kp-table,table.ku-table,table.kl-table,table.ktr-table,table.ops-table,table.os-table,table.pkt-table,table.ps-table,table.tg-table';
+    var TABLES = 'table.dt-table,table.gj-table,table.gt-table,table.jdw-table,table.kp-table,table.ku-table,table.kl-table,table.ktr-table,table.ops-table,table.os-table,table.pl-table,table.pkt-table,table.ps-table,table.tg-table';
     var SIZES = [10, 25, 50, 100], states = {};
     var css = document.createElement('style');
     css.textContent =
