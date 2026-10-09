@@ -676,7 +676,8 @@ function buildLaporanBelajarHtml_(d) {
   if (d.catatanPembelajaranUrl) links.push('<tr><td class="k">Catatan pembelajaran</td><td><a href="' + docEsc_(d.catatanPembelajaranUrl) + '" style="color:' + DOC_BLUE + '; text-decoration:none;">Buka catatan pembelajaran (papan tulis)</a></td></tr>');
   var html =
     docHeader_(idn, 'LAPORAN BELAJAR', docEsc_(d.tanggal || '')) +
-    '<table><tr>' +
+    // Bidang isi berlatar abu-abu tipis (pilihan owner), kepala dan penutup tetap putih
+    '<div class="box" style="padding:3.5mm 4mm;"><table><tr>' +
       '<td style="width:52%; vertical-align:top;"><div class="lbl">Siswa</div><div class="who">' + docEsc_(d.siswaNama || '-') + '</div>' +
         '<div class="muted">Orang tua: ' + docEsc_(d.ortuNama || '-') + '</div><div class="muted">Unit: ' + docEsc_(d.unit || '-') + '</div></td>' +
       '<td style="vertical-align:top;"><table class="kv">' +
@@ -685,10 +686,10 @@ function buildLaporanBelajarHtml_(d) {
         '<tr><td class="k">Waktu</td><td>' + docEsc_(d.jam || '-') + (d.durasi && d.durasi !== '-' ? ' · ' + docEsc_(String(d.durasi).toLowerCase()) : '') + '</td></tr>' +
         '<tr><td class="k">Status</td><td>' + pill + '</td></tr>' +
       '</table></td>' +
-    '</tr></table>' +
+    '</tr></table></div>' +
     '<div class="sec">' + (st === 'visit' ? 'Keterangan visit' : 'Ringkasan pembelajaran') + '</div>' +
     '<div class="box" style="white-space:pre-wrap; line-height:1.65;">' + (d.materiTeks ? docEsc_(d.materiTeks) : '<span class="muted"><i>Tidak ada ringkasan tertulis.</i></span>') + '</div>' +
-    (links.length ? '<div class="sec">Tautan dan catatan</div><table class="kv">' + links.join('') + '</table>' : '') +
+    (links.length ? '<div class="sec">Tautan dan catatan</div><div class="box" style="padding:3mm 4mm;"><table class="kv">' + links.join('') + '</table></div>' : '') +
     // Penanda tangan di kanan, catatan dan kontak di kiri (tanpa tanda tangan tutor), sama dengan rekap
     '<div class="keep" style="margin-top:7mm; border-top:1px solid ' + DOC_LINE + '; padding-top:3mm;"><table><tr>' +
       '<td style="width:55%; vertical-align:bottom; font-size:8pt; padding-right:6mm;"><span class="muted">Laporan ini dibuat oleh sistem Genio Institute pada ' + docTglPanjang_() + '. Tautan materi dan catatan pembelajaran dapat dibuka langsung dari dokumen ini.</span>' +
