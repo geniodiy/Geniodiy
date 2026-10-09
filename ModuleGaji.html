@@ -1302,6 +1302,7 @@
 
   async function gjGenerateAndSaveSlip(row) {
     var payload = gjBuildSlipPayload(row);
+    payload.identitas = await genioDocIdentity();
     var s = genioGetSession();
 
     var pdfUrl = await new Promise(function (resolve, reject) {

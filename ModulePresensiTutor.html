@@ -1264,10 +1264,14 @@
       fr.srcdoc = html; body.innerHTML = ''; body.appendChild(fr);
     };
     if (window.google && google.script && google.script.run) {
-      google.script.run
-        .withSuccessHandler(function (r) { r && r.success ? put(r.html) : (body.innerHTML = '<div class="pt-lap-load">' + esc((r && r.error) || 'Preview gagal dimuat') + '</div>'); })
-        .withFailureHandler(function (e) { body.innerHTML = '<div class="pt-lap-load">' + esc(e.message || e) + '</div>'; })
-        .previewLaporanBelajarHtml(ptLaporanPayload(it));
+      genioDocIdentity().then(function (idn) {
+        var payload = ptLaporanPayload(it);
+        payload.identitas = idn;
+        google.script.run
+          .withSuccessHandler(function (r) { r && r.success ? put(r.html) : (body.innerHTML = '<div class="pt-lap-load">' + esc((r && r.error) || 'Preview gagal dimuat') + '</div>'); })
+          .withFailureHandler(function (e) { body.innerHTML = '<div class="pt-lap-load">' + esc(e.message || e) + '</div>'; })
+          .previewLaporanBelajarHtml(payload);
+      });
     } else {
       body.innerHTML = '<div class="pt-lap-load">Preview hanya tersedia di aplikasi.</div>';
     }

@@ -2308,6 +2308,7 @@
 
   async function psGenerateAndSaveLaporanPdf(row, targetStatus) {
     var payload = psBuildLaporanPayload(row, targetStatus);
+    payload.identitas = await genioDocIdentity();
     var s = genioGetSession();
 
     var pdfUrl = await new Promise(function (resolve, reject) {
@@ -4559,7 +4560,11 @@
   function klEnsureRekap(g, items) {
     var key = klRekapKey(items), cache = klState.rekapCache;
     if (cache[key]) return cache[key];
-    cache[key] = klRun('generateRekapLaporanPdf', klRekapPayload(g, items, key)).then(function (res) {
+    cache[key] = genioDocIdentity().then(function (idn) {
+      var payload = klRekapPayload(g, items, key);
+      payload.identitas = idn;
+      return klRun('generateRekapLaporanPdf', payload);
+    }).then(function (res) {
       return { url: res.url, name: res.name, sub: items.length + ' laporan' + (res.size ? ' · ' + Math.max(1, Math.round(res.size / 1024)) + ' KB' : '') };
     });
     cache[key].catch(function () { if (cache[key]) delete cache[key]; });

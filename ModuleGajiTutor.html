@@ -485,6 +485,7 @@
         })
       };
       if (!(window.google && google.script && google.script.run)) { body.innerHTML = '<div class="gt-slip-load">Preview hanya tersedia di aplikasi.</div>'; return; }
+      payload.identitas = await genioDocIdentity();
       google.script.run
         .withSuccessHandler(function (r) {
           if (!r || !r.success) { body.innerHTML = '<div class="gt-slip-load">' + esc((r && r.error) || 'Preview gagal dimuat') + '</div>'; return; }

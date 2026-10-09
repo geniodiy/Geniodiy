@@ -763,6 +763,18 @@
     }).catch(function () { return s; });
     return genioSessionReady;
   }
+  // Identitas yang dicetak di semua PDF (pengaturan kunci identitas_dokumen, semua role boleh membaca baris ini).
+  // Dikirim ke Code.gs sebagai payload.identitas; kalau gagal dimuat, Code.gs memakai nilai bawaannya.
+  var genioDocIdentityCache = null;
+  function genioDocIdentity(force) {
+    if (genioDocIdentityCache && !force) return genioDocIdentityCache;
+    var s = genioGetSession();
+    if (!s) return Promise.resolve({});
+    genioDocIdentityCache = supaRest('pengaturan?kunci=eq.identitas_dokumen&select=nilai', s.access_token).then(function (rows) {
+      try { return JSON.parse((rows && rows[0] && rows[0].nilai) || '{}') || {}; } catch (e) { return {}; }
+    }).catch(function () { genioDocIdentityCache = null; return {}; });
+    return genioDocIdentityCache;
+  }
   // Kepala unit hanya melihat unitnya sendiri di pilihan unit (form & filter)
   function genioScopeUnits(units) {
     var s = genioGetSession();

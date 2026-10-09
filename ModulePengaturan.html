@@ -85,6 +85,28 @@
     .pgb-rules.pgt-anim .pgb-rule, .pgt-card.pgt-in{animation:none !important;}
     .pgt-edit-wrap, .pgt-toggle-btn .pgt-caret{transition:none;}
   }
+
+  /* ===== Identitas dokumen (kop, kontak, rekening, penanda tangan di semua PDF) ===== */
+  .pgt-idn{grid-column:1/-1;}
+  .pgi-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px 18px; margin-top:12px;}
+  .pgi-item{min-width:0;}
+  .pgi-item small{display:block; font-size:10px; color:var(--ink-soft); margin-bottom:2px;}
+  .pgi-item div{font-size:11.5px; color:var(--ink); line-height:1.5; word-break:break-word;}
+  .pgi-item .muted{color:var(--ink-soft);}
+  .pgi-ttd{width:120px; height:64px; border:1px dashed var(--border); border-radius:9px; background:#fff center/contain no-repeat; display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--ink-soft); text-align:center;}
+  .pgi-form{display:grid; grid-template-columns:1fr 1fr; gap:10px 12px;}
+  .pgi-form .full{grid-column:1/-1;}
+  .pgi-form label{display:block; font-size:10.5px; font-weight:500; color:var(--ink-soft); margin:0 0 5px;}
+  .pgi-form input, .pgi-form textarea{width:100%; box-sizing:border-box; min-height:34px; padding:7px 11px; border:1px solid var(--border); border-radius:9px; background:#fff; font-family:var(--font); font-size:11.5px; color:var(--ink); outline:none; transition:border-color .15s ease, box-shadow .15s ease;}
+  .pgi-form textarea{resize:vertical; line-height:1.45;}
+  .pgi-form input:focus, .pgi-form textarea:focus{border-color:var(--blue); box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .pgi-rek{display:grid; grid-template-columns:90px minmax(0,1fr) 30px; gap:6px; margin-bottom:6px;}
+  .pgi-rek button{width:30px; height:34px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .pgi-add{height:30px; border-radius:8px; border:1px dashed var(--border); background:#fff; color:var(--blue); font-family:var(--font); font-size:11px; font-weight:600; padding:0 12px; cursor:pointer; display:inline-flex; align-items:center; gap:5px;}
+  .pgi-ttd-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .pgi-ttd-row .pgt-toggle-btn{height:32px;}
+  .pgi-hint{font-size:10px; color:var(--ink-soft); margin-top:5px; line-height:1.45;}
+  @media (max-width:640px){ .pgi-form{grid-template-columns:1fr;} }
 </style>
 
   <!-- Highlight -->
@@ -282,7 +304,7 @@
   }
 
   function pgtBindCardEvents() {
-    document.querySelectorAll('.pgt-toggle-btn').forEach(function (btn) {
+    document.querySelectorAll('.pgt-toggle-btn[data-key]').forEach(function (btn) {
       btn.addEventListener('click', function () { pgtToggleCard(btn.dataset.key); });
     });
     document.querySelectorAll('.pgt-preset-btn').forEach(function (btn) {
@@ -303,10 +325,10 @@
         });
       });
     });
-    document.querySelectorAll('.pgt-cancel-btn').forEach(function (btn) {
+    document.querySelectorAll('.pgt-cancel-btn[data-key]').forEach(function (btn) {
       btn.addEventListener('click', function () { pgtToggleCard(btn.dataset.key, true); });
     });
-    document.querySelectorAll('.pgt-save-btn').forEach(function (btn) {
+    document.querySelectorAll('.pgt-save-btn[data-key]').forEach(function (btn) {
       btn.addEventListener('click', function () { pgtSaveValue(btn.dataset.key); });
     });
   }
@@ -344,8 +366,10 @@
       var r = pgtRows[key];
       return r ? pgtRenderCard(key, r) : '';
     }).join('');
-    listEl.innerHTML = notice + (cards || '<div class="pgt-card pgt-full-width" style="text-align:center; color:var(--ink-soft); font-size:11.5px;">Belum ada data pengaturan.</div>');
+    listEl.innerHTML = notice + (cards || '<div class="pgt-card pgt-full-width" style="text-align:center; color:var(--ink-soft); font-size:11.5px;">Belum ada data pengaturan.</div>') +
+      (pgtRows.identitas_dokumen ? pgtIdnCard() : '');
     pgtBindCardEvents();
+    pgtIdnBind();
     if (animate && !PGT_REDUCED_MOTION) {
       listEl.querySelectorAll('.pgt-card').forEach(function (el, i) {
         el.style.setProperty('--i', i); el.classList.add('pgt-in');
@@ -386,5 +410,146 @@
       saveBtn.disabled = false;
       saveBtn.textContent = 'Simpan';
     }
+  }
+
+  /* ===== Identitas dokumen: dicetak di invoice, kuitansi, slip gaji, laporan belajar, dan rekap ===== */
+  var pgtIdn = null, pgtIdnOpen = false, pgtIdnTtdBusy = false;
+  function pgtIdnValue() {
+    var r = pgtRows.identitas_dokumen;
+    var v = {};
+    try { v = JSON.parse((r && r.nilai) || '{}') || {}; } catch (e) {}
+    v.rekening = Array.isArray(v.rekening) ? v.rekening : [];
+    return v;
+  }
+  function pgtIdnTtdUrl(id) { return id ? 'https://lh3.googleusercontent.com/d/' + id + '=w400' : ''; }
+  function pgtIdnCard() {
+    var v = pgtIdn = pgtIdnValue();
+    var r = pgtRows.identitas_dokumen;
+    var rek = v.rekening.length ? v.rekening.map(function (x) { return pgtEscape(x.bank) + ' ' + pgtEscape(x.nomor); }).join('<br>') + '<br><span class="muted">a.n. ' + pgtEscape(v.atas_nama || '-') + '</span>' : '<span class="muted">Belum diisi</span>';
+    var ttd = v.ttd_file_id ? '<div class="pgi-ttd" style="background-image:url(\'' + pgtIdnTtdUrl(v.ttd_file_id) + '\')"></div>' : '<div class="pgi-ttd">Belum ada cap dan tanda tangan</div>';
+    var tgl = pgtFormatTgl(r.updated_at), by = r.users && r.users.nama;
+    var form = pgtCanEdit ? '<div class="pgt-edit-wrap" data-key="identitas_dokumen" style="' + (pgtIdnOpen ? 'max-height:1600px; opacity:1;' : '') + '"><div class="pgt-edit-inner">' +
+      '<div class="pgi-form">' +
+        '<div class="full"><label for="pgi-alamat">Alamat</label><textarea id="pgi-alamat" rows="2">' + pgtEscape(v.alamat || '') + '</textarea></div>' +
+        '<div><label for="pgi-telepon">Telepon</label><input id="pgi-telepon" type="tel" value="' + pgtEscape(v.telepon || '') + '"></div>' +
+        '<div><label for="pgi-email">Email</label><input id="pgi-email" type="email" value="' + pgtEscape(v.email || '') + '"></div>' +
+        '<div class="full"><label for="pgi-kontak">Kontak untuk pertanyaan (footer dokumen)</label><input id="pgi-kontak" type="text" value="' + pgtEscape(v.kontak_admin || '') + '"></div>' +
+        '<div class="full"><label>Rekening pembayaran (di invoice)</label><div id="pgi-rekList"></div><button type="button" class="pgi-add" id="pgi-rekAdd"><i class="ph ph-plus" aria-hidden="true"></i>Tambah rekening</button></div>' +
+        '<div class="full"><label for="pgi-an">Atas nama rekening</label><input id="pgi-an" type="text" value="' + pgtEscape(v.atas_nama || '') + '"></div>' +
+        '<div><label for="pgi-ttdNama">Nama penanda tangan</label><input id="pgi-ttdNama" type="text" value="' + pgtEscape(v.ttd_nama || '') + '"></div>' +
+        '<div><label for="pgi-ttdJab">Jabatan penanda tangan</label><input id="pgi-ttdJab" type="text" value="' + pgtEscape(v.ttd_jabatan || '') + '"></div>' +
+        '<div class="full"><label>Cap dan tanda tangan</label><div class="pgi-ttd-row"><span id="pgi-ttdPrev">' + ttd + '</span>' +
+          '<button type="button" class="pgt-toggle-btn" id="pgi-ttdPick"><i class="ph ph-upload-simple" aria-hidden="true"></i><span>' + (v.ttd_file_id ? 'Ganti gambar' : 'Unggah gambar') + '</span></button>' +
+          (v.ttd_file_id ? '<button type="button" class="pgt-toggle-btn" id="pgi-ttdDel"><i class="ph ph-trash" aria-hidden="true"></i><span>Hapus</span></button>' : '') +
+          '<input type="file" id="pgi-ttdFile" accept="image/png,image/jpeg" hidden></div>' +
+          '<div class="pgi-hint">PNG dengan latar transparan paling bagus. Dicetak di atas nama penanda tangan pada invoice, kuitansi, dan slip gaji.</div></div>' +
+        '<div class="full"><label for="pgi-tagline">Tagline (footer dokumen)</label><input id="pgi-tagline" type="text" value="' + pgtEscape(v.tagline || '') + '"></div>' +
+      '</div>' +
+      '<div id="pgt-alert-identitas_dokumen" class="alert alert-error" hidden></div>' +
+      '<div class="pgt-edit-act"><button type="button" class="pgt-cancel-btn" id="pgi-cancel">Batal</button><button type="button" class="pgt-save-btn" id="pgi-save">Simpan</button></div>' +
+    '</div></div>' : '';
+    return '<div class="pgt-card pgt-idn" data-card="identitas_dokumen">' +
+      '<div class="pgc-head"><span class="pgc-ico" style="background:var(--blue-tint); color:var(--blue);"><i class="ph ph-identification-card" aria-hidden="true"></i></span>' +
+        '<div class="pgc-who"><h4>Identitas dokumen</h4><p>Dicetak di invoice, kuitansi, slip gaji, laporan belajar, dan rekap</p></div></div>' +
+      '<div class="pgi-grid">' +
+        '<div class="pgi-item"><small>Alamat dan kontak</small><div>' + pgtEscape(v.alamat || '-') + '<br>' + pgtEscape(v.telepon || '-') + (v.email ? ' · ' + pgtEscape(v.email) : '') + '</div></div>' +
+        '<div class="pgi-item"><small>Rekening pembayaran</small><div>' + rek + '</div></div>' +
+        '<div class="pgi-item"><small>Penanda tangan</small><div>' + pgtEscape(v.ttd_nama || '-') + '<br><span class="muted">' + pgtEscape(v.ttd_jabatan || '-') + '</span></div></div>' +
+        '<div class="pgi-item"><small>Cap dan tanda tangan</small>' + ttd + '</div>' +
+        '<div class="pgi-item"><small>Footer</small><div>' + pgtEscape(v.kontak_admin || '-') + '<br><span class="muted"><i>' + pgtEscape(v.tagline || '') + '</i></span></div></div>' +
+      '</div>' +
+      '<div class="pgc-foot"><span class="pgc-by">' + (by ? 'Diubah oleh <b>' + pgtEscape(by) + '</b>' + (tgl ? ' · ' + tgl : '') : 'Nilai awal') + '</span>' +
+        (pgtCanEdit ? '<button type="button" class="pgt-toggle-btn" id="pgi-toggle" aria-expanded="' + pgtIdnOpen + '"><span>' + (pgtIdnOpen ? 'Tutup' : 'Ubah') + '</span><svg class="pgt-caret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>' : '') +
+      '</div>' + form + '</div>';
+  }
+  function pgtIdnRekRows(list) {
+    var el = document.getElementById('pgi-rekList');
+    if (!el) return;
+    el.innerHTML = list.map(function (x, i) {
+      return '<div class="pgi-rek" data-i="' + i + '"><input type="text" class="pgi-bank" placeholder="Bank" value="' + pgtEscape(x.bank || '') + '" aria-label="Nama bank">' +
+        '<input type="text" class="pgi-nomor" inputmode="numeric" placeholder="Nomor rekening" value="' + pgtEscape(x.nomor || '') + '" aria-label="Nomor rekening">' +
+        '<button type="button" class="pgi-rekDel" aria-label="Hapus rekening"><i class="ph ph-x" aria-hidden="true"></i></button></div>';
+    }).join('');
+  }
+  function pgtIdnReadRek() {
+    return Array.prototype.map.call(document.querySelectorAll('#pgi-rekList .pgi-rek'), function (row) {
+      return { bank: row.querySelector('.pgi-bank').value.trim(), nomor: row.querySelector('.pgi-nomor').value.replace(/\s+/g, '') };
+    }).filter(function (x) { return x.bank || x.nomor; });
+  }
+  function pgtIdnSetOpen(open) {
+    pgtIdnOpen = open;
+    var wrap = document.querySelector('.pgt-edit-wrap[data-key="identitas_dokumen"]'), btn = document.getElementById('pgi-toggle');
+    if (wrap) { wrap.style.maxHeight = open ? wrap.scrollHeight + 40 + 'px' : '0px'; wrap.style.opacity = open ? '1' : '0'; }
+    if (btn) { btn.setAttribute('aria-expanded', open); btn.querySelector('span').textContent = open ? 'Tutup' : 'Ubah'; }
+  }
+  function pgtIdnBind() {
+    if (!pgtRows.identitas_dokumen || !pgtCanEdit) return;
+    pgtIdnRekRows(pgtIdn.rekening.length ? pgtIdn.rekening : [{ bank: '', nomor: '' }]);
+    document.getElementById('pgi-toggle').addEventListener('click', function () { pgtIdnSetOpen(!pgtIdnOpen); });
+    document.getElementById('pgi-cancel').addEventListener('click', function () { pgtIdnOpen = false; pgtRerenderList(false); });
+    document.getElementById('pgi-rekAdd').addEventListener('click', function () {
+      var list = pgtIdnReadRek(); list.push({ bank: '', nomor: '' }); pgtIdnRekRows(list); pgtIdnSetOpen(true);
+    });
+    document.getElementById('pgi-rekList').addEventListener('click', function (e) {
+      var b = e.target.closest('.pgi-rekDel'); if (!b) return;
+      b.closest('.pgi-rek').remove();
+    });
+    document.getElementById('pgi-ttdPick').addEventListener('click', function () { document.getElementById('pgi-ttdFile').click(); });
+    document.getElementById('pgi-ttdFile').addEventListener('change', function () { if (this.files && this.files[0]) pgtIdnUploadTtd(this.files[0]); });
+    var del = document.getElementById('pgi-ttdDel');
+    if (del) del.addEventListener('click', function () { pgtIdnSave({ ttd_file_id: '' }); });
+    document.getElementById('pgi-save').addEventListener('click', function () { pgtIdnSave(); });
+  }
+  function pgtIdnCollect() {
+    var g = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    return {
+      alamat: g('pgi-alamat'), telepon: g('pgi-telepon'), email: g('pgi-email'), kontak_admin: g('pgi-kontak'),
+      rekening: pgtIdnReadRek(), atas_nama: g('pgi-an'), ttd_nama: g('pgi-ttdNama'), ttd_jabatan: g('pgi-ttdJab'),
+      ttd_file_id: pgtIdn.ttd_file_id || '', tagline: g('pgi-tagline')
+    };
+  }
+  async function pgtIdnSave(patch) {
+    var alertEl = document.getElementById('pgt-alert-identitas_dokumen');
+    var v = Object.assign(pgtIdnCollect(), patch || {});
+    if (!v.alamat || !v.telepon) { alertEl.textContent = 'Alamat dan telepon wajib diisi.'; alertEl.hidden = false; return; }
+    alertEl.hidden = true;
+    var btn = document.getElementById('pgi-save');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    try {
+      var s = genioGetSession();
+      await supaRest('pengaturan?id=eq.' + pgtRows.identitas_dokumen.id, s.access_token, {
+        method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ nilai: JSON.stringify(v), updated_by: s.user_id })
+      });
+      if (typeof genioDocIdentity === 'function') genioDocIdentity(true);
+      genioToast('Identitas dokumen disimpan. PDF berikutnya memakai data ini.', 'success');
+      pgtIdnOpen = !!patch;
+      pgtLoadList();
+    } catch (err) {
+      alertEl.textContent = err.message || 'Gagal menyimpan.'; alertEl.hidden = false;
+      btn.disabled = false; btn.textContent = 'Simpan';
+    }
+  }
+  function pgtIdnUploadTtd(file) {
+    if (pgtIdnTtdBusy) return;
+    if (!/^image\/(png|jpeg)$/.test(file.type)) { genioToast('Gunakan gambar PNG atau JPG', 'error'); return; }
+    if (file.size > 3 * 1024 * 1024) { genioToast('Ukuran gambar maksimal 3 MB', 'error'); return; }
+    if (!(window.google && google.script && google.script.run)) { genioToast('Unggah hanya bisa dari aplikasi', 'error'); return; }
+    pgtIdnTtdBusy = true;
+    genioToast('Mengunggah cap dan tanda tangan...', 'loading', true);
+    var reader = new FileReader();
+    reader.onload = function () {
+      var b64 = String(reader.result).split(',')[1];
+      google.script.run
+        .withSuccessHandler(function (res) {
+          pgtIdnTtdBusy = false;
+          if (!res || !res.success) { genioToast('Gagal mengunggah: ' + ((res && res.error) || ''), 'error'); return; }
+          pgtIdn.ttd_file_id = res.fileId;
+          pgtIdnSave({ ttd_file_id: res.fileId });
+        })
+        .withFailureHandler(function (e) { pgtIdnTtdBusy = false; genioToast('Gagal mengunggah: ' + (e.message || e), 'error'); })
+        .uploadDokumenTtd(b64, file.name, file.type, pgtIdn.ttd_file_id || '');
+    };
+    reader.readAsDataURL(file);
   }
 </script>

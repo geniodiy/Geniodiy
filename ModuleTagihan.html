@@ -566,7 +566,7 @@
       }
 
       // Query presensi yang diterima pada periode aktif
-      var presensiUrl = 'presensi?select=id,tanggal,jam,status,invoice_id,kontrak_tutor!inner(id,kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)))' +
+      var presensiUrl = 'presensi?select=id,tanggal,jam,status,jenis,invoice_id,kontrak_tutor!inner(id,mapel,kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)))' +
         '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end +
         '&status=in.(diterima,visit)' + unitFilterUrl;
 
@@ -1552,7 +1552,11 @@
           sesi: c.sesi,
           hargaSatuan: hgSatuan,
           nominal: c.nominal,
-          subtext: [c.kelas ? 'Kelas ' + c.kelas : '', c.sekolah, tgl ? 'Pertemuan ' + tgl : ''].filter(Boolean).join(' • ')
+          subtext: [c.kelas ? 'Kelas ' + c.kelas : '', c.sekolah, tgl ? 'Pertemuan ' + tgl : ''].filter(Boolean).join(' • '),
+          // Satu baris per pertemuan di PDF (gaya nota)
+          pertemuan: (c.pres || []).slice().sort(function (a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); }).map(function (p) {
+            return { tanggal: p.tanggal, mapel: (p.kontrak_tutor && p.kontrak_tutor.mapel) || '', visit: p.status === 'visit' };
+          })
         };
       });
 
@@ -1574,7 +1578,8 @@
         totalNominal: g.totalNominal,
         items: itemsPayload,
         siswaList: g.children.map(function (c) { return c.nama; }).join(', '),
-        tanggalLunas: g.tanggalLunas ? tgFormatTgl(g.tanggalLunas) : null
+        tanggalLunas: g.tanggalLunas ? tgFormatTgl(g.tanggalLunas) : null,
+        identitas: await genioDocIdentity()
       };
 
       var result = await new Promise(function (resolve, reject) {
