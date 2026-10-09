@@ -106,6 +106,22 @@ function uploadOperasionalFile(base64Data, fileName, mimeType) {
 }
 
 /**
+ * Bukti foto pemasukan lain (wajib di form Pemasukan lain), folder "Genio Institute - Uploads/Bukti Pemasukan Lain".
+ */
+function uploadPemasukanLainFile(base64Data, fileName, mimeType) {
+  try {
+    var rootFolder = getOrCreateDriveFolder_(DriveApp.getRootFolder(), 'Genio Institute - Uploads');
+    var subfolder = getOrCreateDriveFolder_(rootFolder, 'Bukti Pemasukan Lain');
+    var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), mimeType, fileName);
+    var file = subfolder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return { success: true, url: file.getUrl(), fileId: file.getId(), name: file.getName() };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
  * ID folder Google Drive untuk foto profil (semua role). Kosongkan untuk folder
  * otomatis "Genio Institute - Uploads/Foto Profil".
  * Foto sudah dikompres di browser (maks. lebar 800px) sebelum dikirim ke sini.

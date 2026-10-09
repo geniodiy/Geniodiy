@@ -61,3 +61,7 @@ create policy pemasukan_lain_kepala_unit on public.pemasukan_lain for all
   using (public.current_role_name() = 'kepala_unit' and unit_id = public.current_unit_id())
   with check (public.current_role_name() = 'kepala_unit' and unit_id = public.current_unit_id());
 grant select, insert, update, delete on public.pemasukan_lain to authenticated;
+
+-- 3. Bukti foto wajib (sama seperti operasional). Ditambahkan 9 Okt 2026 saat tabel masih kosong.
+alter table public.pemasukan_lain add column if not exists foto_url text;
+alter table public.pemasukan_lain alter column foto_url set not null;
