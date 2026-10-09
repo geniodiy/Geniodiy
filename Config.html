@@ -335,7 +335,10 @@
   .gx-confirm p{font-size:11px; color:var(--ink-soft); margin:0 0 6px; line-height:1.5;}
   @media (prefers-reduced-motion: reduce){ .modal-overlay.show .modal-sheet.gx-sheet{animation:none;} }
   /* Popup kecil melayang yang menempel di elemen yang ditekan (mis. titik jadwal mingguan) */
-  .genio-pop{position:fixed; z-index:96; left:0; top:0; width:min(320px, calc(100vw - 24px)); max-height:420px; overflow-y:auto; overflow-x:hidden; grid-template-columns:minmax(0,1fr); overscroll-behavior:contain; display:grid; gap:8px; padding:2px; box-sizing:border-box; opacity:0; transform:translateY(-4px) scale(.97); transform-origin:var(--pop-ox, 50%) top; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1); pointer-events:none;}
+  .genio-pop{position:fixed; z-index:96; left:0; top:0; width:calc(min(320px, 100vw - 24px) + 28px); max-height:452px; overflow-y:auto; overflow-x:hidden; grid-template-columns:minmax(0,1fr); overscroll-behavior:contain; display:grid; gap:8px;
+    /* Ruang transparan di sekeliling kartu supaya bayangannya tidak terpotong kotak oleh wadah yang bisa di-scroll;
+       genioPlacePop mengimbangi padding ini jadi letak kartu tetap sama */
+    padding:10px 14px 22px; scrollbar-width:none; box-sizing:border-box; opacity:0; transform:translateY(-4px) scale(.97); transform-origin:var(--pop-ox, 50%) top; transition:opacity .16s ease, transform .2s cubic-bezier(.16,1,.3,1); pointer-events:none;}
   .genio-pop[data-place="above"]{transform:translateY(4px) scale(.97); transform-origin:var(--pop-ox, 50%) bottom;}
   .genio-pop.show{opacity:1; transform:none; pointer-events:auto;}
   /* Isi popup tidak pernah lebih lebar dari kotaknya (Safari menghitung teks nowrap sebagai lebar minimum) */
@@ -344,6 +347,7 @@
   .genio-pop .home-slot-time{flex:none;}
   .genio-pop .home-slot-act > *{min-width:0;}
   .genio-pop[hidden]{display:none !important;}
+  .genio-pop::-webkit-scrollbar{display:none;}
   .genio-pop > *{box-shadow:0 12px 32px -10px rgba(20,22,43,.30), 0 2px 6px rgba(20,22,43,.06);}
   .is-picked{transform:scale(1.45) !important; box-shadow:0 0 0 2px #fff, 0 0 0 3.5px currentColor !important; z-index:1; position:relative;}
   @media (prefers-reduced-motion: reduce){ .genio-pop{transition:opacity .12s ease; transform:none !important;} }
@@ -1558,18 +1562,20 @@
     if (!st.anchor.isConnected || r.bottom < topLimit || r.top > vh || (!r.width && !r.height)) { genioClosePop(st.pop); return; }
     var pop = st.pop;
     pop.style.maxHeight = '';
-    var w = pop.offsetWidth, h = pop.offsetHeight;
+    // Ukur kartu tanpa padding bayangan (lihat .genio-pop), lalu geser wadah sebesar padding itu
+    var cs = getComputedStyle(pop), pl = parseFloat(cs.paddingLeft) || 0, pt = parseFloat(cs.paddingTop) || 0, pb = parseFloat(cs.paddingBottom) || 0;
+    var w = pop.offsetWidth - pl * 2, h = pop.offsetHeight - pt - pb;
     var below = vh - r.bottom - gap - m, above = r.top - topLimit - gap - m;
     var place = (h <= below || below >= above) ? 'below' : 'above';
     var room = Math.max(140, place === 'below' ? below : above);
-    if (h > room) { pop.style.maxHeight = room + 'px'; h = room; }
+    if (h > room) { pop.style.maxHeight = (room + pt + pb) + 'px'; h = room; }
     var cx = r.left + r.width / 2;
     var left = Math.max(m, Math.min(cx - w / 2, vw - w - m));
     var top = place === 'below' ? r.bottom + gap : r.top - gap - h;
     pop.dataset.place = place;
-    pop.style.setProperty('--pop-ox', Math.round(cx - left) + 'px');
-    pop.style.left = Math.round(left) + 'px';
-    pop.style.top = Math.round(top) + 'px';
+    pop.style.setProperty('--pop-ox', Math.round(cx - left + pl) + 'px');
+    pop.style.left = Math.round(left - pl) + 'px';
+    pop.style.top = Math.round(top - pt) + 'px';
   }
   function genioClosePop(pop) {
     var st = genioPopState;
@@ -1582,7 +1588,8 @@
   }
   document.addEventListener('click', function (e) {
     if (!genioPopState) return;
-    if (genioPopState.pop.contains(e.target) || (e.target.closest && e.target.closest('[data-genio-pop-trigger]'))) return;
+    // Ketuk di ruang bayangan transparan (wadahnya sendiri, bukan kartu) dihitung di luar popup
+    if ((genioPopState.pop.contains(e.target) && e.target !== genioPopState.pop) || (e.target.closest && e.target.closest('[data-genio-pop-trigger]'))) return;
     genioClosePop();
   }, true);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && genioPopState) genioClosePop(); });
