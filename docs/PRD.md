@@ -789,7 +789,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 | # | Modul | Status | Yang masih kurang |
 |---|---|---|---|
 | 1 | Kelola Unit | Selesai | |
-| 2 | Pengaturan | Selesai | |
+| 2 | Pengaturan | Selesai | 9 Okt 2026: aturan presensi tampil sebagai alur (sesi selesai, batas lapor, denda telat) plus honor visit, diubah dengan tombol − / + atau diketik, simulasi fee Rp 150.000 ikut berubah, dan semua perubahan disimpan sekaligus lewat bar simpan. Highlight lama dihapus supaya angka tidak tampil dua kali. |
 | 3 | Kelola User + Kelola Tutor | Selesai | Tambah user dan tambah tutor, lalu tolak pendaftar dan hapus akun lewat Edge Function `admin-users` (ikut menghapus akun Auth). |
 | 4 | Data Ortu & Siswa | Selesai | Hapus permanen untuk data tanpa histori (sekarang hanya nonaktifkan, dan ini boleh tetap begitu) |
 | 5 | Paket Belajar | Selesai | |
