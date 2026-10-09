@@ -87,7 +87,7 @@
   <!-- Highlight (opsi A): laporan belum dikirim di rentang chip, bar sudah vs belum, dan lama menunggu -->
   <div class="klh" id="klh">
     <div class="klh-main">
-      <div class="klh-top"><span class="klh-lbl"><i></i>Laporan belum dikirim</span><span class="klh-pill" id="klh-pill">Kemarin</span></div>
+      <div class="klh-top"><span class="klh-lbl"><i></i>Laporan belum dikirim</span><span class="klh-pill" id="klh-pill">Bulan ini</span></div>
       <div class="klh-hero"><span class="klh-num" id="klh-num">0</span><span class="klh-unit">laporan</span></div>
       <div class="klh-sub" id="klh-sub">Memuat laporan...</div>
       <div class="klh-bar" id="klh-bar" role="img" aria-label="Sudah dan belum dikirim"></div>
@@ -107,10 +107,10 @@
   <div id="kl-root">
     <div class="kl-tools">
       <div class="kl-chips" id="kl-range" role="tablist" aria-label="Rentang waktu">
-        <button type="button" data-range="yesterday" class="is-on">Kemarin</button>
+        <button type="button" data-range="yesterday">Kemarin</button>
         <button type="button" data-range="today">Hari ini</button>
         <button type="button" data-range="week">Minggu ini</button>
-        <button type="button" data-range="month">Bulan ini</button>
+        <button type="button" data-range="month" class="is-on">Bulan ini</button>
         <button type="button" data-range="custom"><i class="ph ph-calendar-blank" aria-hidden="true"></i><span id="kl-customLabel">Pilih</span></button>
       </div>
       <div class="kl-tools-r">
@@ -123,7 +123,7 @@
       </div>
     </div>
     <div class="kl-head">
-      <div class="ps-section-title" id="kl-title">Laporan minggu ini</div>
+      <div class="ps-section-title" id="kl-title">Laporan bulan ini</div>
       <div class="ps-section-sub" id="kl-sub">-</div>
     </div>
     <div id="kl-list"><div class="kl-empty">Memuat laporan...</div></div>

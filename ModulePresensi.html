@@ -3999,7 +3999,7 @@
   var KL_BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
   var KL_HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
   var KL_HR = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-  var klState = { range: 'yesterday', view: genioViewPref('genio_kl_view'), from: null, to: null, filter: 'belum', rows: [], jadwal: {}, open: {}, me: null, seq: 0, loaded: false, rekapCache: {} };
+  var klState = { range: 'month', view: genioViewPref('genio_kl_view'), from: null, to: null, filter: 'belum', rows: [], jadwal: {}, open: {}, me: null, seq: 0, loaded: false, rekapCache: {} };
   var klSend = null;
 
   function klAllowed() { var s = genioGetSession(); return !!s && KL_ROLES.indexOf(s.role) !== -1; }
