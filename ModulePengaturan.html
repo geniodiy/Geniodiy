@@ -208,7 +208,7 @@
   async function pgtLoadList() {
     var listEl = document.getElementById('pgt-list');
     try {
-      var s = genioGetSession();
+      var s = genioSessionOrLogin();
       pgtCanEdit = (s.role === 'manajer' || s.role === 'super_admin');
 
       var rows = await supaRest('pengaturan?select=*,users(nama,foto_profil_url)', s.access_token);
@@ -396,7 +396,7 @@
     saveBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
 
     try {
-      var s = genioGetSession();
+      var s = genioSessionOrLogin();
       await supaRest('pengaturan?id=eq.' + pgtRows[key].id, s.access_token, {
         method: 'PATCH',
         headers: { 'Prefer': 'return=minimal' },
@@ -516,7 +516,7 @@
     var btn = document.getElementById('pgi-save');
     btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
     try {
-      var s = genioGetSession();
+      var s = genioSessionOrLogin();
       await supaRest('pengaturan?id=eq.' + pgtRows.identitas_dokumen.id, s.access_token, {
         method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
         body: JSON.stringify({ nilai: JSON.stringify(v), updated_by: s.user_id })

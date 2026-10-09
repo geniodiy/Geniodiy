@@ -702,15 +702,34 @@
     return data;
   }
 
+  // Sesi disimpan di sessionStorage dan juga di memori halaman. Safari (terutama iPad) kadang kehilangan
+  // sessionStorage di dalam iframe Apps Script; salinan di memori menjaga aksi tetap jalan sampai halaman dimuat ulang.
+  var genioSessionMem = null;
   function genioSaveSession(session) {
-    sessionStorage.setItem('genio_session', JSON.stringify(session));
+    genioSessionMem = session || null;
+    try { sessionStorage.setItem('genio_session', JSON.stringify(session)); } catch (e) {}
   }
   function genioGetSession() {
-    try { return JSON.parse(sessionStorage.getItem('genio_session') || 'null'); }
-    catch (e) { return null; }
+    var s = null;
+    try { s = JSON.parse(sessionStorage.getItem('genio_session') || 'null'); } catch (e) { s = null; }
+    if (s && s.access_token) { genioSessionMem = s; return s; }
+    if (genioSessionMem) {
+      try { sessionStorage.setItem('genio_session', JSON.stringify(genioSessionMem)); } catch (e) {}
+      return genioSessionMem;
+    }
+    return s;
   }
   function genioClearSession() {
-    sessionStorage.removeItem('genio_session');
+    genioSessionMem = null;
+    try { sessionStorage.removeItem('genio_session'); } catch (e) {}
+  }
+  // Untuk aksi simpan: kalau sesi benar-benar hilang, beri tahu lalu arahkan ke halaman masuk (bukan error "null")
+  function genioSessionOrLogin() {
+    var s = genioGetSession();
+    if (s && s.access_token) return s;
+    if (typeof genioToast === 'function') genioToast('Sesi kamu berakhir. Silakan masuk lagi.', 'error');
+    setTimeout(function () { window.top.location.href = SCRIPT_URL + '?page=login'; }, 1200);
+    throw new Error('Sesi kamu berakhir. Silakan masuk lagi.');
   }
   // Panggil di awal setiap halaman dashboard: redirect ke Login kalau belum ada sesi.
   function genioRequireSession() {
