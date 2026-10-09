@@ -96,6 +96,12 @@
   .pt-empty span{display:block; font-size:11px; color:var(--ink-soft); margin-top:3px;}
 
   /* Form, pemilih siswa, dan preview laporan (kerangka gx-sheet dari Config.html) */
+  /* Pilihan jenis laporan (presensi biasa atau pengajuan visit) di poin 3 */
+  #pt-fJenis{margin:0 0 12px;}
+  .pt-visit-txt{font-size:12px; line-height:1.6; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px; white-space:pre-wrap; margin-bottom:10px;}
+  .pt-visit-txt span{display:block; font-size:10.5px; color:var(--ink-soft); margin-bottom:4px; white-space:normal;}
+  .pt-tag-visit{display:inline-flex; align-items:center; gap:3px; margin-left:6px; padding:1px 7px; border-radius:999px; background:#EAF0FF; color:#2B59D9; font-size:9.5px; font-weight:600; vertical-align:1px;}
+  .pc2-chip.is-visit{background:#EAF0FF; color:#2B59D9;} .pc2-chip.is-visit i{color:#2B59D9;}
   #pt-formModal, #pt-lapModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
   #pt-formModal.show, #pt-lapModal.show{opacity:1;}
   /* Pemilih siswa: dropdown tepat di bawah kolom siswa di dalam form */
@@ -317,26 +323,30 @@
         </div>
         <div class="gx-note pt-note-warn" id="pt-fLate" hidden style="margin-top:0;"><i class="ph ph-warning-circle" aria-hidden="true"></i><span>Sudah lewat lebih dari 24 jam dari waktu pelaksanaan, laporan ini akan kena denda 2% dari fee mengajar.</span></div>
 
-        <div class="gx-step-title"><span class="gx-step">3</span>Laporan pembelajaran</div>
+        <div class="gx-step-title"><span class="gx-step">3</span><span id="pt-fStep3">Laporan pembelajaran</span></div>
+        <div class="gx-seg pt-jenis" id="pt-fJenis" role="radiogroup" aria-label="Jenis laporan">
+          <button type="button" data-val="presensi" class="is-on" role="radio" aria-checked="true">Presensi</button>
+          <button type="button" data-val="visit" role="radio" aria-checked="false">Visit</button>
+        </div>
         <div class="gx-row">
-          <label for="pt-fMateri">Ringkasan sesi <em class="gx-req">wajib</em></label>
+          <label for="pt-fMateri"><span id="pt-fMateriLbl">Ringkasan sesi</span> <em class="gx-req">wajib</em></label>
           <textarea id="pt-fMateri" class="pt-textarea" rows="3" placeholder="Materi yang dipelajari dan perkembangan siswa selama sesi ini."></textarea>
         </div>
 
         <div class="gx-step-title"><span class="gx-step">4</span>Lampiran</div>
         <div class="gx-row">
-          <label for="pt-fFoto">Foto bukti sesi <em class="gx-req" id="pt-fFotoReq">wajib</em></label>
+          <label for="pt-fFoto"><span id="pt-fFotoLbl">Foto bukti sesi</span> <em class="gx-req" id="pt-fFotoReq">wajib</em></label>
           <label class="pt-file">
             <span class="pt-file-ico"><i class="ph ph-camera" aria-hidden="true"></i></span>
             <span class="pt-file-t"><b id="pt-fFotoBtn">Ambil atau pilih foto</b><small id="pt-fFotoStatus">JPG, PNG, atau HEIC. Dikompres otomatis.</small></span>
             <input type="file" id="pt-fFoto" accept="image/*,.heic,.heif">
           </label>
         </div>
-        <div class="gx-row">
+        <div class="gx-row" id="pt-fLinkRow">
           <label for="pt-fLink">Tautan materi <em class="gx-opt">opsional</em></label>
           <input type="url" id="pt-fLink" placeholder="https://..." inputmode="url">
         </div>
-        <div class="gx-row">
+        <div class="gx-row" id="pt-fCatatanRow">
           <label for="pt-fCatatan">Catatan pembelajaran <em class="gx-opt">opsional</em></label>
           <label class="pt-file">
             <span class="pt-file-ico"><i class="ph ph-file-text" aria-hidden="true"></i></span>
@@ -359,7 +369,7 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-file-text" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3>Laporan belajar</h3>
+          <h3 id="pt-lapTitle">Laporan belajar</h3>
           <p class="gx-sub" id="pt-lapSub">-</p>
         </div>
         <button type="button" class="gx-close" id="pt-lapClose" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
@@ -381,11 +391,11 @@
   var PT_HARI_S = { senin: 'Sen', selasa: 'Sel', rabu: 'Rab', kamis: 'Kam', jumat: 'Jum', sabtu: 'Sab', minggu: 'Min', fleksibel: 'Fleksibel' };
   var PT_HARI_L = { senin: 'Senin', selasa: 'Selasa', rabu: 'Rabu', kamis: 'Kamis', jumat: 'Jumat', sabtu: 'Sabtu', minggu: 'Minggu' };
   var PT_BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-  var PT_VISIT = 30000;
+  var PT_VISIT = 30000; // cadangan; nilai sebenarnya dari pengaturan (nominal_visit)
   var PT_MAX_MB = 8;
   var PT_REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var PT_KT_SELECT = 'id,mapel,fee_mengajar,uang_transport,durasi_menit,unit_id,units(nama_unit),kontrak_siswa(id,siswa(id,nama,jenjang,kelas,sekolah)),jadwal(id,hari,jam_mulai,jam_selesai)';
-  var PT_PRES_SELECT = 'id,kontrak_tutor_id,tanggal,jam,status,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,catatan_approval,terlambat,denda,nominal_dibayar,tanggal_input_pertama,approved_at,metode_input,pdf_url,' +
+  var PT_PRES_SELECT = 'id,kontrak_tutor_id,tanggal,jam,status,jenis,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,catatan_approval,terlambat,denda,nominal_dibayar,tanggal_input_pertama,approved_at,metode_input,pdf_url,' +
     'kontrak_tutor(id,mapel,fee_mengajar,uang_transport,durasi_menit,units(nama_unit),kontrak_siswa(siswa(nama,jenjang,kelas)))';
 
   var pt = {
@@ -450,9 +460,11 @@
     flex: { l: 'Fleksibel', c: '#5B3FD1', bg: '#F0ECFD' },
     pending: { l: 'Menunggu', c: '#C27400', bg: '#FFF4E0' },
     diterima: { l: 'Diterima', c: '#1E8E5A', bg: '#E9F7EF', done: true },
-    visit: { l: 'Visit', c: '#2B59D9', bg: '#EAF0FF', done: true },
+    visit: { l: 'Diterima', c: '#1E8E5A', bg: '#E9F7EF', done: true }, // visit yang diterima; jenisnya ditandai chip Visit
     aktif: { l: 'Aktif', c: '#1C1AAF', bg: '#EEEEFB' }
   };
+  function isVisit(p) { return !!p && (p.jenis === 'visit' || p.status === 'visit'); }
+  function visitChip(p) { return isVisit(p) ? '<span class="pc2-chip is-visit"><i class="ph ph-map-pin" aria-hidden="true"></i>Visit</span>' : ''; }
   function pill(key) {
     var s = ST[key];
     if (s.done) return '<span class="pc2-status is-done pt-st-done" style="--st:' + s.c + '; background:' + s.bg + ';"><i></i><span class="ph-fill ph-check-circle" aria-hidden="true"></span>' + s.l + '</span>';
@@ -474,10 +486,13 @@
       var to = today > r.end ? today : r.end;
       var res = await Promise.all([
         supaRest('kontrak_tutor?tutor_id=eq.' + s.user_id + '&status=eq.aktif&select=' + PT_KT_SELECT, s.access_token),
-        supaRest('presensi?select=' + PT_PRES_SELECT + '&or=(status.in.(pending,ditolak),and(tanggal.gte.' + from + ',tanggal.lte.' + to + '))&order=tanggal.desc,jam.desc', s.access_token)
+        supaRest('presensi?select=' + PT_PRES_SELECT + '&or=(status.in.(pending,ditolak),and(tanggal.gte.' + from + ',tanggal.lte.' + to + '))&order=tanggal.desc,jam.desc', s.access_token),
+        supaRest('pengaturan?kunci=eq.nominal_visit&select=nilai', s.access_token).catch(function () { return []; })
       ]);
       pt.kontrak = (res[0] || []).sort(function (a, b) { return String(ktSiswa(a).nama).localeCompare(String(ktSiswa(b).nama)); });
       pt.presensi = res[1] || [];
+      var nv = res[2] && res[2][0] && parseFloat(res[2][0].nilai);
+      if (nv > 0) PT_VISIT = nv; // nominal visit dari pengaturan manajer
       if (!pt.kontak) pt.kontak = await supaRest('rpc/tutor_kontak_bantuan', s.access_token, { method: 'POST', body: '{}' }).catch(function () { return []; });
       if (!Array.isArray(pt.kontak)) pt.kontak = [];
       pt.loaded = true;
@@ -739,10 +754,11 @@
     if (compact) table = true;
     if (kind === 'revisi') return '<button type="button" class="pc2-btn is-setuju pt-btn' + cls + '" data-act="revisi" data-idx="' + idx + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>' + (table ? 'Revisi' : 'Revisi laporan') + '</button>';
     if (kind === 'hari' || kind === 'flex') return '<button type="button" class="pc2-btn is-setuju pt-btn' + cls + '" data-act="isi" data-idx="' + idx + '"><i class="ph ph-plus" aria-hidden="true"></i>Isi presensi</button>';
-    return '<button type="button" class="pc2-btn is-visit pt-btn' + cls + '" data-act="lihat" data-idx="' + idx + '"><i class="ph ph-eye" aria-hidden="true"></i>' + (table ? 'Lihat' : 'Lihat laporan') + '</button>';
+    return '<button type="button" class="pc2-btn is-visit pt-btn' + cls + '" data-act="lihat" data-idx="' + idx + '"><i class="ph ph-eye" aria-hidden="true"></i>' + (table ? 'Lihat' : (kind === 'visit' ? 'Lihat visit' : 'Lihat laporan')) + '</button>';
   }
   function ptHonor(it) {
     if (it.p && (it.p.status === 'diterima' || it.p.status === 'visit')) return +it.p.nominal_dibayar || 0;
+    if (isVisit(it.p)) return PT_VISIT;
     var k = it.k || it.kt || {};
     return feeSesi(k);
   }
@@ -750,8 +766,8 @@
     var p = it.p;
     if (it.kind === 'revisi') return '<p class="is-red"><b>Alasan ditolak</b>' + esc(p.catatan_approval || 'Tidak ada catatan, hubungi kepala unit.') + '</p>';
     if (it.kind === 'hari' || it.kind === 'flex') return '';
-    if (it.kind === 'pending') return '<p>Dikirim ' + esc(tsPendek(p.tanggal_input_pertama)) + ', menunggu diperiksa.' + (p.terlambat ? ' <span style="color:#B86E00;">Terlambat lapor.</span>' : '') + '</p>';
-    var txt = it.kind === 'visit' ? 'Visit, siswa berhalangan. Dibayar flat ' + rp(PT_VISIT) + '.' : 'Diterima' + (p.approved_at ? ' ' + esc(tsPendek(p.approved_at).replace(/ \d\d\.\d\d$/, '')) : '') + '. Masuk hitungan gaji.';
+    if (it.kind === 'pending') return '<p>' + (isVisit(p) ? 'Pengajuan visit dikirim ' : 'Dikirim ') + esc(tsPendek(p.tanggal_input_pertama)) + ', menunggu diperiksa.' + (p.terlambat && !isVisit(p) ? ' <span style="color:#B86E00;">Terlambat lapor.</span>' : '') + '</p>';
+    var txt = it.kind === 'visit' ? 'Visit diterima. Dibayar flat ' + rp(+p.nominal_dibayar || PT_VISIT) + '.' : 'Diterima' + (p.approved_at ? ' ' + esc(tsPendek(p.approved_at).replace(/ \d\d\.\d\d$/, '')) : '') + '. Masuk hitungan gaji.';
     var d = +p.denda || 0;
     return '<p class="is-ok">' + txt + (d ? ' <span style="color:#B86E00;">Terlambat, denda &minus;' + rp(d) + '.</span>' : '') + '</p>';
   }
@@ -765,9 +781,9 @@
       '<div class="pc2-head">' + avatar(it.nama, done ? it.kind : false) +
         '<div class="pc2-who"><h4>' + esc(it.nama) + '</h4><p>' + esc(it.sub) + '</p></div>' + pill(stKey) + '</div>' +
       '<div class="pc2-chips pt-chips-row"><span class="pc2-chip"><i class="ph ph-calendar-blank" aria-hidden="true"></i>' + esc(tglChip) + '</span>' +
-        '<span class="pc2-chip"><i class="ph ph-' + (it.kind === 'flex' ? 'shuffle' : 'clock') + '" aria-hidden="true"></i>' + esc(it.jamText) + '</span></div>' +
+        '<span class="pc2-chip"><i class="ph ph-' + (it.kind === 'flex' ? 'shuffle' : 'clock') + '" aria-hidden="true"></i>' + esc(it.jamText) + '</span>' + visitChip(it.p) + '</div>' +
       (info ? '<div class="pt-info' + (it.kind === 'revisi' ? ' is-rev' : '') + '">' + info + '</div>' : '') +
-      '<div class="pc2-foot pt-foot-act"><div class="pc2-honor"><span>' + honorL + '</span><b>' + rp(ptHonor(it)) + '</b></div>' + ptBtn(it.kind, idx, false, true) + '</div>' +
+      '<div class="pc2-foot pt-foot-act"><div class="pc2-honor"><span>' + honorL + '</span><b>' + rp(ptHonor(it)) + '</b></div>' + ptBtn(isVisit(it.p) && it.kind !== 'revisi' ? 'visit' : it.kind, idx, false, true) + '</div>' +
     '</div>';
   }
   function ptKet(it) {
@@ -775,9 +791,9 @@
     if (it.kind === 'revisi') return p.catatan_approval || '-';
     if (it.kind === 'hari') return 'Jadwal hanya acuan';
     if (it.kind === 'flex') return 'Sesi fleksibel minggu ini';
-    if (it.kind === 'pending') return 'Dikirim ' + tsPendek(p.tanggal_input_pertama);
+    if (it.kind === 'pending') return (isVisit(p) ? 'Pengajuan visit dikirim ' : 'Dikirim ') + tsPendek(p.tanggal_input_pertama);
     if (+p.denda) return 'Terlambat, denda ' + rp(p.denda);
-    return it.kind === 'visit' ? 'Dibayar flat visit' : 'Tepat waktu';
+    return it.kind === 'visit' ? 'Visit, dibayar flat' : 'Tepat waktu';
   }
   function ptSesiTable(items) {
     var trs = items.map(function (it, i) {
@@ -785,14 +801,14 @@
       var ket = ptKet(it);
       return '<tr' + (it.kind === 'revisi' ? ' class="is-alert"' : '') + '><td class="pt-stk pt-stk-no">' + (i + 1) + '</td>' +
         '<td class="pt-stk pt-stk-a">' + (it.kind === 'flex' ? 'Minggu ini' : tglTabel(it.tanggal)) + '</td>' +
-        '<td class="pt-stk pt-stk-b" title="' + esc(it.nama) + '"><b>' + esc(it.nama) + '</b></td>' +
+        '<td class="pt-stk pt-stk-b" title="' + esc(it.nama) + '"><b>' + esc(it.nama) + '</b>' + (isVisit(it.p) ? '<span class="pt-tag-visit">Visit</span>' : '') + '</td>' +
         '<td style="white-space:nowrap;">' + esc(it.jamText) + '</td>' +
         '<td style="white-space:nowrap;">' + esc((it.k || it.kt || {}).mapel || '-') + '</td>' +
         '<td style="white-space:nowrap;">' + esc(ktUnit(it.k || it.kt)) + '</td>' +
         '<td style="text-align:right; white-space:nowrap; font-weight:700;">' + rp(ptHonor(it)) + '</td>' +
         '<td style="text-align:center;">' + pill(stKey) + '</td>' +
         '<td class="pt-ket' + (it.kind === 'revisi' ? ' is-red' : '') + '" title="' + esc(ket) + '">' + esc(ket) + '</td>' +
-        '<td style="text-align:center;">' + ptBtn(it.kind, i, true) + '</td></tr>';
+        '<td style="text-align:center;">' + ptBtn(isVisit(it.p) && it.kind !== 'revisi' ? 'visit' : it.kind, i, true) + '</td></tr>';
     }).join('');
     return '<div class="ps-table-card"><div class="ps-table-wrap"><table class="ps-table pt-table"><thead><tr>' +
       '<th class="pt-stk pt-stk-no">No</th><th class="pt-stk pt-stk-a">Tanggal</th><th class="pt-stk pt-stk-b">Siswa</th><th>Jam</th><th>Mapel</th><th>Unit</th>' +
@@ -976,6 +992,7 @@
     document.getElementById('pt-fRest').classList.toggle('pt-locked', lock);
     document.getElementById('pt-fRest').setAttribute('aria-disabled', String(lock));
     ['pt-fTanggal', 'pt-fJam', 'pt-fMateri', 'pt-fExBtn', 'pt-fFoto', 'pt-fLink', 'pt-fCatatan'].forEach(function (id) { document.getElementById(id).disabled = lock; });
+    document.querySelectorAll('#pt-fJenis button').forEach(function (b) { b.disabled = lock; });
     document.getElementById('pt-fLockHint').hidden = !lock;
     document.getElementById('pt-fKontrakBtn').classList.toggle('pt-need', lock);
     document.getElementById('pt-fSave').disabled = lock;
@@ -984,6 +1001,33 @@
 
   // Contoh ringkasan sesi (komponen bersama genioExampleBox di Config.html): nama mengikuti siswa yang dipilih
   var ptEx = genioExampleBox('pt-fMateri', 'pt-fEx', function () { return pt.form && pt.form.k ? ktSiswa(pt.form.k).nama : ''; });
+  // Jenis laporan: presensi biasa atau pengajuan visit. Visit hanya butuh deskripsi dan dokumentasi, tanpa denda telat.
+  var PT_NOTE_PRESENSI = 'Isi tanggal dan jam <b>sesuai pelaksanaan</b>, jadwal hanya acuan. Laporan yang dikirim lebih dari 24 jam setelah pelaksanaan kena denda 2% dari fee mengajar.';
+  var PT_NOTE_VISIT = 'Ajukan visit kalau sesi tidak bisa berjalan (misalnya siswa berhalangan saat Anda sudah datang). Kalau diterima, dibayar flat ' + '<b id="pt-fVisitRp"></b> dan tidak kena denda telat.';
+  function ptSetJenis(jenis) {
+    var v = jenis === 'visit';
+    if (pt.form) pt.form.jenis = v ? 'visit' : 'presensi';
+    document.querySelectorAll('#pt-fJenis button').forEach(function (b) {
+      var on = b.dataset.val === (v ? 'visit' : 'presensi');
+      b.classList.toggle('is-on', on); b.setAttribute('aria-checked', String(on));
+    });
+    var isRev = pt.form && pt.form.mode === 'revisi';
+    document.getElementById('pt-fStep3').textContent = v ? 'Pengajuan visit' : 'Laporan pembelajaran';
+    document.getElementById('pt-fMateriLbl').textContent = v ? 'Deskripsi pengajuan visit' : 'Ringkasan sesi';
+    document.getElementById('pt-fMateri').placeholder = v ? 'Jelaskan kenapa sesi tidak berjalan, misalnya siswa sakit dan orang tua mengabari saat Anda sudah tiba.' : 'Materi yang dipelajari dan perkembangan siswa selama sesi ini.';
+    document.getElementById('pt-fFotoLbl').textContent = v ? 'Dokumentasi bukti visit' : 'Foto bukti sesi';
+    document.getElementById('pt-fLinkRow').hidden = v;
+    document.getElementById('pt-fCatatanRow').hidden = v;
+    var exBtn = document.getElementById('pt-fExBtn');
+    if (exBtn) exBtn.style.display = v ? 'none' : ''; // contoh hanya untuk ringkasan sesi
+    if (v && ptEx) ptEx.close();
+    if (!isRev) {
+      document.getElementById('pt-fNoteText').innerHTML = v ? PT_NOTE_VISIT : PT_NOTE_PRESENSI;
+      var rpEl = document.getElementById('pt-fVisitRp'); if (rpEl) rpEl.textContent = rp(PT_VISIT);
+    }
+    document.getElementById('pt-fSave').textContent = isRev ? 'Kirim revisi' : (v ? 'Ajukan visit' : 'Kirim presensi');
+    ptCheckLate();
+  }
   function ptSetFormKontrak(k, j, setWaktu) {
     pt.form.k = k;
     ptLockForm(false);
@@ -1000,7 +1044,7 @@
   function ptCheckLate() {
     var t = document.getElementById('pt-fTanggal').value, j = document.getElementById('pt-fJam').value;
     var late = false;
-    if (t && j && !(pt.form && pt.form.mode === 'revisi')) {
+    if (t && j && !(pt.form && (pt.form.mode === 'revisi' || pt.form.jenis === 'visit'))) {
       var p = t.split('-'), h = j.split(':');
       var when = new Date(+p[0], +p[1] - 1, +p[2], +h[0], +h[1]);
       late = (Date.now() - when.getTime()) > 24 * 3600 * 1000;
@@ -1008,7 +1052,7 @@
     document.getElementById('pt-fLate').hidden = !late;
   }
   function ptOpenForm(opts) {
-    pt.form = { mode: opts.mode, k: null, p: opts.p || null, foto: null, catatan: null };
+    pt.form = { mode: opts.mode, k: null, p: opts.p || null, foto: null, catatan: null, jenis: opts.p && isVisit(opts.p) ? 'visit' : 'presensi' };
     var isRev = opts.mode === 'revisi';
     document.getElementById('pt-fAlert').hidden = true;
     document.getElementById('pt-fTitle').textContent = isRev ? 'Revisi laporan' : 'Isi presensi';
@@ -1018,7 +1062,7 @@
     note.classList.toggle('pt-note-red', isRev);
     document.getElementById('pt-fNoteText').innerHTML = isRev
       ? '<b>Alasan ditolak</b>' + esc((opts.p && opts.p.catatan_approval) || 'Tidak ada catatan.')
-      : 'Isi tanggal dan jam <b>sesuai pelaksanaan</b>, jadwal hanya acuan. Laporan yang dikirim lebih dari 24 jam setelah pelaksanaan kena denda 2% dari fee mengajar.';
+      : PT_NOTE_PRESENSI;
     document.getElementById('pt-fKontrakBtn').disabled = isRev;
     document.getElementById('pt-fFoto').value = '';
     document.getElementById('pt-fCatatan').value = '';
@@ -1053,7 +1097,7 @@
       }
     }
     document.getElementById('pt-fTanggal').max = todayIso();
-    ptCheckLate();
+    ptSetJenis(pt.form.jenis);
     ptToggleDrop(false);
     ptShow(document.getElementById('pt-formModal'));
   }
@@ -1141,19 +1185,21 @@
     if (!f.k || !f.k.id) return ptFail('Pilih siswa dulu.');
     if (!tanggal || !jam) return ptFail('Tanggal dan jam pelaksanaan wajib diisi.');
     if (tanggal > todayIso()) return ptFail('Tanggal pelaksanaan tidak boleh setelah hari ini.');
-    if (!materi) return ptFail('Ringkasan sesi wajib diisi.');
-    if (f.mode === 'new' && !f.foto) return ptFail('Foto bukti sesi wajib diunggah.');
-    if (link && !/^https?:\/\//i.test(link)) return ptFail('Tautan materi harus diawali http:// atau https://');
+    var visit = f.jenis === 'visit';
+    if (!materi) return ptFail(visit ? 'Deskripsi pengajuan visit wajib diisi.' : 'Ringkasan sesi wajib diisi.');
+    if (f.mode === 'new' && !f.foto) return ptFail(visit ? 'Dokumentasi bukti visit wajib diunggah.' : 'Foto bukti sesi wajib diunggah.');
+    if (!visit && link && !/^https?:\/\//i.test(link)) return ptFail('Tautan materi harus diawali http:// atau https://');
     var sw = ktSiswa(f.k).nama || 'siswa';
-    var data = { mode: f.mode, p: f.p, k: f.k, tanggal: tanggal, jam: jam, materi: materi, link: link || null, foto: f.foto, catatan: f.catatan };
+    var data = { mode: f.mode, p: f.p, k: f.k, jenis: visit ? 'visit' : 'presensi', tanggal: tanggal, jam: jam, materi: materi, link: visit ? null : (link || null), foto: f.foto, catatan: visit ? null : f.catatan };
     ptHide(document.getElementById('pt-formModal'));
-    genioToast((f.mode === 'revisi' ? 'Mengirim revisi ' : 'Mengirim presensi ') + sw + '...', 'loading', true);
+    genioToast((f.mode === 'revisi' ? 'Mengirim revisi ' : visit ? 'Mengajukan visit ' : 'Mengirim presensi ') + sw + '...', 'loading', true);
     try {
       var fotoUrl = null, catUrl = null;
       if (data.foto) { genioToast('Mengunggah foto bukti...', 'loading', true); fotoUrl = await ptUpload(data.foto, 'foto'); }
       if (data.catatan) { genioToast('Mengunggah catatan...', 'loading', true); catUrl = await ptUpload(data.catatan, 'catatan'); }
       var s = genioGetSession();
-      var body = { tanggal: data.tanggal, jam: data.jam, materi_teks: data.materi, materi_link: data.link };
+      var body = { jenis: data.jenis, tanggal: data.tanggal, jam: data.jam, materi_teks: data.materi, materi_link: data.link };
+      if (data.jenis === 'visit' && data.mode === 'revisi') body.catatan_pembelajaran_url = null;
       if (fotoUrl) body.foto_url = fotoUrl;
       if (catUrl) body.catatan_pembelajaran_url = catUrl;
       if (data.mode === 'revisi') {
@@ -1166,7 +1212,7 @@
         body.diinput_oleh = s.user_id;
         await supaRest('presensi', s.access_token, { method: 'POST', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify(body) });
       }
-      genioToast(data.mode === 'revisi' ? 'Revisi terkirim, menunggu diperiksa' : 'Presensi terkirim, menunggu diperiksa', 'success');
+      genioToast(data.mode === 'revisi' ? 'Revisi terkirim, menunggu diperiksa' : data.jenis === 'visit' ? 'Pengajuan visit terkirim, menunggu diperiksa' : 'Presensi terkirim, menunggu diperiksa', 'success');
       pt.filter = 'menunggu';
       ptLoad();
       try { window.dispatchEvent(new CustomEvent('genio:presensi-tutor')); } catch (e) {}
@@ -1187,8 +1233,20 @@
       status: p.status, materiTeks: p.materi_teks || '', materiLink: p.materi_link || '', catatanPembelajaranUrl: p.catatan_pembelajaran_url || ''
     };
   }
+  // Visit tidak punya laporan belajar: tampilkan deskripsi pengajuan dan dokumentasinya saja
+  function ptOpenVisit(it) {
+    var p = it.p;
+    document.getElementById('pt-lapTitle').textContent = 'Pengajuan visit';
+    document.getElementById('pt-lapSub').textContent = it.nama + ' · ' + tglPendek(p.tanggal) + ' · ' + (p.status === 'pending' ? 'Menunggu' : p.status === 'ditolak' ? 'Ditolak' : 'Diterima');
+    document.getElementById('pt-lapBody').innerHTML = '<div class="pt-visit-txt"><span>Deskripsi pengajuan visit</span>' + esc(p.materi_teks || '-') + '</div>';
+    document.getElementById('pt-lapFiles').innerHTML = p.foto_url ? '<a href="' + esc(p.foto_url) + '" target="_blank" rel="noopener"><i class="ph ph-image"></i>Dokumentasi visit</a>' : '';
+    var pdf = document.getElementById('pt-lapPdf'); pdf.hidden = true; pdf.removeAttribute('href');
+    ptShow(document.getElementById('pt-lapModal'));
+  }
   function ptOpenLaporan(it) {
     var p = it.p;
+    if (isVisit(p)) return ptOpenVisit(it);
+    document.getElementById('pt-lapTitle').textContent = 'Laporan belajar';
     document.getElementById('pt-lapSub').textContent = it.nama + ' · ' + tglPendek(p.tanggal) + ' · ' + (ST[p.status] ? ST[p.status].l : p.status);
     var body = document.getElementById('pt-lapBody');
     body.innerHTML = '<div class="pt-lap-load">Menyiapkan preview laporan...</div>';
@@ -1246,6 +1304,9 @@
   });
   document.getElementById('pt-fTanggal').addEventListener('change', ptCheckLate);
   document.getElementById('pt-fJam').addEventListener('change', ptCheckLate);
+  document.querySelectorAll('#pt-fJenis button').forEach(function (b) {
+    b.addEventListener('click', function () { if (!b.disabled) ptSetJenis(b.dataset.val); });
+  });
   document.getElementById('pt-fFoto').addEventListener('change', function () { ptReadPicked(this, document.getElementById('pt-fFotoStatus'), false, 'foto'); });
   document.getElementById('pt-fCatatan').addEventListener('change', function () { ptReadPicked(this, document.getElementById('pt-fCatatanStatus'), true, 'catatan'); });
   document.getElementById('pt-fSave').addEventListener('click', ptSubmit);

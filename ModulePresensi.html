@@ -274,7 +274,9 @@
   /* ===== Status: pill tabel, menu pilihan, popup ubah status & tolak ===== */
   .ps-table-status-btn{--st:#C27400; --sb:#FFF4E0; background:var(--sb) !important; border:1px solid transparent !important; color:var(--st) !important; font-weight:600 !important;}
   .ps-table-status-btn[data-status="diterima"]{--st:#1E8E5A; --sb:#E9F7EF;}
-  .ps-table-status-btn[data-status="visit"]{--st:#2B59D9; --sb:#EAF0FF;}
+  .ps-table-status-btn[data-status="visit"]{--st:#1E8E5A; --sb:#E9F7EF;}
+  .ps-tag-visit{display:inline-flex; align-items:center; margin-left:6px; padding:1px 7px; border-radius:999px; background:#EAF0FF; color:#2B59D9; font-size:9.5px; font-weight:600; vertical-align:1px;}
+  .pc2-chip.is-visit{background:#EAF0FF; color:#2B59D9;} .pc2-chip.is-visit i{color:#2B59D9;}
   .ps-table-status-btn[data-status="ditolak"]{--st:#D4070F; --sb:#FDEAEA;}
   .ps-table-status-btn .ps-status-dot{background:var(--st) !important;}
   .ps-table-status-btn .ps-status-arrow{opacity:.7 !important;}
@@ -298,7 +300,8 @@
   .pse-note b{font-weight:600;}
   .pse-label{display:flex !important; align-items:center; gap:6px; font-size:10.5px !important; font-weight:500 !important; color:var(--ink-soft) !important; margin:0 0 6px !important;}
   .pse-req{font-style:normal; font-size:9px; font-weight:600; border-radius:999px; padding:1px 6px; background:var(--red-soft); color:var(--red);}
-  .pse-opts{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .pse-opts{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
+  #ps-wakilJenis{margin:0 0 10px;}
   #ps-editStatusModal .ps-editstatus-opt{flex-direction:column !important; height:auto !important; padding:11px 6px !important; gap:6px !important; background:#fff; border:1px solid var(--border) !important; border-radius:10px !important; font-size:11px !important; font-weight:600 !important;}
   #ps-editStatusModal .ps-editstatus-icon{width:26px; height:26px; border-radius:50%; background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:13px; transition:background .15s ease, color .15s ease;}
   .pse-textarea{width:100%; box-sizing:border-box; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:8px 11px; font-family:var(--font); font-size:11.5px; line-height:1.5; resize:vertical; color:var(--ink);}
@@ -1020,10 +1023,6 @@
             <span class="ps-editstatus-icon"><i class="ph ph-check" aria-hidden="true"></i></span>
             Disetujui
           </button>
-          <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="visit">
-            <span class="ps-editstatus-icon"><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
-            Telah visit
-          </button>
           <button type="button" class="ps-editstatus-opt ps-action-btn" data-status="ditolak">
             <span class="ps-editstatus-icon"><i class="ph ph-x" aria-hidden="true"></i></span>
             Ditolak
@@ -1118,7 +1117,7 @@
       </div>
 
       <div class="pw-body">
-        <div class="pw-note"><i class="ph ph-info" aria-hidden="true"></i><span>Presensi ini langsung berstatus <b>diterima</b> dan tidak kena denda keterlambatan.</span></div>
+        <div class="pw-note"><i class="ph ph-info" aria-hidden="true"></i><span id="ps-wakilNoteText">Presensi ini langsung berstatus <b>diterima</b> dan tidak kena denda keterlambatan.</span></div>
         <div id="ps-wakilAlert" class="alert alert-error" hidden></div>
 
         <div class="ps-wakil-group-title"><span class="pw-step">1</span>Tutor dan jadwal</div>
@@ -1163,10 +1162,14 @@
           </div>
         </div>
 
-        <div class="ps-wakil-group-title"><span class="pw-step">3</span>Laporan pembelajaran</div>
+        <div class="ps-wakil-group-title"><span class="pw-step">3</span><span id="ps-wakilStep3">Laporan pembelajaran</span></div>
+        <div class="gx-seg" id="ps-wakilJenis" role="radiogroup" aria-label="Jenis laporan">
+          <button type="button" data-val="presensi" class="is-on" role="radio" aria-checked="true">Presensi</button>
+          <button type="button" data-val="visit" role="radio" aria-checked="false">Visit</button>
+        </div>
         <div class="ps-wakil-group">
           <div class="ps-wakil-row">
-            <label for="ps-wakilMateri">Ringkasan sesi <em class="pw-req">wajib</em></label>
+            <label for="ps-wakilMateri"><span id="ps-wakilMateriLbl">Ringkasan sesi</span> <em class="pw-req">wajib</em></label>
             <textarea id="ps-wakilMateri" rows="3" placeholder="Ringkasan materi dan perkembangan siswa selama sesi ini."></textarea>
           </div>
         </div>
@@ -1174,18 +1177,18 @@
         <div class="ps-wakil-group-title"><span class="pw-step">4</span>Lampiran</div>
         <div class="ps-wakil-group">
           <div class="ps-wakil-row">
-            <label for="ps-wakilFotoFile">Dokumentasi presensi <em class="pw-req">wajib</em></label>
+            <label for="ps-wakilFotoFile"><span id="ps-wakilFotoLbl">Dokumentasi presensi</span> <em class="pw-req">wajib</em></label>
             <label class="pw-file" for="ps-wakilFotoFile">
               <span class="pw-file-ico"><i class="ph ph-image" aria-hidden="true"></i></span>
               <span class="pw-file-t"><b>Pilih foto</b><small id="ps-wakilFotoStatus">JPG atau PNG, foto saat sesi berlangsung</small></span>
               <input type="file" id="ps-wakilFotoFile" accept="image/*" required>
             </label>
           </div>
-          <div class="ps-wakil-row">
+          <div class="ps-wakil-row" id="ps-wakilLinkRow">
             <label for="ps-wakilLink">Tautan materi belajar <em class="pw-opt">opsional</em></label>
             <input type="url" id="ps-wakilLink" placeholder="https://...">
           </div>
-          <div class="ps-wakil-row">
+          <div class="ps-wakil-row" id="ps-wakilCatatanRow">
             <label for="ps-wakilCatatanFile">Catatan pembelajaran <em class="pw-opt">opsional</em></label>
             <label class="pw-file" for="ps-wakilCatatanFile">
               <span class="pw-file-ico"><i class="ph ph-file-text" aria-hidden="true"></i></span>
@@ -1638,10 +1641,17 @@
     return diff;
   }
 
-  var PS_EMBED = 'id,tanggal,jam,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,status,catatan_approval,kontrak_tutor_id,nominal_dibayar,terlambat,unit_id,metode_input,pdf_url,' +
+  var PS_EMBED = 'id,jenis,tanggal,jam,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,status,catatan_approval,kontrak_tutor_id,nominal_dibayar,terlambat,unit_id,metode_input,pdf_url,' +
     'kontrak_tutor(mapel,fee_mengajar,uang_transport,tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url),kontrak_siswa(siswa(nama,orangtua(nama))))';
 
   // Nominal denda satu presensi terlambat (persen dari fee mengajar kontrak tutor).
+  // Pengajuan visit (jenis dipilih tutor). Approver hanya menerima atau menolak; visit yang diterima berstatus 'visit'.
+  var PS_NOMINAL_VISIT = 30000;
+  function psIsVisit(row) { return !!row && (row.jenis === 'visit' || row.status === 'visit'); }
+  function psEstimasiHonor(row) {
+    var kt = row.kontrak_tutor || {};
+    return psIsVisit(row) ? PS_NOMINAL_VISIT : parseFloat(kt.fee_mengajar || 0) + parseFloat(kt.uang_transport || 0);
+  }
   function psDendaRow(row) {
     if (!row || !row.terlambat || !psState.persenDenda) return 0;
     var fee = parseFloat((row.kontrak_tutor && row.kontrak_tutor.fee_mengajar) || 0) || 0;
@@ -1712,10 +1722,13 @@
 
       var results = await Promise.all([
         supaRest('presensi?status=eq.pending&select=' + PS_EMBED + '&order=tanggal.asc,jam.asc', s.access_token),
-        supaRest('presensi?tanggal=gte.' + range.start + '&tanggal=lte.' + range.end + '&status=neq.pending&select=' + PS_EMBED + '&order=tanggal.desc,jam.desc', s.access_token)
+        supaRest('presensi?tanggal=gte.' + range.start + '&tanggal=lte.' + range.end + '&status=neq.pending&select=' + PS_EMBED + '&order=tanggal.desc,jam.desc', s.access_token),
+        supaRest('pengaturan?kunci=eq.nominal_visit&select=nilai', s.access_token).catch(function () { return []; })
       ]);
       psState.approvalRows = results[0];
       psState.riwayatRows = results[1];
+      var nv = results[2] && results[2][0] && parseFloat(results[2][0].nilai);
+      if (nv > 0) PS_NOMINAL_VISIT = nv;
 
       var allRows = psState.approvalRows.concat(psState.riwayatRows);
       var ktIds = Array.from(new Set(allRows.map(function (r) { return r.kontrak_tutor_id; }).filter(Boolean)));
@@ -2053,11 +2066,11 @@
 
     var checkSvg = '<i class="ph ph-check psd-check" aria-hidden="true"></i>';
     var opts = isApproval
-      ? [['diterima', 'Setujui', 'check'], ['visit', 'Visit', 'arrow-right'], ['ditolak', 'Tolak', 'x']]
-      : [['diterima', 'Disetujui', 'check'], ['visit', 'Telah visit', 'arrow-right'], ['ditolak', 'Ditolak', 'x']];
+      ? [['diterima', 'Setujui', 'check'], ['ditolak', 'Tolak', 'x']]
+      : [['diterima', 'Disetujui', 'check'], ['ditolak', 'Ditolak', 'x']];
     var html = '<div class="psd-head">' + (isApproval ? 'Verifikasi presensi' : 'Ubah status') + '</div>' +
       opts.map(function (o) {
-        var cur = !isApproval && currentStatus === o[0];
+        var cur = !isApproval && (currentStatus === o[0] || (currentStatus === 'visit' && o[0] === 'diterima'));
         return '<button type="button" class="ps-status-dropdown-item' + (cur ? ' is-current' : '') + '" data-status="' + o[0] + '">' +
           '<span class="psd-ico psd-' + o[0] + '"><i class="ph ph-' + o[2] + '" aria-hidden="true"></i></span>' +
           '<span class="psd-label">' + o[1] + '</span>' +
@@ -2108,7 +2121,7 @@
   }
 
   async function psHandleStatusSelection(id, targetStatus, currentStatus) {
-    if (targetStatus === currentStatus) return;
+    if (targetStatus === currentStatus || (targetStatus === 'diterima' && currentStatus === 'visit')) return;
 
     if (targetStatus === 'ditolak') {
       psOpenTolakModal(id);
@@ -2190,7 +2203,7 @@
       var siswaNama = (kt.kontrak_siswa && kt.kontrak_siswa.siswa && kt.kontrak_siswa.siswa.nama) || '-';
       var mapel = kt.mapel || '-';
       var unitNama = psGetUnitName(row);
-      var estimasiHonor = parseFloat(kt.fee_mengajar || 0) + parseFloat(kt.uang_transport || 0);
+      var estimasiHonor = psEstimasiHonor(row);
       var honorVal = isApproval ? estimasiHonor : (parseFloat(row.nominal_dibayar || 0) || estimasiHonor);
       var subtitle = (tutor.nama || 'Tutor') + ' • ' + psFormatTanggal(row.tanggal);
 
@@ -2198,7 +2211,7 @@
       var lampiranBtns = [];
       if (row.foto_url) {
         lampiranBtns.push(
-          '<button type="button" class="ps-preview-lampiran-btn ps-table-icon-btn" data-url="' + psEscape(row.foto_url) + '" data-title="Dokumentasi Presensi" data-sub="' + psEscape(subtitle) + '" title="Lihat Foto Dokumentasi">' +
+          '<button type="button" class="ps-preview-lampiran-btn ps-table-icon-btn" data-url="' + psEscape(row.foto_url) + '" data-title="' + (psIsVisit(row) ? 'Dokumentasi Visit' : 'Dokumentasi Presensi') + '" data-sub="' + psEscape(subtitle) + '" title="Lihat Foto Dokumentasi">' +
             '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' +
           '</button>'
         );
@@ -2219,7 +2232,7 @@
       }
       if (row.materi_teks) {
         lampiranBtns.push(
-          '<button type="button" class="ps-table-laporan-btn ps-table-icon-btn" data-laporan="' + psEscape(row.materi_teks) + '" data-title="Laporan Pembelajaran" data-sub="' + psEscape(subtitle) + '" title="Lihat Laporan Pembelajaran">' +
+          '<button type="button" class="ps-table-laporan-btn ps-table-icon-btn" data-laporan="' + psEscape(row.materi_teks) + '" data-title="' + (psIsVisit(row) ? 'Deskripsi Pengajuan Visit' : 'Laporan Pembelajaran') + '" data-sub="' + psEscape(subtitle) + '" title="' + (psIsVisit(row) ? 'Lihat deskripsi visit' : 'Lihat Laporan Pembelajaran') + '">' +
             '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
           '</button>'
         );
@@ -2248,8 +2261,8 @@
             '</button>' +
           '</div>';
       } else {
-        var dotColor = (row.status === 'diterima') ? '#34c759' : ((row.status === 'visit') ? '#007aff' : '#ff3b30');
-        var statusLabel = (row.status === 'diterima') ? 'Disetujui' : ((row.status === 'visit') ? 'Telah visit' : 'Ditolak');
+        var dotColor = (row.status === 'diterima' || row.status === 'visit') ? '#34c759' : '#ff3b30';
+        var statusLabel = (row.status === 'diterima' || row.status === 'visit') ? 'Disetujui' : 'Ditolak';
 
         var sideBtnHtml = '';
         if (row.status === 'ditolak') {
@@ -2257,7 +2270,7 @@
             '<button type="button" class="ps-delete-btn ps-table-icon-btn" data-id="' + row.id + '" aria-label="Hapus presensi" title="Hapus Presensi">' +
               '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
             '</button>';
-        } else if (row.status === 'diterima' || row.status === 'visit') {
+        } else if (row.status === 'diterima') {
           sideBtnHtml =
             '<button type="button" class="ps-download-pdf-btn ps-table-icon-btn" data-id="' + row.id + '" aria-label="Unduh PDF Laporan Belajar Siswa" title="Unduh PDF Laporan Belajar Siswa">' +
               '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
@@ -2281,11 +2294,11 @@
           '<td class="ps-stk ps-stk-tgl" style="color:var(--ink); font-weight:500;" title="' + psEscape(psFormatTanggal(row.tanggal)) + '">' + psEscape(psFormatTanggal(row.tanggal)).replace(/ (\d{4})$/, '<span class="ps-d-y"> $1</span>') + '</td>' +
           '<td class="ps-stk ps-stk-tutor" title="' + psEscape(tutorNama) + '"><span class="pt2-tutor"><span class="pt2-av">' + genioAvatarInner(tutorNama, tutor.foto_profil_url, genioInitials(tutorNama, 1)) + '</span><span class="pt2-name" style="color:var(--ink); font-weight:600;">' + psEscape(tutorNama) + '</span></span></td>' +
           '<td style="white-space:nowrap; color:var(--ink); font-size:10.5px; font-weight:400;">' + (row.jam ? row.jam.slice(0, 5) + ' WIB' : '-') + '</td>' +
-          '<td><span style="color:var(--ink); font-size:10.5px; font-weight:400; white-space:nowrap;">' + psEscape(siswaNama) + '</span></td>' +
+          '<td><span style="color:var(--ink); font-size:10.5px; font-weight:400; white-space:nowrap;">' + psEscape(siswaNama) + '</span>' + (psIsVisit(row) ? '<span class="ps-tag-visit">Visit</span>' : '') + '</td>' +
           '<td><span class="pt2-mapel" style="white-space:nowrap;">' + psEscape(mapel) + '</span></td>' +
           '<td><span style="color:var(--ink-soft); white-space:nowrap;">' + psEscape(unitNama) + '</span></td>' +
           '<td style="text-align:right; white-space:nowrap;"><span style="color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums;">' + psFormatRp(honorVal) + '</span></td>' +
-          '<td style="text-align:center; white-space:nowrap;">' + (row.terlambat ? '<span class="pt2-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat' + (psDendaRow(row) ? ' <b>&minus;' + psFormatRp(psDendaRow(row)) + '</b>' : '') + '</span>' : '<span class="pt2-ok">Tepat waktu</span>') + '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' + (row.terlambat && !psIsVisit(row) ? '<span class="pt2-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat' + (psDendaRow(row) ? ' <b>&minus;' + psFormatRp(psDendaRow(row)) + '</b>' : '') + '</span>' : '<span class="pt2-ok">Tepat waktu</span>') + '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + lampiranHtml + '</td>' +
           '<td style="text-align:center; white-space:nowrap; min-width:170px;">' + statusHtml + '</td>' +
         '</tr>';
@@ -2547,7 +2560,7 @@
     pending: { label: 'Menunggu', bg: '#FFF4E0', color: '#C27400', icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
     diterima: { label: 'Disetujui', bg: '#E9F7EF', color: '#1E8E5A', icon: '<polyline points="20 6 9 17 4 12"/>' },
     ditolak: { label: 'Ditolak', bg: '#FDEAEA', color: '#D4070F', icon: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' },
-    visit: { label: 'Telah visit', bg: '#EAF0FF', color: '#2B59D9', icon: '<path d="M5 12h14M12 5l7 7-7 7"/>' }
+    visit: { label: 'Disetujui', bg: '#E9F7EF', color: '#1E8E5A', icon: '<polyline points="20 6 9 17 4 12"/>' } // visit diterima; jenis ditandai chip Visit
   };
 
   function psRenderCard(row) {
@@ -2557,7 +2570,7 @@
     var waktu = psGetWaktu(row);
     var statusMeta = PS_STATUS_META[row.status] || PS_STATUS_META.pending;
     var isOpen = psState.openCard === row.id;
-    var estimasiHonor = parseFloat(kt.fee_mengajar || 0) + parseFloat(kt.uang_transport || 0);
+    var estimasiHonor = psEstimasiHonor(row);
     var honorLabel = row.status === 'pending' ? 'Estimasi Honor Tutor' : 'Honor Tutor';
     var honorValue = row.status === 'pending' ? estimasiHonor : (row.nominal_dibayar || 0);
 
@@ -2575,7 +2588,7 @@
     if (row.foto_url) {
       lampiranRows.push({
         icon: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
-        label: 'Dokumentasi Presensi',
+        label: psIsVisit(row) ? 'Dokumentasi Visit' : 'Dokumentasi Presensi',
         field: 'foto_url',
         btnLabel: 'Lihat Foto'
       });
@@ -2588,7 +2601,7 @@
         btnLabel: 'Lihat Catatan'
       });
     }
-    if (row.status === 'diterima' || row.status === 'visit') {
+    if (row.status === 'diterima') {
       lampiranRows.push({
         isPdf: true,
         icon: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
@@ -2623,7 +2636,7 @@
       '<div class="ps-lampiran-wrap" data-id="' + row.id + '" style="' + (isOpen ? 'max-height:600px; opacity:1;' : '') + '">' +
         '<div class="pc2-lampiran">' +
           (row.materi_teks
-            ? '<div class="pc2-laporan"><span>Laporan presensi</span><p>' + psEscape(row.materi_teks) + '</p></div>'
+            ? '<div class="pc2-laporan"><span>' + (psIsVisit(row) ? 'Deskripsi pengajuan visit' : 'Laporan presensi') + '</span><p>' + psEscape(row.materi_teks) + '</p></div>'
             : '') +
           lampiranHtml +
           catatanApprovalHtml +
@@ -2633,7 +2646,6 @@
     var actionButtons = row.status === 'pending'
       ? '<div class="pc2-actions">' +
           '<button class="ps-action-btn pc2-btn is-tolak" data-action="tolak" data-id="' + row.id + '"><i class="ph ph-x" aria-hidden="true"></i>Tolak</button>' +
-          '<button class="ps-action-btn pc2-btn is-visit" data-action="visit" data-id="' + row.id + '"><i class="ph ph-arrow-right" aria-hidden="true"></i>Visit</button>' +
           '<button class="ps-action-btn pc2-btn is-setuju" data-action="setujui" data-id="' + row.id + '"><i class="ph ph-check" aria-hidden="true"></i>Setujui</button>' +
         '</div>'
       : '';
@@ -2648,7 +2660,7 @@
     }
 
     var dendaRow = psDendaRow(row);
-    var terlambatChip = row.terlambat ? '<span class="pc2-chip is-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat' + (dendaRow ? ' <b>&minus;' + psFormatRp(dendaRow) + '</b>' : '') + '</span>' : '';
+    var terlambatChip = row.terlambat && !psIsVisit(row) ? '<span class="pc2-chip is-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat' + (dendaRow ? ' <b>&minus;' + psFormatRp(dendaRow) + '</b>' : '') + '</span>' : '';
     var metodeChip = row.metode_input === 'diwakilkan' ? '<span class="pc2-chip"><i class="ph ph-user-switch" aria-hidden="true"></i>Diwakilkan</span>' : '';
 
     return '' +
@@ -2664,7 +2676,7 @@
         '<div class="pc2-chips">' +
           '<span class="pc2-chip"><i class="ph ph-calendar-blank" aria-hidden="true"></i>' + psFormatTanggal(row.tanggal) + '</span>' +
           '<span class="pc2-chip"><i class="ph ph-clock" aria-hidden="true"></i>' + waktu.text + (waktu.durasiMenit ? ' &middot; ' + waktu.durasiMenit + ' mnt' : '') + '</span>' +
-          terlambatChip + metodeChip +
+          (psIsVisit(row) ? '<span class="pc2-chip is-visit"><i class="ph ph-map-pin" aria-hidden="true"></i>Visit</span>' : '') + terlambatChip + metodeChip +
         '</div>' +
         '<div class="pc2-foot">' +
           '<div class="pc2-honor"><span>' + (row.status === 'pending' ? 'Estimasi honor' : 'Honor tutor') + '</span><b>' + psFormatRp(honorValue) + '</b></div>' +
@@ -2706,7 +2718,6 @@
       btn.addEventListener('click', function () {
         var id = btn.dataset.id, action = btn.dataset.action;
         if (action === 'tolak') { psOpenTolakModal(id); }
-        else if (action === 'visit') { psApprove(id, 'visit'); }
         else if (action === 'setujui') { psApprove(id, 'diterima'); }
       });
     });
@@ -2805,11 +2816,8 @@
       var s = genioGetSession();
       var row = psFindRow(id);
 
-      genioToast(
-        (status === 'visit' ? 'Memproses Visit' : 'Menyetujui') + ' & membuat PDF Laporan Belajar...',
-        'loading',
-        true
-      );
+      var visit = psIsVisit(row);
+      genioToast(visit ? 'Menyetujui pengajuan visit...' : 'Menyetujui & membuat PDF Laporan Belajar...', 'loading', true);
 
       await supaRest('presensi?id=eq.' + id, s.access_token, {
         method: 'PATCH',
@@ -2817,25 +2825,26 @@
         body: JSON.stringify({ status: status, approved_by: s.user_id, approved_at: new Date().toISOString(), catatan_approval: null })
       });
 
+      // Database mengubah 'diterima' jadi 'visit' untuk pengajuan visit; visit tidak dibuatkan laporan belajar
       if (row) {
-        row.status = status;
+        row.status = visit ? 'visit' : status;
         row.catatan_approval = null;
       }
 
-      if (status === 'diterima' || status === 'visit') {
+      if (status === 'diterima' && !visit) {
         try {
           if (row) {
             await psGenerateAndSaveLaporanPdf(row, status);
           }
         } catch (pdfErr) {
           console.error('Auto generate PDF error:', pdfErr);
-          genioToast('Presensi ' + (status === 'visit' ? 'Visit' : 'disetujui') + ', namun pembuatan PDF Laporan tertunda: ' + pdfErr.message, 'warning');
+          genioToast('Presensi disetujui, namun pembuatan PDF Laporan tertunda: ' + pdfErr.message, 'warning');
           psLoadAll();
           return;
         }
       }
 
-      genioToast(status === 'visit' ? 'Presensi ditandai Visit & PDF Laporan berhasil dibuat' : 'Presensi disetujui & PDF Laporan berhasil dibuat', 'success');
+      genioToast(visit ? 'Pengajuan visit disetujui' : 'Presensi disetujui & PDF Laporan berhasil dibuat', 'success');
       psLoadAll();
     } catch (err) {
       genioToast('Gagal memproses: ' + err.message, 'error');
@@ -2919,11 +2928,11 @@
       });
 
       if (targetRow) {
-        targetRow.status = psEditStatusSelected;
+        targetRow.status = psEditStatusSelected === 'diterima' && psIsVisit(targetRow) ? 'visit' : psEditStatusSelected;
         targetRow.catatan_approval = psEditStatusSelected === 'ditolak' ? catatan : null;
       }
 
-      if ((psEditStatusSelected === 'diterima' || psEditStatusSelected === 'visit') && targetRow && !targetRow.pdf_url) {
+      if (psEditStatusSelected === 'diterima' && targetRow && !psIsVisit(targetRow) && !targetRow.pdf_url) {
         try {
           await psGenerateAndSaveLaporanPdf(targetRow, psEditStatusSelected);
         } catch (pdfErr) {
@@ -3007,7 +3016,34 @@
     });
   });
 
+  // Jenis laporan saat mewakili tutor: presensi biasa atau visit (langsung diterima sebagai visit, dibayar flat)
+  var psWakilJenis = 'presensi';
+  function psSetWakilJenis(jenis) {
+    var v = jenis === 'visit';
+    psWakilJenis = v ? 'visit' : 'presensi';
+    document.querySelectorAll('#ps-wakilJenis button').forEach(function (b) {
+      var on = b.dataset.val === psWakilJenis;
+      b.classList.toggle('is-on', on); b.setAttribute('aria-checked', String(on));
+    });
+    document.getElementById('ps-wakilStep3').textContent = v ? 'Pengajuan visit' : 'Laporan pembelajaran';
+    document.getElementById('ps-wakilMateriLbl').textContent = v ? 'Deskripsi visit' : 'Ringkasan sesi';
+    document.getElementById('ps-wakilMateri').placeholder = v ? 'Jelaskan kenapa sesi tidak berjalan, misalnya siswa sakit saat tutor sudah tiba.' : 'Ringkasan materi dan perkembangan siswa selama sesi ini.';
+    document.getElementById('ps-wakilFotoLbl').textContent = v ? 'Dokumentasi bukti visit' : 'Dokumentasi presensi';
+    document.getElementById('ps-wakilLinkRow').hidden = v;
+    document.getElementById('ps-wakilCatatanRow').hidden = v;
+    var exBtn = document.getElementById('ps-wExBtn'); if (exBtn) exBtn.style.display = v ? 'none' : '';
+    if (v && typeof psWakilEx !== 'undefined' && psWakilEx) psWakilEx.close();
+    document.getElementById('ps-wakilNoteText').innerHTML = v
+      ? 'Visit ini langsung <b>diterima</b> dan dibayar flat ' + psFormatRp(PS_NOMINAL_VISIT) + ', tanpa denda keterlambatan.'
+      : 'Presensi ini langsung berstatus <b>diterima</b> dan tidak kena denda keterlambatan.';
+    document.getElementById('ps-wakilSaveBtn').textContent = v ? 'Simpan visit' : 'Simpan presensi';
+  }
+  document.querySelectorAll('#ps-wakilJenis button').forEach(function (b) {
+    b.addEventListener('click', function () { psSetWakilJenis(b.dataset.val); });
+  });
+
   document.getElementById('ps-openWakilBtn').addEventListener('click', function () {
+    psSetWakilJenis('presensi');
     document.getElementById('ps-wakilAlert').hidden = true;
     var defaultTgl = new Date().toISOString().slice(0, 10);
     document.getElementById('ps-wakilTanggal').value = defaultTgl;
@@ -3235,7 +3271,7 @@
     if (!document.getElementById('ps-wakilTutor').value) { alertEl.textContent = 'Pilih tutor dulu.'; alertEl.hidden = false; return; }
     if (kontrakIdx === '') { alertEl.textContent = 'Pilih kontrak/jadwal dulu.'; alertEl.hidden = false; return; }
     if (!tanggal || !jam) { alertEl.textContent = 'Tanggal dan jam wajib diisi.'; alertEl.hidden = false; return; }
-    if (!materi) { alertEl.textContent = 'Laporan presensi wajib diisi.'; alertEl.hidden = false; return; }
+    if (!materi) { alertEl.textContent = psWakilJenis === 'visit' ? 'Deskripsi visit wajib diisi.' : 'Laporan presensi wajib diisi.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
     var k = psWakilKontrakList[kontrakIdx];
@@ -3243,8 +3279,8 @@
     if (!unitId) { alertEl.textContent = 'Data unit siswa tidak ditemukan untuk kontrak ini.'; alertEl.hidden = false; return; }
 
     var fotoFile = document.getElementById('ps-wakilFotoFile').files[0];
-    var catatanFile = document.getElementById('ps-wakilCatatanFile').files[0];
-    if (!fotoFile) { alertEl.textContent = 'Dokumentasi Presensi wajib diunggah.'; alertEl.hidden = false; return; }
+    var catatanFile = psWakilJenis === 'visit' ? null : document.getElementById('ps-wakilCatatanFile').files[0];
+    if (!fotoFile) { alertEl.textContent = psWakilJenis === 'visit' ? 'Dokumentasi bukti visit wajib diunggah.' : 'Dokumentasi presensi wajib diunggah.'; alertEl.hidden = false; return; }
     if (fotoFile.size > PS_MAX_FILE_MB * 1024 * 1024) { alertEl.textContent = 'Ukuran file Dokumentasi maksimal ' + PS_MAX_FILE_MB + ' MB.'; alertEl.hidden = false; return; }
     if (catatanFile && catatanFile.size > PS_MAX_FILE_MB * 1024 * 1024) { alertEl.textContent = 'Ukuran file Catatan Pembelajaran maksimal ' + PS_MAX_FILE_MB + ' MB.'; alertEl.hidden = false; return; }
 
@@ -3256,8 +3292,8 @@
     psShowThanksPopup();
     psSubmitWakilInBackground({
       kontrakTutorId: k.id, unitId: unitId, tanggal: tanggal, jam: jam, materi: materi,
-      materiLink: document.getElementById('ps-wakilLink').value.trim() || null,
-      fotoFile: fotoFile, catatanFile: catatanFile, tutorNama: tutorNama
+      materiLink: psWakilJenis === 'visit' ? null : (document.getElementById('ps-wakilLink').value.trim() || null),
+      fotoFile: fotoFile, catatanFile: catatanFile, tutorNama: tutorNama, jenis: psWakilJenis
     });
   });
 
@@ -3303,7 +3339,8 @@
           unit_id: data.unitId,
           tanggal: data.tanggal,
           jam: data.jam,
-          status: 'diterima',
+          jenis: data.jenis || 'presensi',
+          status: data.jenis === 'visit' ? 'visit' : 'diterima',
           metode_input: 'diwakilkan',
           diinput_oleh: s.user_id,
           materi_teks: data.materi,
@@ -3312,7 +3349,7 @@
           catatan_pembelajaran_url: catatanUrl
         })
       });
-      genioToast('Presensi ' + data.tutorNama + ' berhasil disimpan', 'success');
+      genioToast((data.jenis === 'visit' ? 'Visit ' : 'Presensi ') + data.tutorNama + ' berhasil disimpan', 'success');
       psLoadAll();
     } catch (err) {
       genioToast('Gagal simpan presensi ' + data.tutorNama + ': ' + err.message, 'error');

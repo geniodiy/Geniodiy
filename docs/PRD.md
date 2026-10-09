@@ -108,7 +108,7 @@ Jadwal otomatis muncul di Dashboard Tutor
 Tutor isi Presensi (tanggal, jam, materi, foto bukti)
    │
    ▼
-Approval oleh Kepala Unit / Manajer → Terima / Tolak / Visit
+Approval oleh Kepala Unit / Manajer → Terima / Tolak (visit diajukan tutor sendiri lewat jenis Visit)
    │
    ▼
 Jika Tolak → Tutor edit ulang laporan yang sama → menunggu approval lagi (bisa berkali-kali)
@@ -148,6 +148,8 @@ Bulan berikutnya → klik "Generate Slip Gaji" → Manajer tandai "sudah dibayar
 > - Presensi diwakilkan otomatis `diterima`, tidak telat, tanpa denda.
 
 **Status presensi:** `pending` → `diterima` / `ditolak` / `visit`
+
+> **[v5, 9 Okt 2026] Pengajuan visit:** tutor memilih jenis di poin 3 form: **Presensi** (isian biasa) atau **Visit** (deskripsi pengajuan visit + dokumentasi bukti visit, tombol "Ajukan visit"). Approver hanya **Terima / Tolak**; pengajuan visit yang diterima berstatus `visit` (dibayar flat `nominal_visit` dari pengaturan manajer, bebas denda telat, tetap ditagih ke ortu 1 pertemuan). Presensi biasa tidak bisa dijadikan visit oleh approver: tolak, lalu tutor merevisi (boleh mengganti jenis). Visit tidak dibuatkan PDF laporan belajar. Kolom baru `presensi.jenis`.
 
 **Logika hasil approval:**
 | Status | Dihitung sebagai pertemuan? | Gaji tutor |
@@ -940,6 +942,7 @@ Bug kecil yang ditemukan: tombol "Lihat semua" di kartu Jadwal tutor (Home) memb
 - **Sesi hari ini (kepala unit, HRD, manajer):** disamakan dengan beranda tutor: baris Hari ini, Kemarin, dan Fleksibel (minggu ini), dengan tanda sudah/belum lapor per sesi; popup menyebut status kemarin/minggu ini dan pesan pengingat menyesuaikan.
 - **Highlight HRD dan Data Ortu & Siswa (desktop lebih padat):** Home HRD memakai garis tren gaji 6 bulan dan bar "N tutor aktif / X% mengajar bulan ini" (menggantikan gauge). Highlight Data Ortu & Siswa memakai satu batang jenjang bersegmen dengan legenda; panel kanan menampilkan siswa aktif per unit (4 teratas + "N unit lain"), atau per jenis kelamin untuk kepala unit (satu unit).
 - **Tombol + kepala unit/HRD:** roda pilihan muncul dengan "pop" singkat dari tombol + (0,2 detik) dan mengecil kembali saat ditutup (desktop: kartu berayun dari tombol). Form yang dibuka dari pilihan tumbuh dari pilihan itu (roda pilihan menutup), tombol + tetap tampil sebagai x di atas lapisan gelap dan menutup form (juga Esc dan tab bawah), sama seperti tutor.
+- **Pengajuan visit (9 Okt 2026):** jenis Presensi | Visit di form tutor dan form mewakili, approval hanya Terima/Tolak, tanda Visit di kartu/tabel, tanpa PDF untuk visit. Butuh migration `20261009_presensi_jenis_visit.sql` di GDIY sebelum kode dideploy.
 - **Lainnya:** kartu profil jadi satu baris ringkas (avatar, nama, peran · unit, tombol panah); seluruh kartu bisa diketuk untuk membuka profil.
 
 ### [v5] Langkah berikutnya (disepakati 27 Sep 2026)
