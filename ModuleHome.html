@@ -310,6 +310,7 @@
     .home-top-row,
     .home-kpi-row,
     .home-main-grid,
+    .home-rk-row,
     #homeJadwalCol{
       display: contents !important;
     }
@@ -354,6 +355,7 @@
     .home-sec-sapaan    { order: 2 !important; }
     .home-sec-hero      { order: 3 !important; }
     .home-sec-presensi  { order: 4 !important; }
+    #homeKlCard         { order: 4 !important; }
     .home-sec-rekap     { order: 5 !important; }
     #homeSecJadwalTutor { order: 6 !important; }
     .home-sec-trend     { order: 7 !important; }
@@ -387,6 +389,11 @@
     .home-kpi-row{
       display:flex !important; flex-direction:row !important; gap:14px !important; align-items:stretch !important; margin-bottom:14px !important;
     }
+
+    /* Baris rekap per unit | Laporan untuk orang tua: sama tinggi, kartu laporan sempit di kanan */
+    .home-rk-row{display:grid; grid-template-columns:minmax(0,1fr); gap:14px; align-items:stretch; margin-bottom:14px;}
+    .home-rk-row.has-kl{grid-template-columns:minmax(0,1.75fr) minmax(320px,1fr);}
+    .home-rk-row > .card, .home-rk-row > #homeKlCard{margin-bottom:0 !important;}
 
     /* Baris 4: Main Workspace (Trend Progress | 5 Unit | Jadwal Tutor & News) */
     .home-main-grid{
@@ -505,7 +512,8 @@
 
   </div>
 
-  <!-- Rekap keuangan per unit -->
+  <!-- Rekap keuangan per unit | Laporan untuk orang tua (desktop satu baris, sama tinggi) -->
+  <div class="home-rk-row" id="homeRkRow">
   <div class="card home-sec-rekap ru-card" id="homeRekapCard">
     <div class="ru-head">
       <div style="min-width:0;">
@@ -515,6 +523,8 @@
       <div class="ru-legend"><span><i style="background:#F2A097"></i>Gaji</span><span><i style="background:#F9D4CF"></i>Ops</span></div>
     </div>
     <div id="homeRekapTable"><div class="ru-empty">Memuat data unit...</div></div>
+  </div>
+  <div id="homeKlCard" hidden></div>
   </div>
 
   <!-- Baris 4: Main Workspace (Trend | Jadwal Tutor & News) -->
@@ -607,6 +617,10 @@
     var inp = document.getElementById('homePeriodeInput');
     if (inp) inp.value = genioGetPeriode();
     loadHomeData();
+    // Laporan untuk orang tua (manajer dan super admin, semua unit)
+    var kl = document.getElementById('homeKlCard');
+    document.getElementById('homeRkRow').classList.toggle('has-kl', !!(window.genioKirimLaporan && window.genioKirimLaporan.allowed()));
+    if (window.genioKlCard) window.genioKlCard(kl, { showUnit: true });
   };
   window.addEventListener('genio:periode', function (e) {
     var inp = document.getElementById('homePeriodeInput');

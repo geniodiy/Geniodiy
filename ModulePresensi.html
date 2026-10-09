@@ -779,8 +779,7 @@
     background: var(--blue-tint);
   }
 
-  /* ===== Tab Kirim laporan (kepala unit dan manajer) ===== */
-  #ps-root.ps-kirim-on .ps-search-sec, #ps-root.ps-kirim-on #ps-sectionLabel, #ps-root.ps-kirim-on #ps-list{display:none !important;}
+  /* ===== Kirim laporan (menu sendiri, markup di ModuleKirimLaporan.html; kepala unit dan manajer) ===== */
   .kl-tools{display:flex; flex-direction:column; gap:10px; margin:2px 0 12px;}
   .kl-tools-r{display:flex; align-items:center; gap:8px; min-width:0;}
   .kl-tools-r .kl-seg{flex:1; min-width:0;}
@@ -983,10 +982,6 @@
       <span>Riwayat</span>
       <span id="ps-riwayatCount" class="ps-count ps-count-riwayat">0</span>
     </button>
-    <button class="ps-dock-btn ps-tab-btn" data-tab="kirim" id="ps-kirimTabBtn">
-      <span>Kirim laporan</span>
-      <span id="ps-kirimCount" class="ps-count ps-count-kirim">0</span>
-    </button>
   </div>
 
   <!-- Cari, filter, tampilan -->
@@ -1022,31 +1017,6 @@
     <div class="empty-state ps-full-width">Memuat presensi...</div>
   </div>
 
-  <!-- Tab Kirim laporan: laporan belajar yang sudah disetujui, dikelompokkan per orang tua -->
-  <div id="kl-root" hidden>
-    <div class="kl-tools">
-      <div class="kl-chips" id="kl-range" role="tablist" aria-label="Rentang waktu">
-        <button type="button" data-range="yesterday" class="is-on">Kemarin</button>
-        <button type="button" data-range="today">Hari ini</button>
-        <button type="button" data-range="week">Minggu ini</button>
-        <button type="button" data-range="month">Bulan ini</button>
-        <button type="button" data-range="custom"><i class="ph ph-calendar-blank" aria-hidden="true"></i><span id="kl-customLabel">Pilih</span></button>
-      </div>
-      <div class="kl-tools-r">
-        <div class="kl-seg" id="kl-filter" role="tablist" aria-label="Status kirim">
-          <button type="button" data-f="belum" class="is-on">Belum dikirim <span class="kl-badge" id="kl-belumCount">0</span></button>
-          <button type="button" data-f="sudah">Sudah dikirim</button>
-          <button type="button" data-f="semua">Semua</button>
-        </div>
-        <button type="button" id="kl-viewBtn" class="genio-tool-btn genio-tool-icon" aria-label="Ubah tampilan"></button>
-      </div>
-    </div>
-    <div class="kl-head">
-      <div class="ps-section-title" id="kl-title">Laporan minggu ini</div>
-      <div class="ps-section-sub" id="kl-sub">-</div>
-    </div>
-    <div id="kl-list"><div class="kl-empty">Memuat laporan...</div></div>
-  </div>
 
 </div>
 
@@ -1571,12 +1541,6 @@
   };
 
   function psInit() {
-    if (typeof klAllowed === 'function' && !klAllowed()) {
-      var klBtn = document.getElementById('ps-kirimTabBtn');
-      if (klBtn) klBtn.remove();
-      PS_TABS = ['approval', 'riwayat'];
-      if (psState.tab === 'kirim') psState.tab = 'approval';
-    }
     if (!psState.periode) {
       var now = new Date();
       psState.periode = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
@@ -1788,8 +1752,7 @@
     return { start: start, end: end };
   }
 
-  // Tab Kirim laporan hanya untuk kepala unit, manajer, dan super admin (diatur di psInit)
-  var PS_TABS = ['approval', 'riwayat', 'kirim'];
+  var PS_TABS = ['approval', 'riwayat'];
 
   /* Drag/geser + animasi zoom-tahan — mekanisme sama persis seperti bottom bar & tab Unit di Home */
   function initPsTabScrubbing() {
@@ -1883,11 +1846,6 @@
       btn.classList.toggle('ps-dock-active', btn.dataset.tab === tab);
     });
     psUpdateDockGlider();
-    var psRoot = document.getElementById('ps-root');
-    if (psRoot) psRoot.classList.toggle('ps-kirim-on', tab === 'kirim');
-    var klRoot = document.getElementById('kl-root');
-    if (klRoot) klRoot.hidden = tab !== 'kirim';
-    if (tab === 'kirim') { klRender(true); return; }
     var sectionLabel = document.getElementById('ps-sectionLabelText');
     if (tab === 'approval') {
       sectionLabel.innerHTML = '<div class="ps-section-title">Antrean verifikasi</div><div class="ps-section-sub">Menunggu persetujuan manajer</div>';
@@ -2084,8 +2042,7 @@
       document.getElementById('ps-approvalCount').textContent = psState.approvalRows.length;
       document.getElementById('ps-riwayatCount').textContent = periodeRows.length;
 
-      if (typeof klLoad === 'function' && klAllowed()) klLoad();
-      if (psState.tab !== 'kirim') psRenderList(true);
+      psRenderList(true);
     } catch (err) {
       listEl.innerHTML = '<div class="ps-card ps-full-width" style="padding:40px 20px; text-align:center; color:#8e8e93; font-size:12px;">Gagal memuat presensi: ' + psEscape(err.message) + '</div>';
     }
@@ -4030,7 +3987,7 @@
   }
 </script>
 <script>
-  /* ===== Kirim laporan belajar ke orang tua (tab ketiga Presensi; kepala unit, manajer, super admin) =====
+  /* ===== Kirim laporan belajar ke orang tua (menu Kirim laporan di Lainnya, markup di ModuleKirimLaporan.html; kepala unit, manajer, super admin) =====
      Laporan yang sudah disetujui (diterima atau visit) dalam rentang waktu, dikelompokkan per orang tua.
      Kirim satuan (satu laporan) atau rekap (semua yang belum dikirim, bisa disertai yang sudah), lewat link PDF
      atau lampiran file. Tanda terkirim disimpan di tabel laporan_kirim saat tombol kirim ditekan dan bisa dibatalkan. */
@@ -4127,30 +4084,37 @@
   }
 
   /* ----- Data ----- */
+  // Laporan yang sudah disetujui di rentang from..to, plus jadwal (untuk PDF) dan profil pengirim (tanda tangan pesan).
+  // Dipakai halaman Kirim laporan dan kartu "Laporan untuk orang tua" di Home.
+  async function klFetch(from, to) {
+    var s = genioGetSession();
+    var tasks = [supaRest('presensi?tanggal=gte.' + from + '&tanggal=lte.' + to + '&status=in.(diterima,visit)&select=' + KL_SELECT + '&order=tanggal.asc,jam.asc', s.access_token)];
+    if (!klState.me) tasks.push(supaRest('users?id=eq.' + s.user_id + '&select=nama,jenis_kelamin', s.access_token).catch(function () { return []; }));
+    if (s.role === 'kepala_unit' && typeof genioEnsureSessionProfile === 'function') tasks.push(genioEnsureSessionProfile());
+    // Nama unit untuk PDF (psGetUnitName): menu ini bisa dibuka tanpa membuka Presensi lebih dulu
+    if (!psUnitsLoaded) tasks.push(psLoadFilterUnits());
+    var res = await Promise.all(tasks);
+    klState.unitJenis = await genioUnitJenisMap();
+    if (!klState.me) klState.me = (res[1] && res[1][0]) || { nama: s.nama };
+    var rows = res[0] || [];
+    var ktIds = klUniq(rows.map(function (x) { return x.kontrak_tutor_id; }));
+    if (ktIds.length) {
+      var jr = await supaRest('jadwal?kontrak_tutor_id=in.(' + ktIds.join(',') + ')&select=kontrak_tutor_id,hari,jam_mulai,jam_selesai', s.access_token).catch(function () { return []; });
+      jr.forEach(function (j) { klState.jadwal[j.kontrak_tutor_id + '|' + j.hari] = j; });
+    }
+    return rows;
+  }
   async function klLoad() {
     if (!klAllowed()) return;
     var seq = ++klState.seq, r = klRangeDates();
     if (!r.from || !r.to) return;
-    var s = genioGetSession();
     var listEl = document.getElementById('kl-list');
     if (listEl && !klState.loaded) listEl.innerHTML = '<div class="kl-empty">Memuat laporan...</div>';
     else if (listEl) listEl.classList.add('is-loading');
     try {
-      var tasks = [supaRest('presensi?tanggal=gte.' + r.from + '&tanggal=lte.' + r.to + '&status=in.(diterima,visit)&select=' + KL_SELECT + '&order=tanggal.asc,jam.asc', s.access_token)];
-      if (!klState.me) tasks.push(supaRest('users?id=eq.' + s.user_id + '&select=nama,jenis_kelamin', s.access_token).catch(function () { return []; }));
-      if (s.role === 'kepala_unit' && typeof genioEnsureSessionProfile === 'function') tasks.push(genioEnsureSessionProfile());
-      var res = await Promise.all(tasks);
-      klState.unitJenis = await genioUnitJenisMap();
+      var rows = await klFetch(r.from, r.to);
       if (seq !== klState.seq) return;
-      klState.rows = res[0] || [];
-      if (!klState.me) klState.me = (res[1] && res[1][0]) || { nama: s.nama };
-      var ktIds = klUniq(klState.rows.map(function (x) { return x.kontrak_tutor_id; }));
-      klState.jadwal = {};
-      if (ktIds.length) {
-        var jr = await supaRest('jadwal?kontrak_tutor_id=in.(' + ktIds.join(',') + ')&select=kontrak_tutor_id,hari,jam_mulai,jam_selesai', s.access_token).catch(function () { return []; });
-        if (seq !== klState.seq) return;
-        jr.forEach(function (j) { klState.jadwal[j.kontrak_tutor_id + '|' + j.hari] = j; });
-      }
+      klState.rows = rows;
       klState.loaded = true;
       if (listEl) listEl.classList.remove('is-loading');
       klRender(true);
@@ -4161,9 +4125,10 @@
     }
   }
 
-  function klGroups() {
+  function klGroups() { return klGroupsOf(klState.rows); }
+  function klGroupsOf(rows) {
     var map = {}, list = [];
-    klState.rows.forEach(function (r) {
+    rows.forEach(function (r) {
       var p = klParts(r), key = p.o ? p.o.id : 'siswa-' + (p.sw.id || r.id);
       var g = map[key];
       if (!g) {
@@ -4194,8 +4159,6 @@
     if (!listEl) return;
     var groups = klGroups();
     var belumTotal = groups.reduce(function (a, g) { return a + g.belum; }, 0);
-    var cnt = document.getElementById('ps-kirimCount');
-    if (cnt) cnt.textContent = belumTotal;
     var badge = document.getElementById('kl-belumCount');
     if (badge) { badge.textContent = belumTotal; badge.classList.toggle('is-zero', !belumTotal); }
     var r = klRangeDates();
@@ -4341,7 +4304,7 @@
   var klWideLast = window.matchMedia('(min-width:768px)').matches;
   window.addEventListener('resize', function () {
     var w = window.matchMedia('(min-width:768px)').matches;
-    if (w !== klWideLast) { klWideLast = w; klState.view = genioViewPref('genio_kl_view'); if (psState.tab === 'kirim') klRender(false); }
+    if (w !== klWideLast) { klWideLast = w; klState.view = genioViewPref('genio_kl_view'); if (genioIsModuleVisible('kirim-laporan')) klRender(false); }
   });
 
   function klShowModal(m) { m.hidden = false; requestAnimationFrame(function () { m.classList.add('show'); }); }
@@ -4416,9 +4379,12 @@
       await supaRest('orangtua?id=eq.' + klHpGroup.ortu.id, s.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ no_hp: hp }) });
       var oid = klHpGroup.ortu.id;
       klState.rows.forEach(function (r) { var o = klParts(r).o; if (o && o.id === oid) o.no_hp = hp; });
+      klHpGroup.hp = hp;
+      if (klHpGroup.ortu) klHpGroup.ortu.no_hp = hp;
       klHideModal(document.getElementById('kl-hpModal'));
       genioToast('Nomor orang tua disimpan', 'success');
       klRender(false);
+      klChanged({ ortuId: oid, hp: hp });
     } catch (err) {
       al.textContent = 'Gagal menyimpan: ' + err.message; al.hidden = false;
     } finally { btn.disabled = false; }
@@ -4446,6 +4412,7 @@
       klHideModal(document.getElementById('kl-undoModal'));
       genioToast('Tanda terkirim dibatalkan', 'success');
       klRender(false);
+      klChanged({ undo: klUndoRow.id });
     } catch (err) {
       genioToast('Gagal membatalkan: ' + err.message, 'error');
     } finally { btn.disabled = false; }
@@ -4764,7 +4731,24 @@
       genioToast('Pesan dibuka, tapi gagal menandai terkirim: ' + err.message, 'error');
     }
     klRender(false);
+    klChanged({ sent: items.map(function (r) { return r.id; }) });
   }
+  // Beri tahu Home (kartu "Laporan untuk orang tua") bahwa status kirim atau nomor orang tua berubah
+  function klChanged(detail) { window.dispatchEvent(new CustomEvent('genio:laporan-kirim', { detail: detail || {} })); }
+
+  /* ----- Dipakai Home dan badge menu Lainnya ----- */
+  // Jendela kartu Home: dari awal minggu ini (Senin) atau kemarin, mana yang lebih awal, sampai hari ini
+  function klHomeRange() {
+    var t = klNowJakarta().date, mon = new Date(t), y = new Date(t);
+    mon.setDate(t.getDate() - ((t.getDay() + 6) % 7));
+    y.setDate(t.getDate() - 1);
+    return { from: klIso(mon < y ? mon : y), to: klIso(t), weekFrom: klIso(mon) };
+  }
+  window.genioKirimLaporan = {
+    allowed: klAllowed, range: klHomeRange, fetch: klFetch, groups: klGroupsOf, sent: klSent,
+    shortRange: klShortRange, tglShort: klTglShort, unit: psGetUnitName,
+    send: function (g) { klOpenSend(g, null); }
+  };
   document.getElementById('kl-waBtn').addEventListener('click', function () {
     if (!klSend) return;
     var msg = document.getElementById('kl-msg').value.trim();

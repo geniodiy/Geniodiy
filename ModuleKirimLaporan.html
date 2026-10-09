@@ -1,0 +1,185 @@
+<div class="module-panel" data-module="kirim-laporan" hidden>
+<!-- Menu Kirim laporan (Lainnya; kepala unit, manajer, super admin). Logika, popup kirim, dan gayanya ada di ModulePresensi.html (kl*),
+     jadi file ini di-include SEBELUM ModulePresensi supaya elemennya sudah ada saat skrip kl dijalankan. -->
+<style>
+  @media (min-width:900px){
+    .module-panel[data-module="kirim-laporan"][hidden]{ display:none !important; }
+    .module-panel[data-module="kirim-laporan"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
+  }
+
+  /* ===== Kartu Home "Laporan untuk orang tua" (Style 3; Home kepala unit dan manajer), dibuat oleh genioKlCard ===== */
+  .klc{background:#fff; border:1px solid var(--border); border-radius:14px; padding:16px; display:flex; flex-direction:column; min-width:0; box-sizing:border-box;}
+  .klc-head{display:flex; align-items:center; gap:10px; min-width:0;}
+  .klc-ico{width:34px; height:34px; border-radius:10px; flex:none; display:flex; align-items:center; justify-content:center; background:#FFF4E0; color:#B86E00; font-size:17px;}
+  .klc-t{flex:1; min-width:0;}
+  .klc-t h4{margin:0; font-size:12px; font-weight:600; color:var(--ink);}
+  .klc-t span{display:block; font-size:10.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .klc-badge{flex:none; min-width:20px; height:20px; padding:0 6px; border-radius:999px; background:var(--red); color:#fff; font-size:10.5px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; font-variant-numeric:tabular-nums; box-sizing:border-box;}
+  .klc-badge.is-zero{background:var(--border); color:var(--ink-soft);}
+  .klc-bar{display:flex; gap:2px; height:6px; border-radius:999px; overflow:hidden; background:var(--surface); margin-top:14px;}
+  .klc-bar i{display:block; height:100%; transform-origin:left center;}
+  .klc-bar .b{background:#FFC46B;} .klc-bar .s{background:#7CF0C3;}
+  .klc-lg{display:flex; justify-content:space-between; gap:10px; margin-top:6px; font-size:10.5px; color:var(--ink-soft);}
+  .klc-lg b{color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums;}
+  .klc-list{margin-top:8px; display:grid; grid-template-columns:minmax(0,1fr); column-gap:22px;}
+  .klc-row{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid var(--border); min-width:0;}
+  .klc-av{width:32px; height:32px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; background:var(--blue-tint); color:var(--blue); font-size:10.5px; font-weight:700;}
+  .klc-av.is-sek{border-radius:10px; background:#FFF4E0; color:#B86E00; font-size:16px;}
+  .klc-w{flex:1; min-width:0;}
+  .klc-w b{display:block; font-size:12px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .klc-w small{display:block; font-size:10.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .klc-wa{flex:none; width:34px; height:34px; border-radius:9px; border:1px solid #BFE8D2; background:#EFFAF4; color:#12895A; display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer; transition:background .15s ease, transform .15s ease;}
+  .klc-wa:hover{background:#E0F5EA;} .klc-wa:active{transform:scale(.94);}
+  .klc-done{display:flex; align-items:center; gap:10px; padding:12px; margin-top:12px; border-radius:10px; background:var(--surface); font-size:11px; color:var(--ink-soft);}
+  .klc-done i{font-size:20px; color:#12895A;}
+  .klc-done b{display:block; font-size:12px; font-weight:600; color:var(--ink);}
+  .klc-foot{margin-top:auto; padding-top:10px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:8px;}
+  .klc-list + .klc-foot, .klc-done + .klc-foot{margin-top:auto;}
+  .klc-more{background:none; border:0; padding:4px 6px; font-family:var(--font); font-size:11.5px; font-weight:600; color:var(--blue); cursor:pointer;}
+  .klc-more small{font-weight:500; color:var(--ink-soft); margin-left:4px;}
+  .klc-skel{height:120px; border-radius:10px; background:var(--surface); margin-top:14px;}
+  .klc.is-in .klc-bar i{animation:klcGrow .7s cubic-bezier(.16,1,.3,1) both;}
+  .klc.is-in .klc-row{animation:klcIn .38s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 45ms + 80ms);}
+  @keyframes klcGrow{from{transform:scaleX(0);}to{transform:none;}}
+  @keyframes klcIn{from{opacity:0; transform:translateY(6px);}to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .klc.is-in .klc-bar i, .klc.is-in .klc-row{animation:none;} }
+  @media (min-width:900px){ .klc-list.is-two{grid-template-columns:repeat(2, minmax(0,1fr));} .klc-list.is-two .klc-row{border-top:1px solid var(--border);} }
+</style>
+
+  <!-- Kirim laporan: laporan belajar yang sudah disetujui, dikelompokkan per orang tua -->
+  <div id="kl-root">
+    <div class="kl-tools">
+      <div class="kl-chips" id="kl-range" role="tablist" aria-label="Rentang waktu">
+        <button type="button" data-range="yesterday" class="is-on">Kemarin</button>
+        <button type="button" data-range="today">Hari ini</button>
+        <button type="button" data-range="week">Minggu ini</button>
+        <button type="button" data-range="month">Bulan ini</button>
+        <button type="button" data-range="custom"><i class="ph ph-calendar-blank" aria-hidden="true"></i><span id="kl-customLabel">Pilih</span></button>
+      </div>
+      <div class="kl-tools-r">
+        <div class="kl-seg" id="kl-filter" role="tablist" aria-label="Status kirim">
+          <button type="button" data-f="belum" class="is-on">Belum dikirim <span class="kl-badge" id="kl-belumCount">0</span></button>
+          <button type="button" data-f="sudah">Sudah dikirim</button>
+          <button type="button" data-f="semua">Semua</button>
+        </div>
+        <button type="button" id="kl-viewBtn" class="genio-tool-btn genio-tool-icon" aria-label="Ubah tampilan"></button>
+      </div>
+    </div>
+    <div class="kl-head">
+      <div class="ps-section-title" id="kl-title">Laporan minggu ini</div>
+      <div class="ps-section-sub" id="kl-sub">-</div>
+    </div>
+    <div id="kl-list"><div class="kl-empty">Memuat laporan...</div></div>
+  </div>
+</div>
+
+<script>
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['kirim-laporan'] = function () {
+    if (typeof klAllowed === 'function' && klAllowed()) klLoad();
+  };
+
+  /* ===== Kartu Home "Laporan untuk orang tua" (Style 3): laporan disetujui yang belum dikirim, per orang tua,
+     tombol WhatsApp membuka popup kirim yang sama dengan menu Kirim laporan. Rentang: awal minggu ini atau kemarin
+     (mana yang lebih awal) sampai hari ini. Dipakai ModuleHomeUnit (kepala unit) dan ModuleHome (manajer). ===== */
+  (function () {
+    var cards = [];
+    var KLC_NAMA_HARI = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+    function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function first(n) { return String(n || '').trim().split(/\s+/)[0] || ''; }
+    function render(c, animate) {
+      var api = window.genioKirimLaporan, el = c.el;
+      if (!api || !c.rows) return;
+      var groups = api.groups(c.rows);
+      var belum = 0, sudah = 0;
+      groups.forEach(function (g) { belum += g.belum; sudah += g.sent; });
+      var wait = groups.filter(function (g) { return g.belum > 0; });
+      // Yang paling lama menunggu di atas
+      wait.forEach(function (g) { g.oldest = g.rows.filter(function (r) { return !api.sent(r); }).map(function (r) { return r.tanggal; }).sort()[0]; });
+      wait.sort(function (a, b) { return a.oldest.localeCompare(b.oldest) || b.belum - a.belum; });
+      c.groups = wait;
+      c.layout = layoutKey(c);
+      var wide = window.matchMedia('(min-width:900px)').matches;
+      var max = c.opts.max || 4, two = !!(c.opts.twoCols && c.opts.twoCols());
+      if (two) max = 6;
+      var shown = wait.slice(0, max), rest = wait.length - shown.length;
+      var mgr = c.opts.showUnit;
+      var html = '<div class="klc-head"><span class="klc-ico"><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i></span>' +
+        '<div class="klc-t"><h4>Laporan untuk orang tua</h4><span>Sudah disetujui, belum dikirim · sejak ' + esc(api.tglShort(c.range.from)) + '</span></div>' +
+        '<span class="klc-badge' + (belum ? '' : ' is-zero') + '">' + belum + '</span></div>' +
+        '<div class="klc-bar" role="img" aria-label="' + belum + ' belum dikirim, ' + sudah + ' sudah dikirim">' +
+        (belum ? '<i class="b" style="flex:' + belum + '"></i>' : '') + (sudah ? '<i class="s" style="flex:' + sudah + '"></i>' : '') + '</div>' +
+        '<div class="klc-lg"><span><b>' + belum + '</b> belum dikirim</span><span><b>' + sudah + '</b> sudah dikirim</span></div>';
+      if (shown.length) {
+        html += '<div class="klc-list' + (two ? ' is-two' : '') + '">' + shown.map(function (g, i) {
+          var days = [];
+          g.rows.forEach(function (r) { if (api.sent(r)) return; var d = KLC_NAMA_HARI[new Date(r.tanggal + 'T00:00:00').getDay()]; if (days.indexOf(d) === -1) days.push(d); });
+          var sub = [];
+          if (mgr) { var un = api.unit(g.rows[0]); if (un && un !== '-') sub.push(un); }
+          sub.push(g.sekolah ? g.siswa.join(', ') : g.siswa.map(first).join(', '));
+          sub.push(g.belum + ' laporan');
+          if (wide) sub.push(days.join(', '));
+          var av = g.sekolah ? '<span class="klc-av is-sek"><i class="ph ph-graduation-cap" aria-hidden="true"></i></span>'
+            : '<span class="klc-av">' + esc(genioInitials(g.nama)) + '</span>';
+          return '<div class="klc-row" style="--i:' + i + '">' + av + '<div class="klc-w"><b title="' + esc(g.nama) + '">' + esc(g.nama) + '</b><small title="' + esc(sub.join(' · ')) + '">' + esc(sub.join(' · ')) + '</small></div>' +
+            '<button type="button" class="klc-wa" data-key="' + esc(g.key) + '" aria-label="Kirim laporan ke ' + esc(g.nama) + '" title="Kirim lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></button></div>';
+        }).join('') + '</div>';
+      } else {
+        html += '<div class="klc-done"><i class="ph-fill ph-check-circle" aria-hidden="true"></i><div><b>Semua laporan sudah dikirim</b>' + (sudah ? 'Tidak ada laporan yang menunggu.' : 'Belum ada laporan yang disetujui sejak ' + esc(api.tglShort(c.range.from)) + '.') + '</div></div>';
+      }
+      html += '<div class="klc-foot"><button type="button" class="klc-more">Buka Kirim laporan' + (rest > 0 ? '<small>+' + rest + ' orang tua lain</small>' : '') + '</button></div>';
+      el.innerHTML = html;
+      el.classList.remove('is-in');
+      if (animate) { void el.offsetWidth; el.classList.add('is-in'); }
+    }
+    async function load(c) {
+      var api = window.genioKirimLaporan;
+      if (!api || !api.allowed()) { c.el.hidden = true; return; }
+      c.el.hidden = false;
+      var seq = ++c.seq;
+      if (!c.rows) c.el.innerHTML = '<div class="klc-head"><span class="klc-ico"><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i></span><div class="klc-t"><h4>Laporan untuk orang tua</h4><span>Memuat laporan...</span></div></div><div class="klc-skel"></div>';
+      try {
+        c.range = api.range();
+        var rows = await api.fetch(c.range.from, c.range.to);
+        if (seq !== c.seq) return;
+        c.rows = rows;
+        render(c, true);
+      } catch (err) {
+        if (seq !== c.seq) return;
+        c.el.innerHTML = '<div class="klc-head"><span class="klc-ico"><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i></span><div class="klc-t"><h4>Laporan untuk orang tua</h4><span>Gagal memuat: ' + esc(err.message) + '</span></div></div>';
+      }
+    }
+    // el: wadah kartu (diberi kelas klc). opts: showUnit (manajer), twoCols() (true saat kartu selebar baris penuh)
+    window.genioKlCard = function (el, opts) {
+      if (!el) return;
+      var c = cards.filter(function (x) { return x.el === el; })[0];
+      if (!c) {
+        c = { el: el, opts: opts || {}, seq: 0, rows: null, groups: [] };
+        cards.push(c);
+        el.classList.add('klc');
+        el.addEventListener('click', function (e) {
+          var wa = e.target.closest('.klc-wa');
+          if (wa) { var g = (c.groups || []).filter(function (x) { return x.key === wa.dataset.key; })[0]; if (g) window.genioKirimLaporan.send(g); return; }
+          if (e.target.closest('.klc-more') && window.genioDashboardShowModule) window.genioDashboardShowModule('kirim-laporan');
+        });
+      }
+      load(c);
+    };
+    // Status kirim atau nomor orang tua berubah: perbarui kartu tanpa memuat ulang. Kiriman dari kartu ini sudah
+    // menandai baris yang sama (popup memakai grup kartu), batal tanda dan nomor baru datang dari halaman Kirim laporan.
+    window.addEventListener('genio:laporan-kirim', function (e) {
+      var d = e.detail || {};
+      cards.forEach(function (c) {
+        if (!c.rows) return;
+        if (d.ortuId) c.rows.forEach(function (r) { var o = r.kontrak_tutor && r.kontrak_tutor.kontrak_siswa && r.kontrak_tutor.kontrak_siswa.siswa && r.kontrak_tutor.kontrak_siswa.siswa.orangtua; if (o && o.id === d.ortuId) o.no_hp = d.hp; });
+        if (d.undo) c.rows.forEach(function (r) { if (r.id === d.undo) r.laporan_kirim = null; });
+        if (!c.el.hidden && c.el.offsetParent !== null) render(c, false);
+      });
+    });
+    // Lebar berubah melewati batas tampilan (hari di sub-baris, daftar dua kolom): gambar ulang tanpa animasi
+    function layoutKey(c) { return (window.matchMedia('(min-width:900px)').matches ? 'w' : 'n') + (c.opts.twoCols && c.opts.twoCols() ? '2' : '1'); }
+    window.addEventListener('resize', function () {
+      cards.forEach(function (c) { if (c.rows && c.layout !== layoutKey(c)) render(c, false); });
+    });
+  })();
+</script>

@@ -490,6 +490,7 @@
     <?!= include('ModuleHomeUnit'); ?>
 
     <!-- ===== Tab: Presensi ===== -->
+    <?!= include('ModuleKirimLaporan'); ?>
     <?!= include('ModulePresensi'); ?>
     <?!= include('ModulePresensiTutor'); ?>
     <?!= include('ModuleGaji'); ?>
@@ -625,8 +626,8 @@
     if (typeof genioEnsureSessionProfile === 'function') genioEnsureSessionProfile();
     // Menu Lainnya yang boleh dilihat per role (role yang tidak tercantum melihat semua menu)
     var ROLE_MENU = {
-      kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'data-tutor', 'operasional', 'pemasukan-lain', 'genio-news'],
-      hrd: ['ortu-siswa', 'kontrak', 'presensi', 'genio-news'],
+      kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'kirim-laporan', 'data-tutor', 'operasional', 'pemasukan-lain', 'genio-news'],
+      hrd: ['ortu-siswa', 'kontrak', 'presensi', 'genio-news'], // HRD tidak mengirim laporan ke orang tua
       tutor: []
     };
     function genioRetab(btnId, newTab, label, icon) {
@@ -749,19 +750,21 @@
       if (!IS_KU && !IS_HRD) return; // manajer dan super admin tidak memakai tombol + (hanya tutor, kepala unit, HRD)
       var dockEl = document.getElementById('interactiveDock'), wrapEl = document.querySelector('.dock-wrap');
       if (!dockEl || !wrapEl) return;
-      // key, ikon (peta ikon tunggal), label, modul tujuan, tombol tambah di modul itu, popup form yang dibuka tombol itu
+      // key, ikon (peta ikon tunggal), label, modul tujuan, tombol tambah di modul itu, popup form yang dibuka tombol itu,
+      // label panjang (opsional, untuk kartu desktop dan aria). Tanpa tombol tambah: hanya membuka modulnya (Kirim laporan).
       var ALL = {
         presensi: ['check-circle', 'Presensi', 'presensi', 'ps-openWakilBtn', 'ps-wakilModal'],
         siswa: ['student', 'Siswa', 'ortu-siswa', 'os-addBtn', 'os-modal'],
         operasional: ['receipt', 'Operasional', 'operasional', 'ops-addBtn', 'ops-modal'],
+        kirim: ['paper-plane-tilt', 'Kirim', 'kirim-laporan', null, null, 'Kirim laporan'],
         kontrak: ['file-text', 'Kontrak', 'kontrak', 'ktr-addBtn', 'ktr-modal'],
         jadwal: ['calendar-blank', 'Jadwal', 'jadwal', 'jdw-addBtn', 'jdw-modal'],
         tutor: ['chalkboard-teacher', 'Tutor', 'data-tutor', 'dt-addBtn', 'dt-modal'],
         paket: ['books', 'Paket', 'paket-belajar', 'pkt-addBtn', 'pkt-modal']
       };
-      // Kepala unit: menu 5 pilihan. HRD: menu 4 pilihan. Manajer dan super admin: langsung isi presensi (seperti tutor), tanpa menu.
+      // Kepala unit: menu 5 pilihan (Kirim laporan menggantikan Operasional). HRD: menu 4 pilihan.
       var DIRECT = false;
-      var KEYS = IS_KU ? ['presensi', 'siswa', 'operasional', 'kontrak', 'jadwal'] : IS_HRD ? ['tutor', 'siswa', 'kontrak', 'jadwal'] : ['presensi'];
+      var KEYS = IS_KU ? ['presensi', 'siswa', 'kirim', 'kontrak', 'jadwal'] : IS_HRD ? ['tutor', 'siswa', 'kontrak', 'jadwal'] : ['presensi'];
       var PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
       var open = false;
 
@@ -809,7 +812,7 @@
         var a1 = 180 - i * st, a2 = 180 - (i + 1) * st, p1 = pt(a1, Ro), p2 = pt(a2, Ro), p3 = pt(a2, 1), p4 = pt(a1, 1);
         var path = document.createElementNS(NS, 'path');
         path.setAttribute('d', 'M' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + ' A' + Ro + ' ' + Ro + ' 0 0 1 ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1) + ' L' + p3[0].toFixed(1) + ' ' + p3[1].toFixed(1) + ' L' + p4[0].toFixed(1) + ' ' + p4[1].toFixed(1) + ' Z');
-        path.setAttribute('role', 'button'); path.setAttribute('tabindex', '-1'); path.setAttribute('aria-label', 'Tambah ' + ALL[k][1]);
+        path.setAttribute('role', 'button'); path.setAttribute('tabindex', '-1'); path.setAttribute('aria-label', ALL[k][3] ? 'Tambah ' + ALL[k][1] : (ALL[k][5] || ALL[k][1]));
         path.addEventListener('click', function () { choose(k); });
         path.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(k); } });
         wheel.appendChild(path);
@@ -827,7 +830,7 @@
       var card = document.createElement('div'); card.className = 'qa-card'; card.setAttribute('role', 'menu');
       card.style.setProperty('--n', KEYS.length);
       card.innerHTML = '<div class="qa-card-t">Tambah baru</div>' + KEYS.map(function (k, i) {
-        return '<button type="button" class="qa-row" role="menuitem" style="--i:' + i + '" data-k="' + k + '"><span class="qi"><i class="ph ph-' + ALL[k][0] + '" aria-hidden="true"></i></span><span class="ql">' + ALL[k][1] + '</span><i class="ph ph-caret-right qc" aria-hidden="true"></i></button>';
+        return '<button type="button" class="qa-row" role="menuitem" style="--i:' + i + '" data-k="' + k + '"><span class="qi"><i class="ph ph-' + ALL[k][0] + '" aria-hidden="true"></i></span><span class="ql">' + (ALL[k][5] || ALL[k][1]) + '</span><i class="ph ph-caret-right qc" aria-hidden="true"></i></button>';
       }).join('');
       card.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.qa-row'); if (b) choose(b.getAttribute('data-k')); });
       document.body.appendChild(card);
@@ -836,6 +839,7 @@
       function goAdd(k) {
         var c = ALL[k]; if (!c) return;
         if (window.genioDashboardShowModule) window.genioDashboardShowModule(c[2]);
+        if (!c[3]) return;
         var tries = 0;
         (function wait() {
           var panel = document.querySelector('.module-panel[data-module="' + c[2] + '"]'), btn = document.getElementById(c[3]);
@@ -973,9 +977,10 @@
     // ===== Ikon minimalis untuk tiap item menu (line-icon, konsisten gaya bottom nav) =====
     var MENU_ICONS = {
       // Peta ikon tunggal (samakan di semua halaman): siswa student, kontrak file-text, jadwal calendar-blank, tagihan credit-card,
-      // tutor chalkboard-teacher, operasional receipt, unit buildings, paket belajar books, user user-gear, news newspaper, pengaturan gear, presensi check-circle
+      // tutor chalkboard-teacher, operasional receipt, unit buildings, paket belajar books, user user-gear, news newspaper, pengaturan gear, presensi check-circle,
+      // pemasukan lain hand-coins, kirim laporan paper-plane-tilt
       people: '<i class="ph ph-student" aria-hidden="true"></i>', doc: '<i class="ph ph-file-text" aria-hidden="true"></i>', calendar: '<i class="ph ph-calendar-blank" aria-hidden="true"></i>', card: '<i class="ph ph-credit-card" aria-hidden="true"></i>', person: '<i class="ph ph-chalkboard-teacher" aria-hidden="true"></i>', monitor: '<i class="ph ph-receipt" aria-hidden="true"></i>',
-      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>', coins: '<i class="ph ph-hand-coins" aria-hidden="true"></i>'
+      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>', coins: '<i class="ph ph-hand-coins" aria-hidden="true"></i>', send: '<i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>'
     };
 
     // ===== Konfigurasi menu "Lainnya" — satu-satunya sumber data untuk:
@@ -986,6 +991,7 @@
         { key: 'kontrak', icon: 'doc', label: 'Kontrak' },
         { key: 'jadwal', icon: 'calendar', label: 'Jadwal Mengajar' },
         { key: 'tagihan', icon: 'card', label: 'Tagihan' },
+        { key: 'kirim-laporan', icon: 'send', label: 'Kirim laporan' },
         { key: 'data-tutor', icon: 'person', label: 'Kelola Tutor' },
         { key: 'operasional', icon: 'monitor', label: 'Operasional' },
         { key: 'pemasukan-lain', icon: 'coins', label: 'Pemasukan lain' }
@@ -1030,6 +1036,7 @@
       'kontrak': ['Kontrak', 'Kontrak siswa & tutor'],
       'jadwal': ['Jadwal', 'Jadwal sesi belajar'],
       'tagihan': ['Tagihan', 'Invoice & receipt'],
+      'kirim-laporan': ['Kirim laporan', 'Laporan belajar ke orang tua'],
       'data-tutor': IS_KU ? ['Data Tutor', 'Daftar tutor'] : ['Kelola Tutor', 'Kelola akun tutor'],
       'operasional': ['Operasional', 'Pengeluaran unit'],
       'pemasukan-lain': ['Pemasukan lain', 'Biaya di luar les'],
@@ -1163,10 +1170,22 @@
         lainnyaSetInfo('kelola-pengguna', userRows2.length + ' User');
         lainnyaSetInfo('pengaturan', '');
         lainnyaSetInfo('presensi', '');
+        lainnyaKirimInfo();
       } catch (e) {
         genioToast('Gagal memuat sebagian data: ' + e.message, 'error');
       }
     }
+    // Kirim laporan: laporan disetujui yang belum dikirim, rentang sama dengan kartu Home; ikut diperbarui setelah kirim atau batal tanda
+    function lainnyaKirimInfo() {
+      var klApi = window.genioKirimLaporan, sess = genioGetSession();
+      if (!klApi || !klApi.allowed() || !sess) return;
+      var kr = klApi.range();
+      supaRest('presensi?tanggal=gte.' + kr.from + '&tanggal=lte.' + kr.to + '&status=in.(diterima,visit)&select=id,laporan_kirim(id)', sess.access_token).then(function (rows) {
+        var n = (rows || []).filter(function (r) { return !klApi.sent(r); }).length;
+        lainnyaSetInfo('kirim-laporan', n ? n + ' Belum dikirim' : 'Terkirim semua');
+      }).catch(function () { lainnyaSetInfo('kirim-laporan', ''); });
+    }
+    window.addEventListener('genio:laporan-kirim', function (e) { if (!(e.detail && e.detail.ortuId)) lainnyaKirimInfo(); });
     function homePeriodeRangeForLainnya() {
       var d = new Date();
       var y = d.getFullYear(), m = d.getMonth() + 1;

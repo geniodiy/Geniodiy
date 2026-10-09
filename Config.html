@@ -330,7 +330,7 @@
   .pkc-ico i.ph-duotone:before, .ops-ico i.ph-duotone:before, .pgc-ico i.ph-duotone:before, .kuh-act .ic i.ph-duotone:before,
   #ps-filterModal .pw-head-ico i.ph-duotone:before, #ps-wakilModal .pw-head-ico i.ph-duotone:before, #ps-previewModal .pv-ext-ico i.ph-duotone:before,
   .jdw-wa-action-icon i.ph-duotone:before, .pt-file-ico i.ph-duotone:before, #ps-wakilModal .pw-file-ico i.ph-duotone:before, .ops-unit-opt .ops-uico i.ph-duotone:before,
-  .prf-pe-coll .ic i.ph-duotone:before{opacity:.32;}
+  .prf-pe-coll .ic i.ph-duotone:before, .klc-ico i.ph-duotone:before, .klc-av.is-sek i.ph-duotone:before{opacity:.32;}
   .gx-confirm h3{font-size:14px !important; font-weight:600 !important; margin:0 0 4px !important;}
   .gx-confirm p{font-size:11px; color:var(--ink-soft); margin:0 0 6px; line-height:1.5;}
   @media (prefers-reduced-motion: reduce){ .modal-overlay.show .modal-sheet.gx-sheet{animation:none;} }
@@ -1362,7 +1362,7 @@
   (function genioDuoIcons() {
     var SEL = ['.gx-head-ico', '.menu-row .mr-badge', '.gh-per-ic', '.ku-ico', '.pkc-ico', '.ops-ico', '.pgc-ico', '.kuh-act .ic',
       '#ps-filterModal .pw-head-ico', '#ps-wakilModal .pw-head-ico', '#ps-previewModal .pv-ext-ico',
-      '.jdw-wa-action-icon', '.pt-file-ico', '#ps-wakilModal .pw-file-ico', '.ops-unit-opt .ops-uico', '.prf-pe-coll .ic'].map(function (x) { return x + ' i.ph'; }).join(',');
+      '.jdw-wa-action-icon', '.pt-file-ico', '#ps-wakilModal .pw-file-ico', '.ops-unit-opt .ops-uico', '.prf-pe-coll .ic', '.klc-ico', '.klc-av.is-sek'].map(function (x) { return x + ' i.ph'; }).join(',');
     function swap(root) {
       if (!root || !root.querySelectorAll) return;
       var list = root.querySelectorAll(SEL);
@@ -1373,7 +1373,7 @@
       new MutationObserver(function (muts) {
         for (var m = 0; m < muts.length; m++) {
           var t = muts[m].target;
-          if (t.nodeType === 1 && t.closest && t.closest('.gx-head-ico, .mr-badge, .gh-per-ic, .ku-ico, .pkc-ico, .ops-ico, .pgc-ico, .kuh-act, .pw-head-ico, .pv-ext-ico, .jdw-wa-action-icon, .pt-file-ico, .pw-file-ico, .ops-uico, .prf-pe-coll')) { swap(t.parentNode || t); continue; }
+          if (t.nodeType === 1 && t.closest && t.closest('.gx-head-ico, .mr-badge, .gh-per-ic, .ku-ico, .pkc-ico, .ops-ico, .pgc-ico, .kuh-act, .pw-head-ico, .pv-ext-ico, .jdw-wa-action-icon, .pt-file-ico, .pw-file-ico, .ops-uico, .prf-pe-coll, .klc-ico, .klc-av')) { swap(t.parentNode || t); continue; }
           var add = muts[m].addedNodes;
           for (var n = 0; n < add.length; n++) if (add[n].nodeType === 1) swap(add[n].parentNode || add[n]);
         }

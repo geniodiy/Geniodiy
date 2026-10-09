@@ -99,7 +99,12 @@
   .kuh-act.is-zero{opacity:.55;}
 
   /* Sesi hari ini + tutor */
-  .kuh-2{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:14px; align-items:start;}
+  .kuh-2{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); grid-template-areas:"ses tut"; gap:14px; align-items:start;}
+  .kuh-2 > .kuh-c-ses{grid-area:ses;} .kuh-2 > .kuh-c-tut{grid-area:tut;} .kuh-2 > #kuhKlCard{grid-area:lap;}
+  /* Kartu "Laporan untuk orang tua" (kepala unit): layar lebar tiga kolom sama tinggi, layar sedang satu baris penuh di bawah */
+  .kuh-2.has-kl{grid-template-areas:"ses tut" "lap lap"; align-items:stretch;}
+  .kuh-2.has-kl > .kuh-card, .kuh-2.has-kl > #kuhKlCard{margin-bottom:0;}
+  @media (min-width:1240px){ .kuh-2.has-kl{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr); grid-template-areas:"ses lap tut";} }
   .kuh-ses{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid #EEF0F6;}
   .kuh-ses:first-of-type{border-top:none;}
   .kuh-ses .jam{width:44px; flex:none; font-size:11px; font-weight:700;}
@@ -175,7 +180,7 @@
     .kuh-hb{grid-template-columns:1fr;} .kuh-hs{border-left:0; border-top:1px solid rgba(255,255,255,.1);}
     .kuh-num{font-size:28px;}
     .kuh-acts{grid-template-columns:repeat(2, minmax(0,1fr));}
-    .kuh-2{grid-template-columns:1fr;}
+    .kuh-2, .kuh-2.has-kl{grid-template-columns:1fr; grid-template-areas:"ses" "lap" "tut";}
     .kuh-news{grid-template-columns:1fr;} .kuh-nw{display:flex;} .kuh-nw .img{width:88px; height:auto; min-height:58px; flex:none;}
     .kuh-hi .date{display:none;}
   }
@@ -248,8 +253,8 @@
       <button type="button" class="kuh-act" data-goto="kontrak" style="--i:3"><span class="ic r"><i class="ph ph-user-circle-plus" aria-hidden="true"></i></span><div class="t"><b id="kuhHActNoTutor">0</b><span>Siswa belum ada tutor</span><small id="kuhHActNoTutorSub">-</small></div></button>
     </div>
 
-    <div class="kuh-2">
-      <div class="kuh-card">
+    <div class="kuh-2" id="kuh2">
+      <div class="kuh-card kuh-c-ses">
         <div class="kuh-sec" style="margin-bottom:10px;">
           <div>
             <div style="display:flex; align-items:center; gap:6px;"><h4>Sesi Hari ini</h4><span id="kuhSesiBadge" style="background:var(--blue-tint); color:var(--blue); font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px;">-</span></div>
@@ -261,7 +266,8 @@
         <button type="button" class="kuh-seemore" id="kuhSesiMore">Lihat selengkapnya</button>
         <div class="genio-pop" id="kuh-slotModal" hidden role="dialog" aria-label="Detail sesi"></div>
       </div>
-      <div class="kuh-card">
+      <div id="kuhKlCard" hidden></div>
+      <div class="kuh-card kuh-c-tut">
         <div class="kuh-sec"><h4 id="kuhTutorTitle">Tutor di unit ini</h4><span id="kuhTutorSub">-</span></div>
         <div id="kuhTutorList"><div class="kuh-empty">Memuat data tutor...</div></div>
       </div>
@@ -412,6 +418,10 @@
       document.getElementById('kuhHeroUnit').hidden = isHrd;
       document.getElementById('kuhHeroHrd').hidden = !isHrd;
       document.getElementById('kuhActs').hidden = isHrd;
+      // Laporan untuk orang tua (kepala unit; HRD tidak mengirim laporan)
+      document.getElementById('kuh2').classList.toggle('has-kl', !isHrd);
+      if (isHrd) document.getElementById('kuhKlCard').hidden = true;
+      else if (window.genioKlCard) window.genioKlCard(document.getElementById('kuhKlCard'), { twoCols: function () { return window.matchMedia('(min-width:900px) and (max-width:1239px)').matches; } });
       document.getElementById('kuhActsHrd').hidden = !isHrd;
       document.getElementById('kuhTutorTitle').textContent = isHrd ? 'Kinerja tutor' : 'Tutor di unit ini';
       document.getElementById('kuhTrendTitle').textContent = isHrd ? 'Tren SDM' : 'Trend progress unit';
