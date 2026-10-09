@@ -662,13 +662,14 @@ function buildLaporanBelajarHtml_(d) {
 
 function buildInvoiceHtml_(d) {
   var isLunas = (d.status === 'lunas');
-  var docTitle = isLunas ? 'KUITANSI PEMBAYARAN RESMI' : 'INVOICE TAGIHAN BIMBEL';
+  var docTitle = isLunas ? (d.tambahan ? 'KUITANSI TAGIHAN TAMBAHAN' : 'KUITANSI PEMBAYARAN RESMI') : (d.tambahan ? 'INVOICE TAGIHAN TAMBAHAN' : 'INVOICE TAGIHAN BIMBEL');
   var stampColor = isLunas ? '#28a745' : '#d97706';
   var stampBg = isLunas ? '#e8f5e9' : '#fef3c7';
   var stampText = isLunas ? 'LUNAS' : 'TAGIHAN';
-  var docNo = isLunas
+  // Nomor dokumen dikirim dari aplikasi (tagihan tambahan memakai akhiran -2, -3, ...); cadangan dari id
+  var docNo = d.docNo || (isLunas
     ? 'REC-' + ((d.receiptId || d.id || '').substring(0, 8).toUpperCase())
-    : 'INV-' + ((d.id || '').substring(0, 8).toUpperCase());
+    : 'INV-' + ((d.id || '').substring(0, 8).toUpperCase()));
 
   var formatRp = function (n) {
     return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
@@ -785,6 +786,7 @@ function buildInvoiceHtml_(d) {
         '</tr>' +
       '</table>' +
 
+      (d.tambahan && d.tambahanNote ? '<div style="background:#EEEEFB; color:#1C1AAF; border-radius:10px; padding:10px 14px; margin:0 0 16px; font-size:11.5px; font-weight:600;">' + escapeHtml(d.tambahanNote) + '</div>' : '') +
       '<table class="info-table">' +
         '<tr>' +
           '<td class="info-cell">' +

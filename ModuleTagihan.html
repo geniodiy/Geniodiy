@@ -71,6 +71,10 @@
   #tg-resultCount{display:inline-flex; align-items:center; height:24px; background:var(--surface); border:1px solid var(--border); color:var(--ink); font-size:10.5px; font-weight:500; padding:0 9px; border-radius:999px; white-space:nowrap; box-sizing:border-box;}
 
   /* ===== Status, chip, tombol ikon ===== */
+  .tg-tambahan-tag{display:inline-flex; align-items:center; gap:3px; padding:1px 7px 1px 5px; border-radius:999px; background:#EEEEFB; color:var(--blue); font-size:9.5px; font-weight:600; white-space:nowrap; vertical-align:1px;}
+  .tg-tambahan-tag i{font-size:11px;}
+  .tgc-who .tg-tambahan-tag{margin-top:4px;} .tg-stk-ortu .tg-tambahan-tag{margin-left:5px;}
+  .tgc-kid .tg-tgl{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px;}
   .tg-status-pill{display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600; padding:4px 9px; border-radius:999px; white-space:nowrap;}
   .tg-status-pill i{width:6px; height:6px; border-radius:50%;}
   .tg-status-pill.is-lunas{background:#E9F7EF; color:#1E8E5A;} .tg-status-pill.is-lunas i{background:#1E8E5A;}
@@ -562,12 +566,12 @@
       }
 
       // Query presensi yang diterima pada periode aktif
-      var presensiUrl = 'presensi?select=id,tanggal,status,kontrak_tutor!inner(id,kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)))' +
+      var presensiUrl = 'presensi?select=id,tanggal,jam,status,invoice_id,kontrak_tutor!inner(id,kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)))' +
         '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end +
         '&status=in.(diterima,visit)' + unitFilterUrl;
 
       // Query invoice yang sudah tercatat di database
-      var invoiceUrl = 'invoice?select=id,kontrak_siswa_id,unit_id,periode,jumlah_pertemuan,harga_satuan,nominal,status,tanggal_lunas,pdf_url,' +
+      var invoiceUrl = 'invoice?select=id,kontrak_siswa_id,unit_id,periode,urutan,jumlah_pertemuan,harga_satuan,nominal,status,tanggal_lunas,pdf_url,' +
         'kontrak_siswa:kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)),' +
         'receipt:receipt(id,tanggal_bayar,pdf_url)' +
         '&periode=eq.' + tgState.periode + unitFilterUrl;
@@ -580,112 +584,104 @@
       var presensiRows = results[0] || [];
       var existingInvoices = results[1] || [];
 
-      // Hitung akumulasi pertemuan per kontrak siswa
-      var livePresensiMap = {};
+      // Kelompokkan pertemuan per kontrak siswa. Pertemuan yang sudah tertaut ke invoice (invoice_id, diisi saat invoice
+      // ditandai lunas) tetap milik invoice itu. Pertemuan tanpa tautan ditagih di invoice terbuka kontrak itu, atau
+      // di "tagihan tambahan" baru (urutan berikutnya) kalau semua invoice bulan itu sudah lunas.
+      var byK = {};
       presensiRows.forEach(function (p) {
         var kt = p.kontrak_tutor;
         if (!kt || !kt.kontrak_siswa) return;
         var ks = kt.kontrak_siswa;
         if (s.role === 'kepala_unit' && s.unit_id && ks.unit_id !== s.unit_id) return;
         var kId = ks.id;
-        if (!livePresensiMap[kId]) {
-          livePresensiMap[kId] = {
-            kId: kId,
-            ks: ks,
-            count: 0
-          };
-        }
-        livePresensiMap[kId].count += 1;
+        if (!byK[kId]) byK[kId] = { ks: ks, linked: {}, free: [] };
+        if (p.invoice_id) (byK[kId].linked[p.invoice_id] = byK[kId].linked[p.invoice_id] || []).push(p);
+        else byK[kId].free.push(p);
       });
-
-      var invoiceMap = {};
-      existingInvoices.forEach(function (inv) {
-        invoiceMap[inv.kontrak_siswa_id] = inv;
-      });
+      var invByK = {};
+      existingInvoices.forEach(function (inv) { (invByK[inv.kontrak_siswa_id] = invByK[inv.kontrak_siswa_id] || []).push(inv); });
 
       var syncPromises = [];
       var finalInvoices = [];
+      var byTgl = function (a, b) { return String(a.tanggal + (a.jam || '')).localeCompare(String(b.tanggal + (b.jam || ''))); };
 
-      // 1. Sinkronisasi invoice yang sudah ada di database
-      for (var i = 0; i < existingInvoices.length; i++) {
-        var inv = existingInvoices[i];
-        var kId = inv.kontrak_siswa_id;
-        var live = livePresensiMap[kId];
-        var liveCount = live ? live.count : 0;
-
-        if (inv.status === 'lunas') {
-          // Status lunas terkunci sebagai snapshot historis
-          finalInvoices.push(inv);
-        } else {
-          // Status belum lunas: REALTIME kalkulasi dari presensi riil
-          if (liveCount > 0) {
-            var ks = inv.kontrak_siswa || (live && live.ks) || {};
-            var harga = parseFloat(ks.harga || inv.harga_satuan || 0);
-            var liveNominal = liveCount * harga;
-
-            if (inv.jumlah_pertemuan !== liveCount || inv.nominal !== liveNominal) {
-              inv.jumlah_pertemuan = liveCount;
-              inv.harga_satuan = harga;
-              inv.nominal = liveNominal;
-              syncPromises.push(
-                supaRest('invoice?id=eq.' + inv.id, s.access_token, {
-                  method: 'PATCH',
-                  body: JSON.stringify({ jumlah_pertemuan: liveCount, harga_satuan: harga, nominal: liveNominal })
-                })
-              );
-            }
-            finalInvoices.push(inv);
-          } else {
-            // Sesi presensi 0 pada invoice belum lunas -> bersihkan (kepala unit tidak boleh hapus invoice: cukup disembunyikan)
-            if (s.role !== 'kepala_unit') {
-              syncPromises.push(
-                supaRest('invoice?id=eq.' + inv.id, s.access_token, { method: 'DELETE' })
-              );
-            }
-          }
+      // Samakan jumlah pertemuan dan nominal invoice belum lunas dengan pertemuannya
+      function tgSyncInvoice(inv, list, ks) {
+        var harga = parseFloat((ks && ks.harga) || inv.harga_satuan || 0);
+        var n = list.length, nominal = n * harga;
+        if (inv.jumlah_pertemuan !== n || parseFloat(inv.nominal) !== nominal || parseFloat(inv.harga_satuan) !== harga) {
+          inv.jumlah_pertemuan = n; inv.harga_satuan = harga; inv.nominal = nominal;
+          syncPromises.push(supaRest('invoice?id=eq.' + inv.id, s.access_token, {
+            method: 'PATCH',
+            body: JSON.stringify({ jumlah_pertemuan: n, harga_satuan: harga, nominal: nominal })
+          }));
         }
       }
 
-      // 2. Kontrak siswa yang memiliki presensi riil tapi belum tercatat di invoice
-      var newContractIds = Object.keys(livePresensiMap).filter(function (cid) {
-        return !invoiceMap[cid];
-      });
+      var kontrakIds = Object.keys(byK);
+      Object.keys(invByK).forEach(function (k) { if (kontrakIds.indexOf(k) === -1) kontrakIds.push(k); });
 
-      for (var j = 0; j < newContractIds.length; j++) {
-        var newKId = newContractIds[j];
-        var liveData = livePresensiMap[newKId];
-        var ksObj = liveData.ks;
-        var hargaBaru = parseFloat(ksObj.harga || 0);
-        var nomBaru = liveData.count * hargaBaru;
-
-        var newPayload = {
-          kontrak_siswa_id: newKId,
-          unit_id: ksObj.unit_id,
-          periode: tgState.periode,
-          jumlah_pertemuan: liveData.count,
-          harga_satuan: hargaBaru,
-          nominal: nomBaru,
-          status: 'belum_lunas'
-        };
-
-        var postPromise = (async function (payload, ks) {
-          try {
-            var res = await supaRest('invoice', s.access_token, {
-              method: 'POST',
-              headers: { 'Prefer': 'return=representation' },
-              body: JSON.stringify(payload)
-            });
-            var inserted = (Array.isArray(res) ? res[0] : res) || payload;
-            inserted.kontrak_siswa = ks;
-            inserted.units = ks.units || { id: ks.unit_id, nama_unit: '-' };
-            finalInvoices.push(inserted);
-          } catch (e) {
-            console.warn('Auto-create invoice tagihan err:', e.message);
+      kontrakIds.forEach(function (kId) {
+        var L = byK[kId] || { ks: null, linked: {}, free: [] };
+        var invs = (invByK[kId] || []).slice().sort(function (a, b) { return (a.urutan || 1) - (b.urutan || 1); });
+        var ks = L.ks || (invs[0] && invs[0].kontrak_siswa) || {};
+        var maxUrut = 0, open = null;
+        invs.forEach(function (inv) {
+          maxUrut = Math.max(maxUrut, inv.urutan || 1);
+          var linked = (L.linked[inv.id] || []).sort(byTgl);
+          if (inv.status === 'lunas') {
+            // Lunas: snapshot tetap, tidak diubah
+            inv._pres = linked;
+            finalInvoices.push(inv);
+          } else if (linked.length) {
+            // Pernah lunas lalu dibatalkan: tetap terpisah dengan pertemuannya sendiri
+            tgSyncInvoice(inv, linked, ks);
+            inv._pres = linked;
+            finalInvoices.push(inv);
+          } else if (!open) {
+            open = inv;
+          } else if (s.role !== 'kepala_unit') {
+            // Invoice terbuka ganda tanpa pertemuan: dibersihkan
+            syncPromises.push(supaRest('invoice?id=eq.' + inv.id, s.access_token, { method: 'DELETE' }));
           }
-        })(newPayload, ksObj);
+        });
 
-        syncPromises.push(postPromise);
-      }
+        var free = L.free.sort(byTgl);
+        if (free.length) {
+          if (open) {
+            tgSyncInvoice(open, free, ks);
+            open._pres = free;
+            finalInvoices.push(open);
+          } else {
+            var harga = parseFloat(ks.harga || 0);
+            var payload = {
+              kontrak_siswa_id: kId,
+              unit_id: ks.unit_id,
+              periode: tgState.periode,
+              urutan: maxUrut + 1,
+              jumlah_pertemuan: free.length,
+              harga_satuan: harga,
+              nominal: free.length * harga,
+              status: 'belum_lunas'
+            };
+            syncPromises.push((async function (payload, ks, free) {
+              try {
+                var res = await supaRest('invoice', s.access_token, { method: 'POST', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify(payload) });
+                var inserted = (Array.isArray(res) ? res[0] : res) || payload;
+                inserted.kontrak_siswa = ks;
+                inserted.units = ks.units || { id: ks.unit_id, nama_unit: '-' };
+                inserted._pres = free;
+                finalInvoices.push(inserted);
+              } catch (e) {
+                console.warn('Auto-create invoice tagihan err:', e.message);
+              }
+            })(payload, ks, free));
+          }
+        } else if (open && s.role !== 'kepala_unit') {
+          // Tidak ada pertemuan yang perlu ditagih: invoice terbuka dibersihkan (kepala unit tidak menghapus)
+          syncPromises.push(supaRest('invoice?id=eq.' + open.id, s.access_token, { method: 'DELETE' }));
+        }
+      });
 
       if (syncPromises.length) {
         await Promise.allSettled(syncPromises);
@@ -951,10 +947,12 @@
           sesi: 0,
           nominal: 0,
           pakets: [],
-          invoices: []
+          invoices: [],
+          pres: []
         };
       }
       var c = g.childrenMap[anakId];
+      c.pres = c.pres.concat(r._pres || []);
       c.sesi += (r.jumlah_pertemuan || 0);
       c.nominal += parseFloat(r.nominal || 0);
       c.invoices.push(r);
@@ -1093,6 +1091,48 @@
     if (!TG_REDUCED_MOTION) { unitsEl.classList.remove('tg-anim'); void unitsEl.offsetWidth; unitsEl.classList.add('tg-anim'); }
   }
 
+  // ===== Tagihan tambahan: invoice urutan 2 dan seterusnya di bulan yang sama =====
+  var TG_BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  function tgIsTambahan(inv) { return (inv && inv.urutan || 1) > 1; }
+  function tgGroupTambahan(g) { return g.invoices.length > 0 && g.invoices.every(tgIsTambahan); }
+  function tgFirstInvoiceOf(inv) {
+    return (tgState.rows || []).find(function (r) { return r.kontrak_siswa_id === inv.kontrak_siswa_id && (r.urutan || 1) === 1; }) || null;
+  }
+  // Nomor invoice: tagihan tambahan memakai nomor invoice pertama kontrak itu + akhiran urutan (INV-XXXXXXXX-2)
+  function tgInvNo(inv, prefix) {
+    var base = tgIsTambahan(inv) ? (tgFirstInvoiceOf(inv) || inv) : inv;
+    return (prefix || 'INV') + '-' + String(base.id || '').slice(0, 8).toUpperCase() + (tgIsTambahan(inv) ? '-' + inv.urutan : '');
+  }
+  // Tanggal pertemuan yang ditagih, mis. "18, 22 Okt" atau "30 Sep, 2 Okt"
+  function tgTglList(list) {
+    var ds = (list || []).map(function (p) { return p.tanggal; }).filter(Boolean).sort();
+    return ds.map(function (d, i) {
+      var pt = d.split('-'), m = +pt[1] - 1;
+      var next = ds[i + 1] ? +ds[i + 1].split('-')[1] - 1 : null;
+      return (+pt[2]) + (next === m ? '' : ' ' + TG_BLN[m]);
+    }).join(', ');
+  }
+  // Nomor dokumen grup: invoice/kuitansi biasa tetap seperti sebelumnya; tagihan tambahan diberi akhiran urutan
+  function tgDocNo(g, isLunas) {
+    var inv = g.invoices[0] || {};
+    if (!tgIsTambahan(inv)) {
+      return isLunas
+        ? 'REC-' + (inv.receipt && inv.receipt.id ? inv.receipt.id.slice(0, 8).toUpperCase() : String(inv.id || '').slice(0, 8).toUpperCase())
+        : 'INV-' + String(inv.id || '').slice(0, 8).toUpperCase();
+    }
+    if (!isLunas) return tgInvNo(inv);
+    var first = tgFirstInvoiceOf(inv) || inv;
+    var rid = first.receipt && first.receipt.id ? first.receipt.id : first.id;
+    return 'REC-' + String(rid || '').slice(0, 8).toUpperCase() + '-' + inv.urutan;
+  }
+  // Catatan pada dokumen tagihan tambahan: merujuk tagihan pertama yang sudah lunas
+  function tgTambahanNote(g) {
+    var inv = g.invoices[0] || {}, first = tgFirstInvoiceOf(inv);
+    if (!tgGroupTambahan(g)) return '';
+    return 'Tagihan tambahan untuk pertemuan setelah tagihan ' + (first ? tgInvNo(first) : 'sebelumnya') + ' lunas' + (first && first.tanggal_lunas ? ' pada ' + tgFormatTgl(first.tanggal_lunas) : '') + '.';
+  }
+  function tgTambahanTag() { return '<span class="tg-tambahan-tag"><i class="ph ph-plus-circle" aria-hidden="true"></i>Tagihan tambahan</span>'; }
+
   function tgStatusPill(isLunas) {
     return isLunas
       ? '<span class="tg-status-pill is-lunas"><i></i>Lunas</span>'
@@ -1134,7 +1174,7 @@
       }).join(' ');
       return '<tr class="tg-table-row" data-key="' + tgEscape(g.key) + '">' +
         '<td class="tg-no tg-stk tg-stk-no">' + (idx + 1) + '</td>' +
-        '<td class="tg-stk tg-stk-ortu">' + tgEscape(g.ortuNama) + '</td>' +
+        '<td class="tg-stk tg-stk-ortu">' + tgEscape(g.ortuNama) + (tgGroupTambahan(g) ? tgTambahanTag() : '') + '</td>' +
         '<td><div style="display:flex; flex-wrap:nowrap; gap:4px;">' + siswaBadges + '</div></td>' +
         '<td style="text-align:center; white-space:nowrap;">' + g.totalSesi + '</td>' +
         '<td style="white-space:nowrap;">' + tgEscape(g.unitNama) + '</td>' +
@@ -1163,7 +1203,8 @@
     var isLunas = g.status === 'lunas';
     var kids = g.children.map(function (c) {
       var sub = [c.pakets.join(', '), c.sesi + ' sesi'].filter(Boolean).join(' · ');
-      return '<div class="tgc-kid"><div style="min-width:0;"><b>' + tgEscape(c.nama) + '</b><span>' + tgEscape(sub) + '</span></div>' +
+      var tgl = tgTglList(c.pres);
+      return '<div class="tgc-kid"><div style="min-width:0;"><b>' + tgEscape(c.nama) + '</b><span>' + tgEscape(sub) + '</span>' + (tgl ? '<span class="tg-tgl">Pertemuan ' + tgEscape(tgl) + '</span>' : '') + '</div>' +
         '<div class="r"><b>' + tgFormatRp(c.nominal) + '</b></div></div>';
     }).join('');
     var isOpen = !!tgState.openCards[g.key];
@@ -1175,7 +1216,7 @@
     return '<div class="tg-card-item" data-key="' + tgEscape(g.key) + '">' +
       '<div class="tgc-head">' +
         '<div class="tgc-av">' + tgEscape(tgInitials(g.ortuNama)) + '</div>' +
-        '<div class="tgc-who"><h4>' + tgEscape(g.ortuNama) + '</h4><p>' + tgEscape(g.unitNama) + ' · ' + g.children.length + ' siswa</p></div>' +
+        '<div class="tgc-who"><h4>' + tgEscape(g.ortuNama) + '</h4><p>' + tgEscape(g.unitNama) + ' · ' + g.children.length + ' siswa</p>' + (tgGroupTambahan(g) ? tgTambahanTag() : '') + '</div>' +
         tgStatusPill(isLunas) +
       '</div>' +
       '<button type="button" class="tgc-toggle" data-key="' + tgEscape(g.key) + '" aria-expanded="' + isOpen + '">' +
@@ -1237,8 +1278,10 @@
   function tgBuildWaLink(group, cleanHp) {
     var isLunas = group.status === 'lunas';
     var childrenLines = group.children.map(function (c) {
-      return '• ' + c.nama + ' (' + c.sesi + ' Sesi)' + (c.pakets.length ? ' - ' + c.pakets.join(', ') : '') + ': ' + tgFormatRp(c.nominal);
+      var tgl = tgTglList(c.pres);
+      return '• ' + c.nama + ' (' + c.sesi + ' Sesi' + (tgl ? ', ' + tgl : '') + ')' + (c.pakets.length ? ' - ' + c.pakets.join(', ') : '') + ': ' + tgFormatRp(c.nominal);
     }).join('\n');
+    var tambahan = tgGroupTambahan(group);
 
     var msg = '';
     if (isLunas) {
@@ -1257,7 +1300,9 @@
             'Terima kasih atas kepercayaan Bapak/Ibu kepada kami.';
     } else {
       msg = 'Yth. Bapak/Ibu ' + group.ortuNama + ',\n\n' +
-            'Berikut rincian tagihan bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*:\n' +
+            (tambahan
+              ? 'Berikut *tagihan tambahan* bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*, untuk pertemuan setelah tagihan sebelumnya lunas:\n'
+              : 'Berikut rincian tagihan bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*:\n') +
             '━━━━━━━━━━━━━━━━━━━━\n' +
             '• Unit Cabang: ' + group.unitNama + '\n' +
             '• Rincian Siswa:\n' + childrenLines + '\n' +
@@ -1292,7 +1337,8 @@
     tgState.selectedKey = key;
 
     var childListHtml = g.children.map(function (c) {
-      return '<div class="tg-sum-row"><span>' + tgEscape(c.nama) + ' · ' + c.sesi + ' sesi</span><span>' + tgFormatRp(c.nominal) + '</span></div>';
+      var tgl = tgTglList(c.pres);
+      return '<div class="tg-sum-row"><span>' + tgEscape(c.nama) + ' · ' + c.sesi + ' sesi' + (tgl ? ' (' + tgEscape(tgl) + ')' : '') + '</span><span>' + tgFormatRp(c.nominal) + '</span></div>';
     }).join('');
 
     var infoBox = document.getElementById('tg-lunasInfoBox');
@@ -1324,6 +1370,16 @@
 
       for (var i = 0; i < g.invoices.length; i++) {
         var inv = g.invoices[i];
+        // 0. Tautkan pertemuan yang ditagih ke invoice ini, supaya pertemuan sesudahnya masuk tagihan tambahan
+        var unlinked = (inv._pres || []).filter(function (p) { return !p.invoice_id; }).map(function (p) { return p.id; });
+        if (unlinked.length) {
+          await supaRest('presensi?id=in.(' + unlinked.join(',') + ')', s.access_token, {
+            method: 'PATCH',
+            headers: { 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ invoice_id: inv.id })
+          });
+          (inv._pres || []).forEach(function (p) { p.invoice_id = inv.id; });
+        }
         // 1. Update status invoice
         await supaRest('invoice?id=eq.' + inv.id, s.access_token, {
           method: 'PATCH',
@@ -1489,13 +1545,14 @@
 
       var itemsPayload = g.children.map(function (c) {
         var hgSatuan = c.sesi > 0 ? Math.round(c.nominal / c.sesi) : 0;
+        var tgl = tgTglList(c.pres);
         return {
           nama: c.nama,
           pakets: c.pakets,
           sesi: c.sesi,
           hargaSatuan: hgSatuan,
           nominal: c.nominal,
-          subtext: [c.kelas ? 'Kelas ' + c.kelas : '', c.sekolah].filter(Boolean).join(' • ')
+          subtext: [c.kelas ? 'Kelas ' + c.kelas : '', c.sekolah, tgl ? 'Pertemuan ' + tgl : ''].filter(Boolean).join(' • ')
         };
       });
 
@@ -1505,6 +1562,9 @@
         receiptId: (firstInv.receipt && firstInv.receipt.id) ? firstInv.receipt.id : null,
         oldPdfUrl: existingPdfUrl,
         status: g.status,
+        docNo: tgDocNo(g, g.status === 'lunas'),
+        tambahan: tgGroupTambahan(g),
+        tambahanNote: tgTambahanNote(g),
         ortuNama: g.ortuNama,
         ortuHp: g.ortuHp,
         unitNama: g.unitNama,
@@ -1589,12 +1649,12 @@
     tgState.selectedKey = key;
 
     var isLunas = g.status === 'lunas';
-    var docTitle = isLunas ? 'KUITANSI PEMBAYARAN RESMI' : 'INVOICE TAGIHAN BIMBEL';
-    var popupTitle = isLunas ? 'Kuitansi pembayaran' : 'Invoice tagihan';
+    var tambahan = tgGroupTambahan(g);
+    var docTitle = isLunas ? (tambahan ? 'KUITANSI TAGIHAN TAMBAHAN' : 'KUITANSI PEMBAYARAN RESMI') : (tambahan ? 'INVOICE TAGIHAN TAMBAHAN' : 'INVOICE TAGIHAN BIMBEL');
+    var popupTitle = isLunas ? (tambahan ? 'Kuitansi tagihan tambahan' : 'Kuitansi pembayaran') : (tambahan ? 'Invoice tagihan tambahan' : 'Invoice tagihan');
     var firstInv = g.invoices[0] || {};
-    var docNo = isLunas
-      ? 'REC-' + (firstInv.receipt && firstInv.receipt.id ? firstInv.receipt.id.slice(0, 8).toUpperCase() : firstInv.id.slice(0, 8).toUpperCase())
-      : 'INV-' + firstInv.id.slice(0, 8).toUpperCase();
+    var docNo = tgDocNo(g, isLunas);
+    var tambahanNote = tgTambahanNote(g);
 
     document.getElementById('tg-previewDocTitle').textContent = popupTitle;
     document.getElementById('tg-previewDocSub').textContent = g.ortuNama + ' · periode ' + tgFormatPeriodeLabel(tgState.periode);
@@ -1611,6 +1671,7 @@
         '<td style="padding:8px; border-bottom:1px solid #e5e5ea;">' +
           '<div style="font-weight:500;">' + tgEscape(s.nama || 'Siswa') + ' &bull; ' + tgEscape(pkt.nama_paket || 'Bimbingan Belajar') + '</div>' +
           '<div style="font-size:9.5px; color:#8e8e93;">' + [s.kelas ? 'Kelas ' + s.kelas : '', s.sekolah].filter(Boolean).join(' • ') + '</div>' +
+          (tgTglList(inv._pres) ? '<div style="font-size:9.5px; color:#636366; margin-top:2px;">Pertemuan ' + tgEscape(tgTglList(inv._pres)) + (tgIsTambahan(inv) ? ' · tagihan tambahan' : '') + '</div>' : '') +
         '</td>' +
         '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (inv.jumlah_pertemuan || 0) + ' Sesi</td>' +
         '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea;">' + tgFormatRp(inv.harga_satuan) + '</td>' +
@@ -1636,6 +1697,7 @@
           '</div>' +
         '</div>' +
 
+        (tambahanNote ? '<div style="background:#EEEEFB; color:#1C1AAF; border-radius:8px; padding:8px 10px; margin-bottom:12px; font-size:10.5px;">' + tgEscape(tambahanNote) + '</div>' : '') +
         // Metadata grid (No WA phone number)
         '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; background:#f8f9fa; border:1px solid #ededf0; border-radius:8px; padding:10px 12px; margin-bottom:16px; font-size:11px;">' +
           '<div>' +
