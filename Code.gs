@@ -599,11 +599,11 @@ function docHeader_(idn, title, subtitleHtml) {
     '<div class="rule"></div>';
 }
 
-function docRekeningBox_(idn) {
+function docRekeningBox_(idn, sekolah) {
   if (!idn.rekening.length) return '';
   return '<div class="box"><div class="box-t">Pembayaran melalui transfer</div><table class="rk">' +
     idn.rekening.map(function (r) { return '<tr><td class="b" style="width:16mm;">' + docEsc_(r.bank) + '</td><td>' + docEsc_(docRek_(r.nomor)) + '</td></tr>'; }).join('') +
-    '</table><div class="muted" style="font-size:8pt; margin-top:1.5mm;">a.n. ' + docEsc_(idn.atas_nama) + '. Mohon cantumkan nama siswa di berita transfer.</div></div>';
+    '</table><div class="muted" style="font-size:8pt; margin-top:1.5mm;">a.n. ' + docEsc_(idn.atas_nama) + '. Mohon cantumkan nama ' + (sekolah ? 'sekolah' : 'siswa') + ' di berita transfer.</div></div>';
 }
 
 function docSign_(idn, pembuka, ringkas) {
@@ -678,8 +678,9 @@ function buildLaporanBelajarHtml_(d) {
     docHeader_(idn, 'LAPORAN BELAJAR', docEsc_(d.tanggal || '')) +
     // Bidang isi berlatar abu-abu tipis (pilihan owner), kepala dan penutup tetap putih
     '<div class="box" style="padding:3.5mm 4mm;"><table><tr>' +
-      '<td style="width:52%; vertical-align:top;"><div class="lbl">Siswa</div><div class="who">' + docEsc_(d.siswaNama || '-') + '</div>' +
-        '<div class="muted">Orang tua: ' + docEsc_(d.ortuNama || '-') + '</div><div class="muted">Unit: ' + docEsc_(d.unit || '-') + '</div></td>' +
+      // Unit sekolah: siswa = rombel, orang tua = sekolah (dengan PIC)
+      '<td style="width:52%; vertical-align:top;"><div class="lbl">' + (d.isRombel ? 'Rombel' : 'Siswa') + '</div><div class="who">' + docEsc_(d.siswaNama || '-') + '</div>' +
+        '<div class="muted">' + (d.isRombel ? 'Sekolah: ' : 'Orang tua: ') + docEsc_(d.ortuNama || '-') + (d.isRombel && d.picNama ? ' (u.p. ' + docEsc_(d.picNama) + ')' : '') + '</div><div class="muted">Unit: ' + docEsc_(d.unit || '-') + '</div></td>' +
       '<td style="vertical-align:top;"><table class="kv">' +
         '<tr><td class="k">Mata pelajaran</td><td class="b">' + docEsc_(d.mapel || '-') + '</td></tr>' +
         '<tr><td class="k">Tutor</td><td>' + docEsc_(d.tutorNama || '-') + '</td></tr>' +
@@ -735,8 +736,9 @@ function buildRekapLaporanHtml_(d) {
   var html =
     docHeader_(idn, 'REKAP LAPORAN BELAJAR', docEsc_(d.periodeLabel || '')) +
     '<table><tr>' +
-      '<td style="width:52%; vertical-align:top;"><div class="lbl">Orang tua / wali</div><div class="who">' + docEsc_(d.ortuNama || '-') + '</div>' +
-        '<div class="muted">Siswa: ' + docEsc_(d.siswaNama || '-') + '</div><div class="muted">Unit: ' + docEsc_(d.unit || '-') + '</div></td>' +
+      '<td style="width:52%; vertical-align:top;"><div class="lbl">' + (d.isSekolah ? 'Sekolah' : 'Orang tua / wali') + '</div><div class="who">' + docEsc_(d.ortuNama || '-') + '</div>' +
+        (d.isSekolah && d.picNama ? '<div class="muted">u.p. ' + docEsc_(d.picNama) + '</div>' : '') +
+        '<div class="muted">' + (d.isSekolah ? 'Rombel: ' : 'Siswa: ') + docEsc_(d.siswaNama || '-') + '</div><div class="muted">Unit: ' + docEsc_(d.unit || '-') + '</div></td>' +
       '<td style="vertical-align:top;"><table class="kv">' +
         '<tr><td class="k">Periode</td><td class="b">' + docEsc_(d.periodeLabel || '-') + '</td></tr>' +
         '<tr><td class="k">Pertemuan</td><td>' + docEsc_(d.jumlahLabel || '-') + '</td></tr>' +
@@ -745,7 +747,7 @@ function buildRekapLaporanHtml_(d) {
       '</table></td>' +
     '</tr></table>' +
     '<div class="sec">Ringkasan pertemuan</div>' +
-    '<table class="it" style="margin-top:0;"><thead><tr><th class="c" style="width:9mm;">No</th><th>Tanggal</th><th>Siswa</th><th>Mapel</th><th>Tutor</th><th>Waktu</th><th>Status</th></tr></thead><tbody>' + sum + '</tbody></table>' +
+    '<table class="it" style="margin-top:0;"><thead><tr><th class="c" style="width:9mm;">No</th><th>Tanggal</th><th>' + (d.isSekolah ? 'Rombel' : 'Siswa') + '</th><th>Mapel</th><th>Tutor</th><th>Waktu</th><th>Status</th></tr></thead><tbody>' + sum + '</tbody></table>' +
     '<div class="sec">Rincian per pertemuan</div>' + detail +
     // Tanda tangan di kanan, catatan dan kontak di kiri dalam satu blok, supaya rekap pendek tetap muat satu halaman
     '<div class="keep" style="margin-top:4mm; border-top:1px solid ' + DOC_LINE + '; padding-top:3mm;"><table><tr>' +
@@ -788,14 +790,15 @@ function buildInvoiceHtml_(d) {
   var title = isLunas ? 'KUITANSI' : 'INVOICE';
   var subtitle = d.tambahan ? 'Tagihan tambahan' : (isLunas ? 'Bukti pembayaran' : 'Tagihan bimbingan belajar');
   var head = perPertemuan
-    ? '<tr><th class="c" style="width:9mm;">No</th><th style="width:26mm;">Tanggal</th><th>Siswa</th><th>Mapel · paket</th><th class="n" style="width:30mm;">Biaya</th></tr>'
-    : '<tr><th class="c" style="width:9mm;">No</th><th colspan="2">Siswa · paket</th><th style="width:40mm;">Pertemuan</th><th class="n" style="width:32mm;">Subtotal</th></tr>';
+    ? '<tr><th class="c" style="width:9mm;">No</th><th style="width:26mm;">Tanggal</th><th>' + (d.isSekolah ? 'Rombel' : 'Siswa') + '</th><th>Mapel · paket</th><th class="n" style="width:30mm;">Biaya</th></tr>'
+    : '<tr><th class="c" style="width:9mm;">No</th><th colspan="2">' + (d.isSekolah ? 'Rombel' : 'Siswa') + ' · paket</th><th style="width:40mm;">Pertemuan</th><th class="n" style="width:32mm;">Subtotal</th></tr>';
   var html =
     docHeader_(idn, title, subtitle) +
     (d.tambahan && d.tambahanNote ? '<div class="note">' + docEsc_(d.tambahanNote) + '</div>' : '') +
     '<table><tr>' +
       '<td style="width:52%; vertical-align:top;"><div class="lbl">' + (isLunas ? 'Diterima dari' : 'Ditagihkan kepada') + '</div><div class="who">' + docEsc_(d.ortuNama || d.siswaNama || '-') + '</div>' +
-        '<div class="muted">' + docEsc_([d.ortuHp, d.unitNama].filter(Boolean).join(' · ') || '-') + '</div><div class="muted">Siswa: ' + docEsc_(d.siswaList || d.siswaNama || '-') + '</div></td>' +
+        (d.isSekolah && d.picNama ? '<div class="muted">u.p. ' + docEsc_(d.picNama) + '</div>' : '') +
+        '<div class="muted">' + docEsc_([d.ortuHp, d.unitNama].filter(Boolean).join(' · ') || '-') + '</div><div class="muted">' + (d.isSekolah ? 'Rombel: ' : 'Siswa: ') + docEsc_(d.siswaList || d.siswaNama || '-') + '</div></td>' +
       '<td style="vertical-align:top;"><table class="kv">' +
         '<tr><td class="k">Nomor</td><td class="b">' + docEsc_(docNo) + '</td></tr>' +
         '<tr><td class="k">Tanggal</td><td>' + docEsc_(isLunas && d.tanggalLunas ? d.tanggalLunas : docTglPanjang_()) + '</td></tr>' +
@@ -812,7 +815,7 @@ function buildInvoiceHtml_(d) {
     '<div class="keep"><table style="margin-top:5mm;"><tr>' +
       '<td style="width:55%; vertical-align:top;">' + (isLunas
         ? '<div class="box"><div class="box-t">Terima kasih</div><div class="muted">Pembayaran untuk periode ' + docEsc_(d.periodeLabel || d.periode || '') + ' sudah kami terima. Simpan kuitansi ini sebagai bukti pembayaran yang sah.</div></div>'
-        : docRekeningBox_(idn)) + '</td>' +
+        : docRekeningBox_(idn, d.isSekolah)) + '</td>' +
       '<td style="vertical-align:top;">' + docSign_(idn) + '</td>' +
     '</tr></table>' +
     docFooter_(idn, isLunas ? 'kuitansi' : 'invoice') + '</div>';

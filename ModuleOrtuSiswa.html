@@ -125,6 +125,11 @@
   .oc-kids-detail .oc-kid{grid-template-columns:minmax(0,1fr) auto; padding:7px 2px;}
   .oc-kids-detail .oc-kid:first-child{margin-top:4px;}
   .os-g{font-size:9.5px; font-weight:700; margin-left:5px; letter-spacing:.02em;}
+  /* Unit sekolah: rombel dan sekolah */
+  .module-panel[data-module="ortu-siswa"] [data-only][hidden]{display:none !important;}
+  .os-rombel-tag{display:inline-flex; align-items:center; font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px; margin-left:6px; background:#FFF4E0; color:#A15C00; vertical-align:1px;}
+  .os-pic{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px;}
+  .oc-av.is-sekolah{border-radius:10px; background:#FFF4E0; color:#B86E00; font-size:16px;}
   .os-g.is-l{color:#3B4BD8;} .os-g.is-p{color:#C2366A;}
   @media (prefers-reduced-motion: reduce){ .oc-kids-detail, .oc-kids-toggle svg{transition:none;} }
   .oc-chip{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:var(--ink); background:var(--surface); border-radius:8px; padding:4px 8px; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; box-sizing:border-box;}
@@ -317,7 +322,7 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3>Pilih orang tua</h3>
+          <h3><span data-lp="Pilih orang tua" data-ls="Pilih sekolah">Pilih orang tua</span></h3>
           <p class="gx-sub">Ketik untuk mencari lebih cepat.</p>
         </div>
         <button type="button" class="gx-close" id="os-ortuPickerCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
@@ -338,8 +343,8 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-users-three" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3>Kelola orang tua</h3>
-          <p class="gx-sub">Biodata wali dan daftar anaknya.</p>
+          <h3><span data-lp="Kelola orang tua" data-ls="Kelola sekolah">Kelola orang tua</span></h3>
+          <p class="gx-sub"><span data-lp="Biodata wali dan daftar anaknya." data-ls="Data sekolah, kontak PIC, dan daftar rombelnya.">Biodata wali dan daftar anaknya.</span></p>
         </div>
         <button type="button" class="gx-close" id="os-editCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -348,13 +353,14 @@
         <div class="gx-step-title"><span class="gx-step">1</span>Biodata</div>
         <div class="gx-info">
           <div><span>Nama</span><b id="os-viewOrtuNama">-</b></div>
-          <div><span>WhatsApp</span><b id="os-viewOrtuHp">-</b></div>
+          <div data-only="sekolah"><span>PIC</span><b id="os-viewOrtuPic">-</b></div>
+          <div><span><span data-lp="WhatsApp" data-ls="WhatsApp PIC">WhatsApp</span></span><b id="os-viewOrtuHp">-</b></div>
           <div><span>Alamat</span><b id="os-viewOrtuAlamat">-</b></div>
         </div>
-        <button type="button" class="os-sec-btn" id="os-editOrtuBiodataBtn"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit biodata</button>
-        <div class="gx-step-title"><span class="gx-step">2</span>Daftar anak</div>
+        <button type="button" class="os-sec-btn" id="os-editOrtuBiodataBtn"><i class="ph ph-pencil-simple" aria-hidden="true"></i><span data-lp="Edit biodata" data-ls="Edit data sekolah">Edit biodata</span></button>
+        <div class="gx-step-title"><span class="gx-step">2</span><span data-lp="Daftar anak" data-ls="Daftar rombel">Daftar anak</span></div>
         <div id="os-editList"></div>
-        <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span>Status aktif atau nonaktif diubah lewat edit siswa.</span></div>
+        <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span><span data-lp="Status aktif atau nonaktif diubah lewat edit siswa." data-ls="Status aktif atau nonaktif diubah lewat edit rombel.">Status aktif atau nonaktif diubah lewat edit siswa.</span></span></div>
       </div>
       <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="os-editCancelBtn">Tutup</button>
@@ -368,16 +374,17 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-identification-card" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3>Edit biodata orang tua</h3>
-          <p class="gx-sub">Nomor WhatsApp dipakai untuk menghubungi wali.</p>
+          <h3><span data-lp="Edit biodata orang tua" data-ls="Edit data sekolah">Edit biodata orang tua</span></h3>
+          <p class="gx-sub"><span data-lp="Nomor WhatsApp dipakai untuk menghubungi wali." data-ls="Nomor WhatsApp PIC dipakai untuk mengirim laporan dan tagihan.">Nomor WhatsApp dipakai untuk menghubungi wali.</span></p>
         </div>
         <button type="button" class="gx-close" id="os-editOrtuBiodataCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
       <div class="gx-body">
         <div id="os-editOrtuBiodataAlert" class="alert alert-error" hidden></div>
-        <div class="gx-step-title"><span class="gx-step">1</span>Data orang tua</div>
-        <div class="gx-row"><label for="os-editOrtuNama">Nama orang tua <em class="gx-req">wajib</em></label><input type="text" id="os-editOrtuNama"></div>
-        <div class="gx-row"><label for="os-editOrtuHp">Nomor WhatsApp <em class="gx-req">wajib</em></label><input type="tel" id="os-editOrtuHp"></div>
+        <div class="gx-step-title"><span class="gx-step">1</span><span data-lp="Data orang tua" data-ls="Data sekolah">Data orang tua</span></div>
+        <div class="gx-row"><label for="os-editOrtuNama"><span data-lp="Nama orang tua" data-ls="Nama sekolah">Nama orang tua</span> <em class="gx-req">wajib</em></label><input type="text" id="os-editOrtuNama"></div>
+        <div class="gx-row" data-only="sekolah"><label for="os-editOrtuPic">Nama kontak (PIC) <em class="gx-opt">opsional</em></label><input type="text" id="os-editOrtuPic" placeholder="mis. Ibu Rina Lestari"></div>
+        <div class="gx-row"><label for="os-editOrtuHp"><span data-lp="Nomor WhatsApp" data-ls="WhatsApp PIC">Nomor WhatsApp</span> <em class="gx-req">wajib</em></label><input type="tel" id="os-editOrtuHp"></div>
         <div class="gx-row"><label for="os-editOrtuAlamat">Alamat <em class="gx-opt">opsional</em></label><input type="text" id="os-editOrtuAlamat" placeholder="mis. Jl. Kaliurang km 7"></div>
       </div>
       <div class="modal-actions gx-foot">
@@ -393,7 +400,7 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-student" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3>Edit siswa</h3>
+          <h3><span data-lp="Edit siswa" data-ls="Edit rombel">Edit siswa</span></h3>
           <p class="gx-sub" id="os-editSiswaSub">Perbarui data dan status siswa.</p>
         </div>
         <button type="button" class="gx-close" id="os-editSiswaCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
@@ -407,10 +414,10 @@
           <label class="os-editstatus-opt" data-val="aktif"><input type="radio" name="os-editSiswaStatus" value="aktif"><i></i>Aktif</label>
           <label class="os-editstatus-opt" data-val="nonaktif"><input type="radio" name="os-editSiswaStatus" value="nonaktif"><i></i>Nonaktif</label>
         </div>
-        <div class="gx-step-title"><span class="gx-step">2</span>Data siswa</div>
-        <div class="gx-row"><label for="os-editSiswaNama">Nama siswa <em class="gx-req">wajib</em></label><input type="text" id="os-editSiswaNama"></div>
+        <div class="gx-step-title"><span class="gx-step">2</span><span data-lp="Data siswa" data-ls="Data rombel">Data siswa</span></div>
+        <div class="gx-row"><label for="os-editSiswaNama"><span data-lp="Nama siswa" data-ls="Nama rombel">Nama siswa</span> <em class="gx-req">wajib</em></label><input type="text" id="os-editSiswaNama"></div>
         <div class="gx-2col">
-          <div class="gx-row"><label for="os-editSiswaKelas">Kelas</label><input type="text" id="os-editSiswaKelas" placeholder="mis. 9"></div>
+          <div class="gx-row"><label for="os-editSiswaKelas">Kelas</label><input type="text" id="os-editSiswaKelas" placeholder="mis. 9" data-pp="mis. 9" data-ps="mis. 4-5"></div>
           <div class="gx-row"><label for="os-editSiswaJenjang">Jenjang</label>
             <select id="os-editSiswaJenjang">
               <option value="">Pilih jenjang...</option>
@@ -421,8 +428,9 @@
             </select>
           </div>
         </div>
-        <div class="gx-row"><label for="os-editSiswaSekolah">Sekolah</label><input type="text" id="os-editSiswaSekolah" placeholder="mis. SMP N 1 Yogyakarta"></div>
-        <div class="gx-row"><label>Jenis kelamin</label>
+        <div class="gx-row" data-only="sekolah"><label for="os-editSiswaJumlah">Jumlah siswa <em class="gx-opt">opsional</em></label><input type="number" id="os-editSiswaJumlah" min="1" inputmode="numeric" placeholder="mis. 12"></div>
+        <div class="gx-row" data-only="privat"><label for="os-editSiswaSekolah">Sekolah</label><input type="text" id="os-editSiswaSekolah" placeholder="mis. SMP N 1 Yogyakarta"></div>
+        <div class="gx-row" data-only="privat"><label>Jenis kelamin</label>
           <div class="gx-gender">
             <label class="os-gender-opt" data-val="L"><input type="radio" name="os-editSiswaGender" value="L"><b>L</b>Laki-laki</label>
             <label class="os-gender-opt" data-val="P"><input type="radio" name="os-editSiswaGender" value="P"><b>P</b>Perempuan</label>
@@ -442,37 +450,45 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-user-plus" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3>Tambah siswa</h3>
-          <p class="gx-sub">Daftarkan siswa baru beserta orang tuanya.</p>
+          <h3><span data-lp="Tambah siswa" data-ls="Tambah rombel">Tambah siswa</span></h3>
+          <p class="gx-sub"><span data-lp="Daftarkan siswa baru beserta orang tuanya." data-ls="Daftarkan rombel baru beserta sekolahnya.">Daftarkan siswa baru beserta orang tuanya.</span></p>
         </div>
         <button type="button" class="gx-close" id="os-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
       <form id="os-form">
         <div class="gx-body">
           <div id="os-modalAlert" class="alert alert-error" hidden></div>
-          <div class="gx-step-title"><span class="gx-step">1</span>Orang tua</div>
+          <div class="gx-step-title"><span class="gx-step">1</span>Unit</div>
+          <div class="gx-row"><label for="os-siswaUnit">Unit <em class="gx-req">wajib</em></label>
+            <select id="os-siswaUnit" required>
+              <option value="">Pilih unit...</option>
+            </select>
+          </div>
+          <div class="gx-note" data-only="sekolah"><i class="ph ph-graduation-cap" aria-hidden="true"></i><span>Unit sekolah: orang tua diisi sekolah dan siswa diisi rombel.</span></div>
+          <div class="gx-step-title"><span class="gx-step">2</span><span data-lp="Orang tua" data-ls="Sekolah">Orang tua</span></div>
           <div class="gx-seg" style="margin-bottom:10px;">
-            <button type="button" class="os-ortu-mode-btn is-on" data-mode="baru">Orang tua baru</button>
+            <button type="button" class="os-ortu-mode-btn is-on" data-mode="baru"><span data-lp="Orang tua baru" data-ls="Sekolah baru">Orang tua baru</span></button>
             <button type="button" class="os-ortu-mode-btn" data-mode="lama">Sudah terdaftar</button>
           </div>
           <div id="os-ortuBaruGroup">
-            <div class="gx-row"><label for="os-ortuNama">Nama orang tua <em class="gx-req">wajib</em></label><input type="text" id="os-ortuNama" placeholder="mis. Ridwan Fathir"></div>
+            <div class="gx-row"><label for="os-ortuNama"><span data-lp="Nama orang tua" data-ls="Nama sekolah">Nama orang tua</span> <em class="gx-req">wajib</em></label><input type="text" id="os-ortuNama" placeholder="mis. Ridwan Fathir" data-pp="mis. Ridwan Fathir" data-ps="mis. SD Muhammadiyah Sapen"></div>
+            <div class="gx-row" data-only="sekolah"><label for="os-ortuPic">Nama kontak (PIC) <em class="gx-opt">opsional</em></label><input type="text" id="os-ortuPic" placeholder="mis. Ibu Rina Lestari"></div>
             <div class="gx-2col">
-              <div class="gx-row"><label for="os-ortuHp">WhatsApp <em class="gx-req">wajib</em></label><input type="tel" id="os-ortuHp" placeholder="08xxxxxxxxxx"></div>
+              <div class="gx-row"><label for="os-ortuHp"><span data-lp="WhatsApp" data-ls="WhatsApp PIC">WhatsApp</span> <em class="gx-req">wajib</em></label><input type="tel" id="os-ortuHp" placeholder="08xxxxxxxxxx"></div>
               <div class="gx-row"><label for="os-ortuAlamat">Alamat <em class="gx-opt">opsional</em></label><input type="text" id="os-ortuAlamat" placeholder="mis. Jl. Kaliurang"></div>
             </div>
           </div>
           <div id="os-ortuLamaGroup" style="display:none;">
-            <div class="gx-row"><label for="os-ortuExistingBtn">Pilih orang tua <em class="gx-req">wajib</em></label>
+            <div class="gx-row"><label for="os-ortuExistingBtn"><span data-lp="Pilih orang tua" data-ls="Pilih sekolah">Pilih orang tua</span> <em class="gx-req">wajib</em></label>
               <button type="button" id="os-ortuExistingBtn" class="gx-field"><span id="os-ortuExistingLabel">Pilih orang tua...</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
               <input type="hidden" id="os-ortuExisting">
             </div>
           </div>
 
-          <div class="gx-step-title"><span class="gx-step">2</span>Data siswa</div>
-          <div class="gx-row"><label for="os-siswaNama">Nama siswa <em class="gx-req">wajib</em></label><input type="text" id="os-siswaNama" required placeholder="mis. Almer Fathir"></div>
+          <div class="gx-step-title"><span class="gx-step">3</span><span data-lp="Data siswa" data-ls="Data rombel">Data siswa</span></div>
+          <div class="gx-row"><label for="os-siswaNama"><span data-lp="Nama siswa" data-ls="Nama rombel">Nama siswa</span> <em class="gx-req">wajib</em></label><input type="text" id="os-siswaNama" required placeholder="mis. Almer Fathir" data-pp="mis. Almer Fathir" data-ps="mis. Kelas 4-5 Olimpiade"></div>
           <div class="gx-2col">
-            <div class="gx-row"><label for="os-siswaKelas">Kelas</label><input type="text" id="os-siswaKelas" placeholder="mis. 9"></div>
+            <div class="gx-row"><label for="os-siswaKelas">Kelas</label><input type="text" id="os-siswaKelas" placeholder="mis. 9" data-pp="mis. 9" data-ps="mis. 4-5"></div>
             <div class="gx-row"><label for="os-siswaJenjang">Jenjang <em class="gx-req">wajib</em></label>
               <select id="os-siswaJenjang" required>
                 <option value="">Pilih...</option>
@@ -483,13 +499,9 @@
               </select>
             </div>
           </div>
-          <div class="gx-row"><label for="os-siswaSekolah">Sekolah</label><input type="text" id="os-siswaSekolah" placeholder="mis. SMP N 1 Yogyakarta"></div>
-          <div class="gx-row"><label for="os-siswaUnit">Unit <em class="gx-req">wajib</em></label>
-            <select id="os-siswaUnit" required>
-              <option value="">Pilih unit...</option>
-            </select>
-          </div>
-          <div class="gx-row"><label>Jenis kelamin</label>
+          <div class="gx-row" data-only="sekolah"><label for="os-siswaJumlah">Jumlah siswa <em class="gx-opt">opsional</em></label><input type="number" id="os-siswaJumlah" min="1" inputmode="numeric" placeholder="mis. 12"></div>
+          <div class="gx-row" data-only="privat"><label for="os-siswaSekolah">Sekolah</label><input type="text" id="os-siswaSekolah" placeholder="mis. SMP N 1 Yogyakarta"></div>
+          <div class="gx-row" data-only="privat"><label>Jenis kelamin</label>
             <div class="gx-gender">
               <label class="os-gender-opt" data-val="L"><input type="radio" name="os-siswaGender" value="L"><b>L</b>Laki-laki</label>
               <label class="os-gender-opt" data-val="P"><input type="radio" name="os-siswaGender" value="P"><b>P</b>Perempuan</label>
@@ -498,7 +510,7 @@
         </div>
         <div class="modal-actions gx-foot">
           <button type="button" class="btn btn-outline" id="os-cancelBtn">Batal</button>
-          <button type="submit" class="btn btn-primary" id="os-saveBtn">Simpan siswa</button>
+          <button type="submit" class="btn btn-primary" id="os-saveBtn"><span data-lp="Simpan siswa" data-ls="Simpan rombel">Simpan siswa</span></button>
         </div>
       </form>
     </div>
@@ -616,13 +628,15 @@
     try {
       var s = genioGetSession();
       var results = await Promise.all([
-        supaRest('orangtua?select=id,nama,no_hp,alamat&order=nama.asc', s.access_token),
-        supaRest('siswa?select=id,nama,orangtua_id,unit_id,status,kelas,sekolah,jenjang,jenis_kelamin,units(nama_unit)', s.access_token),
-        supaRest('units?select=id&order=nama_unit.asc', s.access_token)
+        supaRest('orangtua?select=id,nama,no_hp,alamat,pic_nama&order=nama.asc', s.access_token),
+        supaRest('siswa?select=id,nama,orangtua_id,unit_id,status,kelas,sekolah,jenjang,jenis_kelamin,jumlah_siswa,units(nama_unit,jenis)', s.access_token),
+        supaRest('units?select=id,jenis&order=nama_unit.asc', s.access_token)
       ]);
       var ortuRows = results[0];
       var siswaRows = results[1];
       var unitCount = results[2].length;
+      osUnitJenis = {};
+      results[2].forEach(function (u) { osUnitJenis[u.id] = u.jenis || 'privat'; });
 
       var siswaByOrtu = {};
       siswaRows.forEach(function (sw) {
@@ -636,7 +650,8 @@
         var nonaktifCount = anak.length - aktifCount;
         var unitNama = (anak[0] && anak[0].units && anak[0].units.nama_unit) || null;
         return {
-          id: o.id, nama: o.nama, no_hp: o.no_hp, alamat: o.alamat,
+          id: o.id, nama: o.nama, no_hp: o.no_hp, alamat: o.alamat, pic_nama: o.pic_nama || '',
+          isSekolah: anak.some(function (a) { return osIsSekolahUnit(a.unit_id); }),
           anak: anak, aktifCount: aktifCount, nonaktifCount: nonaktifCount,
           status: aktifCount > 0 ? 'aktif' : 'nonaktif',
           unitNama: unitNama
@@ -650,11 +665,27 @@
     }
   }
 
+  /* ===== Unit sekolah: orang tua = sekolah (dengan PIC), siswa = rombel ===== */
+  var osUnitJenis = {};
+  function osIsSekolahUnit(unitId) { return osUnitJenis[unitId] === 'sekolah'; }
+  // Ganti teks dan tampilkan bagian sesuai jenis: [data-lp]/[data-ls] teks, [data-pp]/[data-ps] placeholder, [data-only] tampil/sembunyi
+  function osApplyJenis(root, sek) {
+    if (!root) return;
+    root.querySelectorAll('[data-lp]').forEach(function (el) { el.textContent = sek ? el.dataset.ls : el.dataset.lp; });
+    root.querySelectorAll('[data-pp]').forEach(function (el) { el.placeholder = sek ? el.dataset.ps : el.dataset.pp; });
+    root.querySelectorAll('[data-only]').forEach(function (el) { el.hidden = (el.dataset.only === 'sekolah') !== !!sek; });
+  }
+  function osRombelTag() { return '<span class="os-rombel-tag">Rombel</span>'; }
+  function osRombelSub(a) {
+    return [a.kelas ? 'Kelas ' + a.kelas : '', a.jenjang, a.jumlah_siswa ? a.jumlah_siswa + ' siswa' : ''].filter(Boolean).join(' · ');
+  }
+
   function osMatchesSearch(o) {
     if (!osState.search) return true;
     var q = osState.search;
     if ((o.nama || '').toLowerCase().indexOf(q) !== -1) return true;
     if ((o.no_hp || '').toLowerCase().indexOf(q) !== -1) return true;
+    if ((o.pic_nama || '').toLowerCase().indexOf(q) !== -1) return true;
     if ((o.unitNama || '').toLowerCase().indexOf(q) !== -1) return true;
     return o.anak.some(function (a) {
       return (a.nama || '').toLowerCase().indexOf(q) !== -1 || (a.sekolah || '').toLowerCase().indexOf(q) !== -1;
@@ -781,7 +812,7 @@
   function osSiswaMatchesSearch(r) {
     if (!osState.search) return true;
     var q = osState.search;
-    return [r.nama, r.sekolah, r.kelas, r.ortu.nama, r.ortu.no_hp, r.unitNama].some(function (v) {
+    return [r.nama, r.sekolah, r.kelas, r.ortu.nama, r.ortu.no_hp, r.ortu.pic_nama, r.unitNama, r.isRombel ? 'rombel' : ''].some(function (v) {
       return (v || '').toLowerCase().indexOf(q) !== -1;
     });
   }
@@ -795,7 +826,7 @@
     var rows = [];
     osState.ortuList.forEach(function (o) {
       o.anak.forEach(function (a) {
-        rows.push(Object.assign({}, a, { ortu: o, unitNama: (a.units && a.units.nama_unit) || '' }));
+        rows.push(Object.assign({}, a, { ortu: o, unitNama: (a.units && a.units.nama_unit) || '', isRombel: osIsSekolahUnit(a.unit_id) }));
       });
     });
     return rows;
@@ -872,7 +903,9 @@
   function osRenderCard(o) {
     var isAktif = o.status === 'aktif';
     var meta;
+    var sek = o.isSekolah;
     if (!o.anak.length) meta = 'Belum ada siswa terdaftar';
+    else if (sek) meta = 'Sekolah · ' + o.anak.length + ' rombel' + (o.anak.length > 1 ? ' · ' + o.aktifCount + ' aktif' : '') + (o.pic_nama ? ' · PIC ' + osEscape(o.pic_nama) : '');
     else if (o.anak.length === 1) meta = 'Wali dari 1 siswa · ' + (o.anak[0].status === 'aktif' ? 'aktif' : 'nonaktif');
     else meta = 'Wali dari ' + o.anak.length + ' siswa · ' + o.aktifCount + ' aktif';
 
@@ -881,11 +914,11 @@
 
     var isOpen = !!osState.openCards[o.id];
     var names = o.anak.map(function (a) {
-      var first = osEscape((a.nama || '').trim().split(/\s+/)[0] || '-');
+      var first = sek ? osEscape(a.nama || '-') : osEscape((a.nama || '').trim().split(/\s+/)[0] || '-');
       return a.status === 'aktif' ? first : '<s>' + first + '</s>';
     }).join(', ');
     var kids = o.anak.map(function (a) {
-      var sub = [a.kelas ? 'Kelas ' + a.kelas : '', a.sekolah].filter(Boolean).join(' · ') || 'Kelas dan sekolah belum diisi';
+      var sub = sek ? (osRombelSub(a) || 'Kelas belum diisi') : ([a.kelas ? 'Kelas ' + a.kelas : '', a.sekolah].filter(Boolean).join(' · ') || 'Kelas dan sekolah belum diisi');
       var off = a.status !== 'aktif';
       return '<div class="oc-kid' + (off ? ' is-off' : '') + '">' +
         '<div style="min-width:0;"><div class="oc-kn">' + osEscape(a.nama) + osGenderTag(a.jenis_kelamin) + '</div><div class="oc-ks">' + osEscape(sub) + '</div></div>' +
@@ -894,7 +927,7 @@
     }).join('');
     var kidsBlock = o.anak.length
       ? '<button type="button" class="oc-kids-toggle" data-id="' + o.id + '" aria-expanded="' + isOpen + '">' +
-          '<i class="ph ph-student" aria-hidden="true"></i><span class="oc-kids-names">' + names + '</span><em>' + o.anak.length + ' anak</em>' +
+          '<i class="ph ' + (sek ? 'ph-users-three' : 'ph-student') + '" aria-hidden="true"></i><span class="oc-kids-names">' + names + '</span><em>' + o.anak.length + (sek ? ' rombel' : ' anak') + '</em>' +
           '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
         '</button>' +
         '<div class="oc-kids-detail' + (isOpen ? ' is-open' : '') + '" data-id="' + o.id + '"' + (isOpen ? ' style="max-height:none"' : '') + '>' + kids + '</div>'
@@ -902,14 +935,14 @@
 
     return '<div class="os-card">' +
       '<div class="oc-head">' +
-        '<div class="oc-av">' + osEscape(osInitials(o.nama)) + '</div>' +
+        (sek ? '<div class="oc-av is-sekolah"><i class="ph ph-graduation-cap" aria-hidden="true"></i></div>' : '<div class="oc-av">' + osEscape(osInitials(o.nama)) + '</div>') +
         '<div class="oc-who"><h4>' + osEscape(o.nama) + '</h4><p>' + meta + '</p></div>' +
         '<span class="oc-status ' + (isAktif ? 'is-on' : 'is-off') + '"><i></i>' + (isAktif ? 'Aktif' : 'Nonaktif') + '</span>' +
       '</div>' +
       '<div class="oc-chips">' + chips + '</div>' +
       kidsBlock +
       '<div class="oc-foot">' +
-        '<div class="oc-wa"><span>WhatsApp</span><b>' + osEscape(o.no_hp || '-') + '</b></div>' +
+        '<div class="oc-wa"><span>' + (sek ? 'WhatsApp PIC' : 'WhatsApp') + '</span><b>' + osEscape(o.no_hp || '-') + '</b></div>' +
         (o.no_hp ? '<a class="os-icon is-wa" href="' + osWaLink(o.no_hp) + '" target="_blank" rel="noopener noreferrer" aria-label="Hubungi lewat WhatsApp" title="Hubungi lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' : '') +
         '<button type="button" class="os-edit-btn" data-id="' + o.id + '">Kelola</button>' +
       '</div>' +
@@ -943,11 +976,12 @@
       var on = r.status === 'aktif';
       return '<tr>' +
         '<td class="os-no">' + (i + 1) + '</td>' +
-        '<td class="os-stk os-nm">' + osEscape(r.nama) + osGenderTag(r.jenis_kelamin) + '</td>' +
-        '<td>' + osEscape(r.ortu.nama || '-') + '</td>' +
+        '<td class="os-stk os-nm" title="' + osEscape(r.nama) + '">' + osEscape(r.nama) + (r.isRombel ? osRombelTag() : osGenderTag(r.jenis_kelamin)) + '</td>' +
+        '<td>' + osEscape(r.ortu.nama || '-') + (r.isRombel && r.ortu.pic_nama ? '<span class="os-pic">PIC ' + osEscape(r.ortu.pic_nama) + '</span>' : '') + '</td>' +
         '<td class="os-num">' + osEscape(r.ortu.no_hp || '-') + '</td>' +
         '<td class="os-c os-num">' + osEscape(r.kelas || '-') + '</td>' +
-        '<td' + (r.sekolah ? '' : ' class="os-soft"') + '>' + osEscape(r.sekolah || '-') + '</td>' +
+        // Rombel: sekolahnya sudah tertulis di kolom orang tua
+        (r.isRombel ? '<td class="os-soft">-</td>' : '<td' + (r.sekolah ? '' : ' class="os-soft"') + '>' + osEscape(r.sekolah || '-') + '</td>') +
         '<td>' + osEscape(r.unitNama || '-') + '</td>' +
         '<td class="os-act">' +
           (r.ortu.no_hp ? '<a class="os-icon is-wa" href="' + osWaLink(r.ortu.no_hp) + '" target="_blank" rel="noopener noreferrer" aria-label="Hubungi orang tua lewat WhatsApp" title="Hubungi orang tua"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' : '') +
@@ -1016,6 +1050,8 @@
     document.getElementById('os-viewOrtuNama').textContent = ortu.nama || '-';
     document.getElementById('os-viewOrtuHp').textContent = ortu.no_hp || '-';
     document.getElementById('os-viewOrtuAlamat').textContent = ortu.alamat || '-';
+    document.getElementById('os-viewOrtuPic').textContent = ortu.pic_nama || '-';
+    osApplyJenis(osEditModal, ortu.isSekolah);
     osRenderEditList(ortu);
     osEditModal.hidden = false;
     requestAnimationFrame(function () { osEditModal.classList.add('show'); });
@@ -1033,6 +1069,8 @@
     document.getElementById('os-editOrtuNama').value = ortu.nama || '';
     document.getElementById('os-editOrtuHp').value = ortu.no_hp || '';
     document.getElementById('os-editOrtuAlamat').value = ortu.alamat || '';
+    document.getElementById('os-editOrtuPic').value = ortu.pic_nama || '';
+    osApplyJenis(osEditOrtuBiodataModal, ortu.isSekolah);
     osEditOrtuBiodataModal.hidden = false;
     requestAnimationFrame(function () { osEditOrtuBiodataModal.classList.add('show'); });
   });
@@ -1047,6 +1085,9 @@
     var nama = document.getElementById('os-editOrtuNama').value.trim();
     var hp = document.getElementById('os-editOrtuHp').value.trim();
     var alamat = document.getElementById('os-editOrtuAlamat').value.trim();
+    var ortuNow = osState.ortuList.find(function (o) { return o.id === osEditTargetOrtuId; });
+    var isSek = !!(ortuNow && ortuNow.isSekolah);
+    var pic = document.getElementById('os-editOrtuPic').value.trim();
     if (!nama || !hp) { alertEl.textContent = 'Nama dan nomor WhatsApp wajib diisi.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
@@ -1054,18 +1095,27 @@
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
     try {
-      var s = genioGetSession();
+      var s = genioSessionOrLogin();
+      var ortuBody = { nama: nama, no_hp: hp, alamat: alamat || null };
+      if (isSek) ortuBody.pic_nama = pic || null;
       await supaRest('orangtua?id=eq.' + osEditTargetOrtuId, s.access_token, {
         method: 'PATCH',
         headers: { 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ nama: nama, no_hp: hp, alamat: alamat || null })
+        body: JSON.stringify(ortuBody)
       });
-      genioToast('Biodata orang tua berhasil diperbarui', 'success');
+      // Rombel menyimpan nama sekolahnya di kolom sekolah (untuk pencarian dan dokumen), jadi ikut diganti
+      if (isSek && ortuNow && ortuNow.nama !== nama) {
+        await supaRest('siswa?orangtua_id=eq.' + osEditTargetOrtuId, s.access_token, {
+          method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ sekolah: nama })
+        });
+      }
+      genioToast(isSek ? 'Data sekolah berhasil diperbarui' : 'Biodata orang tua berhasil diperbarui', 'success');
       osCloseOrtuBiodataModal();
       await osLoadAll();
       document.getElementById('os-viewOrtuNama').textContent = nama;
       document.getElementById('os-viewOrtuHp').textContent = hp;
       document.getElementById('os-viewOrtuAlamat').textContent = alamat || '-';
+      document.getElementById('os-viewOrtuPic').textContent = pic || '-';
     } catch (err) {
       alertEl.textContent = err.message || 'Gagal menyimpan biodata.'; alertEl.hidden = false;
     } finally {
@@ -1077,15 +1127,16 @@
   function osRenderEditList(ortu) {
     var listEl = document.getElementById('os-editList');
     if (!ortu.anak.length) {
-      listEl.innerHTML = '<p style="font-size:11px; color:var(--ink-soft); text-align:center; padding:14px 0; margin:0;">Orang tua ini belum punya siswa terdaftar.</p>';
+      listEl.innerHTML = '<p style="font-size:11px; color:var(--ink-soft); text-align:center; padding:14px 0; margin:0;">' + (ortu.isSekolah ? 'Sekolah ini belum punya rombel terdaftar.' : 'Orang tua ini belum punya siswa terdaftar.') + '</p>';
       return;
     }
     listEl.innerHTML = ortu.anak.map(function (a) {
       var aAktif = a.status === 'aktif';
-      var sub = [a.kelas ? 'Kelas ' + a.kelas : '', a.jenjang].filter(Boolean).join(' · ');
+      var isR = osIsSekolahUnit(a.unit_id);
+      var sub = isR ? osRombelSub(a) : [a.kelas ? 'Kelas ' + a.kelas : '', a.jenjang].filter(Boolean).join(' · ');
       return '<div class="os-kid-row">' +
         '<span class="oc-ki' + (a.jenis_kelamin === 'P' ? ' is-p' : '') + '">' + osEscape(osInitials(a.nama)) + '</span>' +
-        '<div style="min-width:0;"><b>' + osEscape(a.nama) + osGenderTag(a.jenis_kelamin) + '</b><span class="s"><i' + (aAktif ? '' : ' class="is-off"') + '></i>' + (aAktif ? 'Aktif' : 'Nonaktif') + (sub ? ' · ' + osEscape(sub) : '') + '</span></div>' +
+        '<div style="min-width:0;"><b>' + osEscape(a.nama) + (isR ? '' : osGenderTag(a.jenis_kelamin)) + '</b><span class="s"><i' + (aAktif ? '' : ' class="is-off"') + '></i>' + (aAktif ? 'Aktif' : 'Nonaktif') + (sub ? ' · ' + osEscape(sub) : '') + '</span></div>' +
         '<button type="button" class="os-edit-siswa-btn" data-siswa-id="' + a.id + '">Edit</button>' +
       '</div>';
     }).join('');
@@ -1110,10 +1161,14 @@
     document.getElementById('os-editSiswaKelas').value = siswa.kelas || '';
     document.getElementById('os-editSiswaSekolah').value = siswa.sekolah || '';
     document.getElementById('os-editSiswaJenjang').value = siswa.jenjang || '';
+    document.getElementById('os-editSiswaJumlah').value = siswa.jumlah_siswa || '';
+    var isR = osIsSekolahUnit(siswa.unit_id);
+    osEditSiswaModal.dataset.rombel = isR ? '1' : '';
+    osApplyJenis(osEditSiswaModal, isR);
 
     osSetSegOn('#os-editSiswaModal .os-gender-opt', siswa.jenis_kelamin);
     osSetSegOn('.os-editstatus-opt', siswa.status);
-    document.getElementById('os-editSiswaSub').textContent = (siswa.nama || 'Siswa') + ' · wali ' + (ortu.nama || '-');
+    document.getElementById('os-editSiswaSub').textContent = (siswa.nama || 'Siswa') + (isR ? ' · ' : ' · wali ') + (ortu.nama || '-');
 
     osEditSiswaModal.hidden = false;
     requestAnimationFrame(function () { osEditSiswaModal.classList.add('show'); });
@@ -1143,21 +1198,26 @@
     var gender = genderEl ? genderEl.value : null;
     var statusEl = document.querySelector('input[name="os-editSiswaStatus"]:checked');
     var status = statusEl ? statusEl.value : 'aktif';
+    var isR = osEditSiswaModal.dataset.rombel === '1';
+    var jumlah = parseInt(document.getElementById('os-editSiswaJumlah').value, 10);
 
-    if (!nama) { alertEl.textContent = 'Nama siswa wajib diisi.'; alertEl.hidden = false; return; }
+    if (!nama) { alertEl.textContent = isR ? 'Nama rombel wajib diisi.' : 'Nama siswa wajib diisi.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
     var btn = this;
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
     try {
-      var s = genioGetSession();
+      var s = genioSessionOrLogin();
+      var body = isR
+        ? { nama: nama, kelas: kelas || null, jenjang: jenjang || null, jumlah_siswa: jumlah > 0 ? jumlah : null, status: status }
+        : { nama: nama, kelas: kelas || null, sekolah: sekolah || null, jenjang: jenjang || null, jenis_kelamin: gender, status: status };
       await supaRest('siswa?id=eq.' + siswaId, s.access_token, {
         method: 'PATCH',
         headers: { 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ nama: nama, kelas: kelas || null, sekolah: sekolah || null, jenjang: jenjang || null, jenis_kelamin: gender, status: status })
+        body: JSON.stringify(body)
       });
-      genioToast('Data siswa berhasil diperbarui', 'success');
+      genioToast(isR ? 'Data rombel berhasil diperbarui' : 'Data siswa berhasil diperbarui', 'success');
       osCloseEditSiswaModal();
       await osLoadAll();
       if (!osEditModal.hidden) {
@@ -1402,7 +1462,7 @@
 
   function osResetOrtuExistingField() {
     document.getElementById('os-ortuExisting').value = '';
-    document.getElementById('os-ortuExistingLabel').textContent = 'Pilih orang tua...';
+    document.getElementById('os-ortuExistingLabel').textContent = osFormSekolah ? 'Pilih sekolah...' : 'Pilih orang tua...';
     document.getElementById('os-ortuExistingLabel').style.color = 'var(--ink-soft)';
   }
 
@@ -1411,6 +1471,7 @@
     document.getElementById('os-ortuPickerSearchInput').value = '';
     osRenderOrtuPickerList();
     osOrtuPickerModal.hidden = false;
+    osApplyJenis(osOrtuPickerModal, osFormSekolah);
     requestAnimationFrame(function () { osOrtuPickerModal.classList.add('show'); });
   }
   function osCloseOrtuPicker() {
@@ -1419,17 +1480,17 @@
   }
 
   function osRenderOrtuPickerList() {
-    var allOptions = osState.ortuList.slice().sort(function (a, b) { return a.nama.localeCompare(b.nama); });
+    var allOptions = osState.ortuList.filter(function (o) { return !!o.isSekolah === !!osFormSekolah; }).sort(function (a, b) { return a.nama.localeCompare(b.nama); });
     var options = osOrtuPickerSearch ? allOptions.filter(function (o) { return o.nama.toLowerCase().indexOf(osOrtuPickerSearch) !== -1; }) : allOptions;
     var listEl = document.getElementById('os-ortuPickerList');
 
     if (!options.length) {
-      listEl.innerHTML = '<div style="font-size:11px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : 'Belum ada data orang tua.') + '</div>';
+      listEl.innerHTML = '<div style="font-size:11px; color:var(--ink-soft); padding:14px 4px; text-align:center;">' + (allOptions.length ? 'Tidak ada hasil.' : (osFormSekolah ? 'Belum ada data sekolah.' : 'Belum ada data orang tua.')) + '</div>';
       return;
     }
     listEl.innerHTML = options.map(function (o) {
       var n = o.anak.length;
-      return '<button type="button" class="os-ortu-picker-opt gx-opt-row" data-id="' + o.id + '"><span class="oc-ki" style="width:24px; height:24px;">' + osEscape(osInitials(o.nama)) + '</span><span style="min-width:0; flex:1;">' + osEscape(o.nama) + '<span style="display:block; font-size:10px; color:var(--ink-soft);">' + osEscape(o.no_hp || '-') + ' · ' + n + ' anak</span></span></button>';
+      return '<button type="button" class="os-ortu-picker-opt gx-opt-row" data-id="' + o.id + '"><span class="oc-ki" style="width:24px; height:24px;">' + osEscape(osInitials(o.nama)) + '</span><span style="min-width:0; flex:1;">' + osEscape(o.nama) + '<span style="display:block; font-size:10px; color:var(--ink-soft);">' + (o.isSekolah && o.pic_nama ? osEscape(o.pic_nama) + ' · ' : '') + osEscape(o.no_hp || '-') + ' · ' + n + (o.isSekolah ? ' rombel' : ' anak') + '</span></span></button>';
     }).join('');
     listEl.querySelectorAll('.os-ortu-picker-opt').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -1453,24 +1514,36 @@
     setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
   });
 
+  var osFormSekolah = false;
+  // Form tambah mengikuti jenis unit yang dipilih: unit sekolah memakai sekolah + rombel
+  function osApplyFormJenis() {
+    var sek = osIsSekolahUnit(document.getElementById('os-siswaUnit').value);
+    if (sek !== osFormSekolah) { osFormSekolah = sek; osResetOrtuExistingField(); }
+    osApplyJenis(osModal, sek);
+  }
+  document.getElementById('os-siswaUnit').addEventListener('change', osApplyFormJenis);
+
   async function osOpenModal() {
     document.getElementById('os-modalAlert').hidden = true;
     document.getElementById('os-form').reset();
     osSetSegOn('#os-modal .os-gender-opt', null);
     osSetOrtuMode('baru');
+    osFormSekolah = false;
     osResetOrtuExistingField();
     if (!osUnitsLoaded) {
       try {
         var s = genioGetSession();
-        var units = genioScopeUnits(await supaRest('units?select=id,nama_unit&order=nama_unit.asc', s.access_token));
+        var units = genioScopeUnits(await supaRest('units?select=id,nama_unit,jenis&order=nama_unit.asc', s.access_token));
+        units.forEach(function (u) { osUnitJenis[u.id] = u.jenis || 'privat'; });
         var select = document.getElementById('os-siswaUnit');
-        select.innerHTML = '<option value="">Pilih unit...</option>' + units.map(function (u) { return '<option value="' + u.id + '">' + osEscape(u.nama_unit) + '</option>'; }).join('');
+        select.innerHTML = '<option value="">Pilih unit...</option>' + units.map(function (u) { return '<option value="' + u.id + '">' + osEscape(u.nama_unit) + (u.jenis === 'sekolah' ? ' (sekolah)' : '') + '</option>'; }).join('');
         osUnitsLoaded = true;
       } catch (err) { /* biarkan tetap kosong kalau gagal */ }
     }
     // Kepala unit: unit siswa otomatis unitnya sendiri (form.reset() di atas mengosongkannya)
     var unitSel = document.getElementById('os-siswaUnit');
     if (genioIsKepalaUnit() && unitSel.options.length === 2) { unitSel.selectedIndex = 1; unitSel.disabled = true; }
+    osApplyFormJenis();
     osModal.hidden = false;
     requestAnimationFrame(function () { osModal.classList.add('show'); });
   }
@@ -1491,8 +1564,10 @@
     var siswaGenderEl = document.querySelector('input[name="os-siswaGender"]:checked');
     var siswaGender = siswaGenderEl ? siswaGenderEl.value : null;
     var siswaUnit = document.getElementById('os-siswaUnit').value;
+    var sek = osIsSekolahUnit(siswaUnit);
+    var jumlah = parseInt(document.getElementById('os-siswaJumlah').value, 10);
 
-    if (!siswaNama || !siswaUnit) { alertEl.textContent = 'Nama siswa dan unit wajib diisi.'; alertEl.hidden = false; return; }
+    if (!siswaNama || !siswaUnit) { alertEl.textContent = sek ? 'Nama rombel dan unit wajib diisi.' : 'Nama siswa dan unit wajib diisi.'; alertEl.hidden = false; return; }
     if (!siswaJenjang) { alertEl.textContent = 'Jenjang wajib dipilih.'; alertEl.hidden = false; return; }
 
     var ortuId = null;
@@ -1500,44 +1575,55 @@
 
     if (osState.ortuMode === 'lama') {
       ortuId = document.getElementById('os-ortuExisting').value;
-      if (!ortuId) { alertEl.textContent = 'Pilih orang tua yang sudah terdaftar.'; alertEl.hidden = false; return; }
+      if (!ortuId) { alertEl.textContent = sek ? 'Pilih sekolah yang sudah terdaftar.' : 'Pilih orang tua yang sudah terdaftar.'; alertEl.hidden = false; return; }
     } else {
       ortuNama = document.getElementById('os-ortuNama').value.trim();
       ortuHp = document.getElementById('os-ortuHp').value.trim();
       ortuAlamat = document.getElementById('os-ortuAlamat').value.trim();
-      if (!ortuNama || !ortuHp) { alertEl.textContent = 'Nama dan nomor WhatsApp orang tua wajib diisi.'; alertEl.hidden = false; return; }
+      if (!ortuNama || !ortuHp) { alertEl.textContent = sek ? 'Nama sekolah dan WhatsApp PIC wajib diisi.' : 'Nama dan nomor WhatsApp orang tua wajib diisi.'; alertEl.hidden = false; return; }
     }
 
     var saveBtn = document.getElementById('os-saveBtn');
+    var saveHtml = saveBtn.innerHTML;
     saveBtn.disabled = true;
     saveBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
 
     try {
-      var s = genioGetSession();
+      var s = genioSessionOrLogin();
 
       if (osState.ortuMode === 'baru') {
+        var ortuBody = { nama: ortuNama, no_hp: ortuHp, alamat: ortuAlamat || null, created_by: s.user_id };
+        if (sek) ortuBody.pic_nama = document.getElementById('os-ortuPic').value.trim() || null;
         var ortuResult = await supaRest('orangtua', s.access_token, {
           method: 'POST',
           headers: { 'Prefer': 'return=representation' },
-          body: JSON.stringify({ nama: ortuNama, no_hp: ortuHp, alamat: ortuAlamat || null, created_by: s.user_id })
+          body: JSON.stringify(ortuBody)
         });
         ortuId = ortuResult[0].id;
       }
 
+      var siswaBody = { nama: siswaNama, orangtua_id: ortuId, unit_id: siswaUnit, status: 'aktif', kelas: siswaKelas || null, sekolah: siswaSekolah || null, jenjang: siswaJenjang, jenis_kelamin: siswaGender };
+      if (sek) {
+        // Rombel: nama sekolah disimpan di kolom sekolah, tanpa jenis kelamin
+        var sekolahOrtu = osState.ortuMode === 'baru' ? ortuNama : ((osState.ortuList.find(function (o) { return o.id === ortuId; }) || {}).nama || null);
+        siswaBody.sekolah = sekolahOrtu;
+        siswaBody.jenis_kelamin = null;
+        siswaBody.jumlah_siswa = jumlah > 0 ? jumlah : null;
+      }
       await supaRest('siswa', s.access_token, {
         method: 'POST',
         headers: { 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ nama: siswaNama, orangtua_id: ortuId, unit_id: siswaUnit, status: 'aktif', kelas: siswaKelas || null, sekolah: siswaSekolah || null, jenjang: siswaJenjang, jenis_kelamin: siswaGender })
+        body: JSON.stringify(siswaBody)
       });
 
-      genioToast('Siswa berhasil ditambahkan', 'success');
+      genioToast(sek ? 'Rombel berhasil ditambahkan' : 'Siswa berhasil ditambahkan', 'success');
       osCloseModal();
       osLoadAll();
     } catch (err) {
       alertEl.textContent = err.message || 'Gagal menyimpan data.'; alertEl.hidden = false;
     } finally {
       saveBtn.disabled = false;
-      saveBtn.textContent = 'Simpan siswa';
+      saveBtn.innerHTML = saveHtml;
     }
   }
 </script>

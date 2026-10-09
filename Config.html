@@ -794,6 +794,20 @@
     }).catch(function () { genioDocIdentityCache = null; return {}; });
     return genioDocIdentityCache;
   }
+  // Jenis unit (privat | sekolah) per unit id. Di unit sekolah, orangtua = sekolah (pic_nama = kontak) dan siswa = rombel.
+  var genioUnitJenisCache = null;
+  function genioUnitJenisMap() {
+    if (genioUnitJenisCache) return genioUnitJenisCache;
+    var s = genioGetSession();
+    if (!s) return Promise.resolve({});
+    genioUnitJenisCache = supaRest('units?select=id,jenis', s.access_token).then(function (rows) {
+      var m = {};
+      (rows || []).forEach(function (u) { m[u.id] = u.jenis || 'privat'; });
+      return m;
+    }).catch(function () { genioUnitJenisCache = null; return {}; });
+    return genioUnitJenisCache;
+  }
+  function genioUnitJenisReset() { genioUnitJenisCache = null; }
   // Kepala unit hanya melihat unitnya sendiri di pilihan unit (form & filter)
   function genioScopeUnits(units) {
     var s = genioGetSession();

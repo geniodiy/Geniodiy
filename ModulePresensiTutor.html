@@ -394,9 +394,9 @@
   var PT_VISIT = 30000; // cadangan; nilai sebenarnya dari pengaturan (nominal_visit)
   var PT_MAX_MB = 8;
   var PT_REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var PT_KT_SELECT = 'id,mapel,fee_mengajar,uang_transport,durasi_menit,unit_id,units(nama_unit),kontrak_siswa(id,siswa(id,nama,jenjang,kelas,sekolah)),jadwal(id,hari,jam_mulai,jam_selesai)';
+  var PT_KT_SELECT = 'id,mapel,fee_mengajar,uang_transport,durasi_menit,unit_id,units(nama_unit,jenis),kontrak_siswa(id,siswa(id,nama,jenjang,kelas,sekolah)),jadwal(id,hari,jam_mulai,jam_selesai)';
   var PT_PRES_SELECT = 'id,kontrak_tutor_id,tanggal,jam,status,jenis,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,catatan_approval,terlambat,denda,nominal_dibayar,tanggal_input_pertama,approved_at,metode_input,pdf_url,' +
-    'kontrak_tutor(id,mapel,fee_mengajar,uang_transport,durasi_menit,units(nama_unit),kontrak_siswa(siswa(nama,jenjang,kelas)))';
+    'kontrak_tutor(id,mapel,fee_mengajar,uang_transport,durasi_menit,units(nama_unit,jenis),kontrak_siswa(siswa(nama,jenjang,kelas,sekolah)))';
 
   var pt = {
     tab: 'sesi', filter: 'tindakan', q: '',
@@ -1227,7 +1227,9 @@
   function ptLaporanPayload(it) {
     var p = it.p, kt = it.kt || {}, sw = ktSiswa(kt), s = genioGetSession();
     return {
-      id: p.id, siswaNama: sw.nama || '-', ortuNama: '-', tutorNama: (s && s.nama) || '-', mapel: kt.mapel || '-', unit: ktUnit(kt),
+      // Unit sekolah: rombel dengan nama sekolahnya (tutor tidak membaca data orang tua)
+      isRombel: !!(kt.units && kt.units.jenis === 'sekolah'),
+      id: p.id, siswaNama: sw.nama || '-', ortuNama: (kt.units && kt.units.jenis === 'sekolah' && sw.sekolah) || '-', tutorNama: (s && s.nama) || '-', mapel: kt.mapel || '-', unit: ktUnit(kt),
       tanggal: tglPendek(p.tanggal) + ' ' + parseIso(p.tanggal).getFullYear(), tanggalRaw: p.tanggal,
       jam: waktuTampil(p.jam, kt.durasi_menit), durasi: kt.durasi_menit ? kt.durasi_menit + ' Menit' : '-',
       status: p.status, materiTeks: p.materi_teks || '', materiLink: p.materi_link || '', catatanPembelajaranUrl: p.catatan_pembelajaran_url || ''

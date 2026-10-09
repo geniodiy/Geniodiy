@@ -1929,7 +1929,7 @@
   }
 
   var PS_EMBED = 'id,jenis,invoice_id,invoice:invoice!presensi_invoice_id_fkey(status,urutan,tanggal_lunas),tanggal,jam,materi_teks,materi_link,foto_url,catatan_pembelajaran_url,status,catatan_approval,kontrak_tutor_id,nominal_dibayar,terlambat,unit_id,metode_input,pdf_url,' +
-    'kontrak_tutor(mapel,fee_mengajar,uang_transport,tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url),kontrak_siswa(siswa(nama,orangtua(nama))))';
+    'kontrak_tutor(mapel,fee_mengajar,uang_transport,tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url),kontrak_siswa(siswa(nama,orangtua(nama,pic_nama))))';
 
   // Nominal denda satu presensi terlambat (persen dari fee mengajar kontrak tutor).
   // Pengajuan visit (jenis dipilih tutor). Approver hanya menerima atau menolak; visit yang diterima berstatus 'visit'.
@@ -2309,6 +2309,10 @@
   async function psGenerateAndSaveLaporanPdf(row, targetStatus) {
     var payload = psBuildLaporanPayload(row, targetStatus);
     payload.identitas = await genioDocIdentity();
+    // Unit sekolah: laporan menulis Rombel dan Sekolah (dengan PIC)
+    var unitJenis = await genioUnitJenisMap();
+    payload.isRombel = unitJenis[row.unit_id] === 'sekolah';
+    payload.picNama = ((((row.kontrak_tutor || {}).kontrak_siswa || {}).siswa || {}).orangtua || {}).pic_nama || '';
     var s = genioGetSession();
 
     var pdfUrl = await new Promise(function (resolve, reject) {
@@ -4032,7 +4036,7 @@
      atau lampiran file. Tanda terkirim disimpan di tabel laporan_kirim saat tombol kirim ditekan dan bisa dibatalkan. */
   var KL_ROLES = ['kepala_unit', 'manajer', 'super_admin'];
   var KL_SELECT = 'id,jenis,status,tanggal,jam,materi_teks,materi_link,catatan_pembelajaran_url,catatan_approval,pdf_url,unit_id,kontrak_tutor_id,' +
-    'kontrak_tutor(mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama),kontrak_siswa(siswa(id,nama,unit_id,orangtua(id,nama,no_hp)))),' +
+    'kontrak_tutor(mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama),kontrak_siswa(siswa(id,nama,unit_id,orangtua(id,nama,no_hp,pic_nama)))),' +
     'laporan_kirim(id,dikirim_at,cara,mode,isi)';
   var KL_BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
   var KL_BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
@@ -4086,7 +4090,8 @@
   function klIsVisit(row) { return !!row && (row.jenis === 'visit' || row.status === 'visit'); }
   function klParts(row) {
     var kt = row.kontrak_tutor || {}, ks = kt.kontrak_siswa || {}, sw = ks.siswa || {};
-    return { kt: kt, sw: sw, o: sw.orangtua || null, tutor: (kt.users && kt.users.nama) || '-', mapel: kt.mapel || '-', siswa: sw.nama || 'Siswa' };
+    return { kt: kt, sw: sw, o: sw.orangtua || null, tutor: (kt.users && kt.users.nama) || '-', mapel: kt.mapel || '-', siswa: sw.nama || 'Siswa',
+      sekolah: (klState.unitJenis || {})[sw.unit_id || row.unit_id] === 'sekolah' };
   }
   function klWaktu(row) {
     var jam = row.jam ? row.jam.slice(0, 5).replace(':', '.') : '-';
@@ -4135,6 +4140,7 @@
       if (!klState.me) tasks.push(supaRest('users?id=eq.' + s.user_id + '&select=nama,jenis_kelamin', s.access_token).catch(function () { return []; }));
       if (s.role === 'kepala_unit' && typeof genioEnsureSessionProfile === 'function') tasks.push(genioEnsureSessionProfile());
       var res = await Promise.all(tasks);
+      klState.unitJenis = await genioUnitJenisMap();
       if (seq !== klState.seq) return;
       klState.rows = res[0] || [];
       if (!klState.me) klState.me = (res[1] && res[1][0]) || { nama: s.nama };
@@ -4161,7 +4167,8 @@
       var p = klParts(r), key = p.o ? p.o.id : 'siswa-' + (p.sw.id || r.id);
       var g = map[key];
       if (!g) {
-        g = map[key] = { key: key, ortu: p.o, nama: p.o ? (p.o.nama || 'Orang tua') : 'Orang tua ' + p.siswa, hp: p.o ? (p.o.no_hp || '') : '', siswa: [], rows: [] };
+        g = map[key] = { key: key, ortu: p.o, nama: p.o ? (p.o.nama || 'Orang tua') : 'Orang tua ' + p.siswa, hp: p.o ? (p.o.no_hp || '') : '', siswa: [], rows: [],
+          sekolah: p.sekolah, pic: (p.o && p.o.pic_nama) || '' };
         list.push(g);
       }
       if (g.siswa.indexOf(p.siswa) === -1) g.siswa.push(p.siswa);
@@ -4588,7 +4595,7 @@
     });
     var nVisit = items.filter(klIsVisit).length, nSesi = items.length - nVisit;
     return {
-      ortuNama: g.nama, siswaNama: order.join(', '), unit: psGetUnitName(items[0]),
+      ortuNama: g.nama, siswaNama: order.join(', '), unit: psGetUnitName(items[0]), isSekolah: !!g.sekolah, picNama: g.pic || '',
       periodeLabel: klPeriodeText(dates[0], dates[dates.length - 1]).replace(/^\w+, /, ''),
       tanggalMulai: dates[0], tanggalSelesai: dates[dates.length - 1], rekapKey: key,
       jumlahLabel: [nSesi ? nSesi + ' pertemuan' : '', nVisit ? nVisit + ' visit' : ''].filter(Boolean).join(', '),
@@ -4625,29 +4632,31 @@
     var sorted = items.slice().sort(function (a, b) { return (a.tanggal + (a.jam || '')).localeCompare(b.tanggal + (b.jam || '')); });
     var names = klUniq(sorted.map(function (r) { return klParts(r).siswa; }));
     var siswa = klJoinNames(names), multi = names.length > 1;
+    // Unit sekolah: sapa PIC sekolah, dan sebut "rombel" sebelum nama rombel
+    var rb = g.sekolah ? 'rombel ' : '';
     var a = sorted[0].tanggal, b = sorted[sorted.length - 1].tanggal;
     var waktu = a === b ? 'hari *' + klPeriodeText(a, b) + '*' : 'periode *' + klPeriodeText(a, b) + '*';
     var nVisit = sorted.filter(klIsVisit).length, nSesi = sorted.length - nVisit;
     var jumlah = [nSesi ? nSesi + ' pertemuan' : '', nVisit ? nVisit + ' visit' : ''].filter(Boolean).join(' dan ');
     var hasLinks = sorted.some(function (r) { return !klIsVisit(r) && (r.materi_link || r.catatan_pembelajaran_url); });
     var terbaru = !single && !klSend.incl && g.rows.some(klSent);
-    var L = [klSalam() + ' ' + klSapaOrtu(g.nama) + ',', ''];
+    var L = [klSalam() + ' ' + (g.sekolah ? (g.pic ? klSapaOrtu(g.pic) : 'Bapak/Ibu') + (g.pic ? '' : ' ' + g.nama) : klSapaOrtu(g.nama)) + ',', ''];
     var where = mode === 'link' ? 'di dalam PDF laporan tersebut.' : 'di dalam PDF laporan terlampir.';
     var listed = false;
     if (single) {
       var r0 = sorted[0], p0 = klParts(r0);
-      var desc = '*' + p0.siswa + '* hari *' + klPeriodeText(r0.tanggal, r0.tanggal) + '* (' + p0.mapel + ' bersama ' + p0.tutor + ')';
+      var desc = rb + '*' + p0.siswa + '* hari *' + klPeriodeText(r0.tanggal, r0.tanggal) + '* (' + p0.mapel + ' bersama ' + p0.tutor + ')';
       if (mode === 'link') { L.push('Berikut laporan belajar ' + desc + ':'); L.push(files[0].url); }
       else L.push('Terlampir laporan belajar ' + desc + '.');
     } else if (isi === 'rekap') {
       var jenis = terbaru ? 'laporan belajar terbaru' : 'rekap laporan belajar';
-      if (mode === 'link') { L.push('Berikut ' + jenis + ' *' + siswa + '* ' + waktu + ' (' + jumlah + '):'); L.push(files[0].url); }
-      else L.push('Terlampir ' + jenis + ' *' + siswa + '* ' + waktu + ' (' + jumlah + ').');
+      if (mode === 'link') { L.push('Berikut ' + jenis + ' ' + rb + '*' + siswa + '* ' + waktu + ' (' + jumlah + '):'); L.push(files[0].url); }
+      else L.push('Terlampir ' + jenis + ' ' + rb + '*' + siswa + '* ' + waktu + ' (' + jumlah + ').');
     } else {
       where = mode === 'link' ? 'di dalam setiap PDF laporan.' : 'di dalam setiap PDF laporan terlampir.';
       if (mode === 'link') {
         listed = true;
-        L.push('Berikut laporan belajar ' + (terbaru ? 'terbaru ' : '') + '*' + siswa + '* ' + waktu + ':', '');
+        L.push('Berikut laporan belajar ' + (terbaru ? 'terbaru ' : '') + rb + '*' + siswa + '* ' + waktu + ':', '');
         var fi = 0;
         sorted.forEach(function (r, i) {
           var p = klParts(r), d = klD(r.tanggal), tgl = KL_HARI[d.getDay()] + ' ' + d.getDate() + ' ' + KL_BLN[d.getMonth()];
@@ -4655,7 +4664,7 @@
           else { L.push((i + 1) + '. ' + p.siswa + ', ' + tgl + ', ' + p.mapel); L.push(files[fi++].url); }
         });
       } else {
-        L.push('Terlampir ' + files.length + ' file laporan belajar ' + (terbaru ? 'terbaru ' : '') + '*' + siswa + '* ' + waktu + '.');
+        L.push('Terlampir ' + files.length + ' file laporan belajar ' + (terbaru ? 'terbaru ' : '') + rb + '*' + siswa + '* ' + waktu + '.');
       }
     }
     if (hasLinks) { L.push(''); L.push('Tautan materi dan file catatan pembelajaran (papan tulis) dari tutor dapat dibuka langsung ' + where); }

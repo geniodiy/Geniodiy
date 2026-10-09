@@ -69,6 +69,9 @@
   .ku-status i{width:6px; height:6px; border-radius:50%;}
   .ku-status.is-on{background:#E9F7EF; color:#1E8E5A;} .ku-status.is-on i{background:#1E8E5A;}
   .ku-status.is-off{background:var(--surface); color:var(--ink-soft);} .ku-status.is-off i{background:#A9ADC0;}
+  .ku-jenis{display:inline-flex; align-items:center; gap:4px; font-size:9.5px; font-weight:600; padding:2px 7px; border-radius:999px; white-space:nowrap; vertical-align:1px; margin-left:6px; background:var(--blue-tint); color:var(--blue);}
+  .ku-jenis.is-sekolah{background:#FFF4E0; color:#A15C00;}
+  .ku-ico.is-sekolah{background:#FFF4E0 !important; color:#B86E00 !important;}
   .ku-share{display:flex; align-items:center; gap:8px; min-width:0;}
   .ku-share .t{flex:1; height:6px; border-radius:99px; background:var(--surface); overflow:hidden; min-width:40px;}
   .ku-share .t i{display:block; height:100%; border-radius:99px; background:var(--blue); transform-origin:left center;}
@@ -191,8 +194,14 @@
           <input type="hidden" id="ku-id">
           <div class="gx-step-title"><span class="gx-step">1</span>Nama unit</div>
           <div class="gx-row"><label for="ku-nama">Nama unit <em class="gx-req">wajib</em></label><input type="text" id="ku-nama" required placeholder="mis. Condongcatur"></div>
+          <div class="gx-step-title"><span class="gx-step">2</span>Jenis unit</div>
+          <div class="gx-seg" id="ku-jenisSeg">
+            <label class="ku-jenis-opt" data-val="privat"><input type="radio" name="ku-jenis" value="privat">Privat</label>
+            <label class="ku-jenis-opt" data-val="sekolah"><input type="radio" name="ku-jenis" value="sekolah">Sekolah</label>
+          </div>
+          <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span id="ku-jenisNote">Les privat: orang tua dan siswa seperti biasa.</span></div>
           <div id="ku-statusField" hidden>
-            <div class="gx-step-title"><span class="gx-step">2</span>Status</div>
+            <div class="gx-step-title"><span class="gx-step">3</span>Status</div>
             <div class="gx-seg">
               <label class="radio-opt" data-val="aktif"><input type="radio" name="ku-status" value="aktif"><i></i>Aktif</label>
               <label class="radio-opt" data-val="nonaktif"><input type="radio" name="ku-status" value="nonaktif"><i></i>Nonaktif</label>
@@ -332,6 +341,12 @@
       : '<span class="ku-status is-off"><i></i>Nonaktif</span>';
   }
 
+  function kuJenisTag(u) {
+    return u.jenis === 'sekolah'
+      ? '<span class="ku-jenis is-sekolah"><i class="ph ph-graduation-cap" aria-hidden="true"></i>Sekolah</span>'
+      : '<span class="ku-jenis">Privat</span>';
+  }
+
   function kuShare(u, total, i) {
     var pct = total ? Math.round(u._siswaCount / total * 100) : 0;
     return '<div class="ku-share"><span class="t"><i style="width:' + Math.max(pct ? 3 : 0, pct) + '%; --i:' + Math.min(i, 12) + ';"></i></span><span>' + pct + '%</span></div>';
@@ -357,11 +372,12 @@
     if (kuViewMode === 'table') {
       listEl.classList.add('ku-view-table');
       listEl.innerHTML = '<div class="ku-table-card"><div class="ku-table-wrap"><table class="ku-table"><thead><tr>' +
-          '<th class="ku-stk ku-stk-no">No</th><th class="ku-stk ku-stk-nama">Unit</th><th>Status</th><th style="text-align:right;">Siswa aktif</th><th class="ku-col-share">Porsi siswa</th><th style="text-align:right;">Aksi</th>' +
+          '<th class="ku-stk ku-stk-no">No</th><th class="ku-stk ku-stk-nama">Unit</th><th>Jenis</th><th>Status</th><th style="text-align:right;">Siswa aktif</th><th class="ku-col-share">Porsi siswa</th><th style="text-align:right;">Aksi</th>' +
         '</tr></thead><tbody>' + rows.map(function (u, idx) {
           return '<tr>' +
             '<td class="ku-stk ku-stk-no">' + (idx + 1) + '</td>' +
             '<td class="ku-stk ku-stk-nama" title="' + kuEscape(u.nama_unit) + '">' + kuEscape(u.nama_unit) + '</td>' +
+            '<td>' + kuJenisTag(u).replace('margin-left:6px', '') + '</td>' +
             '<td>' + kuStatusPill(u.status === 'aktif') + '</td>' +
             '<td class="ku-num">' + u._siswaCount + '</td>' +
             '<td class="ku-col-share">' + kuShare(u, total, idx) + '</td>' +
@@ -374,8 +390,8 @@
         var isAktif = u.status === 'aktif';
         return '<div class="ku-card' + (isAktif ? '' : ' is-off') + '">' +
           '<div class="kuc-head">' +
-            '<span class="ku-ico"><i class="ph ph-buildings" aria-hidden="true"></i></span>' +
-            '<div class="kuc-who"><h4 title="' + kuEscape(u.nama_unit) + '">' + kuEscape(u.nama_unit) + '</h4><p><b>' + u._siswaCount + '</b> siswa aktif</p></div>' +
+            '<span class="ku-ico' + (u.jenis === 'sekolah' ? ' is-sekolah' : '') + '"><i class="ph ph-buildings" aria-hidden="true"></i></span>' +
+            '<div class="kuc-who"><h4 title="' + kuEscape(u.nama_unit) + '">' + kuEscape(u.nama_unit) + kuJenisTag(u) + '</h4><p><b>' + u._siswaCount + '</b> ' + (u.jenis === 'sekolah' ? 'rombel' : 'siswa') + ' aktif</p></div>' +
             kuStatusPill(isAktif) +
           '</div>' +
           '<div class="kuc-share"><div class="kuc-share-l">Porsi dari seluruh siswa aktif</div>' + kuShare(u, total, idx) + '</div>' +
@@ -431,14 +447,32 @@
     });
   }
 
+  var KU_JENIS_NOTE = {
+    privat: 'Les privat: orang tua dan siswa seperti biasa.',
+    sekolah: 'Unit sekolah: orang tua diganti sekolah (dengan PIC) dan siswa diganti rombel. Tagihan dikirim ke sekolah, tetap per pertemuan.'
+  };
+  function kuSetJenis(val) {
+    document.querySelectorAll('#ku-form .ku-jenis-opt').forEach(function (o) {
+      var on = o.dataset.val === val;
+      o.classList.toggle('checked', on);
+      o.classList.toggle('is-on', on);
+      o.querySelector('input').checked = on;
+    });
+    document.getElementById('ku-jenisNote').textContent = KU_JENIS_NOTE[val] || KU_JENIS_NOTE.privat;
+  }
+  document.querySelectorAll('#ku-form .ku-jenis-opt').forEach(function (opt) {
+    opt.addEventListener('click', function (e) { e.preventDefault(); kuSetJenis(opt.dataset.val); });
+  });
+
   function kuOpenModal(unit) {
     kuHideError();
     kuForm.reset();
     kuSetStatus(null);
+    kuSetJenis(unit && unit.jenis === 'sekolah' ? 'sekolah' : 'privat');
 
     if (unit) {
       document.getElementById('ku-modalTitle').textContent = 'Edit unit';
-      document.getElementById('ku-modalSub').textContent = unit._siswaCount + ' siswa aktif di unit ini.';
+      document.getElementById('ku-modalSub').textContent = unit._siswaCount + (unit.jenis === 'sekolah' ? ' rombel' : ' siswa') + ' aktif di unit ini.';
       document.getElementById('ku-id').value = unit.id;
       document.getElementById('ku-nama').value = unit.nama_unit;
       document.getElementById('ku-statusField').hidden = false;
@@ -477,27 +511,30 @@
     var id = document.getElementById('ku-id').value;
     var nama = document.getElementById('ku-nama').value.trim();
     if (!nama) { kuShowError('Nama unit wajib diisi.'); return; }
+    var jenisChecked = document.querySelector('#ku-form input[name="ku-jenis"]:checked');
+    var jenis = jenisChecked ? jenisChecked.value : 'privat';
 
     var saveBtn = document.getElementById('ku-saveBtn');
     saveBtn.disabled = true;
     saveBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
 
     try {
-      var s = genioGetSession();
+      var s = genioSessionOrLogin();
 
       if (id) {
         var statusChecked = document.querySelector('#ku-form input[name="ku-status"]:checked');
         await supaRest('units?id=eq.' + id, s.access_token, {
           method: 'PATCH',
           headers: { 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ nama_unit: nama, status: statusChecked ? statusChecked.value : 'aktif' })
+          body: JSON.stringify({ nama_unit: nama, jenis: jenis, status: statusChecked ? statusChecked.value : 'aktif' })
         });
         genioToast('Unit berhasil diperbarui', 'success');
+        if (typeof genioUnitJenisReset === 'function') genioUnitJenisReset();
       } else {
         await supaRest('units', s.access_token, {
           method: 'POST',
           headers: { 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ nama_unit: nama, status: 'aktif' })
+          body: JSON.stringify({ nama_unit: nama, jenis: jenis, status: 'aktif' })
         });
         genioToast('Unit berhasil ditambahkan', 'success');
       }

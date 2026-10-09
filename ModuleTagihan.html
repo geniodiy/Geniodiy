@@ -566,13 +566,13 @@
       }
 
       // Query presensi yang diterima pada periode aktif
-      var presensiUrl = 'presensi?select=id,tanggal,jam,status,jenis,invoice_id,kontrak_tutor!inner(id,mapel,kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)))' +
+      var presensiUrl = 'presensi?select=id,tanggal,jam,status,jenis,invoice_id,kontrak_tutor!inner(id,mapel,kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat,pic_nama)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit,jenis)))' +
         '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end +
         '&status=in.(diterima,visit)' + unitFilterUrl;
 
       // Query invoice yang sudah tercatat di database
       var invoiceUrl = 'invoice?select=id,kontrak_siswa_id,unit_id,periode,urutan,jumlah_pertemuan,harga_satuan,nominal,status,tanggal_lunas,pdf_url,' +
-        'kontrak_siswa:kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit)),' +
+        'kontrak_siswa:kontrak_siswa!inner(id,unit_id,harga,siswa:siswa!inner(id,nama,kelas,sekolah,ortu:orangtua(id,nama,no_hp,alamat,pic_nama)),paket_belajar:paket_belajar!inner(id,nama_paket),units:units(id,nama_unit,jenis)),' +
         'receipt:receipt(id,tanggal_bayar,pdf_url)' +
         '&periode=eq.' + tgState.periode + unitFilterUrl;
 
@@ -910,12 +910,16 @@
       var ortuHp = ortu.no_hp || ortu.nomor_telepon || '';
       var ortuAlamat = ortu.alamat || '';
       var unitNama = (r.units && r.units.nama_unit) || (ks.units && ks.units.nama_unit) || '-';
+      var unitJenis = (r.units && r.units.jenis) || (ks.units && ks.units.jenis) || 'privat';
 
       if (!map[ortuId]) {
         map[ortuId] = {
           key: ortuId,
           ortuId: ortuId,
           ortuNama: ortuNama,
+          // Unit sekolah: tagihan ke sekolah (u.p. PIC), anaknya adalah rombel
+          isSekolah: unitJenis === 'sekolah',
+          picNama: ortu.pic_nama || '',
           ortuHp: ortuHp,
           ortuAlamat: ortuAlamat,
           unitNama: unitNama,
@@ -1216,7 +1220,7 @@
     return '<div class="tg-card-item" data-key="' + tgEscape(g.key) + '">' +
       '<div class="tgc-head">' +
         '<div class="tgc-av">' + tgEscape(tgInitials(g.ortuNama)) + '</div>' +
-        '<div class="tgc-who"><h4>' + tgEscape(g.ortuNama) + '</h4><p>' + tgEscape(g.unitNama) + ' · ' + g.children.length + ' siswa</p>' + (tgGroupTambahan(g) ? tgTambahanTag() : '') + '</div>' +
+        '<div class="tgc-who"><h4>' + tgEscape(g.ortuNama) + '</h4><p>' + tgEscape(g.unitNama) + ' · ' + g.children.length + (g.isSekolah ? ' rombel' : ' siswa') + '</p>' + (tgGroupTambahan(g) ? tgTambahanTag() : '') + '</div>' +
         tgStatusPill(isLunas) +
       '</div>' +
       '<button type="button" class="tgc-toggle" data-key="' + tgEscape(g.key) + '" aria-expanded="' + isOpen + '">' +
@@ -1272,11 +1276,21 @@
   }
 
   // =========================================================
+  // Sapaan PIC sekolah: "Ibu Rina" tetap, nama tanpa sapaan diberi "Bapak/Ibu"
+  function tgSapa(nama) {
+    var n = String(nama || '').trim();
+    if (/^(bpk\.?|bapak|pak)\s+/i.test(n)) return n.replace(/^(bpk\.?|bapak|pak)\s+/i, 'Bapak ');
+    if (/^(ibu|bu)\s+/i.test(n)) return n.replace(/^(ibu|bu)\s+/i, 'Ibu ');
+    return 'Bapak/Ibu ' + n;
+  }
+
   // WHATSAPP BILLING TEMPLATE (CONSOLIDATED PER ORANG TUA)
   // =========================================================
 
   function tgBuildWaLink(group, cleanHp) {
     var isLunas = group.status === 'lunas';
+    var yth = group.isSekolah ? (group.picNama ? 'Yth. ' + tgSapa(group.picNama) + ' (' + group.ortuNama + ')' : 'Yth. Bapak/Ibu ' + group.ortuNama) : 'Yth. Bapak/Ibu ' + group.ortuNama;
+    var rincian = group.isSekolah ? '• Rincian Rombel:\n' : '• Rincian Siswa:\n';
     var childrenLines = group.children.map(function (c) {
       var tgl = tgTglList(c.pres);
       return '• ' + c.nama + ' (' + c.sesi + ' Sesi' + (tgl ? ', ' + tgl : '') + ')' + (c.pakets.length ? ' - ' + c.pakets.join(', ') : '') + ': ' + tgFormatRp(c.nominal);
@@ -1285,12 +1299,12 @@
 
     var msg = '';
     if (isLunas) {
-      msg = 'Yth. Bapak/Ibu ' + group.ortuNama + ',\n\n' +
+      msg = yth + ',\n\n' +
             'Terima kasih, pembayaran bimbingan belajar Genio Institute telah kami terima dengan status *LUNAS*:\n' +
             '━━━━━━━━━━━━━━━━━━━━\n' +
             '• Periode: ' + tgFormatPeriodeLabel(tgState.periode) + '\n' +
             '• Unit: ' + group.unitNama + '\n' +
-            '• Rincian Siswa:\n' + childrenLines + '\n' +
+            rincian + childrenLines + '\n' +
             '• Total Sesi: ' + group.totalSesi + ' Pertemuan\n' +
             '• *Total Diterima: ' + tgFormatRp(group.totalNominal) + '*\n' +
             '• Tanggal Bayar: ' + tgFormatTgl(group.tanggalLunas) + '\n' +
@@ -1299,13 +1313,13 @@
             'Tanda terima kuitansi resmi ini diterbitkan otomatis oleh sistem Genio Institute.\n\n' +
             'Terima kasih atas kepercayaan Bapak/Ibu kepada kami.';
     } else {
-      msg = 'Yth. Bapak/Ibu ' + group.ortuNama + ',\n\n' +
+      msg = yth + ',\n\n' +
             (tambahan
               ? 'Berikut *tagihan tambahan* bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*, untuk pertemuan setelah tagihan sebelumnya lunas:\n'
               : 'Berikut rincian tagihan bimbingan belajar Genio Institute periode *' + tgFormatPeriodeLabel(tgState.periode) + '*:\n') +
             '━━━━━━━━━━━━━━━━━━━━\n' +
             '• Unit Cabang: ' + group.unitNama + '\n' +
-            '• Rincian Siswa:\n' + childrenLines + '\n' +
+            rincian + childrenLines + '\n' +
             '• Total Sesi: ' + group.totalSesi + ' Pertemuan\n' +
             '• *Total Tagihan: ' + tgFormatRp(group.totalNominal) + '*\n' +
             '• Status: *MENUNGGU PEMBAYARAN*\n' +
@@ -1552,7 +1566,7 @@
           sesi: c.sesi,
           hargaSatuan: hgSatuan,
           nominal: c.nominal,
-          subtext: [c.kelas ? 'Kelas ' + c.kelas : '', c.sekolah, tgl ? 'Pertemuan ' + tgl : ''].filter(Boolean).join(' • '),
+          subtext: [c.kelas ? 'Kelas ' + c.kelas : '', g.isSekolah ? '' : c.sekolah, tgl ? 'Pertemuan ' + tgl : ''].filter(Boolean).join(' • '),
           // Satu baris per pertemuan di PDF (gaya nota)
           pertemuan: (c.pres || []).slice().sort(function (a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); }).map(function (p) {
             return { tanggal: p.tanggal, mapel: (p.kontrak_tutor && p.kontrak_tutor.mapel) || '', visit: p.status === 'visit' };
@@ -1571,6 +1585,8 @@
         tambahanNote: tgTambahanNote(g),
         ortuNama: g.ortuNama,
         ortuHp: g.ortuHp,
+        isSekolah: !!g.isSekolah,
+        picNama: g.picNama || '',
         unitNama: g.unitNama,
         periode: tgState.periode,
         periodeLabel: tgFormatPeriodeLabel(tgState.periode),
