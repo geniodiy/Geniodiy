@@ -689,13 +689,12 @@ function buildLaporanBelajarHtml_(d) {
     '<div class="sec">' + (st === 'visit' ? 'Keterangan visit' : 'Ringkasan pembelajaran') + '</div>' +
     '<div class="box" style="white-space:pre-wrap; line-height:1.65;">' + (d.materiTeks ? docEsc_(d.materiTeks) : '<span class="muted"><i>Tidak ada ringkasan tertulis.</i></span>') + '</div>' +
     (links.length ? '<div class="sec">Tautan dan catatan</div><table class="kv">' + links.join('') + '</table>' : '') +
-    '<div class="keep"><table style="margin-top:8mm;"><tr>' +
-      '<td style="width:50%; vertical-align:top;"><div class="sign"><div class="muted">Tutor pengajar,</div><div>&nbsp;</div><div style="height:18mm;"></div>' +
-        '<div class="sign-name">' + docEsc_(d.tutorNama || '-') + '</div></div></td>' +
+    // Penanda tangan di kanan, catatan dan kontak di kiri (tanpa tanda tangan tutor), sama dengan rekap
+    '<div class="keep" style="margin-top:7mm; border-top:1px solid ' + DOC_LINE + '; padding-top:3mm;"><table><tr>' +
+      '<td style="width:55%; vertical-align:bottom; font-size:8pt; padding-right:6mm;"><span class="muted">Laporan ini dibuat oleh sistem Genio Institute pada ' + docTglPanjang_() + '. Tautan materi dan catatan pembelajaran dapat dibuka langsung dari dokumen ini.</span>' +
+        '<br><span class="muted">Hubungi kami: ' + docEsc_(idn.kontak_admin) + '</span>' + (idn.tagline ? '<br><span class="tag">' + docEsc_(idn.tagline) + '</span>' : '') + '</td>' +
       '<td style="vertical-align:top;">' + docSign_(idn) + '</td>' +
-    '</tr></table>' +
-    '<div class="ft"><span class="muted">Laporan ini dibuat oleh sistem Genio Institute pada ' + docTglPanjang_() + '. Tautan materi dan catatan pembelajaran dapat dibuka langsung dari dokumen ini.</span>' +
-      '<br><span class="muted">Hubungi kami: ' + docEsc_(idn.kontak_admin) + '</span>' + (idn.tagline ? '<br><span class="tag">' + docEsc_(idn.tagline) + '</span>' : '') + '</div>' + '</div>';
+    '</tr></table></div>';
   return docPage_('Laporan belajar - ' + (d.siswaNama || 'Siswa'), false, html);
 }
 
