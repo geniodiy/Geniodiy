@@ -106,12 +106,23 @@ function uploadOperasionalFile(base64Data, fileName, mimeType) {
 }
 
 /**
- * Bukti foto pemasukan lain (wajib di form Pemasukan lain), folder "Genio Institute - Uploads/Bukti Pemasukan Lain".
+ * Folder induk untuk unggahan baru (cap + tanda tangan dan bukti pemasukan lain), pilihan owner 9 Okt 2026.
+ * Subfolder dibuat otomatis di dalamnya. Kosongkan untuk kembali ke "Genio Institute - Uploads" di root Drive.
+ */
+var UPLOADS_FOLDER_ID = '1dntccwxbd_CI-CRnpql82mKkEsWz1V1y';
+function getUploadsFolder_() {
+  if (UPLOADS_FOLDER_ID) {
+    try { return DriveApp.getFolderById(UPLOADS_FOLDER_ID); } catch (e) { /* folder tidak bisa dibuka: pakai bawaan */ }
+  }
+  return getOrCreateDriveFolder_(DriveApp.getRootFolder(), 'Genio Institute - Uploads');
+}
+
+/**
+ * Bukti foto pemasukan lain (wajib di form Pemasukan lain), subfolder "Bukti Pemasukan Lain" di folder unggahan.
  */
 function uploadPemasukanLainFile(base64Data, fileName, mimeType) {
   try {
-    var rootFolder = getOrCreateDriveFolder_(DriveApp.getRootFolder(), 'Genio Institute - Uploads');
-    var subfolder = getOrCreateDriveFolder_(rootFolder, 'Bukti Pemasukan Lain');
+    var subfolder = getOrCreateDriveFolder_(getUploadsFolder_(), 'Bukti Pemasukan Lain');
     var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), mimeType, fileName);
     var file = subfolder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
@@ -157,8 +168,7 @@ function uploadProfilFile(base64Data, fileName, mimeType) {
 function uploadDokumenTtd(base64Data, fileName, mimeType, oldFileId) {
   try {
     if (!/^image\/(png|jpeg)$/.test(mimeType || '')) return { success: false, error: 'Gunakan gambar PNG atau JPG' };
-    var rootFolder = getOrCreateDriveFolder_(DriveApp.getRootFolder(), 'Genio Institute - Uploads');
-    var folder = getOrCreateDriveFolder_(rootFolder, 'Identitas Dokumen');
+    var folder = getOrCreateDriveFolder_(getUploadsFolder_(), 'Cap dan Tanda Tangan');
     var file = folder.createFile(Utilities.newBlob(Utilities.base64Decode(base64Data), mimeType, fileName || 'cap-tanda-tangan.png'));
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     if (oldFileId && oldFileId !== file.getId()) {
