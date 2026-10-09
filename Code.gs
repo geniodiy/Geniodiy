@@ -292,7 +292,9 @@ function generateInvoicePdf(invoiceData) {
     var isLunas = invoiceData.status === 'lunas';
     var prefix = isLunas ? 'Kuitansi_' : 'Invoice_';
     var cleanPeriode = (invoiceData.periode || 'Periode').replace(/[^a-zA-Z0-9_\-]/g, '_');
-    var fileName = prefix + cleanOrtu + '_' + cleanPeriode + '.pdf';
+    // Tagihan tambahan diberi akhiran sendiri supaya tidak menimpa (membuang) PDF invoice/kuitansi pertama orang tua yang sama
+    var tambahanSuffix = (invoiceData.tambahan && invoiceData.docNo) ? '_Tambahan-' + String(invoiceData.docNo).split('-').pop() : '';
+    var fileName = prefix + cleanOrtu + '_' + cleanPeriode + tambahanSuffix + '.pdf';
 
     try {
       var existingFiles = subfolder.getFilesByName(fileName);
