@@ -463,7 +463,8 @@
   .pc2-lampiran{animation:pc2In .25s ease both;}
   @keyframes pc2In{from{opacity:0; transform:translateY(-4px);}to{opacity:1; transform:none;}}
   @media (prefers-reduced-motion: reduce){ .pc2-lampiran{animation:none;} }
-  .pc2-actions{display:grid; grid-template-columns:1fr 1fr 1.3fr; gap:6px; margin-top:12px;}
+  .pc2-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:12px;}
+  .pc2-actions .pc2-btn{flex:none; min-width:112px; padding:0 18px !important;}
   .pc2-btn{height:34px !important; border-radius:9px !important; font-family:var(--font); font-size:11px !important; font-weight:600 !important; gap:5px !important; padding:0 6px !important;}
   .pc2-btn i{font-size:13px;}
   .pc2-btn.is-tolak{background:#fff; color:var(--red); border:1px solid rgba(212,7,15,.22) !important;}
@@ -2050,6 +2051,7 @@
   function psOpenStatusDropdown(btn, id, currentStatus) {
     var menu = document.getElementById('ps-statusDropdownMenu');
     if (!menu) return;
+    if (psState.role === 'hrd') return; // HRD hanya melihat presensi, tidak menyetujui atau mengubah status
 
     if (!menu.hidden && psActiveDropdownTarget && psActiveDropdownTarget.id === id) {
       psCloseStatusDropdown();

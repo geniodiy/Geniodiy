@@ -629,6 +629,9 @@
   /* HRD: presensi hanya lihat; tidak menghapus kontrak tutor dan jadwal */
   .role-hrd .pc2-actions, .role-hrd #ps-openWakilBtn, .role-hrd .ps-edit-status-btn, .role-hrd .ps-delete-btn,
   .role-hrd .ktr-del-tutor-btn, .role-hrd .jdw-del-btn{display:none !important;}
+  /* HRD: status presensi di tabel tampil sebagai label biasa (tanpa panah, tidak bisa diklik untuk diubah) */
+  .role-hrd .ps-table-status-btn{pointer-events:none; cursor:default;}
+  .role-hrd .ps-table-status-btn .ps-status-arrow{display:none;}
 
   /* ===== Avatar pengguna: foto profil kalau ada, huruf inisial kalau belum ===== */
   .genio-av-img{width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block; flex:none;}
