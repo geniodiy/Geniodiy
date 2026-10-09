@@ -4165,6 +4165,9 @@
     document.getElementById('kl-title').textContent = klRangeTitle();
     document.getElementById('kl-sub').textContent = r.from ? klPeriodeText(r.from, r.to).replace(/^(\w+), /, '$1 ') + ' · per orang tua' : '-';
     if (!klState.loaded) return;
+    // Highlight halaman (ModuleKirimLaporan.html): ikut rentang chip yang dipilih
+    if (window.genioKlHero) window.genioKlHero({ groups: groups, today: klIso(klNowJakarta().date), animate: !!animate,
+      pill: klState.range === 'custom' && r.from ? klShortRange(r.from, r.to) : ({ today: 'Hari ini', yesterday: 'Kemarin', week: 'Minggu ini', month: 'Bulan ini' })[klState.range] || '' });
     var f = klState.filter;
     var shown = groups.filter(function (g) { return f === 'semua' ? true : f === 'belum' ? g.belum > 0 : g.belum === 0; });
     var asTable = klState.view === 'table';

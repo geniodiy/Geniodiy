@@ -7,6 +7,44 @@
     .module-panel[data-module="kirim-laporan"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
   }
 
+  /* ===== Highlight (opsi A): laporan belum dikirim + bar sudah vs belum | lama menunggu ===== */
+  .klh{position:relative; overflow:hidden; border-radius:18px; color:#fff; margin-bottom:14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,300px); background:linear-gradient(135deg, #070833 0%, #101075 55%, var(--blue) 100%);}
+  .klh-main{position:relative; isolation:isolate; padding:16px 20px; min-width:0;}
+  .klh-main::before{content:''; position:absolute; z-index:-1; left:-70px; top:-150px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(255,196,107,.14), rgba(255,196,107,0) 70%);}
+  .klh-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .klh-lbl{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:rgba(255,255,255,.72); white-space:nowrap;}
+  .klh-lbl i{width:6px; height:6px; border-radius:50%; background:#FFC46B; box-shadow:0 0 0 4px rgba(255,196,107,.16);}
+  .klh.is-done .klh-lbl i{background:#7CF0C3; box-shadow:0 0 0 4px rgba(124,240,195,.16);}
+  .klh-pill{font-size:10px; font-weight:500; background:rgba(255,255,255,.12); padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .klh-hero{display:flex; align-items:baseline; gap:6px; margin-top:8px;}
+  .klh-num{font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.05; font-variant-numeric:tabular-nums;}
+  .klh-unit{font-size:12px; color:rgba(255,255,255,.65);}
+  .klh-sub{font-size:10.5px; color:rgba(255,255,255,.62); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .klh-sub em{font-style:normal; color:#FFC46B; font-weight:600;}
+  .klh-bar{display:flex; gap:2px; height:8px; border-radius:999px; overflow:hidden; margin-top:14px; background:rgba(255,255,255,.08);}
+  .klh-bar span{display:block; height:100%; transform-origin:left center;}
+  .klh-leg{display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:9px; font-size:10.5px; color:rgba(255,255,255,.75);}
+  .klh-leg span{display:inline-flex; align-items:center; gap:5px; white-space:nowrap;}
+  .klh-leg i{width:7px; height:7px; border-radius:2px; display:inline-block;}
+  .klh-leg b{color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .klh-side{background:rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.1); padding:14px 18px; display:flex; flex-direction:column; justify-content:center; gap:8px; min-width:0;}
+  #klh-age{display:flex; flex-direction:column; gap:10px;}
+  .klh-side h5{margin:0 0 2px; font-size:11px; font-weight:600; color:#fff;}
+  .klh-row{display:grid; grid-template-columns:72px minmax(0,1fr) 24px; gap:8px; align-items:center; font-size:10.5px; color:rgba(255,255,255,.75);}
+  .klh-row .tr{height:6px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden;}
+  .klh-row .tr i{display:block; height:100%; border-radius:999px; background:#FFC46B; transform-origin:left center;}
+  .klh-row.is-old .tr i{background:#FF9C94;}
+  .klh-row b{text-align:right; color:#fff; font-weight:700; font-variant-numeric:tabular-nums;}
+  .klh-row.is-zero b{color:rgba(255,255,255,.45);}
+  .klh.is-anim .klh-bar span, .klh.is-anim .klh-row .tr i{animation:klhGrow .8s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 70ms);}
+  @keyframes klhGrow{from{transform:scaleX(0);} to{transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .klh.is-anim .klh-bar span, .klh.is-anim .klh-row .tr i{animation:none;} }
+  @media (max-width:899px){
+    .klh{grid-template-columns:1fr;}
+    .klh-side{border-left:none; border-top:1px solid rgba(255,255,255,.1);}
+    .klh-num{font-size:28px;}
+  }
+
   /* ===== Kartu Home "Laporan untuk orang tua" (Style 3; Home kepala unit dan manajer), dibuat oleh genioKlCard ===== */
   .klc{background:#fff; border:1px solid var(--border); border-radius:14px; padding:16px; display:flex; flex-direction:column; min-width:0; box-sizing:border-box;}
   .klc-head{display:flex; align-items:center; gap:10px; min-width:0;}
@@ -46,6 +84,25 @@
   @media (min-width:900px){ .klc-list.is-two{grid-template-columns:repeat(2, minmax(0,1fr));} .klc-list.is-two .klc-row{border-top:1px solid var(--border);} }
 </style>
 
+  <!-- Highlight (opsi A): laporan belum dikirim di rentang chip, bar sudah vs belum, dan lama menunggu -->
+  <div class="klh" id="klh">
+    <div class="klh-main">
+      <div class="klh-top"><span class="klh-lbl"><i></i>Laporan belum dikirim</span><span class="klh-pill" id="klh-pill">Kemarin</span></div>
+      <div class="klh-hero"><span class="klh-num" id="klh-num">0</span><span class="klh-unit">laporan</span></div>
+      <div class="klh-sub" id="klh-sub">Memuat laporan...</div>
+      <div class="klh-bar" id="klh-bar" role="img" aria-label="Sudah dan belum dikirim"></div>
+      <div class="klh-leg">
+        <span><i style="background:#7CF0C3;"></i>Sudah dikirim <b id="klh-sudah">0</b></span>
+        <span><i style="background:#FFC46B;"></i>Belum dikirim <b id="klh-belum">0</b></span>
+        <span>Terkirim <b id="klh-pct">-</b></span>
+      </div>
+    </div>
+    <div class="klh-side">
+      <h5>Lama menunggu</h5>
+      <div id="klh-age"></div>
+    </div>
+  </div>
+
   <!-- Kirim laporan: laporan belajar yang sudah disetujui, dikelompokkan per orang tua -->
   <div id="kl-root">
     <div class="kl-tools">
@@ -78,6 +135,49 @@
   window.genioModuleHandlers['kirim-laporan'] = function () {
     if (typeof klAllowed === 'function' && klAllowed()) klLoad();
   };
+
+  /* ===== Highlight (opsi A), dipanggil klRender di ModulePresensi.html ===== */
+  (function () {
+    var AGE = [['Hari ini', 0, 0], ['Kemarin', 1, 1], ['2-3 hari', 2, 3], ['Lebih lama', 4, 99999]];
+    function days(today, iso) { return Math.round((new Date(today + 'T00:00:00') - new Date(String(iso).slice(0, 10) + 'T00:00:00')) / 86400000); }
+    function ago(n) { return n <= 0 ? 'hari ini' : n === 1 ? 'kemarin' : n + ' hari lalu'; }
+    window.genioKlHero = function (d) {
+      var root = document.getElementById('klh');
+      if (!root) return;
+      var api = window.genioKirimLaporan;
+      var belum = 0, sudah = 0, ortu = 0, buckets = [0, 0, 0, 0], oldest = null;
+      d.groups.forEach(function (g) {
+        belum += g.belum; sudah += g.sent;
+        if (g.belum) ortu++;
+        g.rows.forEach(function (r) {
+          if (api && api.sent(r)) return;
+          var n = Math.max(0, days(d.today, r.tanggal));
+          if (oldest === null || n > oldest) oldest = n;
+          for (var i = 0; i < AGE.length; i++) if (n >= AGE[i][1] && n <= AGE[i][2]) { buckets[i]++; break; }
+        });
+      });
+      var total = belum + sudah;
+      root.classList.toggle('is-done', !belum);
+      document.getElementById('klh-pill').textContent = d.pill || '';
+      var numEl = document.getElementById('klh-num');
+      if (d.animate && typeof homeRevealValue === 'function') homeRevealValue(numEl, String(belum)); else numEl.textContent = belum;
+      document.getElementById('klh-sub').innerHTML = belum
+        ? 'ke ' + ortu + ' orang tua · tertua dari <em>' + ago(oldest) + '</em>'
+        : total ? 'Semua laporan di rentang ini sudah dikirim' : 'Belum ada laporan yang disetujui di rentang ini';
+      document.getElementById('klh-bar').innerHTML = (sudah ? '<span style="flex:' + sudah + '; background:#7CF0C3; --i:0"></span>' : '') +
+        (belum ? '<span style="flex:' + belum + '; background:#FFC46B; --i:1"></span>' : '');
+      document.getElementById('klh-sudah').textContent = sudah;
+      document.getElementById('klh-belum').textContent = belum;
+      document.getElementById('klh-pct').textContent = total ? Math.round(sudah / total * 100) + '%' : '-';
+      var max = Math.max.apply(null, buckets) || 1;
+      document.getElementById('klh-age').innerHTML = AGE.map(function (a, i) {
+        var n = buckets[i];
+        return '<div class="klh-row' + (i >= 2 ? ' is-old' : '') + (n ? '' : ' is-zero') + '" style="--i:' + (i + 2) + '"><span>' + a[0] + '</span><span class="tr">' + (n ? '<i style="width:' + Math.max(6, n / max * 100) + '%"></i>' : '') + '</span><b>' + n + '</b></div>';
+      }).join('');
+      root.classList.remove('is-anim');
+      if (d.animate) { void root.offsetWidth; root.classList.add('is-anim'); }
+    };
+  })();
 
   /* ===== Kartu Home "Laporan untuk orang tua" (Style 3): laporan disetujui yang belum dikirim, per orang tua,
      tombol WhatsApp membuka popup kirim yang sama dengan menu Kirim laporan. Rentang: awal minggu ini atau kemarin
