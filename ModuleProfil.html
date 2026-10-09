@@ -50,6 +50,17 @@
   .prf-act:hover{background:var(--surface); color:var(--ink);}
   .prf-act.is-wa{color:#14A44D;} .prf-act.is-wa:hover{background:#E9F7EF;}
   .prf-act[hidden]{display:none;}
+  /* Ajukan perubahan email (tutor, kepala unit, HRD): email login hanya diubah admin */
+  .prf-email-help{display:flex; align-items:center; gap:12px; margin-top:10px; padding:12px 14px; background:#fff; border:1px solid var(--border); border-radius:14px; min-width:0;}
+  .prf-email-help[hidden]{display:none;}
+  .prf-email-help .ic{width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;}
+  .prf-email-help .t{flex:1; min-width:0;}
+  .prf-email-help .t b{display:block; font-size:11.5px; font-weight:600; color:var(--ink);}
+  .prf-email-help .t span{display:block; font-size:10.5px; color:var(--ink-soft); margin-top:2px; line-height:1.45;}
+  .prf-email-wa{flex:none; height:32px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--ink); font-size:11px; font-weight:600; display:inline-flex; align-items:center; gap:6px; text-decoration:none; white-space:nowrap; transition:background .15s ease;}
+  .prf-email-wa i{font-size:14px; color:#14A44D;}
+  .prf-email-wa:hover{background:#E9F7EF; border-color:#BFE8D0;}
+  @media (max-width:420px){ .prf-email-help{flex-wrap:wrap;} .prf-email-wa{width:100%; justify-content:center;} }
 
   /* ===== Popup edit profil (gaya Genio UI) ===== */
   #prfEditModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
@@ -142,8 +153,14 @@
         <div class="prf-sec">Kontak</div>
         <div class="prf-card">
           <div class="prf-row"><span class="tx"><span>Email</span><b id="prfDetailEmail">-</b></span><button type="button" class="prf-act" id="prfCopyEmail" title="Salin email" aria-label="Salin email"><i class="ph ph-copy" aria-hidden="true"></i></button></div>
-          <div class="prf-row"><span class="tx"><span>Nomor WhatsApp</span><b id="prfDetailHp">-</b></span><a class="prf-act is-wa" id="prfWaLink" href="#" target="_blank" rel="noopener noreferrer" title="Buka WhatsApp" aria-label="Buka WhatsApp" hidden><i class="ph ph-chat-circle" aria-hidden="true"></i></a></div>
+          <div class="prf-row"><span class="tx"><span>Nomor WhatsApp</span><b id="prfDetailHp">-</b></span><button type="button" class="prf-act" id="prfCopyHp" title="Salin nomor" aria-label="Salin nomor" hidden><i class="ph ph-copy" aria-hidden="true"></i></button></div>
           <div class="prf-row"><span class="tx"><span>Jenis kelamin</span><b id="prfDetailGender">-</b></span></div>
+          <div class="prf-row" id="prfRowLastLogin" hidden><span class="tx"><span>Terakhir masuk</span><b id="prfDetailLastLogin">-</b></span></div>
+        </div>
+        <div class="prf-email-help" id="prfEmailHelp" hidden>
+          <span class="ic"><i class="ph ph-envelope-simple" aria-hidden="true"></i></span>
+          <div class="t"><b>Ingin mengubah email login?</b><span>Email hanya bisa diubah oleh admin. Hubungi admin lewat WhatsApp.</span></div>
+          <a class="prf-email-wa" id="prfEmailWa" href="#" target="_blank" rel="noopener noreferrer"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Hubungi admin</a>
         </div>
       </div>
       <div id="prfAkunSec" hidden>
@@ -282,11 +299,19 @@
     var parts = nama.trim().split(/\s+/);
     return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
   }
-  function prfWaLink(hp) {
-    var d = String(hp || '').replace(/\D/g, '');
-    if (!d) return '';
-    if (d.charAt(0) === '0') d = '62' + d.slice(1);
-    return 'https://wa.me/' + d;
+  var PRF_ADMIN_WA = '6282133131931'; // nomor admin untuk pengajuan perubahan email
+  async function prfLoadLastLogin(session) {
+    var el = document.getElementById('prfDetailLastLogin');
+    try {
+      var res = await fetch(SUPABASE_URL + '/auth/v1/user', { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + session.access_token } });
+      var u = await res.json();
+      var t = u && u.last_sign_in_at ? new Date(u.last_sign_in_at) : null;
+      if (!t || isNaN(t)) { el.textContent = '-'; return; }
+      var now = new Date(), day = function (d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); };
+      var diff = Math.round((day(now) - day(t)) / 86400000);
+      var jam = String(t.getHours()).padStart(2, '0') + '.' + String(t.getMinutes()).padStart(2, '0');
+      el.textContent = (diff === 0 ? 'Hari ini' : diff === 1 ? 'Kemarin' : t.getDate() + ' ' + PRF_BULAN[t.getMonth()].slice(0, 3) + ' ' + t.getFullYear()) + ', ' + jam;
+    } catch (e) { el.textContent = '-'; }
   }
 
   async function prfLoadDetail() {
@@ -331,10 +356,21 @@
 
       var hp = (me && me.no_hp) || (tp && tp.no_wa);
       document.getElementById('prfDetailHp').textContent = hp || '-';
-      var wa = prfWaLink(hp);
-      var waEl = document.getElementById('prfWaLink');
-      waEl.hidden = !wa;
-      if (wa) waEl.href = wa;
+      document.getElementById('prfCopyHp').hidden = !hp;
+
+      // Ajukan perubahan email: tutor, kepala unit, dan HRD tidak bisa mengubah email sendiri, jadi diarahkan ke admin
+      var canAskEmail = ['tutor', 'kepala_unit', 'hrd'].indexOf(session.role) !== -1;
+      document.getElementById('prfEmailHelp').hidden = !canAskEmail;
+      if (canAskEmail) {
+        var nm = (me && me.nama) || session.nama || '';
+        document.getElementById('prfEmailWa').href = 'https://wa.me/' + PRF_ADMIN_WA + '?text=' + encodeURIComponent(
+          'Halo admin Genio Institute, saya ' + nm + ' (' + roleLabel + '). Saya ingin mengajukan perubahan email login dari ' + (session.email || '-') + ' menjadi: ');
+      }
+
+      // Terakhir masuk (role selain tutor): waktu login terakhir dari Supabase Auth
+      var showLast = session.role !== 'tutor';
+      document.getElementById('prfRowLastLogin').hidden = !showLast;
+      if (showLast) prfLoadLastLogin(session);
 
       // Tutor tidak terikat unit mana pun, jadi baris unit tidak ditampilkan
       var unit = session.role === 'tutor' ? '' : ((me && me.units && me.units.nama_unit) || (session.role === 'kepala_unit' ? '' : 'Semua unit'));
@@ -834,6 +870,19 @@
     document.getElementById('prfFotoInput').value = '';
     prfSetEditPhoto('', document.getElementById('prfEditNama').value);
     document.getElementById('prfFotoHint').textContent = 'Foto akan dihapus saat disimpan.';
+  });
+  document.getElementById('prfCopyHp').addEventListener('click', function () {
+    var hp = document.getElementById('prfDetailHp').textContent;
+    if (!hp || hp === '-') return;
+    function done() { genioToast('Nomor disalin', 'success'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(hp).then(done, function () { genioToast('Gagal menyalin nomor', 'error'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = hp; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { genioToast('Gagal menyalin nomor', 'error'); }
+      ta.remove();
+    }
   });
   document.getElementById('prfCopyEmail').addEventListener('click', function () {
     var email = document.getElementById('prfDetailEmail').textContent;
