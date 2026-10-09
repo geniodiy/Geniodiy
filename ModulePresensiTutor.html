@@ -1227,7 +1227,7 @@
   function ptLaporanPayload(it) {
     var p = it.p, kt = it.kt || {}, sw = ktSiswa(kt), s = genioGetSession();
     return {
-      // Unit sekolah: rombel dengan nama sekolahnya (tutor tidak membaca data orang tua)
+      // Unit sekolah: kelompok dengan nama sekolahnya (tutor tidak membaca data orang tua)
       isRombel: !!(kt.units && kt.units.jenis === 'sekolah'),
       id: p.id, siswaNama: sw.nama || '-', ortuNama: (kt.units && kt.units.jenis === 'sekolah' && sw.sekolah) || '-', tutorNama: (s && s.nama) || '-', mapel: kt.mapel || '-', unit: ktUnit(kt),
       tanggal: tglPendek(p.tanggal) + ' ' + parseIso(p.tanggal).getFullYear(), tanggalRaw: p.tanggal,

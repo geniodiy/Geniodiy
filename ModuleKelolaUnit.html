@@ -391,7 +391,7 @@
         return '<div class="ku-card' + (isAktif ? '' : ' is-off') + '">' +
           '<div class="kuc-head">' +
             '<span class="ku-ico' + (u.jenis === 'sekolah' ? ' is-sekolah' : '') + '"><i class="ph ph-buildings" aria-hidden="true"></i></span>' +
-            '<div class="kuc-who"><h4 title="' + kuEscape(u.nama_unit) + '">' + kuEscape(u.nama_unit) + kuJenisTag(u) + '</h4><p><b>' + u._siswaCount + '</b> ' + (u.jenis === 'sekolah' ? 'rombel' : 'siswa') + ' aktif</p></div>' +
+            '<div class="kuc-who"><h4 title="' + kuEscape(u.nama_unit) + '">' + kuEscape(u.nama_unit) + kuJenisTag(u) + '</h4><p><b>' + u._siswaCount + '</b> ' + (u.jenis === 'sekolah' ? 'kelompok' : 'siswa') + ' aktif</p></div>' +
             kuStatusPill(isAktif) +
           '</div>' +
           '<div class="kuc-share"><div class="kuc-share-l">Porsi dari seluruh siswa aktif</div>' + kuShare(u, total, idx) + '</div>' +
@@ -449,7 +449,7 @@
 
   var KU_JENIS_NOTE = {
     privat: 'Les privat: orang tua dan siswa seperti biasa.',
-    sekolah: 'Unit sekolah: orang tua diganti sekolah (dengan PIC) dan siswa diganti rombel. Tagihan dikirim ke sekolah, tetap per pertemuan.'
+    sekolah: 'Unit sekolah: orang tua diganti sekolah (dengan PIC) dan siswa diganti kelompok. Tagihan dikirim ke sekolah, tetap per pertemuan.'
   };
   function kuSetJenis(val) {
     document.querySelectorAll('#ku-form .ku-jenis-opt').forEach(function (o) {
@@ -472,7 +472,7 @@
 
     if (unit) {
       document.getElementById('ku-modalTitle').textContent = 'Edit unit';
-      document.getElementById('ku-modalSub').textContent = unit._siswaCount + (unit.jenis === 'sekolah' ? ' rombel' : ' siswa') + ' aktif di unit ini.';
+      document.getElementById('ku-modalSub').textContent = unit._siswaCount + (unit.jenis === 'sekolah' ? ' kelompok' : ' siswa') + ' aktif di unit ini.';
       document.getElementById('ku-id').value = unit.id;
       document.getElementById('ku-nama').value = unit.nama_unit;
       document.getElementById('ku-statusField').hidden = false;

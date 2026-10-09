@@ -2309,7 +2309,7 @@
   async function psGenerateAndSaveLaporanPdf(row, targetStatus) {
     var payload = psBuildLaporanPayload(row, targetStatus);
     payload.identitas = await genioDocIdentity();
-    // Unit sekolah: laporan menulis Rombel dan Sekolah (dengan PIC)
+    // Unit sekolah: laporan menulis Kelompok dan Sekolah (dengan PIC)
     var unitJenis = await genioUnitJenisMap();
     payload.isRombel = unitJenis[row.unit_id] === 'sekolah';
     payload.picNama = ((((row.kontrak_tutor || {}).kontrak_siswa || {}).siswa || {}).orangtua || {}).pic_nama || '';
@@ -4632,8 +4632,8 @@
     var sorted = items.slice().sort(function (a, b) { return (a.tanggal + (a.jam || '')).localeCompare(b.tanggal + (b.jam || '')); });
     var names = klUniq(sorted.map(function (r) { return klParts(r).siswa; }));
     var siswa = klJoinNames(names), multi = names.length > 1;
-    // Unit sekolah: sapa PIC sekolah, dan sebut "rombel" sebelum nama rombel
-    var rb = g.sekolah ? 'rombel ' : '';
+    // Unit sekolah: sapa PIC sekolah, dan sebut "kelompok" sebelum nama kelompok
+    var rb = g.sekolah ? 'kelompok ' : '';
     var a = sorted[0].tanggal, b = sorted[sorted.length - 1].tanggal;
     var waktu = a === b ? 'hari *' + klPeriodeText(a, b) + '*' : 'periode *' + klPeriodeText(a, b) + '*';
     var nVisit = sorted.filter(klIsVisit).length, nSesi = sorted.length - nVisit;

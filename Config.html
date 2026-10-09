@@ -794,7 +794,7 @@
     }).catch(function () { genioDocIdentityCache = null; return {}; });
     return genioDocIdentityCache;
   }
-  // Jenis unit (privat | sekolah) per unit id. Di unit sekolah, orangtua = sekolah (pic_nama = kontak) dan siswa = rombel.
+  // Jenis unit (privat | sekolah) per unit id. Di unit sekolah, orangtua = sekolah (pic_nama = kontak) dan siswa = kelompok.
   var genioUnitJenisCache = null;
   function genioUnitJenisMap() {
     if (genioUnitJenisCache) return genioUnitJenisCache;

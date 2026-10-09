@@ -917,7 +917,7 @@
           key: ortuId,
           ortuId: ortuId,
           ortuNama: ortuNama,
-          // Unit sekolah: tagihan ke sekolah (u.p. PIC), anaknya adalah rombel
+          // Unit sekolah: tagihan ke sekolah (u.p. PIC), anaknya adalah kelompok
           isSekolah: unitJenis === 'sekolah',
           picNama: ortu.pic_nama || '',
           ortuHp: ortuHp,
@@ -1220,7 +1220,7 @@
     return '<div class="tg-card-item" data-key="' + tgEscape(g.key) + '">' +
       '<div class="tgc-head">' +
         '<div class="tgc-av">' + tgEscape(tgInitials(g.ortuNama)) + '</div>' +
-        '<div class="tgc-who"><h4>' + tgEscape(g.ortuNama) + '</h4><p>' + tgEscape(g.unitNama) + ' · ' + g.children.length + (g.isSekolah ? ' rombel' : ' siswa') + '</p>' + (tgGroupTambahan(g) ? tgTambahanTag() : '') + '</div>' +
+        '<div class="tgc-who"><h4>' + tgEscape(g.ortuNama) + '</h4><p>' + tgEscape(g.unitNama) + ' · ' + g.children.length + (g.isSekolah ? ' kelompok' : ' siswa') + '</p>' + (tgGroupTambahan(g) ? tgTambahanTag() : '') + '</div>' +
         tgStatusPill(isLunas) +
       '</div>' +
       '<button type="button" class="tgc-toggle" data-key="' + tgEscape(g.key) + '" aria-expanded="' + isOpen + '">' +
@@ -1290,7 +1290,7 @@
   function tgBuildWaLink(group, cleanHp) {
     var isLunas = group.status === 'lunas';
     var yth = group.isSekolah ? (group.picNama ? 'Yth. ' + tgSapa(group.picNama) + ' (' + group.ortuNama + ')' : 'Yth. Bapak/Ibu ' + group.ortuNama) : 'Yth. Bapak/Ibu ' + group.ortuNama;
-    var rincian = group.isSekolah ? '• Rincian Rombel:\n' : '• Rincian Siswa:\n';
+    var rincian = group.isSekolah ? '• Rincian Kelompok:\n' : '• Rincian Siswa:\n';
     var childrenLines = group.children.map(function (c) {
       var tgl = tgTglList(c.pres);
       return '• ' + c.nama + ' (' + c.sesi + ' Sesi' + (tgl ? ', ' + tgl : '') + ')' + (c.pakets.length ? ' - ' + c.pakets.join(', ') : '') + ': ' + tgFormatRp(c.nominal);

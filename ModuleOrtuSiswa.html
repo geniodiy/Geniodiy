@@ -125,9 +125,9 @@
   .oc-kids-detail .oc-kid{grid-template-columns:minmax(0,1fr) auto; padding:7px 2px;}
   .oc-kids-detail .oc-kid:first-child{margin-top:4px;}
   .os-g{font-size:9.5px; font-weight:700; margin-left:5px; letter-spacing:.02em;}
-  /* Unit sekolah: rombel dan sekolah */
+  /* Unit sekolah: kelompok dan sekolah */
   .module-panel[data-module="ortu-siswa"] [data-only][hidden]{display:none !important;}
-  .os-rombel-tag{display:inline-flex; align-items:center; font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px; margin-left:6px; background:#FFF4E0; color:#A15C00; vertical-align:1px;}
+  .os-kelompok-tag{display:inline-flex; align-items:center; font-size:9.5px; font-weight:600; padding:1px 7px; border-radius:999px; margin-left:6px; background:#FFF4E0; color:#A15C00; vertical-align:1px;}
   .os-pic{display:block; font-size:10px; color:var(--ink-soft); margin-top:1px;}
   .oc-av.is-sekolah{border-radius:10px; background:#FFF4E0; color:#B86E00; font-size:16px;}
   .os-g.is-l{color:#3B4BD8;} .os-g.is-p{color:#C2366A;}
@@ -344,7 +344,7 @@
         <span class="gx-head-ico"><i class="ph ph-users-three" aria-hidden="true"></i></span>
         <div style="min-width:0;">
           <h3><span data-lp="Kelola orang tua" data-ls="Kelola sekolah">Kelola orang tua</span></h3>
-          <p class="gx-sub"><span data-lp="Biodata wali dan daftar anaknya." data-ls="Data sekolah, kontak PIC, dan daftar rombelnya.">Biodata wali dan daftar anaknya.</span></p>
+          <p class="gx-sub"><span data-lp="Biodata wali dan daftar anaknya." data-ls="Data sekolah, kontak PIC, dan daftar kelompoknya.">Biodata wali dan daftar anaknya.</span></p>
         </div>
         <button type="button" class="gx-close" id="os-editCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -358,9 +358,9 @@
           <div><span>Alamat</span><b id="os-viewOrtuAlamat">-</b></div>
         </div>
         <button type="button" class="os-sec-btn" id="os-editOrtuBiodataBtn"><i class="ph ph-pencil-simple" aria-hidden="true"></i><span data-lp="Edit biodata" data-ls="Edit data sekolah">Edit biodata</span></button>
-        <div class="gx-step-title"><span class="gx-step">2</span><span data-lp="Daftar anak" data-ls="Daftar rombel">Daftar anak</span></div>
+        <div class="gx-step-title"><span class="gx-step">2</span><span data-lp="Daftar anak" data-ls="Daftar kelompok">Daftar anak</span></div>
         <div id="os-editList"></div>
-        <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span><span data-lp="Status aktif atau nonaktif diubah lewat edit siswa." data-ls="Status aktif atau nonaktif diubah lewat edit rombel.">Status aktif atau nonaktif diubah lewat edit siswa.</span></span></div>
+        <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span><span data-lp="Status aktif atau nonaktif diubah lewat edit siswa." data-ls="Status aktif atau nonaktif diubah lewat edit kelompok.">Status aktif atau nonaktif diubah lewat edit siswa.</span></span></div>
       </div>
       <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="os-editCancelBtn">Tutup</button>
@@ -400,7 +400,7 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-student" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3><span data-lp="Edit siswa" data-ls="Edit rombel">Edit siswa</span></h3>
+          <h3><span data-lp="Edit siswa" data-ls="Edit kelompok">Edit siswa</span></h3>
           <p class="gx-sub" id="os-editSiswaSub">Perbarui data dan status siswa.</p>
         </div>
         <button type="button" class="gx-close" id="os-editSiswaCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
@@ -414,8 +414,8 @@
           <label class="os-editstatus-opt" data-val="aktif"><input type="radio" name="os-editSiswaStatus" value="aktif"><i></i>Aktif</label>
           <label class="os-editstatus-opt" data-val="nonaktif"><input type="radio" name="os-editSiswaStatus" value="nonaktif"><i></i>Nonaktif</label>
         </div>
-        <div class="gx-step-title"><span class="gx-step">2</span><span data-lp="Data siswa" data-ls="Data rombel">Data siswa</span></div>
-        <div class="gx-row"><label for="os-editSiswaNama"><span data-lp="Nama siswa" data-ls="Nama rombel">Nama siswa</span> <em class="gx-req">wajib</em></label><input type="text" id="os-editSiswaNama"></div>
+        <div class="gx-step-title"><span class="gx-step">2</span><span data-lp="Data siswa" data-ls="Data kelompok">Data siswa</span></div>
+        <div class="gx-row"><label for="os-editSiswaNama"><span data-lp="Nama siswa" data-ls="Nama kelompok">Nama siswa</span> <em class="gx-req">wajib</em></label><input type="text" id="os-editSiswaNama"></div>
         <div class="gx-2col">
           <div class="gx-row"><label for="os-editSiswaKelas">Kelas</label><input type="text" id="os-editSiswaKelas" placeholder="mis. 9" data-pp="mis. 9" data-ps="mis. 4-5"></div>
           <div class="gx-row"><label for="os-editSiswaJenjang">Jenjang</label>
@@ -450,8 +450,8 @@
       <div class="gx-head">
         <span class="gx-head-ico"><i class="ph ph-user-plus" aria-hidden="true"></i></span>
         <div style="min-width:0;">
-          <h3><span data-lp="Tambah siswa" data-ls="Tambah rombel">Tambah siswa</span></h3>
-          <p class="gx-sub"><span data-lp="Daftarkan siswa baru beserta orang tuanya." data-ls="Daftarkan rombel baru beserta sekolahnya.">Daftarkan siswa baru beserta orang tuanya.</span></p>
+          <h3><span data-lp="Tambah siswa" data-ls="Tambah kelompok">Tambah siswa</span></h3>
+          <p class="gx-sub"><span data-lp="Daftarkan siswa baru beserta orang tuanya." data-ls="Daftarkan kelompok baru beserta sekolahnya.">Daftarkan siswa baru beserta orang tuanya.</span></p>
         </div>
         <button type="button" class="gx-close" id="os-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -464,7 +464,7 @@
               <option value="">Pilih unit...</option>
             </select>
           </div>
-          <div class="gx-note" data-only="sekolah"><i class="ph ph-graduation-cap" aria-hidden="true"></i><span>Unit sekolah: orang tua diisi sekolah dan siswa diisi rombel.</span></div>
+          <div class="gx-note" data-only="sekolah"><i class="ph ph-graduation-cap" aria-hidden="true"></i><span>Unit sekolah: orang tua diisi sekolah dan siswa diisi kelompok.</span></div>
           <div class="gx-step-title"><span class="gx-step">2</span><span data-lp="Orang tua" data-ls="Sekolah">Orang tua</span></div>
           <div class="gx-seg" style="margin-bottom:10px;">
             <button type="button" class="os-ortu-mode-btn is-on" data-mode="baru"><span data-lp="Orang tua baru" data-ls="Sekolah baru">Orang tua baru</span></button>
@@ -485,8 +485,8 @@
             </div>
           </div>
 
-          <div class="gx-step-title"><span class="gx-step">3</span><span data-lp="Data siswa" data-ls="Data rombel">Data siswa</span></div>
-          <div class="gx-row"><label for="os-siswaNama"><span data-lp="Nama siswa" data-ls="Nama rombel">Nama siswa</span> <em class="gx-req">wajib</em></label><input type="text" id="os-siswaNama" required placeholder="mis. Almer Fathir" data-pp="mis. Almer Fathir" data-ps="mis. Kelas 4-5 Olimpiade"></div>
+          <div class="gx-step-title"><span class="gx-step">3</span><span data-lp="Data siswa" data-ls="Data kelompok">Data siswa</span></div>
+          <div class="gx-row"><label for="os-siswaNama"><span data-lp="Nama siswa" data-ls="Nama kelompok">Nama siswa</span> <em class="gx-req">wajib</em></label><input type="text" id="os-siswaNama" required placeholder="mis. Almer Fathir" data-pp="mis. Almer Fathir" data-ps="mis. Kelas 4-5 Olimpiade"></div>
           <div class="gx-2col">
             <div class="gx-row"><label for="os-siswaKelas">Kelas</label><input type="text" id="os-siswaKelas" placeholder="mis. 9" data-pp="mis. 9" data-ps="mis. 4-5"></div>
             <div class="gx-row"><label for="os-siswaJenjang">Jenjang <em class="gx-req">wajib</em></label>
@@ -510,7 +510,7 @@
         </div>
         <div class="modal-actions gx-foot">
           <button type="button" class="btn btn-outline" id="os-cancelBtn">Batal</button>
-          <button type="submit" class="btn btn-primary" id="os-saveBtn"><span data-lp="Simpan siswa" data-ls="Simpan rombel">Simpan siswa</span></button>
+          <button type="submit" class="btn btn-primary" id="os-saveBtn"><span data-lp="Simpan siswa" data-ls="Simpan kelompok">Simpan siswa</span></button>
         </div>
       </form>
     </div>
@@ -665,7 +665,7 @@
     }
   }
 
-  /* ===== Unit sekolah: orang tua = sekolah (dengan PIC), siswa = rombel ===== */
+  /* ===== Unit sekolah: orang tua = sekolah (dengan PIC), siswa = kelompok ===== */
   var osUnitJenis = {};
   function osIsSekolahUnit(unitId) { return osUnitJenis[unitId] === 'sekolah'; }
   // Ganti teks dan tampilkan bagian sesuai jenis: [data-lp]/[data-ls] teks, [data-pp]/[data-ps] placeholder, [data-only] tampil/sembunyi
@@ -675,7 +675,7 @@
     root.querySelectorAll('[data-pp]').forEach(function (el) { el.placeholder = sek ? el.dataset.ps : el.dataset.pp; });
     root.querySelectorAll('[data-only]').forEach(function (el) { el.hidden = (el.dataset.only === 'sekolah') !== !!sek; });
   }
-  function osRombelTag() { return '<span class="os-rombel-tag">Rombel</span>'; }
+  function osRombelTag() { return '<span class="os-kelompok-tag">Kelompok</span>'; }
   function osRombelSub(a) {
     return [a.kelas ? 'Kelas ' + a.kelas : '', a.jenjang, a.jumlah_siswa ? a.jumlah_siswa + ' siswa' : ''].filter(Boolean).join(' · ');
   }
@@ -812,7 +812,7 @@
   function osSiswaMatchesSearch(r) {
     if (!osState.search) return true;
     var q = osState.search;
-    return [r.nama, r.sekolah, r.kelas, r.ortu.nama, r.ortu.no_hp, r.ortu.pic_nama, r.unitNama, r.isRombel ? 'rombel' : ''].some(function (v) {
+    return [r.nama, r.sekolah, r.kelas, r.ortu.nama, r.ortu.no_hp, r.ortu.pic_nama, r.unitNama, r.isRombel ? 'kelompok' : ''].some(function (v) {
       return (v || '').toLowerCase().indexOf(q) !== -1;
     });
   }
@@ -905,7 +905,7 @@
     var meta;
     var sek = o.isSekolah;
     if (!o.anak.length) meta = 'Belum ada siswa terdaftar';
-    else if (sek) meta = 'Sekolah · ' + o.anak.length + ' rombel' + (o.anak.length > 1 ? ' · ' + o.aktifCount + ' aktif' : '') + (o.pic_nama ? ' · PIC ' + osEscape(o.pic_nama) : '');
+    else if (sek) meta = 'Sekolah · ' + o.anak.length + ' kelompok' + (o.anak.length > 1 ? ' · ' + o.aktifCount + ' aktif' : '') + (o.pic_nama ? ' · PIC ' + osEscape(o.pic_nama) : '');
     else if (o.anak.length === 1) meta = 'Wali dari 1 siswa · ' + (o.anak[0].status === 'aktif' ? 'aktif' : 'nonaktif');
     else meta = 'Wali dari ' + o.anak.length + ' siswa · ' + o.aktifCount + ' aktif';
 
@@ -927,7 +927,7 @@
     }).join('');
     var kidsBlock = o.anak.length
       ? '<button type="button" class="oc-kids-toggle" data-id="' + o.id + '" aria-expanded="' + isOpen + '">' +
-          '<i class="ph ' + (sek ? 'ph-users-three' : 'ph-student') + '" aria-hidden="true"></i><span class="oc-kids-names">' + names + '</span><em>' + o.anak.length + (sek ? ' rombel' : ' anak') + '</em>' +
+          '<i class="ph ' + (sek ? 'ph-users-three' : 'ph-student') + '" aria-hidden="true"></i><span class="oc-kids-names">' + names + '</span><em>' + o.anak.length + (sek ? ' kelompok' : ' anak') + '</em>' +
           '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
         '</button>' +
         '<div class="oc-kids-detail' + (isOpen ? ' is-open' : '') + '" data-id="' + o.id + '"' + (isOpen ? ' style="max-height:none"' : '') + '>' + kids + '</div>'
@@ -980,7 +980,7 @@
         '<td>' + osEscape(r.ortu.nama || '-') + (r.isRombel && r.ortu.pic_nama ? '<span class="os-pic">PIC ' + osEscape(r.ortu.pic_nama) + '</span>' : '') + '</td>' +
         '<td class="os-num">' + osEscape(r.ortu.no_hp || '-') + '</td>' +
         '<td class="os-c os-num">' + osEscape(r.kelas || '-') + '</td>' +
-        // Rombel: sekolahnya sudah tertulis di kolom orang tua
+        // Kelompok: sekolahnya sudah tertulis di kolom orang tua
         (r.isRombel ? '<td class="os-soft">-</td>' : '<td' + (r.sekolah ? '' : ' class="os-soft"') + '>' + osEscape(r.sekolah || '-') + '</td>') +
         '<td>' + osEscape(r.unitNama || '-') + '</td>' +
         '<td class="os-act">' +
@@ -1103,7 +1103,7 @@
         headers: { 'Prefer': 'return=minimal' },
         body: JSON.stringify(ortuBody)
       });
-      // Rombel menyimpan nama sekolahnya di kolom sekolah (untuk pencarian dan dokumen), jadi ikut diganti
+      // Kelompok menyimpan nama sekolahnya di kolom sekolah (untuk pencarian dan dokumen), jadi ikut diganti
       if (isSek && ortuNow && ortuNow.nama !== nama) {
         await supaRest('siswa?orangtua_id=eq.' + osEditTargetOrtuId, s.access_token, {
           method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ sekolah: nama })
@@ -1127,7 +1127,7 @@
   function osRenderEditList(ortu) {
     var listEl = document.getElementById('os-editList');
     if (!ortu.anak.length) {
-      listEl.innerHTML = '<p style="font-size:11px; color:var(--ink-soft); text-align:center; padding:14px 0; margin:0;">' + (ortu.isSekolah ? 'Sekolah ini belum punya rombel terdaftar.' : 'Orang tua ini belum punya siswa terdaftar.') + '</p>';
+      listEl.innerHTML = '<p style="font-size:11px; color:var(--ink-soft); text-align:center; padding:14px 0; margin:0;">' + (ortu.isSekolah ? 'Sekolah ini belum punya kelompok terdaftar.' : 'Orang tua ini belum punya siswa terdaftar.') + '</p>';
       return;
     }
     listEl.innerHTML = ortu.anak.map(function (a) {
@@ -1163,7 +1163,7 @@
     document.getElementById('os-editSiswaJenjang').value = siswa.jenjang || '';
     document.getElementById('os-editSiswaJumlah').value = siswa.jumlah_siswa || '';
     var isR = osIsSekolahUnit(siswa.unit_id);
-    osEditSiswaModal.dataset.rombel = isR ? '1' : '';
+    osEditSiswaModal.dataset.kelompok = isR ? '1' : '';
     osApplyJenis(osEditSiswaModal, isR);
 
     osSetSegOn('#os-editSiswaModal .os-gender-opt', siswa.jenis_kelamin);
@@ -1198,10 +1198,10 @@
     var gender = genderEl ? genderEl.value : null;
     var statusEl = document.querySelector('input[name="os-editSiswaStatus"]:checked');
     var status = statusEl ? statusEl.value : 'aktif';
-    var isR = osEditSiswaModal.dataset.rombel === '1';
+    var isR = osEditSiswaModal.dataset.kelompok === '1';
     var jumlah = parseInt(document.getElementById('os-editSiswaJumlah').value, 10);
 
-    if (!nama) { alertEl.textContent = isR ? 'Nama rombel wajib diisi.' : 'Nama siswa wajib diisi.'; alertEl.hidden = false; return; }
+    if (!nama) { alertEl.textContent = isR ? 'Nama kelompok wajib diisi.' : 'Nama siswa wajib diisi.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
     var btn = this;
@@ -1217,7 +1217,7 @@
         headers: { 'Prefer': 'return=minimal' },
         body: JSON.stringify(body)
       });
-      genioToast(isR ? 'Data rombel berhasil diperbarui' : 'Data siswa berhasil diperbarui', 'success');
+      genioToast(isR ? 'Data kelompok berhasil diperbarui' : 'Data siswa berhasil diperbarui', 'success');
       osCloseEditSiswaModal();
       await osLoadAll();
       if (!osEditModal.hidden) {
@@ -1490,7 +1490,7 @@
     }
     listEl.innerHTML = options.map(function (o) {
       var n = o.anak.length;
-      return '<button type="button" class="os-ortu-picker-opt gx-opt-row" data-id="' + o.id + '"><span class="oc-ki" style="width:24px; height:24px;">' + osEscape(osInitials(o.nama)) + '</span><span style="min-width:0; flex:1;">' + osEscape(o.nama) + '<span style="display:block; font-size:10px; color:var(--ink-soft);">' + (o.isSekolah && o.pic_nama ? osEscape(o.pic_nama) + ' · ' : '') + osEscape(o.no_hp || '-') + ' · ' + n + (o.isSekolah ? ' rombel' : ' anak') + '</span></span></button>';
+      return '<button type="button" class="os-ortu-picker-opt gx-opt-row" data-id="' + o.id + '"><span class="oc-ki" style="width:24px; height:24px;">' + osEscape(osInitials(o.nama)) + '</span><span style="min-width:0; flex:1;">' + osEscape(o.nama) + '<span style="display:block; font-size:10px; color:var(--ink-soft);">' + (o.isSekolah && o.pic_nama ? osEscape(o.pic_nama) + ' · ' : '') + osEscape(o.no_hp || '-') + ' · ' + n + (o.isSekolah ? ' kelompok' : ' anak') + '</span></span></button>';
     }).join('');
     listEl.querySelectorAll('.os-ortu-picker-opt').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -1515,7 +1515,7 @@
   });
 
   var osFormSekolah = false;
-  // Form tambah mengikuti jenis unit yang dipilih: unit sekolah memakai sekolah + rombel
+  // Form tambah mengikuti jenis unit yang dipilih: unit sekolah memakai sekolah + kelompok
   function osApplyFormJenis() {
     var sek = osIsSekolahUnit(document.getElementById('os-siswaUnit').value);
     if (sek !== osFormSekolah) { osFormSekolah = sek; osResetOrtuExistingField(); }
@@ -1567,7 +1567,7 @@
     var sek = osIsSekolahUnit(siswaUnit);
     var jumlah = parseInt(document.getElementById('os-siswaJumlah').value, 10);
 
-    if (!siswaNama || !siswaUnit) { alertEl.textContent = sek ? 'Nama rombel dan unit wajib diisi.' : 'Nama siswa dan unit wajib diisi.'; alertEl.hidden = false; return; }
+    if (!siswaNama || !siswaUnit) { alertEl.textContent = sek ? 'Nama kelompok dan unit wajib diisi.' : 'Nama siswa dan unit wajib diisi.'; alertEl.hidden = false; return; }
     if (!siswaJenjang) { alertEl.textContent = 'Jenjang wajib dipilih.'; alertEl.hidden = false; return; }
 
     var ortuId = null;
@@ -1604,7 +1604,7 @@
 
       var siswaBody = { nama: siswaNama, orangtua_id: ortuId, unit_id: siswaUnit, status: 'aktif', kelas: siswaKelas || null, sekolah: siswaSekolah || null, jenjang: siswaJenjang, jenis_kelamin: siswaGender };
       if (sek) {
-        // Rombel: nama sekolah disimpan di kolom sekolah, tanpa jenis kelamin
+        // Kelompok: nama sekolah disimpan di kolom sekolah, tanpa jenis kelamin
         var sekolahOrtu = osState.ortuMode === 'baru' ? ortuNama : ((osState.ortuList.find(function (o) { return o.id === ortuId; }) || {}).nama || null);
         siswaBody.sekolah = sekolahOrtu;
         siswaBody.jenis_kelamin = null;
@@ -1616,7 +1616,7 @@
         body: JSON.stringify(siswaBody)
       });
 
-      genioToast(sek ? 'Rombel berhasil ditambahkan' : 'Siswa berhasil ditambahkan', 'success');
+      genioToast(sek ? 'Kelompok berhasil ditambahkan' : 'Siswa berhasil ditambahkan', 'success');
       osCloseModal();
       osLoadAll();
     } catch (err) {
