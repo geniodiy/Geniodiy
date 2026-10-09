@@ -617,9 +617,9 @@
     padding:5px 10px; margin-right:10px; font-family:var(--font); font-size:12px; font-weight:500; cursor:pointer;
   }
 
-  /* ===== Keyboard layar di HP: popup naik ke atas dan memendek supaya kolom yang diketik tidak tertutup ===== */
-  .modal-overlay.gx-typing{align-items:flex-start !important; justify-content:center !important; padding:8px 8px 0 !important;}
-  .modal-overlay.gx-typing .modal-sheet{max-height:calc(var(--gx-vh, 50vh) - 16px) !important; border-radius:18px !important; margin:0 auto !important;}
+  /* ===== Keyboard layar di HP: popup tetap di tempatnya (bagian bawahnya tertutup keyboard), hanya digeser seperlunya
+     supaya kolom yang sedang diketik berada tepat di atas keyboard (lihat genioKeyboardAware) ===== */
+  .modal-overlay.gx-typing .modal-sheet{transition:transform .22s ease !important;}
 
   /* ===== Tombol yang disembunyikan per role (class role-<role> di body, dipasang Dashboard.html) ===== */
   /* Kepala unit: Data tutor hanya lihat; kontrak tutor tidak bisa dihapus (RLS) */
@@ -826,7 +826,7 @@
   }
 
   // ===== Tutup popup lewat latar hanya kalau sentuhan memang dimulai di latar =====
-  // Saat kolom di popup disentuh di HP, popup bergeser ke atas (lihat genioKeyboardAware)
+  // Saat kolom di popup disentuh di HP, popup bisa bergeser sedikit (lihat genioKeyboardAware)
   // sebelum event click terjadi, sehingga click bisa "mendarat" di latar dan menutup popup.
   // Click di latar diabaikan kalau pointerdown-nya tidak di latar, atau terjadi tepat setelah popup bergeser.
   var genioOverlayGuard = { downOnOverlay: null, shiftedAt: 0 };
@@ -846,9 +846,9 @@
 
   // ===== Keyboard layar di HP: jaga kolom yang sedang diketik di dalam popup tetap terlihat =====
   // Web app Apps Script berjalan di dalam iframe, jadi tinggi keyboard sering tidak terbaca.
-  // Saat kolom ketik di popup difokuskan, popup dipindah ke atas layar dan dipendekkan
-  // (pakai visualViewport kalau terbaca, kalau tidak pakai 50% tinggi layar),
-  // lalu kolomnya di-scroll ke tengah area popup.
+  // Saat kolom ketik di popup difokuskan, popup tetap di tempatnya dan bagian bawahnya boleh tertutup keyboard;
+  // hanya kolom yang diketik dijaga tepat di atas keyboard (tinggi keyboard dari visualViewport kalau terbaca,
+  // kalau tidak dianggap 50% tinggi layar di HP).
   (function genioKeyboardAware() {
     if (!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches)) return;
     var TYPE_RE = /^(text|email|tel|number|password|search|url)$/i;
@@ -879,36 +879,56 @@
       }
       return null;
     }
+    // Geser popup ke atas hanya sebanyak yang perlu: isi popup digulir dulu, sisanya popup diangkat, sampai bawah kolom
+    // berada 12px di atas keyboard (kolom yang lebih tinggi dari ruang tersisa: atasnya di atas layar yang terlihat).
+    // Overlay dan tinggi popup dibekukan selama mengetik, supaya popup tidak ikut mengecil atau pindah ke atas saat layar menyempit.
+    var shift = 0;
+    function sheetOf(ov) { return ov ? ov.querySelector('.modal-sheet') : null; }
+    function setShift(px) {
+      shift = Math.max(0, Math.round(px));
+      var sh = sheetOf(overlay);
+      if (sh) sh.style.setProperty('transform', shift ? 'translateY(' + (-shift) + 'px)' : 'none', 'important');
+    }
+    function freeze() {
+      if (!overlay || overlay.classList.contains('gx-typing')) return;
+      var sh = sheetOf(overlay);
+      genioOverlayGuard.shiftedAt = Date.now();
+      overlay.classList.add('gx-typing');
+      overlay.style.setProperty('bottom', 'auto', 'important');
+      overlay.style.setProperty('height', baseH + 'px', 'important');
+      if (sh) sh.style.setProperty('max-height', Math.round(sh.getBoundingClientRect().height) + 'px', 'important');
+    }
     function keepVisible() {
       if (!active || !overlay) return;
-      var area = measuredArea() || (IS_PHONE ? { h: Math.round(Math.max(260, baseH * 0.5)), top: window.visualViewport ? window.visualViewport.offsetTop : 0 } : null);
-      if (area) {
-        if (!overlay.classList.contains('gx-typing')) genioOverlayGuard.shiftedAt = Date.now();
-        overlay.classList.add('gx-typing');
-        overlay.style.setProperty('--gx-vh', area.h + 'px');
-        overlay.style.paddingTop = (8 + area.top) + 'px';
-      } else if (overlay.classList.contains('gx-typing')) {
-        genioOverlayGuard.shiftedAt = Date.now();
-        overlay.classList.remove('gx-typing');
-        overlay.style.removeProperty('--gx-vh');
-        overlay.style.paddingTop = '';
-      }
-      // Kolom digulir ke tengah area popup (kalau popup dinaikkan) atau ke sepertiga atas (kalau tidak)
-      var sc = scrollParent(active, overlay);
-      if (sc) {
-        var r = active.getBoundingClientRect(), sr = sc.getBoundingClientRect();
-        var anchor = area ? (sc.clientHeight / 2 - r.height / 2) : Math.min(sc.clientHeight * 0.3, sc.clientHeight - r.height);
-        var target = sc.scrollTop + (r.top - sr.top) - anchor;
-        if (area || r.bottom > sr.top + sc.clientHeight * 0.6) sc.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+      var vv = window.visualViewport;
+      var area = measuredArea() || (IS_PHONE ? { h: Math.round(Math.max(260, baseH * 0.5)), top: vv ? vv.offsetTop : 0 } : null);
+      if (!area) { if (shift) setShift(0); return; }
+      freeze();
+      var limit = area.top + area.h - 12, ceil = area.top + 8;
+      var r = active.getBoundingClientRect();
+      var need = Math.min(r.bottom - limit, r.top - ceil);
+      if (need > 0) {
+        var sc = scrollParent(active, overlay);
+        if (sc) {
+          var room = sc.scrollHeight - sc.clientHeight - sc.scrollTop;
+          var d = Math.min(need, room);
+          if (d > 0) { sc.scrollTop += d; need -= d; }
+        }
+        if (need > 0) setShift(shift + need);
+      } else if (shift && need < 0) {
+        setShift(shift + need);
       }
     }
     function release() {
       if (overlay) {
         if (overlay.classList.contains('gx-typing')) genioOverlayGuard.shiftedAt = Date.now();
         overlay.classList.remove('gx-typing');
-        overlay.style.removeProperty('--gx-vh');
-        overlay.style.paddingTop = '';
+        overlay.style.removeProperty('bottom');
+        overlay.style.removeProperty('height');
+        var sh = sheetOf(overlay);
+        if (sh) { sh.style.removeProperty('max-height'); sh.style.removeProperty('transform'); }
       }
+      shift = 0;
       active = null; overlay = null;
     }
     document.addEventListener('focusin', function (e) {

@@ -241,8 +241,8 @@ function generateRekapLaporanPdf(rekapData) {
 
 /**
  * Isi file PDF laporan belajar (satuan atau rekap) sebagai base64, supaya browser bisa langsung
- * menyimpan atau membagikan file tanpa membuka Google Drive. Hanya file di folder Laporan Belajar
- * (dan subfolder Rekap) yang dilayani.
+ * menyimpan atau membagikan file tanpa membuka Google Drive. Hanya file PDF laporan belajar
+ * (nama berawalan Laporan_Belajar_ atau Rekap_Laporan_Belajar_) yang dilayani.
  */
 function getLaporanFileBase64(fileIdOrUrl) {
   try {
@@ -251,14 +251,9 @@ function getLaporanFileBase64(fileIdOrUrl) {
     if (m && m[1]) fileId = m[1];
     if (!/^[a-zA-Z0-9_-]{10,}$/.test(fileId)) return { success: false, error: 'File tidak dikenali' };
     var file = DriveApp.getFileById(fileId);
-    var laporanFolder = getLaporanBelajarFolder_();
-    var allowed = {};
-    allowed[laporanFolder.getId()] = true;
-    var rekapIt = laporanFolder.getFoldersByName('Rekap Laporan Belajar');
-    while (rekapIt.hasNext()) allowed[rekapIt.next().getId()] = true;
-    var ok = false, parents = file.getParents();
-    while (parents.hasNext()) { if (allowed[parents.next().getId()]) { ok = true; break; } }
-    if (!ok || file.isTrashed()) return { success: false, error: 'File laporan tidak ditemukan' };
+    var name = file.getName();
+    if (!/^(Rekap_)?Laporan_Belajar_.*\.pdf$/i.test(name)) return { success: false, error: 'Bukan file laporan belajar' };
+    if (file.isTrashed()) return { success: false, error: 'File laporan sudah diganti. Tutup lalu buka lagi popup kirimnya.' };
     var blob = file.getBlob();
     return { success: true, name: file.getName(), mimeType: blob.getContentType() || 'application/pdf', base64: Utilities.base64Encode(blob.getBytes()) };
   } catch (err) {
