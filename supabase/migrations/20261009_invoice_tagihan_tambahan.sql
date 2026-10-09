@@ -1,4 +1,6 @@
--- Tagihan tambahan (invoice susulan). NOT YET APPLIED: apply after the owner approves the preview.
+-- Tagihan tambahan (invoice susulan). Applied to GDIY on 9 Oct 2026 (in parts: invoice_tagihan_tambahan_1_schema,
+-- invoice_tagihan_tambahan_2_backfill, then the lock function, trigger and presensi_before_write via SQL). This file is now
+-- the source of record for presensi_before_write and presensi_lock_ditagih.
 --
 -- One kontrak siswa may now have several invoices in the same month (urutan 1, 2, ...). Every pertemuan is billed once:
 -- presensi.invoice_id is set when its invoice is marked lunas, and stays set (also after "batalkan lunas", so the
