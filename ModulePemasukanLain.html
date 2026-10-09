@@ -108,6 +108,7 @@
   .plc-foot .grow{flex:1;}
 
   /* ===== Popup ===== */
+  #pl-katModal .modal-sheet.gx-sheet{max-width:460px !important;}
   #pl-modal, #pl-ortuModal, #pl-katModal, #pl-confirmModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
   #pl-modal.show, #pl-ortuModal.show, #pl-katModal.show, #pl-confirmModal.show{opacity:1;}
   .pl-chips{display:flex; flex-wrap:wrap; gap:6px;}
@@ -138,11 +139,18 @@
   .pl-kat-row input:focus{border-color:var(--blue); background:#fff; outline:none; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
   .pl-kat-row.is-off input{color:var(--ink-soft); text-decoration:line-through;}
   .pl-kat-row small{font-size:10px; color:var(--ink-soft); white-space:nowrap;}
-  .pl-kat-add{display:flex; gap:8px; margin-top:12px;}
-  .pl-kat-add input{flex:1; min-width:0; height:36px; border:1px solid var(--border); border-radius:9px; background:var(--surface); padding:0 11px; font-family:var(--font); font-size:11.5px; color:var(--ink); outline:none; box-sizing:border-box;}
-  .pl-kat-add input:focus{border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
-  .pl-ikon-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
-  .pl-ikon{width:32px; height:32px; border-radius:9px; border:1px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--ink-soft); cursor:pointer;}
+  .pl-kat-new{margin-top:14px; padding:12px; border-radius:12px; background:var(--surface);}
+  .pl-kat-new-t{font-size:11.5px; font-weight:600; color:var(--ink); margin-bottom:8px;}
+  .pl-kat-new-l{font-size:10.5px; color:var(--ink-soft); margin:10px 0 6px;}
+  .pl-kat-add{display:grid; grid-template-columns:36px minmax(0,1fr) auto; gap:8px; align-items:center;}
+  .pl-kat-prev{width:36px; height:36px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:16px;}
+  .pl-kat-add input{width:100%; min-width:0; height:36px; border:1px solid var(--border); border-radius:9px; background:#fff; padding:0 11px; font-family:var(--font); font-size:11.5px; color:var(--ink); outline:none; box-sizing:border-box;}
+  .pl-kat-add input:focus{border-color:var(--blue); box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .pl-kat-addbtn{height:36px; padding:0 14px; border-radius:9px; border:none; background:var(--blue); color:#fff; font-family:var(--font); font-size:11.5px; font-weight:600; display:inline-flex; align-items:center; gap:5px; cursor:pointer; white-space:nowrap;}
+  .pl-kat-addbtn:hover{background:var(--blue-dark, #16148F);}
+  .pl-ikon-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .pl-ikon{width:34px; height:34px; border-radius:9px; border:1px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--ink-soft); cursor:pointer; padding:0;}
+  @media (max-width:420px){ .pl-kat-addbtn span{display:none;} .pl-kat-addbtn{padding:0 11px;} }
   .pl-ikon.is-on{border-color:var(--blue); background:var(--blue-tint); color:var(--blue);}
   [data-module="pemasukan-lain"] [hidden]{display:none !important;}
   @keyframes plIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
@@ -256,9 +264,16 @@
       <div class="gx-body">
         <div id="pl-katAlert" class="alert alert-error" hidden></div>
         <div id="pl-katList"></div>
-        <div class="gx-step-title" style="margin-top:14px;"><span class="gx-step">+</span>Tambah kategori</div>
-        <div class="pl-kat-add"><input type="text" id="pl-katNew" placeholder="mis. Pendaftaran" maxlength="40"><button type="button" class="btn btn-primary" id="pl-katAddBtn" style="flex:none; height:36px; padding:0 16px;">Tambah</button></div>
-        <div class="pl-ikon-row" id="pl-katIkon"></div>
+        <div class="pl-kat-new">
+          <div class="pl-kat-new-t">Tambah kategori</div>
+          <div class="pl-kat-add">
+            <span class="pl-kat-prev" id="pl-katPrev"><i class="ph ph-tag" aria-hidden="true"></i></span>
+            <input type="text" id="pl-katNew" placeholder="Nama kategori, mis. Pendaftaran" maxlength="40" aria-label="Nama kategori baru">
+            <button type="button" class="pl-kat-addbtn" id="pl-katAddBtn"><i class="ph ph-plus" aria-hidden="true"></i><span>Tambah</span></button>
+          </div>
+          <div class="pl-kat-new-l">Pilih ikon</div>
+          <div class="pl-ikon-row" id="pl-katIkon"></div>
+        </div>
       </div>
       <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-primary" id="pl-katDoneBtn">Selesai</button>
@@ -690,7 +705,14 @@
     document.getElementById('pl-katIkon').innerHTML = PL_IKONS.map(function (ic) {
       return '<button type="button" class="pl-ikon' + (ic === pl.katIkon ? ' is-on' : '') + '" data-ic="' + ic + '" aria-label="Ikon"><i class="ph ' + ic + '" aria-hidden="true"></i></button>';
     }).join('');
-    document.querySelectorAll('#pl-katIkon .pl-ikon').forEach(function (b) { b.addEventListener('click', function () { pl.katIkon = b.dataset.ic; plRenderKat(); }); });
+    document.getElementById('pl-katPrev').innerHTML = '<i class="ph ' + pl.katIkon + '" aria-hidden="true"></i>';
+    document.querySelectorAll('#pl-katIkon .pl-ikon').forEach(function (b) {
+      b.addEventListener('click', function () {
+        pl.katIkon = b.dataset.ic;
+        document.querySelectorAll('#pl-katIkon .pl-ikon').forEach(function (x) { x.classList.toggle('is-on', x === b); });
+        document.getElementById('pl-katPrev').innerHTML = '<i class="ph ' + pl.katIkon + '" aria-hidden="true"></i>';
+      });
+    });
     document.querySelectorAll('#pl-katList .pl-kat-row').forEach(function (row) {
       var id = row.dataset.id, k = pl.kategori.filter(function (q) { return q.id === id; })[0];
       var inp = row.querySelector('input');
