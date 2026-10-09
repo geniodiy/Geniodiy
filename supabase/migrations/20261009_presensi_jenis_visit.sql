@@ -1,4 +1,4 @@
--- Presensi jenis visit (9 Okt 2026). NOT YET APPLIED: apply to GDIY only after the owner approves.
+-- Presensi jenis visit. Applied to GDIY on 9 Oct 2026 (migration presensi_jenis_visit).
 --
 -- Tutor (or kepala unit/manajer when mewakili) chooses the jenis when submitting:
 --   presensi: normal report (ringkasan sesi, foto bukti, tautan, catatan).
@@ -12,9 +12,9 @@ alter table public.presensi add column if not exists jenis text not null default
 alter table public.presensi drop constraint if exists presensi_jenis_check;
 alter table public.presensi add constraint presensi_jenis_check check (jenis in ('presensi', 'visit'));
 -- Backfill without firing triggers, so nominal and denda of old rows are not recalculated with today's settings
-set session_replication_role = replica;
+alter table public.presensi disable trigger trg_presensi_before_write;
 update public.presensi set jenis = 'visit' where status = 'visit' and jenis <> 'visit';
-set session_replication_role = origin;
+alter table public.presensi enable trigger trg_presensi_before_write;
 
 CREATE OR REPLACE FUNCTION public.presensi_before_write()
  RETURNS trigger
