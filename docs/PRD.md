@@ -150,6 +150,8 @@ Bulan berikutnya → klik "Generate Slip Gaji" → Manajer tandai "sudah dibayar
 **Status presensi:** `pending` → `diterima` / `ditolak` / `visit`
 
 > **[v5, 9 Okt 2026] Pengajuan visit:** tutor memilih jenis di poin 3 form: **Presensi** (isian biasa) atau **Visit** (deskripsi pengajuan visit + dokumentasi bukti visit, tombol "Ajukan visit"). Approver hanya **Terima / Tolak**; pengajuan visit yang diterima berstatus `visit` (dibayar flat `nominal_visit` dari pengaturan manajer, bebas denda telat, tetap ditagih ke ortu 1 pertemuan). Presensi biasa tidak bisa dijadikan visit oleh approver: tolak, lalu tutor merevisi (boleh mengganti jenis). Visit tidak dibuatkan PDF laporan belajar. Kolom baru `presensi.jenis`.
+>
+> **[v5, 9 Okt 2026] Kirim laporan ke orang tua:** tab ketiga **Kirim laporan** di Presensi, hanya untuk kepala unit (unitnya sendiri), manajer, dan super admin. Laporan yang sudah disetujui (diterima dan visit) dalam rentang Hari ini / Kemarin / **Minggu ini** (bawaan) / Bulan ini / Pilih tanggal, dikelompokkan per orang tua dengan progres terkirim; filter Belum dikirim / Sudah dikirim / Semua. Kirim **satuan** (satu laporan) atau **rekap** (semua yang belum dikirim; bisa menyertakan yang sudah dikirim untuk rekap lengkap). Cara kirim: **Bagikan link** (pesan WhatsApp berisi link PDF) atau **Lampirkan file** (unduh PDF langsung tanpa membuka Drive, lalu lampirkan di WhatsApp; di HP ada Bagikan file lewat menu bagikan). Isi file rekap: **1 PDF rekap** (header dan identitas sekali, tabel ringkasan, rincian per pertemuan per siswa, footer sekali) atau PDF per pertemuan. Visit ikut sebagai catatan, tanpa PDF sendiri. Pesan memakai salam sesuai jam WIB, kalimat bahwa tautan materi dan catatan pembelajaran bisa dibuka di PDF, dan tanda tangan jabatan + Mr./Ms. + nama + Genio Institute; teks bisa diedit sebelum dikirim. Laporan ditandai terkirim saat tombol kirim ditekan (tabel `laporan_kirim`) dan tandanya bisa dibatalkan. Orang tua tanpa nomor diberi tombol Lengkapi nomor.
 
 **Logika hasil approval:**
 | Status | Dihitung sebagai pertemuan? | Gaji tutor |
@@ -792,7 +794,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 | 4 | Data Ortu & Siswa | Selesai | Hapus permanen untuk data tanpa histori (sekarang hanya nonaktifkan, dan ini boleh tetap begitu) |
 | 5 | Paket Belajar | Selesai | |
 | 6 | Kontrak + Jadwal | Selesai | |
-| 7 | Presensi | Selesai (sisi Manajer), sisi tutor sebagian | PDF Laporan Belajar untuk presensi diwakilkan. Halaman Presensi tutor (isi, revisi, jadwal lengkap) sudah dibuat di Fase 4a. |
+| 7 | Presensi | Selesai (sisi Manajer), sisi tutor sebagian | PDF Laporan Belajar untuk presensi diwakilkan. Halaman Presensi tutor (isi, revisi, jadwal lengkap) sudah dibuat di Fase 4a. Tab Kirim laporan ke orang tua (satuan dan rekap, link atau file, PDF rekap) selesai 9 Okt 2026. |
 | 8 | Tagihan | Selesai (dengan sinkron otomatis) | |
 | 9 | Operasional | Selesai | |
 | 10 | Penggajian | Selesai (dengan generate otomatis) | Pengeluaran gaji di Home membaca `slip_gaji`, jadi baru terisi setelah menu Gaji bulan itu dibuka. |

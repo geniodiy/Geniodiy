@@ -1144,7 +1144,7 @@
   // Footer: info data, pilihan baris per halaman (10/25/50/100, disimpan terpisah HP dan layar lebar), tombol pertama, sebelumnya,
   // nomor halaman, berikutnya, terakhir. Kembali ke halaman 1 saat jumlah data berubah (cari, filter). Tidak tampil kalau data <= 10.
   (function genioPager() {
-    var TABLES = 'table.dt-table,table.gj-table,table.gt-table,table.jdw-table,table.kp-table,table.ku-table,table.ktr-table,table.ops-table,table.os-table,table.pkt-table,table.ps-table,table.tg-table';
+    var TABLES = 'table.dt-table,table.gj-table,table.gt-table,table.jdw-table,table.kp-table,table.ku-table,table.kl-table,table.ktr-table,table.ops-table,table.os-table,table.pkt-table,table.ps-table,table.tg-table';
     var SIZES = [10, 25, 50, 100], states = {};
     var css = document.createElement('style');
     css.textContent =
@@ -1183,6 +1183,7 @@
       for (var i = 0; i < body.rows.length; i++) {
         var r = body.rows[i];
         if (r.cells.length === 1 && r.cells[0].colSpan > 1) continue; // baris kosong "tidak ada data"
+        if (r.classList.contains('genio-pg-sub')) continue; // baris rincian ikut baris induknya, tidak dihitung
         out.push(r);
       }
       return out;
@@ -1210,6 +1211,12 @@
       st.rows = rows; st.size = size; st.sv = sv;
       var from = (sv.page - 1) * size, to = Math.min(total, from + size);
       rows.forEach(function (r, i) { r.classList.toggle('genio-pg-hide', total > SIZES[0] && (i < from || i >= to)); });
+      var body = table.tBodies && table.tBodies[0], parentHidden = false;
+      if (body) for (var bi = 0; bi < body.rows.length; bi++) {
+        var br = body.rows[bi];
+        if (br.classList.contains('genio-pg-sub')) br.classList.toggle('genio-pg-hide', parentHidden);
+        else parentHidden = br.classList.contains('genio-pg-hide');
+      }
       var card = table.closest('.ps-table-card, [class$="-table-card"]') || table.parentElement.parentElement;
       var foot = st.foot;
       if (total <= SIZES[0]) { if (foot && foot.parentNode) foot.parentNode.removeChild(foot); st.foot = null; return; }

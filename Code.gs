@@ -169,13 +169,7 @@ function previewLaporanBelajarHtml(laporanData) {
 
 function generateLaporanBelajarPdf(laporanData) {
   try {
-    var subfolder;
-    if (LAPORAN_BELAJAR_FOLDER_ID) {
-      subfolder = DriveApp.getFolderById(LAPORAN_BELAJAR_FOLDER_ID);
-    } else {
-      var rootFolder = getOrCreateDriveFolder_(DriveApp.getRootFolder(), 'Genio Institute - Uploads');
-      subfolder = getOrCreateDriveFolder_(rootFolder, 'Laporan Belajar');
-    }
+    var subfolder = getLaporanBelajarFolder_();
 
     var htmlContent = buildLaporanBelajarHtml_(laporanData);
     var cleanSiswa = (laporanData.siswaNama || 'Siswa').replace(/[^a-zA-Z0-9_\- ]/g, '').trim().replace(/\s+/g, '_');
@@ -206,6 +200,67 @@ function generateLaporanBelajarPdf(laporanData) {
       fileId: file.getId(),
       name: file.getName()
     };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+function getLaporanBelajarFolder_() {
+  if (LAPORAN_BELAJAR_FOLDER_ID) return DriveApp.getFolderById(LAPORAN_BELAJAR_FOLDER_ID);
+  var rootFolder = getOrCreateDriveFolder_(DriveApp.getRootFolder(), 'Genio Institute - Uploads');
+  return getOrCreateDriveFolder_(rootFolder, 'Laporan Belajar');
+}
+
+/**
+ * PDF rekap laporan belajar untuk satu orang tua dalam satu periode (tab "Kirim laporan" di Presensi).
+ * Header dan identitas sekali di atas, tabel ringkasan, lalu rincian tiap pertemuan per siswa, footer sekali di akhir.
+ * Nama file memuat kunci isi (rekapKey dari daftar id presensi), jadi rekap dengan isi sama menimpa file lama,
+ * sedangkan rekap susulan dengan isi berbeda menjadi file baru dan link yang sudah dikirim ke orang tua tetap hidup.
+ */
+function generateRekapLaporanPdf(rekapData) {
+  try {
+    var d = rekapData || {};
+    var folder = getOrCreateDriveFolder_(getLaporanBelajarFolder_(), 'Rekap Laporan Belajar');
+    var clean = function (s) { return String(s || '').replace(/[^a-zA-Z0-9_\- ]/g, '').trim().replace(/\s+/g, '_'); };
+    var fileName = 'Rekap_Laporan_Belajar_' + (clean(d.ortuNama) || 'Orang_Tua') + '_' + clean(d.tanggalMulai) + '_sd_' + clean(d.tanggalSelesai) +
+      (d.rekapKey ? '_' + clean(d.rekapKey) : '') + '.pdf';
+    try {
+      var existing = folder.getFilesByName(fileName);
+      while (existing.hasNext()) existing.next().setTrashed(true);
+    } catch (cleanErr) {
+      Logger.log('Warning cleaning old rekap: ' + cleanErr.message);
+    }
+    var blob = Utilities.newBlob(buildRekapLaporanHtml_(d), 'text/html', 'rekap.html').getAs('application/pdf').setName(fileName);
+    var file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return { success: true, url: file.getUrl(), fileId: file.getId(), name: file.getName(), size: file.getSize() };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Isi file PDF laporan belajar (satuan atau rekap) sebagai base64, supaya browser bisa langsung
+ * menyimpan atau membagikan file tanpa membuka Google Drive. Hanya file di folder Laporan Belajar
+ * (dan subfolder Rekap) yang dilayani.
+ */
+function getLaporanFileBase64(fileIdOrUrl) {
+  try {
+    var fileId = String(fileIdOrUrl || '');
+    var m = fileId.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || fileId.match(/\/d\/([a-zA-Z0-9_-]+)/) || fileId.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (m && m[1]) fileId = m[1];
+    if (!/^[a-zA-Z0-9_-]{10,}$/.test(fileId)) return { success: false, error: 'File tidak dikenali' };
+    var file = DriveApp.getFileById(fileId);
+    var laporanFolder = getLaporanBelajarFolder_();
+    var allowed = {};
+    allowed[laporanFolder.getId()] = true;
+    var rekapIt = laporanFolder.getFoldersByName('Rekap Laporan Belajar');
+    while (rekapIt.hasNext()) allowed[rekapIt.next().getId()] = true;
+    var ok = false, parents = file.getParents();
+    while (parents.hasNext()) { if (allowed[parents.next().getId()]) { ok = true; break; } }
+    if (!ok || file.isTrashed()) return { success: false, error: 'File laporan tidak ditemukan' };
+    var blob = file.getBlob();
+    return { success: true, name: file.getName(), mimeType: blob.getContentType() || 'application/pdf', base64: Utilities.base64Encode(blob.getBytes()) };
   } catch (err) {
     return { success: false, error: err.message };
   }
@@ -660,6 +715,118 @@ function buildLaporanBelajarHtml_(d) {
     '</div>' +
   '</body>' +
   '</html>';
+}
+
+// Rekap beberapa pertemuan untuk satu orang tua. Tampilan mengikuti buildLaporanBelajarHtml_ supaya seragam.
+// d: { ortuNama, siswaNama, unit, periodeLabel, jumlahLabel, mapelList, tutorList,
+//      groups: [{ siswaNama, items: [{ no, tanggal, tanggalShort, mapel, tutorNama, jam, durasi, isVisit, materiTeks, materiLink, catatanPembelajaranUrl }] }] }
+function buildRekapLaporanHtml_(d) {
+  var esc = function (str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  };
+  var pill = function (isVisit) {
+    return isVisit
+      ? '<span class="pill pill-visit">VISIT</span>'
+      : '<span class="pill">DITERIMA</span>';
+  };
+  var groups = d.groups || [];
+  var multi = groups.length > 1;
+
+  var summaryRows = '';
+  groups.forEach(function (g) {
+    (g.items || []).forEach(function (it) {
+      summaryRows += '<tr><td>' + esc(it.no) + '</td><td>' + esc(it.tanggalShort) + '</td><td>' + esc(g.siswaNama) + '</td><td>' + esc(it.mapel) +
+        '</td><td>' + esc(it.tutorNama) + '</td><td>' + esc(it.jam) + (it.durasi && !it.isVisit ? ' · ' + esc(it.durasi) : '') + '</td><td>' + pill(it.isVisit) + '</td></tr>';
+    });
+  });
+
+  var detail = '';
+  groups.forEach(function (g) {
+    if (multi) detail += '<div class="siswa-head">' + esc(g.siswaNama) + '</div>';
+    (g.items || []).forEach(function (it) {
+      var links = [];
+      if (it.materiLink) links.push('Materi: <a href="' + esc(it.materiLink) + '">' + esc(it.materiLink) + '</a>');
+      if (it.catatanPembelajaranUrl) links.push('Catatan pembelajaran: <a href="' + esc(it.catatanPembelajaranUrl) + '">Buka catatan pembelajaran</a>');
+      var desc = it.materiTeks
+        ? '<div class="desc">' + esc(it.materiTeks) + '</div>'
+        : '<div class="desc desc-empty">Tidak ada deskripsi laporan tertulis.</div>';
+      detail += '<div class="meet">' +
+        '<table class="meet-head"><tr>' +
+          '<td style="width:20px; padding-right:0;"><span class="num">' + esc(it.no) + '</span></td>' +
+          '<td><b>' + esc(it.tanggal) + '</b><span class="meta">' + esc(it.mapel) + ' · ' + esc(it.tutorNama) + ' · ' + esc(it.jam) +
+            (it.durasi && !it.isVisit ? ', ' + esc(it.durasi) : '') + '</span></td>' +
+          '<td style="text-align:right; width:80px;">' + pill(it.isVisit) + '</td>' +
+        '</tr></table>' +
+        '<div class="meet-body">' + desc + (links.length ? '<div class="links">' + links.join('<span class="sep"></span>') + '</div>' : '') + '</div>' +
+      '</div>';
+    });
+  });
+
+  var tanggalCetak = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  return '<!DOCTYPE html><html><head><meta charset="utf-8">' +
+    '<title>Rekap Laporan Belajar - ' + esc(d.ortuNama || 'Orang Tua') + '</title>' +
+    '<style>' +
+      '@page { size: A4 portrait; margin: 16mm 14mm; }' +
+      'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #1c1c1e; margin: 0; padding: 20px; background: #fff; line-height: 1.45; }' +
+      '.report-box { max-width: 740px; margin: 0 auto; border: 1px solid #e5e5ea; border-radius: 12px; padding: 26px; box-sizing: border-box; }' +
+      '.header-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; border-bottom: 2.5px solid #1c1c1e; }' +
+      '.header-table td { padding-bottom: 14px; }' +
+      '.logo-title { font-size: 23px; font-weight: 800; color: #1c1c1e; letter-spacing: -0.5px; }' +
+      '.logo-sub { font-size: 11px; color: #8e8e93; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; font-weight: 600; }' +
+      '.report-title { font-size: 18px; font-weight: 800; color: #1c1aaf; text-align: right; letter-spacing: 0.3px; }' +
+      '.report-meta { font-size: 11px; color: #636366; text-align: right; margin-top: 4px; }' +
+      '.info-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0 0 18px; }' +
+      '.info-cell { width: 49%; vertical-align: top; padding: 12px 14px; background: #f8f9fa; border: 1px solid #ededf0; border-radius: 10px; }' +
+      '.info-gap { width: 2%; }' +
+      '.info-row { font-size: 11.5px; margin-bottom: 6px; }' +
+      '.info-label { color: #8e8e93; display: inline-block; width: 120px; font-size: 11px; }' +
+      '.info-val { font-weight: 700; color: #1c1c1e; }' +
+      '.section-title { font-size: 12px; font-weight: 800; color: #1c1c1e; text-transform: uppercase; letter-spacing: 0.6px; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1.5px solid #ededf0; }' +
+      '.sum { width: 100%; border-collapse: collapse; font-size: 10.5px; }' +
+      '.sum th { background: #f8f9fa; color: #636366; font-size: 10px; text-align: left; padding: 7px 8px; border-bottom: 1px solid #e5e5ea; }' +
+      '.sum td { padding: 7px 8px; border-bottom: 1px solid #f0f0f3; vertical-align: middle; }' +
+      '.pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9px; font-weight: 800; background: #e8f5e9; color: #28a745; }' +
+      '.pill-visit { background: #eaf3ff; color: #007aff; }' +
+      '.siswa-head { font-size: 13px; font-weight: 800; color: #1c1aaf; margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #e5e5ea; }' +
+      '.meet { border: 1px solid #e5e5ea; border-radius: 10px; margin-bottom: 10px; page-break-inside: avoid; break-inside: avoid; overflow: hidden; }' +
+      '.meet-head { width: 100%; border-collapse: collapse; background: #f8f9fa; border-bottom: 1px solid #ededf0; }' +
+      '.meet-head td { padding: 8px 12px; font-size: 11.5px; vertical-align: middle; }' +
+      '.meet-head .meta { color: #636366; font-size: 10.5px; margin-left: 8px; }' +
+      '.num { display: inline-block; width: 20px; height: 20px; line-height: 20px; border-radius: 50%; background: #1c1aaf; color: #fff; font-size: 10px; font-weight: 800; text-align: center; }' +
+      '.meet-body { padding: 10px 12px; }' +
+      '.desc { font-size: 11.5px; line-height: 1.65; white-space: pre-wrap; color: #1c1c1e; }' +
+      '.desc-empty { color: #8e8e93; font-style: italic; }' +
+      '.links { margin-top: 7px; font-size: 10.5px; color: #636366; }' +
+      '.links a { color: #007aff; text-decoration: none; font-weight: 600; word-break: break-all; }' +
+      '.links .sep { display: inline-block; width: 14px; }' +
+      '.footer-text { margin-top: 26px; padding-top: 14px; border-top: 1px dashed #d1d1d6; font-size: 10.5px; color: #8e8e93; text-align: center; line-height: 1.5; page-break-inside: avoid; }' +
+    '</style></head><body>' +
+    '<div class="report-box">' +
+      '<table class="header-table"><tr>' +
+        '<td style="vertical-align:top;"><div class="logo-title">GENIO INSTITUTE</div><div class="logo-sub">Lembaga Bimbingan Belajar &amp; Privat Berkualitas</div></td>' +
+        '<td style="text-align:right; vertical-align:top;"><div class="report-title">REKAP LAPORAN BELAJAR</div><div class="report-meta">Periode: <strong>' + esc(d.periodeLabel || '-') + '</strong></div></td>' +
+      '</tr></table>' +
+      '<table class="info-table"><tr>' +
+        '<td class="info-cell">' +
+          '<div class="info-row"><span class="info-label">Orang Tua / Wali</span><span class="info-val">: ' + esc(d.ortuNama || '-') + '</span></div>' +
+          '<div class="info-row"><span class="info-label">Nama Siswa</span><span class="info-val">: ' + esc(d.siswaNama || '-') + '</span></div>' +
+          '<div class="info-row"><span class="info-label">Unit / Cabang</span><span class="info-val">: ' + esc(d.unit || '-') + '</span></div>' +
+        '</td><td class="info-gap"></td>' +
+        '<td class="info-cell">' +
+          '<div class="info-row"><span class="info-label">Jumlah Pertemuan</span><span class="info-val">: ' + esc(d.jumlahLabel || '-') + '</span></div>' +
+          '<div class="info-row"><span class="info-label">Mata Pelajaran</span><span class="info-val">: ' + esc(d.mapelList || '-') + '</span></div>' +
+          '<div class="info-row"><span class="info-label">Tutor</span><span class="info-val">: ' + esc(d.tutorList || '-') + '</span></div>' +
+        '</td>' +
+      '</tr></table>' +
+      '<div class="section-title">Ringkasan Pertemuan</div>' +
+      '<table class="sum"><tr><th>No</th><th>Tanggal</th><th>Siswa</th><th>Mapel</th><th>Tutor</th><th>Waktu</th><th>Status</th></tr>' + summaryRows + '</table>' +
+      '<div class="section-title">Rincian per Pertemuan</div>' +
+      detail +
+      '<div class="footer-text">Dokumen ini dicetak otomatis oleh Sistem Informasi Genio Institute pada ' + tanggalCetak +
+        ' dan merupakan rekap laporan pembelajaran resmi bagi siswa &amp; orang tua. Tautan materi dan catatan pembelajaran dapat dibuka langsung dari dokumen ini.</div>' +
+    '</div></body></html>';
 }
 
 function buildInvoiceHtml_(d) {
