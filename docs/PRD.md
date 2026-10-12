@@ -801,6 +801,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 | 10 | Penggajian | Selesai (dengan generate otomatis) | Pengeluaran gaji di Home membaca `slip_gaji`, jadi baru terisi setelah menu Gaji bulan itu dibuka. |
 | 11 | Home & Progres | Sebagian | Genio News dipindah ke paling atas. Tambah siswa aktif dan jumlah pertemuan di highlight, pie chart siswa aktif per unit, shortcut tagihan belum lunas. Menu Progres belum ada. |
 | 12 | Genio News | Belum | Menu penuh dengan daftar, detail, dan editor (upload gambar dengan kompresi). |
+| 14 | Jadwal Kosong Tutor | Selesai (12 Okt 2026) | Tutor mengisi jadwal kosong per 30 menit (07.00 sampai 21.00) lewat Profil > Atur jadwal kosong, jam yang sudah ada jadwal mengajar terkunci, pengingat di Beranda. Manajer, super admin, kepala unit, dan HRD melihat menu Jadwal Kosong Tutor: jumlah tutor kosong per jam (sudah dikurangi jadwal mengajar), filter mapel dan jenis kelamin, popup tutor dengan pendidikan terakhir, tombol WhatsApp, dan tautan ke data tutor. |
 | 13 | Laporan Keuangan | Belum (Coming Soon) | Menu di Lainnya untuk manajer dan super admin sudah ada sebagai penanda (12 Okt 2026, ide pemilik); isi dan rancangan dikerjakan nanti. |
 | + | Profil | Selesai | Ubah email login belum dibuka. |
 | + | Login | Sebagian | Redesign tampilan (ditunda), Google Sign-In. |

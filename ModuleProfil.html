@@ -181,6 +181,8 @@
           <div class="prf-row"><span class="tx"><span>Nomor rekening</span><b id="prfDetailRek">-</b></span></div>
         </div>
       </div>
+      <!-- Tutor: kartu Jadwal kosong + tombol Atur jadwal kosong (diisi ModuleJadwalKosong.html) -->
+      <div id="prfJkWrap" hidden></div>
     </div>
   </div>
 
@@ -347,6 +349,7 @@
       var tp = prfTutorProfile(me);
       var isTutor = session.role === 'tutor';
       document.getElementById('prfTutorCard').hidden = !isTutor;
+      if (isTutor && window.genioJadwalKosong) window.genioJadwalKosong.tutorCard(document.getElementById('prfJkWrap'), 'profil');
       if (isTutor) {
         document.getElementById('prfDetailKeahlian').textContent = prfKeahlianText(tp && tp.keahlian) || '-';
         document.getElementById('prfDetailPendidikan').textContent = (tp && tp.pendidikan_terakhir) || '-';

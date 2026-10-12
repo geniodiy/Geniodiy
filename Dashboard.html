@@ -547,6 +547,7 @@
     <?!= include('ModulePaketBelajar'); ?>
     <?!= include('ModuleKontrak'); ?>
     <?!= include('ModuleJadwal'); ?>
+    <?!= include('ModuleJadwalKosong'); ?>
     <?!= include('ModuleTagihan'); ?>
     <?!= include('ModuleKelolaPengguna'); ?>
     <?!= include('ModuleDataTutor'); ?>
@@ -626,8 +627,8 @@
     if (typeof genioEnsureSessionProfile === 'function') genioEnsureSessionProfile();
     // Menu Lainnya yang boleh dilihat per role (role yang tidak tercantum melihat semua menu)
     var ROLE_MENU = {
-      kepala_unit: ['ortu-siswa', 'kontrak', 'tagihan', 'kirim-laporan', 'data-tutor', 'operasional', 'pemasukan-lain', 'genio-news'],
-      hrd: ['ortu-siswa', 'kontrak', 'presensi', 'genio-news'], // HRD tidak mengirim laporan ke orang tua
+      kepala_unit: ['ortu-siswa', 'kontrak', 'jadwal-kosong', 'tagihan', 'kirim-laporan', 'data-tutor', 'operasional', 'pemasukan-lain', 'genio-news'],
+      hrd: ['ortu-siswa', 'kontrak', 'jadwal-kosong', 'presensi', 'genio-news'], // HRD tidak mengirim laporan ke orang tua
       tutor: []
     };
     function genioRetab(btnId, newTab, label, icon) {
@@ -978,9 +979,9 @@
     var MENU_ICONS = {
       // Peta ikon tunggal (samakan di semua halaman): siswa student, kontrak file-text, jadwal calendar-blank, tagihan credit-card,
       // tutor chalkboard-teacher, operasional receipt, unit buildings, paket belajar books, user user-gear, news newspaper, pengaturan gear, presensi check-circle,
-      // pemasukan lain hand-coins, kirim laporan paper-plane-tilt, laporan keuangan chart-line-up
+      // pemasukan lain hand-coins, kirim laporan paper-plane-tilt, laporan keuangan chart-line-up, jadwal kosong tutor clock-user
       people: '<i class="ph ph-student" aria-hidden="true"></i>', doc: '<i class="ph ph-file-text" aria-hidden="true"></i>', calendar: '<i class="ph ph-calendar-blank" aria-hidden="true"></i>', card: '<i class="ph ph-credit-card" aria-hidden="true"></i>', person: '<i class="ph ph-chalkboard-teacher" aria-hidden="true"></i>', monitor: '<i class="ph ph-receipt" aria-hidden="true"></i>',
-      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>', coins: '<i class="ph ph-hand-coins" aria-hidden="true"></i>', send: '<i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>', report: '<i class="ph ph-chart-line-up" aria-hidden="true"></i>'
+      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>', coins: '<i class="ph ph-hand-coins" aria-hidden="true"></i>', send: '<i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>', report: '<i class="ph ph-chart-line-up" aria-hidden="true"></i>', clockuser: '<i class="ph ph-clock-user" aria-hidden="true"></i>'
     };
 
     // ===== Konfigurasi menu "Lainnya" — satu-satunya sumber data untuk:
@@ -990,6 +991,7 @@
         { key: 'ortu-siswa', icon: 'people', label: 'Data Ortu & Siswa' },
         { key: 'kontrak', icon: 'doc', label: 'Kontrak' },
         { key: 'jadwal', icon: 'calendar', label: 'Jadwal Mengajar' },
+        { key: 'jadwal-kosong', icon: 'clockuser', label: 'Jadwal Kosong Tutor' },
         { key: 'tagihan', icon: 'card', label: 'Tagihan' },
         { key: 'kirim-laporan', icon: 'send', label: 'Kirim laporan' },
         { key: 'data-tutor', icon: 'person', label: 'Kelola Tutor' },
@@ -1037,6 +1039,7 @@
       'ortu-siswa': ['Data Ortu & Siswa', 'Lintas unit'],
       'kontrak': ['Kontrak', 'Kontrak siswa & tutor'],
       'jadwal': ['Jadwal', 'Jadwal sesi belajar'],
+      'jadwal-kosong': ['Jadwal Kosong Tutor', 'Kapan tutor bisa mengajar'],
       'tagihan': ['Tagihan', 'Invoice & receipt'],
       'kirim-laporan': ['Kirim laporan', 'Laporan belajar ke orang tua'],
       'data-tutor': IS_KU ? ['Data Tutor', 'Daftar tutor'] : ['Kelola Tutor', 'Kelola akun tutor'],
@@ -1174,6 +1177,12 @@
         lainnyaSetInfo('pengaturan', '');
         lainnyaSetInfo('presensi', '');
         lainnyaKirimInfo();
+        // Jadwal kosong tutor: berapa tutor yang sudah mengisi
+        if (document.getElementById('mrInfo-jadwal-kosong')) {
+          supaRest('tutor_profile?jadwal_kosong_at=not.is.null&select=id', token).then(function (r) {
+            lainnyaSetInfo('jadwal-kosong', (r || []).length + ' Tutor mengisi');
+          }).catch(function () { lainnyaSetInfo('jadwal-kosong', ''); });
+        }
       } catch (e) {
         genioToast('Gagal memuat sebagian data: ' + e.message, 'error');
       }

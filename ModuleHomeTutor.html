@@ -173,6 +173,9 @@
       <button type="button" class="kuh-act" data-go="gaji"><span class="ic"><i class="ph ph-wallet" aria-hidden="true"></i></span><div class="t"><b id="hmtActSlip">Rp 0</b><span>Slip belum dibayar</span><small id="hmtActSlipSub">-</small></div></button>
     </div>
 
+    <!-- Pengingat isi jadwal kosong (muncul kalau belum diisi atau lebih dari 30 hari) -->
+    <div id="hmtJkCard" hidden></div>
+
     <div class="kuh-2">
       <div class="hmt-col">
         <div class="kuh-card hmt-rev" id="hmtRevCard" hidden>
@@ -320,6 +323,7 @@
     if (!s || s.role !== 'tutor' || hmt.loading) return;
     hmt.loading = true;
     hmtRenderGreeting(s);
+    if (window.genioJadwalKosong) window.genioJadwalKosong.tutorCard(document.getElementById('hmtJkCard'), 'home');
     try {
       var per = genioGetPeriode();
       var from = perShift(per, -23) + '-01'; // 12 bulan + 12 bulan pembanding
