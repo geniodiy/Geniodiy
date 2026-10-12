@@ -157,6 +157,29 @@
   .jk-tpl small{display:block; font-size:10.5px; color:var(--ink-soft); margin-top:2px; line-height:1.5;}
   .jk-list .jk-tpl{margin:4px 0 10px; box-shadow:none; max-width:none;}
   .jk-daynote{font-size:10.5px; color:var(--ink-soft); background:var(--surface); border-radius:10px; padding:8px 12px; margin:2px 0 8px;}
+  /* Kartu Home HRD */
+  .jkc{display:flex; flex-direction:column;}
+  .jkc-sub{font-size:10.5px; color:var(--ink-soft); margin:-4px 0 12px;}
+  .jkc-wrap{position:relative;}
+  .jkc-scroll{overflow-x:auto; scrollbar-width:thin; -webkit-overflow-scrolling:touch; padding-bottom:4px;}
+  .jkc-g{display:grid; gap:4px; align-items:center; width:max-content;}
+  .jkc-h{font-size:9.5px; color:var(--muted, #8A8EA5); text-align:center;}
+  .jkc-l{position:sticky; left:0; z-index:1; background:#fff; font-size:11px; font-weight:600; color:var(--ink); line-height:1.15; padding-right:6px; align-self:stretch; display:flex; flex-direction:column; justify-content:center;}
+  .jkc-l small{font-size:9.5px; font-weight:400; color:var(--ink-soft);}
+  .jkc-l.is-on{color:var(--blue);}
+  .jkc-c{width:28px; height:28px; border-radius:5px; border:0; padding:0; background:#F1F2F7; font-family:var(--font); font-size:10px; font-weight:700; color:var(--blue); display:flex; align-items:center; justify-content:center; cursor:pointer;}
+  .jkc-c.l1{background:#E4E4F8;} .jkc-c.l2{background:#C3C3F0;} .jkc-c.l3{background:#7E7CDC; color:#fff;} .jkc-c.l4{background:var(--blue); color:#fff;}
+  .jkc-c.l0{cursor:default;}
+  .jkc-c:not(.l0):hover{outline:2px solid var(--ink); outline-offset:1px;}
+  .jkc-g.is-tpl .jkc-c{opacity:.55; pointer-events:none;}
+  .jkc-g.is-anim .jkc-c{animation:jkcIn .4s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 18ms);}
+  @keyframes jkcIn{from{opacity:0; transform:scale(.7);} to{opacity:1; transform:none;}}
+  .jkc-msg{position:absolute; inset:18px 0 4px 62px; display:flex; align-items:center; justify-content:center; pointer-events:none;}
+  .jkc-msg span{background:#fff; border:1px solid var(--border); border-radius:10px; padding:8px 12px; font-size:10.5px; color:var(--ink-soft); box-shadow:0 8px 20px -10px rgba(20,22,43,.25);}
+  .jkc-leg{display:flex; gap:12px; flex-wrap:wrap; font-size:10px; color:var(--ink-soft); margin-top:12px; padding-top:10px; border-top:1px dashed var(--border);}
+  .jkc-leg span{display:inline-flex; align-items:center; gap:5px;} .jkc-leg i{width:10px; height:10px; border-radius:3px; display:inline-block;}
+  .jkc-more{margin-top:auto; padding-top:10px; border:0; background:none; font-family:var(--font); font-size:11px; font-weight:600; color:var(--blue); cursor:pointer;}
+  @media (prefers-reduced-motion: reduce){ .jkc-g.is-anim .jkc-c{animation:none;} }
   .jk-empty{text-align:center; padding:28px 16px; font-size:11px; color:var(--ink-soft);}
   .jk-empty i{font-size:26px; opacity:.6; display:block; margin-bottom:6px;}
   .jk-leg2{display:flex; gap:12px; flex-wrap:wrap; font-size:10px; color:var(--ink-soft); margin-top:12px;}
@@ -498,18 +521,15 @@
   var mg = { loaded: false, tutors: [], free: {}, mapel: [], gender: [], day: todayIdx(), seq: 0, dd: null };
   var JK_GENDER = [['L', 'Laki-laki'], ['P', 'Perempuan']];
 
-  async function mgLoad() {
-    var seq = ++mg.seq, s = genioSessionOrLogin();
-    ddClose();
-    if (!mg.loaded) document.getElementById('jk-heroSub').textContent = 'Memuat jadwal kosong...';
-    try {
+  // Ambil tutor aktif, jadwal kosong, dan jam mengajar; dipakai menu Jadwal Kosong Tutor dan kartu Home HRD
+  async function mgFetch() {
+      var s = genioSessionOrLogin();
       var res = await Promise.all([
         supaRest('users?role=eq.tutor&status=eq.aktif&select=id,nama,jenis_kelamin,no_hp,foto_profil_url,tutor_profile(keahlian,pendidikan_terakhir,no_wa,jadwal_kosong_at)&order=nama.asc', s.access_token),
         supaRest('tutor_jadwal_kosong?select=tutor_id,hari,jam_mulai,jam_selesai', s.access_token),
         supaRest('rpc/tutor_jam_terisi', s.access_token, { method: 'POST', body: '{}' })
       ]);
-      if (seq !== mg.seq) return;
-      var free = {}, busy = {};
+      var free = {};
       (res[1] || []).forEach(function (r) { var d = dayIdx(r.hari); if (d < 0) return; var w = free[r.tutor_id] = free[r.tutor_id] || emptyWeek(); coverIdx(toMin(r.jam_mulai), toMin(r.jam_selesai)).forEach(function (i) { w[d][i] = true; }); });
       (res[2] || []).forEach(function (r) { var d = dayIdx(r.hari); if (d < 0 || !free[r.tutor_id]) return; touchIdx(toMin(r.jam_mulai), toMin(r.jam_selesai)).forEach(function (i) { free[r.tutor_id][d][i] = false; }); });
       mg.tutors = (res[0] || []).map(function (u) {
@@ -518,6 +538,14 @@
       });
       mg.free = free;
       mg.loaded = true;
+  }
+  async function mgLoad() {
+    var seq = ++mg.seq;
+    ddClose();
+    if (!mg.loaded) document.getElementById('jk-heroSub').textContent = 'Memuat jadwal kosong...';
+    try {
+      await mgFetch();
+      if (seq !== mg.seq) return;
       mgRender(true);
     } catch (err) {
       if (seq !== mg.seq) return;
@@ -701,21 +729,24 @@
   // Rentang kosong yang memuat blok i (untuk info "kosong 15.00-18.00" di popup)
   function freeSpan(w, d, i) { var a = i, b = i; while (a > 0 && w[d][a - 1]) a--; while (b < N - 1 && w[d][b + 1]) b++; return lbl(a) + '-' + (b + 1 === N ? '21.00' : lbl(b + 1)); }
   function waNumber(hp) { var n = String(hp || '').replace(/\D/g, ''); if (n.indexOf('0') === 0) n = '62' + n.slice(1); return n; }
-  function openList(d, i) {
-    var pool = mgPool().filter(function (t) { return mg.free[t.id][d][i]; });
+  // i sampai i2 (tidak termasuk) = blok yang dilihat; opts.all = abaikan filter halaman (kartu Home HRD)
+  function openList(d, i, i2, opts) {
+    i2 = i2 || i + 1; opts = opts || {};
+    function firstFree(t) { for (var k = i; k < i2; k++) if (mg.free[t.id][d][k]) return k; return -1; }
+    var pool = (opts.all ? mg.tutors.filter(function (t) { return mg.free[t.id]; }) : mgPool()).filter(function (t) { return firstFree(t) > -1; });
     if (!pool.length) return;
     var s = genioGetSession() || {};
-    document.getElementById('jk-listTitle').textContent = HARI_L[d] + ' ' + lbl(i) + '-' + lbl(i + 1);
-    document.getElementById('jk-listSub').textContent = pool.length + ' tutor kosong · ' + mgFilterText();
+    document.getElementById('jk-listTitle').textContent = (opts.dayLabel || HARI_L[d]) + ' ' + lbl(i) + '-' + lbl(i2);
+    document.getElementById('jk-listSub').textContent = pool.length + ' tutor kosong' + (opts.all ? '' : ' · ' + mgFilterText());
     document.getElementById('jk-listBody').innerHTML = pool.map(function (t) {
-      var a = daysAgo(t.at), stale = a !== null && a > STALE_DAYS;
-      var msg = 'Halo Kak ' + t.nama.split(' ')[0] + ', saya ' + (s.nama || 'admin') + ' dari Genio Institute. Apakah hari ' + HARI_L[d] + ' jam ' + lbl(i) + ' masih kosong untuk mengajar?';
+      var a = daysAgo(t.at), stale = a !== null && a > STALE_DAYS, f = firstFree(t);
+      var msg = 'Halo Kak ' + t.nama.split(' ')[0] + ', saya ' + (s.nama || 'admin') + ' dari Genio Institute. Apakah hari ' + HARI_L[d] + ' jam ' + lbl(f) + ' masih kosong untuk mengajar?';
       var wa = t.wa ? 'https://wa.me/' + waNumber(t.wa) + '?text=' + encodeURIComponent(msg) : '';
       var sub2 = (t.keahlian || []).join(', ');
       return '<div class="jk-tl"><span class="jk-av">' + genioAvatarInner(t.nama, t.foto, genioInitials(t.nama)) + '</span>' +
         '<div class="jk-tw"><b title="' + esc(t.nama) + '">' + esc(t.nama) + '</b>' +
         '<small>' + esc(t.pendidikan || 'Pendidikan terakhir belum diisi') + '</small>' +
-        '<small class="jk-free">Kosong ' + freeSpan(mg.free[t.id], d, i) + (sub2 ? '<span style="color:var(--ink-soft); font-weight:400;"> · ' + esc(sub2) + '</span>' : '') + '</small>' +
+        '<small class="jk-free">Kosong ' + freeSpan(mg.free[t.id], d, f) + (sub2 ? '<span style="color:var(--ink-soft); font-weight:400;"> · ' + esc(sub2) + '</span>' : '') + '</small>' +
         (stale ? '<small><em>Diperbarui ' + agoText(a) + '</em></small>' : '') + '</div>' +
         '<a class="jk-wa' + (wa ? '' : ' is-off') + '" href="' + (wa || '#') + '" target="_blank" rel="noopener noreferrer" title="' + (wa ? 'Chat lewat WhatsApp' : 'Nomor WhatsApp belum ada') + '" aria-label="Chat ' + esc(t.nama) + ' lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></a>' +
         '<button type="button" class="jk-go" data-tutor="' + esc(t.nama) + '" title="Lihat data tutor" aria-label="Lihat data ' + esc(t.nama) + '"><i class="ph ph-caret-right" aria-hidden="true"></i></button></div>';
@@ -758,6 +789,52 @@
 
   window.genioModuleHandlers = window.genioModuleHandlers || {};
   window.genioModuleHandlers['jadwal-kosong'] = mgLoad;
-  window.genioJadwalKosong = { tutorCard: tutorCard, openForm: openForm };
+  /* ===== Kartu Home HRD: jadwal kosong hari ini, besok, lusa (Style 1, kotak persegi per jam, geser ke kanan kalau banyak) ===== */
+  var hc = { el: null, days: [] };
+  function homeCard(el) {
+    if (!el) return;
+    if (!hc.el) {
+      hc.el = el;
+      el.addEventListener('click', function (e) {
+        var c = e.target.closest('.jkc-c'); if (c && !c.classList.contains('l0')) { var k = +c.dataset.r; openList(hc.days[k], +c.dataset.i, +c.dataset.i + 2, { all: true, dayLabel: ['Hari ini', 'Besok', 'Lusa'][k] + ', ' + HARI_L[hc.days[k]] }); return; }
+        if (e.target.closest('.jkc-more') && window.genioDashboardShowModule) window.genioDashboardShowModule('jadwal-kosong');
+      });
+    }
+    el.hidden = false;
+    if (!mg.loaded) el.innerHTML = '<div class="kuh-sec"><h4>Jadwal kosong tutor</h4><span>3 hari ke depan</span></div><div class="jk-empty">Memuat jadwal kosong...</div>';
+    mgFetch().then(function () { homeRender(true); }).catch(function (err) {
+      el.innerHTML = '<div class="kuh-sec"><h4>Jadwal kosong tutor</h4></div><div class="jk-empty">Gagal memuat: ' + esc(err.message) + '</div>';
+    });
+  }
+  function homeRender(animate) {
+    var el = hc.el; if (!el) return;
+    var t0 = todayIdx(); hc.days = [t0, (t0 + 1) % 7, (t0 + 2) % 7];
+    var pool = mg.tutors.filter(function (t) { return mg.free[t.id]; });
+    // Per jam: tutor yang kosong di salah satu dari dua blok 30 menit
+    var hours = []; for (var i = 0; i < N; i += 2) hours.push(i);
+    var cnt = hc.days.map(function (d) { return hours.map(function (i) { return pool.filter(function (t) { return mg.free[t.id][d][i] || mg.free[t.id][d][i + 1]; }).length; }); });
+    var lo = hours.length, hi = -1;
+    cnt.forEach(function (row) { row.forEach(function (v, k) { if (v) { if (k < lo) lo = k; if (k > hi) hi = k; } }); });
+    var tpl = hi < 0; if (tpl) { lo = 0; hi = hours.length - 1; }
+    var cols = hi - lo + 1;
+    var g = '<span class="jkc-l jkc-hd"></span>';
+    for (var k = lo; k <= hi; k++) g += '<span class="jkc-h">' + lbl(hours[k]).slice(0, 2) + '</span>';
+    ['Hari ini', 'Besok', 'Lusa'].forEach(function (nm, r) {
+      g += '<span class="jkc-l' + (r === 0 ? ' is-on' : '') + '">' + nm + '<small>' + HARI_L[hc.days[r]] + '</small></span>';
+      for (var k = lo; k <= hi; k++) {
+        var v = cnt[r][k];
+        g += '<button type="button" class="jkc-c ' + lvl(v) + '" data-r="' + r + '" data-i="' + hours[k] + '" style="--i:' + (k - lo) + '" title="' + nm + ' ' + lbl(hours[k]) + '-' + lbl(hours[k] + 2) + ': ' + v + ' tutor kosong"' + (v ? '' : ' tabindex="-1"') + '>' + (v || '') + '</button>';
+      }
+    });
+    var msg = !mg.tutors.some(function (t) { return t.filled; }) ? 'Belum ada tutor yang mengisi jadwal kosong.' : 'Tidak ada tutor kosong di 3 hari ini.';
+    el.innerHTML = '<div class="kuh-sec"><h4>Jadwal kosong tutor</h4><span>3 hari ke depan</span></div>' +
+      '<div class="jkc-sub">Ketuk kotak untuk melihat tutor</div>' +
+      '<div class="jkc-wrap"><div class="jkc-scroll"><div class="jkc-g' + (tpl ? ' is-tpl' : '') + (animate && !RM ? ' is-anim' : '') + '" style="grid-template-columns:62px repeat(' + cols + ', 28px);">' + g + '</div></div>' +
+      (tpl ? '<div class="jkc-msg"><span>' + msg + '</span></div>' : '') + '</div>' +
+      '<div class="jkc-leg"><span><i style="background:#E4E4F8"></i>1 tutor</span><span><i style="background:#C3C3F0"></i>2</span><span><i style="background:#7E7CDC"></i>3</span><span><i style="background:var(--blue)"></i>4+</span></div>' +
+      '<button type="button" class="jkc-more">Lihat semua jadwal kosong</button>';
+  }
+
+  window.genioJadwalKosong = { tutorCard: tutorCard, openForm: openForm, homeCard: homeCard };
 })();
 </script>
