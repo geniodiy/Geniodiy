@@ -227,6 +227,7 @@
         <div style="min-width:0;">
           <h3 id="pl-modalTitle">Tambah pemasukan</h3>
           <p class="gx-sub">Biaya di luar les, masuk ke invoice bulanan.</p>
+          <div class="genio-idrow" id="pl-modalId" style="justify-content:flex-start; margin-top:6px;" hidden></div>
         </div>
         <button type="button" class="gx-close" id="pl-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -552,7 +553,7 @@
     if (pl.view === 'table') {
       listEl.className = 'pl-view-table';
       listEl.innerHTML = '<div class="pl-table-card"><div class="pl-table-wrap"><table class="pl-table"><thead><tr>' +
-        '<th class="pl-no pl-stk pl-stk-no">No</th><th class="pl-stk pl-stk-who">Ditagihkan ke</th><th>Tanggal</th><th>Kategori</th><th class="pl-col-ket">Keterangan</th><th>Jumlah</th><th style="text-align:right;">Total</th><th>Status</th><th style="text-align:right;">Aksi</th>' +
+        '<th class="pl-no pl-stk pl-stk-no">No</th><th class="pl-stk pl-stk-who">Ditagihkan ke</th><th>Tanggal</th><th>Kategori</th><th class="pl-col-ket">Keterangan</th><th>Jumlah</th><th style="text-align:right;">Total</th><th>Status</th><th style="text-align:right;">Aksi</th><th>ID</th>' +
         '</tr></thead><tbody>' + rows.map(function (x, i) {
           var o = x.orangtua || {};
           return '<tr><td class="pl-no pl-stk pl-stk-no">' + (i + 1) + '</td>' +
@@ -560,7 +561,7 @@
             '<td>' + tglPendek(x.tanggal) + '</td><td>' + katChip(x.pemasukan_kategori) + '</td>' +
             '<td class="pl-col-ket">' + esc(x.keterangan) + '</td>' +
             '<td>' + num(x.jumlah) + ' × ' + rp(x.harga_satuan) + '</td><td class="pl-money">' + rp(x.nominal) + '</td>' +
-            '<td>' + stPill(x) + '</td><td class="pl-act">' + actions(x) + '</td></tr>';
+            '<td>' + stPill(x) + '</td><td class="pl-act">' + actions(x) + '</td><td>' + genioIdChip(x.id) + '</td></tr>';
         }).join('') + '</tbody></table></div></div>';
     } else {
       listEl.className = '';
@@ -700,6 +701,7 @@
     document.getElementById('pl-modalAlert').hidden = true;
     document.getElementById('pl-editId').value = x ? x.id : '';
     document.getElementById('pl-modalTitle').textContent = x ? 'Ubah pemasukan' : 'Tambah pemasukan';
+    genioSetIdChip(document.getElementById('pl-modalId'), x && x.id);
     var r = periodeRange(), today = new Date(), tIso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
     plSetTanggal(x ? x.tanggal : (tIso >= r.start && tIso <= r.end ? tIso : r.start));
     document.getElementById('pl-fotoFile').value = '';

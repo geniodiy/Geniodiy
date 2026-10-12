@@ -420,6 +420,7 @@
         <div style="min-width:0;">
           <h3 id="gj-previewTitle">Slip gaji tutor</h3>
           <div id="gj-previewSub">-</div>
+          <div id="gj-previewId" class="genio-idrow" style="justify-content:flex-start; margin-top:6px;" hidden></div>
         </div>
         <button type="button" id="gj-previewCloseX" class="pv-close" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -1417,6 +1418,7 @@
     var parts = gjState.periode.split('-');
     var namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][parseInt(parts[1], 10) - 1];
     if (subEl) subEl.textContent = 'Periode ' + namaBulan + ' ' + parts[0] + ' • ' + gjFormatRp(row.total_gaji);
+    genioSetIdChip(document.getElementById('gj-previewId'), row.id);
 
     if (link) {
       link.href = url;

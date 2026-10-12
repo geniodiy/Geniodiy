@@ -516,6 +516,7 @@
         <div style="min-width:0;">
           <h3 id="ktr-modalTitle">Tambah kontrak</h3>
           <p class="gx-sub">Kontrak belajar siswa untuk satu paket.</p>
+          <div class="genio-idrow" id="ktr-modalId" style="justify-content:flex-start; margin-top:6px;" hidden></div>
         </div>
         <button type="button" class="gx-close" id="ktr-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -590,6 +591,7 @@
         <div style="min-width:0;">
           <h3 id="ktr-tutorModalTitle">Tambah tutor</h3>
           <p class="gx-sub">Tutor, mapel, dan honor per sesi untuk kontrak ini.</p>
+          <div class="genio-idrow" id="ktr-tutorModalId" style="justify-content:flex-start; margin-top:6px;" hidden></div>
         </div>
         <button type="button" class="gx-close" id="ktr-tutorCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -1472,6 +1474,7 @@
     document.getElementById('ktr-modalAlert').hidden = true;
     ktrEditId = k ? k.id : null;
     document.getElementById('ktr-modalTitle').textContent = k ? 'Edit kontrak' : 'Tambah kontrak';
+    genioSetIdChip(document.getElementById('ktr-modalId'), k && k.id);
     var defaultTglMulai = k ? k.tanggal_mulai : new Date().toISOString().slice(0, 10);
     document.getElementById('ktr-tglMulai').value = defaultTglMulai;
     document.getElementById('ktr-tglMulaiLabel').textContent = ktrFormatTgl(defaultTglMulai);
@@ -1590,6 +1593,7 @@
     ktrTutorEditId = kt ? kt.id : null;
     document.getElementById('ktr-tutorKontrakSiswaId').value = kontrakSiswaId;
     document.getElementById('ktr-tutorModalTitle').textContent = kt ? 'Edit tutor' : 'Tambah tutor';
+    genioSetIdChip(document.getElementById('ktr-tutorModalId'), kt && kt.id);
     document.getElementById('ktr-mapel').value = kt ? kt.mapel : '';
     document.getElementById('ktr-fee').value = kt ? kt.fee_mengajar : '';
     document.getElementById('ktr-durasi').value = kt ? (kt.durasi_menit || '') : '';

@@ -2582,6 +2582,7 @@
           '<td style="text-align:center; white-space:nowrap;">' + (row.terlambat && !psIsVisit(row) ? '<span class="pt2-late"><i class="ph ph-warning-circle" aria-hidden="true"></i>Terlambat' + (psDendaRow(row) ? ' <b>&minus;' + psFormatRp(psDendaRow(row)) + '</b>' : '') + '</span>' : '<span class="pt2-ok">Tepat waktu</span>') + '</td>' +
           '<td style="text-align:center; white-space:nowrap;">' + lampiranHtml + '</td>' +
           '<td style="text-align:center; white-space:nowrap; min-width:170px;">' + statusHtml + '</td>' +
+          '<td style="white-space:nowrap;">' + genioIdChip(row.id) + '</td>' +
         '</tr>';
     }).join('');
 
@@ -2618,6 +2619,7 @@
                 '</th>' +
                 '<th style="text-align:center;">Lampiran</th>' +
                 '<th style="text-align:center; min-width:175px;">Status</th>' +
+                '<th>ID</th>' +
               '</tr>' +
             '</thead>' +
             '<tbody>' +
@@ -2921,6 +2923,7 @@
             : '') +
           lampiranHtml +
           catatanApprovalHtml +
+          '<div class="genio-idrow">' + genioIdChip(row.id) + '</div>' +
         '</div>' +
       '</div>';
 

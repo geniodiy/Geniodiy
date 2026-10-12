@@ -255,6 +255,7 @@
         <div style="min-width:0;">
           <h3 id="ops-modalTitle">Tambah pengeluaran</h3>
           <p class="gx-sub">Catat biaya operasional per unit beserta buktinya.</p>
+          <div class="genio-idrow" id="ops-modalId" style="justify-content:flex-start; margin-top:6px;" hidden></div>
         </div>
         <button type="button" class="gx-close" id="ops-modalCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -357,6 +358,7 @@
         <div style="min-width:0;">
           <h3 id="ops-previewTitle" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Bukti transaksi</h3>
           <p class="gx-sub">Bukti transaksi</p>
+          <div class="genio-idrow" id="ops-previewId" style="justify-content:flex-start; margin-top:6px;" hidden></div>
         </div>
         <button type="button" class="gx-close" id="ops-previewCloseX" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
@@ -590,7 +592,7 @@
           var prevBtn = e.target.closest('.ops-preview-btn');
           if (prevBtn) {
             e.preventDefault();
-            opsOpenPreview(prevBtn.dataset.url, prevBtn.dataset.ket);
+            opsOpenPreview(prevBtn.dataset.url, prevBtn.dataset.ket, prevBtn.dataset.id);
             return;
           }
           var toggle = e.target.closest('.ops-detail-toggle');
@@ -851,7 +853,7 @@
   }
 
   function opsBuktiAttrs(r) {
-    return 'data-url="' + opsEscape(r.foto_url) + '" data-ket="' + opsEscape(r.keterangan || 'Bukti transaksi') + '"';
+    return 'data-url="' + opsEscape(r.foto_url) + '" data-ket="' + opsEscape(r.keterangan || 'Bukti transaksi') + '" data-id="' + opsEscape(r.id) + '"';
   }
 
   function opsRenderTable(rows) {
@@ -986,6 +988,7 @@
     opsEditId = r ? id : null;
     document.getElementById('ops-editId').value = opsEditId || '';
     document.getElementById('ops-modalTitle').textContent = r ? 'Edit pengeluaran' : 'Tambah pengeluaran';
+    genioSetIdChip(document.getElementById('ops-modalId'), r && r.id);
     document.getElementById('ops-keterangan').value = r ? (r.keterangan || '') : '';
     document.getElementById('ops-nominal').value = r ? r.nominal : '';
 
@@ -1158,8 +1161,9 @@
     return m ? m[1] : null;
   }
 
-  function opsOpenPreview(url, ket) {
+  function opsOpenPreview(url, ket, id) {
     if (!url) return;
+    genioSetIdChip(document.getElementById('ops-previewId'), id);
     var modal = document.getElementById('ops-previewModal');
     var img = document.getElementById('ops-previewImg');
     var spinner = document.getElementById('ops-previewSpinner');

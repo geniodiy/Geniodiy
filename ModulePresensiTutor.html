@@ -377,6 +377,7 @@
       <div class="gx-body" style="padding-top:12px;">
         <div id="pt-lapBody"></div>
         <div class="pt-lap-files" id="pt-lapFiles"></div>
+        <div class="genio-idrow" id="pt-lapId" hidden></div>
       </div>
       <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="pt-lapOk">Tutup</button>
@@ -1243,6 +1244,7 @@
     document.getElementById('pt-lapBody').innerHTML = '<div class="pt-visit-txt"><span>Deskripsi pengajuan visit</span>' + esc(p.materi_teks || '-') + '</div>';
     document.getElementById('pt-lapFiles').innerHTML = p.foto_url ? '<a href="' + esc(p.foto_url) + '" target="_blank" rel="noopener"><i class="ph ph-image"></i>Dokumentasi visit</a>' : '';
     var pdf = document.getElementById('pt-lapPdf'); pdf.hidden = true; pdf.removeAttribute('href');
+    genioSetIdChip(document.getElementById('pt-lapId'), p.id);
     ptShow(document.getElementById('pt-lapModal'));
   }
   function ptOpenLaporan(it) {
@@ -1259,6 +1261,7 @@
     document.getElementById('pt-lapFiles').innerHTML = files.join('');
     var pdf = document.getElementById('pt-lapPdf');
     if (p.pdf_url) { pdf.href = p.pdf_url; pdf.hidden = false; } else { pdf.hidden = true; pdf.removeAttribute('href'); }
+    genioSetIdChip(document.getElementById('pt-lapId'), p.id);
     ptShow(document.getElementById('pt-lapModal'));
     var put = function (html) {
       var fr = document.createElement('iframe');

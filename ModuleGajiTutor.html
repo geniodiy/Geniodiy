@@ -180,7 +180,7 @@
         </div>
         <button type="button" class="gx-close" id="gt-slipClose" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
-      <div class="gx-body" style="padding-top:12px;"><div id="gt-slipBody"></div></div>
+      <div class="gx-body" style="padding-top:12px;"><div id="gt-slipBody"></div><div class="genio-idrow" id="gt-slipId" hidden></div></div>
       <div class="modal-actions gx-foot">
         <button type="button" class="btn btn-outline" id="gt-slipOk">Tutup</button>
         <a class="btn btn-primary" id="gt-slipPdf" target="_blank" rel="noopener" hidden>Unduh PDF</a>
@@ -460,6 +460,7 @@
     body.innerHTML = '<div class="gt-slip-load">Menyiapkan slip gaji...</div>';
     var pdf = document.getElementById('gt-slipPdf');
     if (slip && slip.pdf_url) { pdf.href = slip.pdf_url; pdf.hidden = false; } else { pdf.hidden = true; pdf.removeAttribute('href'); }
+    genioSetIdChip(document.getElementById('gt-slipId'), slip && slip.id);
     modal.hidden = false; modal.style.display = 'flex'; requestAnimationFrame(function () { modal.classList.add('show'); });
     try {
       var rows = monthRows(periode, false);

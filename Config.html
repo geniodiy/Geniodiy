@@ -275,6 +275,14 @@
   .gx-foot .btn{flex:1; height:34px !important; font-size:11.5px !important; border-radius:9px !important;}
   .gx-foot .btn.is-danger{background:var(--red) !important; border-color:var(--red) !important; color:#fff !important;}
   .gx-confirm{padding:22px 20px 6px; text-align:center;}
+  /* Chip ID pendek (genioIdChip): untuk melacak data di database, tombol salin menyalin UUID lengkap */
+  .genio-idchip{display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 8px; border-radius:999px; border:1px solid var(--border); background:var(--surface); font-family:var(--font); font-size:10px; font-weight:500; color:var(--ink-soft); cursor:pointer; white-space:nowrap; flex:none; vertical-align:middle; transition:border-color .15s ease, color .15s ease;}
+  .genio-idchip b{font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; letter-spacing:.02em;}
+  .genio-idchip i{font-size:11px;}
+  .genio-idchip:hover{border-color:var(--blue); color:var(--blue);}
+  .genio-idchip:hover b{color:var(--blue);}
+  .genio-idrow{display:flex; justify-content:flex-end; margin-top:8px;}
+  .genio-idrow[hidden]{display:none !important;}
   .gx-confirm .gx-head-ico{width:44px; height:44px; border-radius:50%; font-size:20px; margin:0 auto 12px;}
   /* Wadah ikon tonal (opsi G): latar tint datar sesuai arti warna dari tiap modul, tanpa tepi dan bayangan,
      ikon duotone (garis + isian lembut sewarna). Kelas ikon diganti ke ph-duotone oleh genioDuoIcons di bawah. */
@@ -1624,6 +1632,42 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
     setTimeout(watch, 1500);
   })();
+
+  /* ===== ID pendek untuk melacak data di database =====
+     8 karakter awal UUID (pola sama dengan nomor INV/REC), mis. #3F2A9C1D. Chip-nya menyalin UUID lengkap,
+     jadi di database cukup: select * from presensi where id = '<uuid>' (atau id::text like '3f2a9c1d%'). */
+  function genioShortId(id) { return String(id || '').replace(/-/g, '').slice(0, 8).toUpperCase(); }
+  function genioIdChip(id) {
+    if (!id) return '';
+    var s = genioShortId(id);
+    return '<button type="button" class="genio-idchip" data-genio-id="' + genioEscapeHtml(String(id)) + '" title="Salin ID lengkap untuk dicari di database" aria-label="Salin ID ' + s + '"><span>ID</span><b>#' + s + '</b><i class="ph ph-copy" aria-hidden="true"></i></button>';
+  }
+  // Isi wadah chip di popup (kosongkan dan sembunyikan kalau belum ada id, mis. form tambah)
+  function genioSetIdChip(el, id) {
+    if (!el) return;
+    el.innerHTML = genioIdChip(id);
+    el.hidden = !id;
+  }
+  function genioCopyText(text, okMsg) {
+    function done() { genioToast(okMsg || 'Disalin', 'success'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+    } else fallback();
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { genioToast('Gagal menyalin', 'error'); }
+      ta.remove();
+    }
+  }
+  // Fase capture: chip di dalam kartu atau baris yang bisa diklik tidak ikut membuka/menutup kartunya
+  document.addEventListener('click', function (e) {
+    var chip = e.target.closest && e.target.closest('.genio-idchip');
+    if (!chip) return;
+    e.preventDefault(); e.stopPropagation();
+    genioCopyText(chip.getAttribute('data-genio-id'), 'ID #' + genioShortId(chip.getAttribute('data-genio-id')) + ' disalin');
+  }, true);
 
   function genioToast(msg, type, persist) {
     type = (type === 'success' || type === 'error') ? type : 'loading';
