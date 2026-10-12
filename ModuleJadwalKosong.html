@@ -160,8 +160,24 @@
   /* Kartu Home HRD */
   .jkc{display:flex; flex-direction:column;}
   .jkc-sub{font-size:10.5px; color:var(--ink-soft); margin:-4px 0 12px;}
+  .jkc-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:-4px 0 12px;}
+  .jkc-head .jkc-sub{margin:0;}
+  .jkc-nav{display:flex; gap:6px; flex:none;}
+  .jkc-nav[hidden]{display:none;}
+  .jkc-nav button{width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:#fff; color:var(--ink); display:flex; align-items:center; justify-content:center; font-size:13px; cursor:pointer; transition:background .15s ease, opacity .2s ease, transform .15s ease;}
+  .jkc-nav button:hover:not(:disabled){background:var(--surface);}
+  .jkc-nav button:active:not(:disabled){transform:scale(.92);}
+  .jkc-nav button:disabled{opacity:.35; cursor:default;}
   .jkc-wrap{position:relative;}
-  .jkc-scroll{overflow-x:auto; scrollbar-width:thin; -webkit-overflow-scrolling:touch; padding-bottom:4px;}
+  /* Geser: seret dengan mouse (inersia), tombol panah (animasi halus), atau usap di HP */
+  .jkc-scroll{overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; padding-bottom:4px; cursor:grab;}
+  .jkc-scroll::-webkit-scrollbar{display:none;}
+  .jkc-scroll.is-drag{cursor:grabbing; -webkit-user-select:none; user-select:none;}
+  .jkc-scroll.is-drag .jkc-c{pointer-events:none;}
+  .jkc-wrap::after{content:''; position:absolute; top:0; bottom:4px; right:0; width:28px; background:linear-gradient(90deg, rgba(255,255,255,0), #fff); pointer-events:none; opacity:0; transition:opacity .25s ease;}
+  .jkc-wrap.has-more::after{opacity:1;}
+  .jkc-wrap::before{content:''; position:absolute; top:0; bottom:4px; left:62px; width:22px; background:linear-gradient(270deg, rgba(255,255,255,0), #fff); pointer-events:none; opacity:0; transition:opacity .25s ease; z-index:2;}
+  .jkc-wrap.has-less::before{opacity:1;}
   .jkc-g{display:grid; gap:4px; align-items:center; width:max-content;}
   .jkc-h{font-size:9.5px; color:var(--muted, #8A8EA5); text-align:center;}
   .jkc-l{position:sticky; left:0; z-index:1; background:#fff; font-size:11px; font-weight:600; color:var(--ink); line-height:1.15; padding-right:6px; align-self:stretch; display:flex; flex-direction:column; justify-content:center;}
@@ -234,7 +250,7 @@
     <div class="jk-wide">
       <div class="jk-wk jk-hm" id="jk-week"></div>
       <div class="jk-tpl-wrap" id="jk-weekTpl" hidden></div>
-      <div class="jk-leg2"><span><i style="background:#E4E4F8"></i>1 tutor</span><span><i style="background:#C3C3F0"></i>2</span><span><i style="background:#7E7CDC"></i>3</span><span><i style="background:var(--blue)"></i>4 atau lebih</span><span style="margin-left:auto;">Sudah dikurangi jadwal mengajar</span></div>
+      <div class="jk-leg2"><span><i style="background:#E4E4F8"></i>1 tutor</span><span><i style="background:#C3C3F0"></i>2</span><span><i style="background:#7E7CDC"></i>3</span><span><i style="background:var(--blue)"></i>4 atau lebih</span></div>
     </div>
   </div>
 </div>
@@ -270,7 +286,6 @@
       <button type="button" class="gx-close" id="jk-listClose" aria-label="Tutup"><i class="ph ph-x" aria-hidden="true"></i></button>
     </div>
     <div class="gx-body" id="jk-listBody" style="padding-top:6px; padding-bottom:6px;"></div>
-    <div class="jk-note"><i class="ph ph-info" aria-hidden="true"></i>Sudah dikurangi jadwal mengajar yang ada</div>
   </div>
 </div>
 
@@ -828,11 +843,71 @@
     });
     var msg = !mg.tutors.some(function (t) { return t.filled; }) ? 'Belum ada tutor yang mengisi jadwal kosong.' : 'Tidak ada tutor kosong di 3 hari ini.';
     el.innerHTML = '<div class="kuh-sec"><h4>Jadwal kosong tutor</h4><span>3 hari ke depan</span></div>' +
-      '<div class="jkc-sub">Ketuk kotak untuk melihat tutor</div>' +
+      '<div class="jkc-head"><div class="jkc-sub">Ketuk kotak untuk melihat tutor</div><div class="jkc-nav" hidden><button type="button" data-nav="-1" aria-label="Geser ke kiri"><i class="ph ph-caret-left" aria-hidden="true"></i></button><button type="button" data-nav="1" aria-label="Geser ke kanan"><i class="ph ph-caret-right" aria-hidden="true"></i></button></div></div>' +
       '<div class="jkc-wrap"><div class="jkc-scroll"><div class="jkc-g' + (tpl ? ' is-tpl' : '') + (animate && !RM ? ' is-anim' : '') + '" style="grid-template-columns:62px repeat(' + cols + ', 28px);">' + g + '</div></div>' +
       (tpl ? '<div class="jkc-msg"><span>' + msg + '</span></div>' : '') + '</div>' +
       '<div class="jkc-leg"><span><i style="background:#E4E4F8"></i>1 tutor</span><span><i style="background:#C3C3F0"></i>2</span><span><i style="background:#7E7CDC"></i>3</span><span><i style="background:var(--blue)"></i>4+</span></div>' +
       '<button type="button" class="jkc-more">Lihat semua jadwal kosong</button>';
+    hcBindScroll();
+  }
+  // Animasi geser halus (ease out) untuk tombol panah dan inersia setelah diseret
+  function hcEase(t) { return 1 - Math.pow(1 - t, 3); }
+  function hcAnimate(sc, to, ms) {
+    to = Math.max(0, Math.min(to, sc.scrollWidth - sc.clientWidth));
+    cancelAnimationFrame(sc._raf);
+    if (RM) { sc.scrollLeft = to; return; }
+    var from = sc.scrollLeft, t0 = performance.now(), dur = ms || 420;
+    (function step(now) {
+      var p = Math.min(1, (now - t0) / dur);
+      sc.scrollLeft = from + (to - from) * hcEase(p);
+      if (p < 1) sc._raf = requestAnimationFrame(step);
+    })(t0);
+  }
+  function hcSync() {
+    var el = hc.el; if (!el) return;
+    var sc = el.querySelector('.jkc-scroll'), wrap = el.querySelector('.jkc-wrap'), nav = el.querySelector('.jkc-nav');
+    if (!sc) return;
+    var max = sc.scrollWidth - sc.clientWidth, x = sc.scrollLeft;
+    nav.hidden = max <= 2;
+    nav.querySelector('[data-nav="-1"]').disabled = x <= 2;
+    nav.querySelector('[data-nav="1"]').disabled = x >= max - 2;
+    wrap.classList.toggle('has-more', x < max - 2);
+    wrap.classList.toggle('has-less', x > 2);
+  }
+  function hcBindScroll() {
+    var el = hc.el, sc = el.querySelector('.jkc-scroll');
+    if (!sc) return;
+    sc.addEventListener('scroll', hcSync, { passive: true });
+    el.querySelector('.jkc-nav').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-nav]'); if (!b || b.disabled) return;
+      hcAnimate(sc, sc.scrollLeft + (+b.dataset.nav) * Math.max(120, sc.clientWidth * 0.7));
+    });
+    // Seret dengan mouse; di HP usapan biasa (scroll bawaan) tetap dipakai
+    var drag = null;
+    sc.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      cancelAnimationFrame(sc._raf);
+      drag = { x: e.clientX, left: sc.scrollLeft, moved: false, vx: 0, lx: e.clientX, lt: performance.now() };
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      var dx = e.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) > 4) { drag.moved = true; sc.classList.add('is-drag'); }
+      if (!drag.moved) return;
+      sc.scrollLeft = drag.left - dx;
+      var now = performance.now(), dt = Math.max(1, now - drag.lt);
+      drag.vx = (e.clientX - drag.lx) / dt; drag.lx = e.clientX; drag.lt = now;
+    });
+    window.addEventListener('pointerup', function () {
+      if (!drag) return;
+      var d = drag; drag = null;
+      if (!d.moved) return;
+      setTimeout(function () { sc.classList.remove('is-drag'); }, 0);
+      // Inersia: lanjut meluncur sesuai kecepatan terakhir lalu melambat
+      if (Math.abs(d.vx) > 0.15) hcAnimate(sc, sc.scrollLeft - d.vx * 260, 520);
+    });
+    requestAnimationFrame(hcSync);
+    if (!hc.resizeBound) { hc.resizeBound = true; window.addEventListener('resize', function () { requestAnimationFrame(hcSync); }); }
   }
 
   window.genioJadwalKosong = { tutorCard: tutorCard, openForm: openForm, homeCard: homeCard };
