@@ -158,7 +158,7 @@
   .jk-list .jk-tpl{margin:4px 0 10px; box-shadow:none; max-width:none;}
   .jk-daynote{font-size:10.5px; color:var(--ink-soft); background:var(--surface); border-radius:10px; padding:8px 12px; margin:2px 0 8px;}
   /* Kartu Home HRD */
-  .jkc{display:flex; flex-direction:column;}
+  .jkc{display:flex; flex-direction:column; position:relative;}
   .jkc-sub{font-size:10.5px; color:var(--ink-soft); margin:-4px 0 12px;}
   .jkc-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:-4px 0 12px;}
   .jkc-head .jkc-sub{margin:0;}
@@ -180,13 +180,32 @@
   .jkc-wrap.has-less::before{opacity:1;}
   .jkc-g{display:grid; gap:4px; align-items:center; width:max-content;}
   .jkc-h{font-size:9.5px; color:var(--muted, #8A8EA5); text-align:center;}
-  .jkc-l{position:sticky; left:0; z-index:1; background:#fff; font-size:11px; font-weight:600; color:var(--ink); line-height:1.15; padding-right:6px; align-self:stretch; display:flex; flex-direction:column; justify-content:center;}
+  .jkc-l{position:sticky; left:0; z-index:2; background:#fff; font-size:11px; font-weight:600; color:var(--ink); line-height:1.15; padding-right:6px; align-self:stretch; display:flex; flex-direction:column; justify-content:center;}
   .jkc-l small{font-size:9.5px; font-weight:400; color:var(--ink-soft);}
   .jkc-l.is-on{color:var(--blue);}
   .jkc-c{width:28px; height:28px; border-radius:5px; border:0; padding:0; background:#F1F2F7; font-family:var(--font); font-size:10px; font-weight:700; color:var(--blue); display:flex; align-items:center; justify-content:center; cursor:pointer;}
   .jkc-c.l1{background:#E4E4F8;} .jkc-c.l2{background:#C3C3F0;} .jkc-c.l3{background:#7E7CDC; color:#fff;} .jkc-c.l4{background:var(--blue); color:#fff;}
   .jkc-c.l0{cursor:default;}
-  .jkc-c:not(.l0):hover{outline:2px solid var(--ink); outline-offset:1px;}
+  /* Opsi A (owner's choice 12 Oct 2026): sorotan silang + kartu intip saat mouse digeser */
+  .jkc-c{position:relative; transition:transform .22s cubic-bezier(.16,1,.3,1), opacity .2s ease, box-shadow .22s ease, filter .2s ease;}
+  .jkc-h, .jkc-l{transition:color .2s ease, transform .2s ease;}
+  .jkc-g.is-hov .jkc-c:not(.is-hot):not(.is-line){opacity:.38; filter:saturate(.6);}
+  .jkc-g.is-hov .jkc-c.is-line{opacity:.85;}
+  .jkc-c.is-hot{transform:translateY(-3px) scale(1.18); box-shadow:0 8px 16px -6px rgba(28,26,175,.55); z-index:1;}
+  .jkc-h.is-hl{color:var(--blue); font-weight:700; transform:translateY(-2px);}
+  .jkc-g.is-hov .jkc-l.is-on:not(.is-hl){color:var(--ink);}
+  .jkc-l.is-hl{color:var(--blue);}
+  .jkc-peek{position:absolute; z-index:6; pointer-events:none; background:#fff; border:1px solid var(--border); border-radius:12px; padding:9px 11px; box-shadow:0 14px 30px -12px rgba(20,22,43,.35); width:max-content; min-width:150px; max-width:210px; opacity:0; transform:translateY(6px) scale(.96); transition:opacity .18s ease, transform .25s cubic-bezier(.16,1,.3,1), left .25s cubic-bezier(.16,1,.3,1), top .25s cubic-bezier(.16,1,.3,1);}
+  .jkc-peek.show{opacity:1; transform:none;}
+  .jkc-peek.is-new{transition:opacity .18s ease, transform .25s cubic-bezier(.16,1,.3,1);}
+  .jkc-peek b{display:block; font-size:11px; font-weight:600; color:var(--ink);}
+  .jkc-peek .pt{font-size:10px; color:var(--ink-soft); margin-bottom:6px;}
+  .jkc-peek .pa{display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--ink); margin-top:4px; min-width:0; animation:jkcPk .3s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--k) * 40ms);}
+  .jkc-peek .pa span:last-child{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;}
+  .jkc-peek .pav{width:18px; height:18px; border-radius:50%; flex:none; display:inline-flex; align-items:center; justify-content:center; background:var(--blue-tint); color:var(--blue); font-size:7.5px; font-weight:700; overflow:hidden;}
+  .jkc-peek .pav img{width:100%; height:100%; object-fit:cover;}
+  .jkc-peek .pm{font-size:10px; color:var(--ink-soft); margin-top:5px;}
+  @keyframes jkcPk{from{opacity:0; transform:translateX(-6px);} to{opacity:1; transform:none;}}
   .jkc-g.is-tpl .jkc-c{opacity:.55; pointer-events:none;}
   .jkc-g.is-anim .jkc-c{animation:jkcIn .4s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * 18ms);}
   @keyframes jkcIn{from{opacity:0; transform:scale(.7);} to{opacity:1; transform:none;}}
@@ -195,7 +214,7 @@
   .jkc-leg{display:flex; gap:12px; flex-wrap:wrap; font-size:10px; color:var(--ink-soft); margin-top:12px; padding-top:10px; border-top:1px dashed var(--border);}
   .jkc-leg span{display:inline-flex; align-items:center; gap:5px;} .jkc-leg i{width:10px; height:10px; border-radius:3px; display:inline-block;}
   .jkc-more{margin-top:auto; padding-top:10px; border:0; background:none; font-family:var(--font); font-size:11px; font-weight:600; color:var(--blue); cursor:pointer;}
-  @media (prefers-reduced-motion: reduce){ .jkc-g.is-anim .jkc-c{animation:none;} }
+  @media (prefers-reduced-motion: reduce){ .jkc-g.is-anim .jkc-c{animation:none;} .jkc-c, .jkc-h, .jkc-l, .jkc-peek, .jkc-peek .pa{transition:none; animation:none;} .jkc-c.is-hot{transform:none; box-shadow:0 0 0 2px var(--blue);} .jkc-h.is-hl{transform:none;} }
   .jk-empty{text-align:center; padding:28px 16px; font-size:11px; color:var(--ink-soft);}
   .jk-empty i{font-size:26px; opacity:.6; display:block; margin-bottom:6px;}
   .jk-leg2{display:flex; gap:12px; flex-wrap:wrap; font-size:10px; color:var(--ink-soft); margin-top:12px;}
@@ -833,9 +852,9 @@
     var tpl = hi < 0; if (tpl) { lo = 0; hi = hours.length - 1; }
     var cols = hi - lo + 1;
     var g = '<span class="jkc-l jkc-hd"></span>';
-    for (var k = lo; k <= hi; k++) g += '<span class="jkc-h">' + lbl(hours[k]).slice(0, 2) + '</span>';
+    for (var k = lo; k <= hi; k++) g += '<span class="jkc-h" data-i="' + hours[k] + '">' + lbl(hours[k]).slice(0, 2) + '</span>';
     ['Hari ini', 'Besok', 'Lusa'].forEach(function (nm, r) {
-      g += '<span class="jkc-l' + (r === 0 ? ' is-on' : '') + '">' + nm + '<small>' + HARI_L[hc.days[r]] + '</small></span>';
+      g += '<span class="jkc-l' + (r === 0 ? ' is-on' : '') + '" data-r="' + r + '">' + nm + '<small>' + HARI_L[hc.days[r]] + '</small></span>';
       for (var k = lo; k <= hi; k++) {
         var v = cnt[r][k];
         g += '<button type="button" class="jkc-c ' + lvl(v) + '" data-r="' + r + '" data-i="' + hours[k] + '" style="--i:' + (k - lo) + '" title="' + nm + ' ' + lbl(hours[k]) + '-' + lbl(hours[k] + 2) + ': ' + v + ' tutor kosong"' + (v ? '' : ' tabindex="-1"') + '>' + (v || '') + '</button>';
@@ -847,8 +866,10 @@
       '<div class="jkc-wrap"><div class="jkc-scroll"><div class="jkc-g' + (tpl ? ' is-tpl' : '') + (animate && !RM ? ' is-anim' : '') + '" style="grid-template-columns:62px repeat(' + cols + ', 28px);">' + g + '</div></div>' +
       (tpl ? '<div class="jkc-msg"><span>' + msg + '</span></div>' : '') + '</div>' +
       '<div class="jkc-leg"><span><i style="background:#E4E4F8"></i>1 tutor</span><span><i style="background:#C3C3F0"></i>2</span><span><i style="background:#7E7CDC"></i>3</span><span><i style="background:var(--blue)"></i>4+</span></div>' +
-      '<button type="button" class="jkc-more">Lihat semua jadwal kosong</button>';
+      '<button type="button" class="jkc-more">Lihat semua jadwal kosong</button><div class="jkc-peek" aria-hidden="true"></div>';
+    hc.pool = pool;
     hcBindScroll();
+    hcBindHover();
   }
   // Animasi geser halus (ease out) untuk tombol panah dan inersia setelah diseret
   function hcEase(t) { return 1 - Math.pow(1 - t, 3); }
@@ -883,31 +904,82 @@
       hcAnimate(sc, sc.scrollLeft + (+b.dataset.nav) * Math.max(120, sc.clientWidth * 0.7));
     });
     // Seret dengan mouse; di HP usapan biasa (scroll bawaan) tetap dipakai
-    var drag = null;
     sc.addEventListener('pointerdown', function (e) {
       if (e.pointerType !== 'mouse' || e.button !== 0) return;
       cancelAnimationFrame(sc._raf);
-      drag = { x: e.clientX, left: sc.scrollLeft, moved: false, vx: 0, lx: e.clientX, lt: performance.now() };
+      hc.drag = { sc: sc, x: e.clientX, left: sc.scrollLeft, moved: false, vx: 0, lx: e.clientX, lt: performance.now() };
     });
+    requestAnimationFrame(hcSync);
+    if (hc.winBound) return;
+    hc.winBound = true;
+    window.addEventListener('resize', function () { requestAnimationFrame(hcSync); });
     window.addEventListener('pointermove', function (e) {
-      if (!drag) return;
+      var drag = hc.drag; if (!drag) return;
+      var sc = drag.sc;
       var dx = e.clientX - drag.x;
-      if (!drag.moved && Math.abs(dx) > 4) { drag.moved = true; sc.classList.add('is-drag'); }
+      if (!drag.moved && Math.abs(dx) > 4) { drag.moved = true; sc.classList.add('is-drag'); hcPeekOff(); }
       if (!drag.moved) return;
       sc.scrollLeft = drag.left - dx;
       var now = performance.now(), dt = Math.max(1, now - drag.lt);
       drag.vx = (e.clientX - drag.lx) / dt; drag.lx = e.clientX; drag.lt = now;
     });
     window.addEventListener('pointerup', function () {
-      if (!drag) return;
-      var d = drag; drag = null;
+      var d = hc.drag; if (!d) return;
+      hc.drag = null;
+      var sc = d.sc;
       if (!d.moved) return;
       setTimeout(function () { sc.classList.remove('is-drag'); }, 0);
       // Inersia: lanjut meluncur sesuai kecepatan terakhir lalu melambat
       if (Math.abs(d.vx) > 0.15) hcAnimate(sc, sc.scrollLeft - d.vx * 260, 520);
     });
-    requestAnimationFrame(hcSync);
-    if (!hc.resizeBound) { hc.resizeBound = true; window.addEventListener('resize', function () { requestAnimationFrame(hcSync); }); }
+  }
+  // Opsi A: kotak yang ditunjuk mouse terangkat, baris dan kolomnya tetap terang, label hari dan jam menyala,
+  // dan kartu intip menampilkan tutor yang kosong (hanya mouse; di HP ketukan langsung membuka popup)
+  function hcPeekOff() {
+    var el = hc.el; if (!el) return;
+    hc.hot = null;
+    var g = el.querySelector('.jkc-g'), pk = el.querySelector('.jkc-peek');
+    if (g) { g.classList.remove('is-hov'); g.querySelectorAll('.is-hot, .is-line, .is-hl').forEach(function (k) { k.classList.remove('is-hot', 'is-line', 'is-hl'); }); }
+    if (pk) pk.classList.remove('show');
+  }
+  function hcPeek(c) {
+    var el = hc.el, g = el.querySelector('.jkc-g'), pk = el.querySelector('.jkc-peek');
+    if (!g || !pk || c === hc.hot) return;
+    var first = !hc.hot; hc.hot = c;
+    g.classList.remove('is-anim'); g.classList.add('is-hov');
+    var r = c.dataset.r, i = c.dataset.i;
+    g.querySelectorAll('.jkc-c').forEach(function (k) { k.classList.toggle('is-hot', k === c); k.classList.toggle('is-line', k !== c && (k.dataset.r === r || k.dataset.i === i)); });
+    g.querySelectorAll('.jkc-h').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.i === i); });
+    g.querySelectorAll('.jkc-l[data-r]').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.r === r); });
+    var d = hc.days[+r], ii = +i;
+    var list = (hc.pool || []).filter(function (t) { return mg.free[t.id][d][ii] || mg.free[t.id][d][ii + 1]; });
+    var MAX = 4;
+    pk.innerHTML = '<b>' + list.length + ' tutor kosong</b><div class="pt">' + ['Hari ini', 'Besok', 'Lusa'][+r] + ', ' + lbl(ii) + '-' + lbl(ii + 2) + '</div>' +
+      list.slice(0, MAX).map(function (t, k) { return '<div class="pa" style="--k:' + k + '"><span class="pav">' + genioAvatarInner(t.nama, t.foto, genioInitials(t.nama)) + '</span><span>' + esc(t.nama) + '</span></div>'; }).join('') +
+      (list.length > MAX ? '<div class="pm">+' + (list.length - MAX) + ' tutor lain</div>' : '');
+    // Di samping kotak (kanan, atau kiri kalau tidak muat), tetap di dalam kartu
+    var a = c.getBoundingClientRect(), b = el.getBoundingClientRect();
+    var x = a.left - b.left, y = a.top - b.top, w = pk.offsetWidth, h = pk.offsetHeight;
+    var left = x + a.width + 12; if (left + w > el.clientWidth - 6) left = x - w - 12;
+    left = Math.max(6, left);
+    var top = Math.min(Math.max(6, y + a.height / 2 - h / 2), el.clientHeight - h - 6);
+    pk.classList.toggle('is-new', first);
+    pk.style.left = left + 'px'; pk.style.top = top + 'px';
+    pk.classList.add('show');
+  }
+  function hcBindHover() {
+    var el = hc.el, g = el.querySelector('.jkc-g'), sc = el.querySelector('.jkc-scroll');
+    if (!g || g.classList.contains('is-tpl')) return;
+    hc.hot = null;
+    g.addEventListener('pointerover', function (e) {
+      if (e.pointerType !== 'mouse' || hc.drag && hc.drag.moved) return;
+      var c = e.target.closest('.jkc-c');
+      if (!c || c.classList.contains('l0')) return;
+      hcPeek(c);
+    });
+    g.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hcPeekOff(); });
+    sc.addEventListener('scroll', function () { if (hc.hot) hcPeekOff(); }, { passive: true });
+    sc.addEventListener('click', function () { hcPeekOff(); });
   }
 
   window.genioJadwalKosong = { tutorCard: tutorCard, openForm: openForm, homeCard: homeCard };
