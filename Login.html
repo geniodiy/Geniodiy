@@ -287,6 +287,13 @@
 
     function showError(msg) { alertBox.textContent = msg; alertBox.hidden = false; }
     function hideError() { alertBox.hidden = true; }
+    // Datang dari dashboard karena sesi habis: beri tahu kenapa harus masuk lagi
+    try {
+      if (sessionStorage.getItem('genio_expired')) {
+        sessionStorage.removeItem('genio_expired');
+        showError('Sesi kamu sudah berakhir karena lama tidak dipakai. Silakan masuk lagi.');
+      }
+    } catch (e) {}
 
     function switchView(name) {
       hideError();

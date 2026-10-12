@@ -686,27 +686,12 @@
     var data = null;
     try { data = await res.json(); } catch (e) { /* respons kosong, mis. saat Prefer: return=minimal */ }
     if (!res.ok) {
-      // Auto-refresh token jika sesi kedaluwarsa (401) agar user tidak perlu hapus cache browser
-      if (res.status === 401 && !options._isRetry) {
-        var s = genioGetSession();
-        if (s && s.refresh_token) {
-          try {
-            var rfRes = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
-              body: JSON.stringify({ refresh_token: s.refresh_token })
-            });
-            var rfData = await rfRes.json();
-            if (rfRes.ok && rfData.access_token) {
-              s.access_token = rfData.access_token;
-              s.refresh_token = rfData.refresh_token || s.refresh_token;
-              genioSaveSession(s);
-              return await supaRest(path, s.access_token, Object.assign({}, options, { _isRetry: true }));
-            }
-          } catch (rfErr) {
-            console.warn('Gagal auto-refresh token:', rfErr);
-          }
-        }
+      // Token kedaluwarsa (401): perpanjang sekali (dipakai bersama semua panggilan yang sedang jalan) lalu ulangi.
+      // Kalau sesi tidak bisa diperpanjang, genioRefreshSession mengarahkan ke halaman masuk.
+      if (res.status === 401) {
+        if (options._isRetry) { genioSessionExpired(); throw new Error('Sesi kamu berakhir. Silakan masuk lagi.'); }
+        var fresh = await genioRefreshSession();
+        return await supaRest(path, fresh.access_token, Object.assign({}, options, { _isRetry: true }));
       }
       var msg = (data && (data.message || data.hint)) || 'Gagal memproses data.';
       throw new Error(msg);
@@ -735,12 +720,75 @@
     genioSessionMem = null;
     try { sessionStorage.removeItem('genio_session'); } catch (e) {}
   }
+  /* ===== Sesi Supabase habis =====
+     Token akses berlaku sekitar 1 jam. Saat kembali ke halaman (tab aktif lagi, fokus, atau tiap menit) token yang
+     hampir habis diperpanjang lebih dulu. Semua panggilan memakai SATU permintaan perpanjang (genioRefreshing):
+     refresh token Supabase sekali pakai, jadi dua permintaan bersamaan bisa membuat sesi dicabut dan halaman macet.
+     Kalau perpanjang ditolak server (sesi dicabut atau kedaluwarsa), sesi dihapus dan pengguna langsung dibawa
+     ke halaman masuk dengan pesan. Gangguan jaringan tidak menghapus sesi. */
+  var genioRefreshing = null, genioExpiring = false;
+  function genioTokenExp(token) {
+    try {
+      var b = String(token).split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (b.length % 4) b += '=';
+      return (JSON.parse(atob(b)).exp || 0) * 1000;
+    } catch (e) { return 0; }
+  }
+  function genioSessionExpired() {
+    if (genioExpiring) return;
+    genioExpiring = true;
+    genioClearSession();
+    try { sessionStorage.setItem('genio_expired', '1'); } catch (e) {}
+    if (typeof genioToast === 'function') genioToast('Sesi kamu berakhir. Silakan masuk lagi.', 'error', true);
+    setTimeout(function () { window.top.location.href = SCRIPT_URL + '?page=login'; }, 1200);
+  }
+  function genioRefreshSession() {
+    if (genioRefreshing) return genioRefreshing;
+    var s = genioGetSession();
+    if (!s || !s.refresh_token) {
+      genioSessionExpired();
+      return Promise.reject(new Error('Sesi kamu berakhir. Silakan masuk lagi.'));
+    }
+    genioRefreshing = fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ refresh_token: s.refresh_token })
+    }).then(function (res) {
+      return res.json().catch(function () { return null; }).then(function (d) {
+        if (res.ok && d && d.access_token) {
+          var cur = genioGetSession() || s;
+          cur.access_token = d.access_token;
+          cur.refresh_token = d.refresh_token || cur.refresh_token;
+          genioSaveSession(cur);
+          return cur;
+        }
+        if (res.status >= 400 && res.status < 500) genioSessionExpired();
+        throw new Error('Sesi kamu berakhir. Silakan masuk lagi.');
+      });
+    }, function () {
+      throw new Error('Koneksi terputus. Periksa internet lalu coba lagi.');
+    });
+    genioRefreshing.then(function () { genioRefreshing = null; }, function () { genioRefreshing = null; });
+    return genioRefreshing;
+  }
+  // Perpanjang token yang tinggal kurang dari 2 menit saat pengguna kembali ke halaman
+  function genioCheckSession() {
+    if (genioExpiring) return;
+    var s = genioGetSession();
+    if (!s || !s.access_token) return;
+    var exp = genioTokenExp(s.access_token);
+    if (exp && exp - Date.now() < 120000) genioRefreshSession().catch(function () {});
+  }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) genioCheckSession(); });
+  window.addEventListener('focus', genioCheckSession);
+  window.addEventListener('pageshow', genioCheckSession);
+  setInterval(genioCheckSession, 60000);
+
   // Untuk aksi simpan: kalau sesi benar-benar hilang, beri tahu lalu arahkan ke halaman masuk (bukan error "null")
   function genioSessionOrLogin() {
     var s = genioGetSession();
     if (s && s.access_token) return s;
-    if (typeof genioToast === 'function') genioToast('Sesi kamu berakhir. Silakan masuk lagi.', 'error');
-    setTimeout(function () { window.top.location.href = SCRIPT_URL + '?page=login'; }, 1200);
+    genioSessionExpired();
     throw new Error('Sesi kamu berakhir. Silakan masuk lagi.');
   }
   // Panggil di awal setiap halaman dashboard: redirect ke Login kalau belum ada sesi.
@@ -842,13 +890,9 @@
     });
     var data = null;
     try { data = await res.json(); } catch (e) {}
-    if (res.status === 401 && !_isRetry && s.refresh_token) {
-      try {
-        var rf = await supaAuth('token?grant_type=refresh_token', { refresh_token: s.refresh_token });
-        s.access_token = rf.access_token; s.refresh_token = rf.refresh_token || s.refresh_token;
-        genioSaveSession(s);
-        return genioAdminUsers(payload, true);
-      } catch (e) {}
+    if (res.status === 401 && !_isRetry) {
+      await genioRefreshSession();
+      return genioAdminUsers(payload, true);
     }
     if (!res.ok) throw new Error((data && data.error) || 'Gagal memproses akun.');
     if (data && data.warning) genioToast(data.warning, 'error');
