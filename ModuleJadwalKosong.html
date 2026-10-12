@@ -538,18 +538,24 @@
     var emptyHtml = '<div class="jk-empty"><i class="ph ph-clock-user" aria-hidden="true"></i>' + (filled ? 'Tidak ada tutor yang cocok dengan filter ini.' : 'Belum ada tutor yang mengisi jadwal kosong. Tutor mengisinya lewat Profil > Atur jadwal kosong.') + '</div>';
     document.getElementById('jk-panelTitle').textContent = isWide() ? 'Jadwal kosong per minggu' : 'Jadwal kosong ' + HARI_L[d];
     document.getElementById('jk-panelSub').textContent = isWide() ? 'Klik kotak untuk melihat tutor' : 'Ketuk jam untuk melihat tutor';
+    // Hanya jam yang terisi dalam seminggu: dari jam bulat paling pagi sampai jam bulat paling malam yang ada tutornya
+    var lo = N, hi = -1;
+    counts.forEach(function (row) { row.forEach(function (v, j) { if (v) { if (j < lo) lo = j; if (j > hi) hi = j; } }); });
+    if (hi < 0) { lo = 0; hi = N - 1; }
+    lo -= lo % 2; hi += (hi % 2 === 0 ? 1 : 0);
     if (isWide()) {
       var g = '<span></span>';
-      for (var i = 0; i < N; i++) g += '<span class="h">' + (i % 2 === 0 ? lbl(i).slice(0, 2) : '') + '</span>';
+      for (var i = lo; i <= hi; i++) g += '<span class="h">' + (i % 2 === 0 ? lbl(i).slice(0, 2) : '') + '</span>';
       HARI.forEach(function (h, k) {
         g += '<button type="button" class="d' + (k === d ? ' is-on' : '') + '" data-day="' + k + '">' + HARI_S[k] + '</button>';
-        for (var j = 0; j < N; j++) {
+        for (var j = lo; j <= hi; j++) {
           var v = counts[k][j];
           g += '<button type="button" class="jk-c ' + lvl(v) + '" data-d="' + k + '" data-i="' + j + '" title="' + HARI_L[k] + ' ' + lbl(j) + '-' + lbl(j + 1) + ': ' + v + ' tutor kosong"' + (v ? '' : ' tabindex="-1"') + '>' + (v || '') + '</button>';
         }
       });
       document.getElementById('jk-week').innerHTML = none ? emptyHtml : g;
       document.getElementById('jk-week').style.display = none ? 'block' : '';
+      document.getElementById('jk-week').style.gridTemplateColumns = '44px repeat(' + (hi - lo + 1) + ', minmax(0,1fr))';
     } else {
       document.getElementById('jk-dayPick').innerHTML = HARI_S.map(function (h, k) { return '<button type="button" class="' + (k === d ? 'is-on' : '') + '" data-day="' + k + '" role="tab" aria-selected="' + (k === d) + '">' + h + '</button>'; }).join('');
       var listEl = document.getElementById('jk-dayList');
@@ -557,6 +563,7 @@
       var rowMax = Math.max.apply(null, counts[d]) || 1;
       genioKeepScroll(listEl, function () {
         listEl.innerHTML = counts[d].map(function (v, j) {
+          if (j < lo || j > hi) return '';
           return '<button type="button" class="jk-tr' + (v ? '' : ' is-zero') + '" data-d="' + d + '" data-i="' + j + '" style="--i:' + j + '"' + (v ? '' : ' tabindex="-1"') + '><span>' + lbl(j) + '-' + lbl(j + 1) + '</span><span class="b">' + (v ? '<i style="width:' + Math.round(v / rowMax * 100) + '%"></i>' : '') + '</span><b>' + v + '</b><span class="ch">' + (v ? '<i class="ph ph-caret-right" aria-hidden="true"></i>' : '') + '</span></button>';
         }).join('');
       });
