@@ -136,7 +136,16 @@
   .jk-hm .jk-c{display:flex; align-items:center; justify-content:center; font-size:9.5px; font-weight:700; color:var(--blue); height:28px;}
   .jk-hm .jk-c.l1{background:#E4E4F8;} .jk-hm .jk-c.l2{background:#C3C3F0;} .jk-hm .jk-c.l3{background:#7E7CDC; color:#fff;} .jk-hm .jk-c.l4{background:var(--blue); color:#fff;}
   .jk-hm .jk-c.l0{cursor:default;}
-  .jk-hm .jk-c:not(.l0):hover{outline:2px solid var(--ink); outline-offset:1px;}
+  /* Opsi A juga di grid mingguan: kotak terangkat, baris hari + kolom jam tetap terang, kartu intip tutor (jkWeekPeek) */
+  .jk-hm .jk-c{position:relative; transition:transform .22s cubic-bezier(.16,1,.3,1), opacity .2s ease, box-shadow .22s ease, filter .2s ease;}
+  .jk-hm .h, .jk-hm .d{transition:color .2s ease, transform .2s ease;}
+  .jk-hm.is-hov .jk-c:not(.is-hot):not(.is-line){opacity:.38; filter:saturate(.6);}
+  .jk-hm.is-hov .jk-c.is-line{opacity:.85;}
+  .jk-hm .jk-c.is-hot{transform:translateY(-3px) scale(1.16); box-shadow:0 8px 16px -6px rgba(28,26,175,.55); z-index:1;}
+  .jk-hm .h.is-hl{color:var(--blue); font-weight:700; transform:translateY(-2px);}
+  .jk-hm.is-hov .d.is-on:not(.is-hl){color:var(--ink);}
+  .jk-hm .d.is-hl{color:var(--blue);}
+  @media (prefers-reduced-motion: reduce){ .jk-hm .jk-c, .jk-hm .h, .jk-hm .d{transition:none;} .jk-hm .jk-c.is-hot{transform:none; box-shadow:0 0 0 2px var(--blue);} .jk-hm .h.is-hl{transform:none;} }
   .jk-hm .jk-row-on{box-shadow:inset 3px 0 0 var(--blue);}
   .jk-list{display:flex; flex-direction:column;}
   .jk-tr{display:grid; grid-template-columns:86px minmax(0,1fr) 22px 14px; gap:10px; align-items:center; padding:8px 0; border:0; border-top:1px solid #EEF0F6; background:none; font-family:var(--font); font-size:11px; color:var(--ink); text-align:left; cursor:pointer; width:100%;}
@@ -734,7 +743,7 @@
     var tplCard = '<div class="jk-tpl"><span class="jk-ico"><i class="ph ph-clock-user" aria-hidden="true"></i></span><div><b>' + tplMsg[0] + '</b><small>' + tplMsg[1] + '</small></div></div>';
     if (isWide()) {
       var g = '<span></span>';
-      for (var i = lo; i <= hi; i++) g += '<span class="h">' + (i % 2 === 0 ? lbl(i).slice(0, 2) : '') + '</span>';
+      for (var i = lo; i <= hi; i++) g += '<span class="h" data-i="' + i + '">' + (i % 2 === 0 ? lbl(i).slice(0, 2) : '') + '</span>';
       HARI.forEach(function (h, k) {
         g += '<button type="button" class="d' + (k === d ? ' is-on' : '') + '" data-day="' + k + '">' + HARI_S[k] + '</button>';
         for (var j = lo; j <= hi; j++) {
@@ -742,6 +751,7 @@
           g += '<button type="button" class="jk-c ' + lvl(v) + '" data-d="' + k + '" data-i="' + j + '" title="' + HARI_L[k] + ' ' + lbl(j) + '-' + lbl(j + 1) + ': ' + v + ' tutor kosong"' + (v ? '' : ' tabindex="-1"') + '>' + (v || '') + '</button>';
         }
       });
+      jkWeekPeekOff();
       document.getElementById('jk-week').innerHTML = g;
       var tw = document.getElementById('jk-weekTpl'); tw.hidden = !tpl; tw.innerHTML = tpl ? tplCard : '';
       document.getElementById('jk-week').classList.toggle('is-tpl', tpl);
@@ -953,20 +963,56 @@
     g.querySelectorAll('.jkc-l[data-r]').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.r === r); });
     var d = hc.days[+r], ii = +i;
     var list = (hc.pool || []).filter(function (t) { return mg.free[t.id][d][ii] || mg.free[t.id][d][ii + 1]; });
+    jkPeekShow(pk, el, c, list, ['Hari ini', 'Besok', 'Lusa'][+r] + ', ' + lbl(ii) + '-' + lbl(ii + 2), first);
+  }
+  // Isi dan letak kartu intip: di samping kotak (kanan, atau kiri kalau tidak muat), tetap di dalam host
+  function jkPeekShow(pk, host, c, list, label, first) {
     var MAX = 4;
-    pk.innerHTML = '<b>' + list.length + ' tutor kosong</b><div class="pt">' + ['Hari ini', 'Besok', 'Lusa'][+r] + ', ' + lbl(ii) + '-' + lbl(ii + 2) + '</div>' +
+    pk.innerHTML = '<b>' + list.length + ' tutor kosong</b><div class="pt">' + label + '</div>' +
       list.slice(0, MAX).map(function (t, k) { return '<div class="pa" style="--k:' + k + '"><span class="pav">' + genioAvatarInner(t.nama, t.foto, genioInitials(t.nama)) + '</span><span>' + esc(t.nama) + '</span></div>'; }).join('') +
       (list.length > MAX ? '<div class="pm">+' + (list.length - MAX) + ' tutor lain</div>' : '');
-    // Di samping kotak (kanan, atau kiri kalau tidak muat), tetap di dalam kartu
-    var a = c.getBoundingClientRect(), b = el.getBoundingClientRect();
+    var a = c.getBoundingClientRect(), b = host.getBoundingClientRect();
     var x = a.left - b.left, y = a.top - b.top, w = pk.offsetWidth, h = pk.offsetHeight;
-    var left = x + a.width + 12; if (left + w > el.clientWidth - 6) left = x - w - 12;
+    var left = x + a.width + 12; if (left + w > host.clientWidth - 6) left = x - w - 12;
     left = Math.max(6, left);
-    var top = Math.min(Math.max(6, y + a.height / 2 - h / 2), el.clientHeight - h - 6);
+    var top = Math.min(Math.max(6, y + a.height / 2 - h / 2), Math.max(6, host.clientHeight - h - 6));
     pk.classList.toggle('is-new', first);
     pk.style.left = left + 'px'; pk.style.top = top + 'px';
     pk.classList.add('show');
   }
+  // Grid mingguan di menu Jadwal Kosong Tutor (desktop): efek yang sama, isi tutor mengikuti filter halaman
+  var jkWk = { hot: null };
+  function jkWeekPeekOff() {
+    var g = document.getElementById('jk-week'), pk = document.getElementById('jk-weekPeek');
+    if (jkWk) jkWk.hot = null;
+    if (g) { g.classList.remove('is-hov'); g.querySelectorAll('.is-hot, .is-line, .is-hl').forEach(function (k) { k.classList.remove('is-hot', 'is-line', 'is-hl'); }); }
+    if (pk) pk.classList.remove('show');
+  }
+  function jkWeekPeek(c) {
+    var g = document.getElementById('jk-week'), host = g.parentNode, pk = document.getElementById('jk-weekPeek');
+    if (!pk) { pk = document.createElement('div'); pk.id = 'jk-weekPeek'; pk.className = 'jkc-peek'; pk.setAttribute('aria-hidden', 'true'); host.appendChild(pk); }
+    if (c === jkWk.hot) return;
+    var first = !jkWk.hot; jkWk.hot = c;
+    var d = c.dataset.d, i = c.dataset.i, hr = String(+i - (+i % 2));
+    g.classList.add('is-hov');
+    g.querySelectorAll('.jk-c').forEach(function (k) { k.classList.toggle('is-hot', k === c); k.classList.toggle('is-line', k !== c && (k.dataset.d === d || k.dataset.i === i)); });
+    g.querySelectorAll('.h').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.i === hr); });
+    g.querySelectorAll('.d').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.day === d); });
+    var list = mgPool().filter(function (t) { return mg.free[t.id] && mg.free[t.id][+d][+i]; });
+    jkPeekShow(pk, host, c, list, HARI_L[+d] + ', ' + lbl(+i) + '-' + lbl(+i + 1), first);
+  }
+  (function () {
+    var g = document.getElementById('jk-week');
+    g.addEventListener('pointerover', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      var c = e.target.closest('.jk-c');
+      if (!c || c.classList.contains('l0') || g.classList.contains('is-tpl')) return;
+      jkWeekPeek(c);
+    });
+    g.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') jkWeekPeekOff(); });
+    g.addEventListener('click', jkWeekPeekOff);
+    window.addEventListener('scroll', function () { if (jkWk.hot) jkWeekPeekOff(); }, { passive: true });
+  })();
   function hcBindHover() {
     var el = hc.el, g = el.querySelector('.jkc-g'), sc = el.querySelector('.jkc-scroll');
     if (!g || g.classList.contains('is-tpl')) return;
