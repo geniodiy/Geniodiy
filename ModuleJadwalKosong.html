@@ -137,15 +137,14 @@
   .jk-hm .jk-c.l1{background:#E4E4F8;} .jk-hm .jk-c.l2{background:#C3C3F0;} .jk-hm .jk-c.l3{background:#7E7CDC; color:#fff;} .jk-hm .jk-c.l4{background:var(--blue); color:#fff;}
   .jk-hm .jk-c.l0{cursor:default;}
   /* Opsi A juga di grid mingguan: kotak terangkat, baris hari + kolom jam tetap terang, kartu intip tutor (jkWeekPeek) */
-  .jk-hm .jk-c{position:relative; transition:transform .22s cubic-bezier(.16,1,.3,1), opacity .2s ease, box-shadow .22s ease, filter .2s ease;}
+  .jk-hm .jk-c{position:relative; transition:transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s ease, background-color .2s ease, color .2s ease;}
   .jk-hm .h, .jk-hm .d{transition:color .2s ease, transform .2s ease;}
-  .jk-hm.is-hov .jk-c:not(.is-hot):not(.is-line){opacity:.38; filter:saturate(.6);}
-  .jk-hm.is-hov .jk-c.is-line{opacity:.85;}
-  .jk-hm .jk-c.is-hot{transform:translateY(-3px) scale(1.16); box-shadow:0 8px 16px -6px rgba(28,26,175,.55); z-index:1;}
+  .jk-hm .jk-c.is-hot{transform:translateY(-3px) scale(1.15); box-shadow:0 8px 16px -6px rgba(28,26,175,.55); z-index:1;}
+  .jk-hm .jk-c.l1.is-hot{background:#C3C3F0;} .jk-hm .jk-c.l2.is-hot{background:#7E7CDC; color:#fff;} .jk-hm .jk-c.l3.is-hot{background:var(--blue); color:#fff;} .jk-hm .jk-c.l4.is-hot{background:#0E0C6E; color:#fff;}
   .jk-hm .h.is-hl{color:var(--blue); font-weight:700; transform:translateY(-2px);}
   .jk-hm.is-hov .d.is-on:not(.is-hl){color:var(--ink);}
   .jk-hm .d.is-hl{color:var(--blue);}
-  @media (prefers-reduced-motion: reduce){ .jk-hm .jk-c, .jk-hm .h, .jk-hm .d{transition:none;} .jk-hm .jk-c.is-hot{transform:none; box-shadow:0 0 0 2px var(--blue);} .jk-hm .h.is-hl{transform:none;} }
+  @media (prefers-reduced-motion: reduce){ .jk-hm .jk-c, .jk-hm .h, .jk-hm .d{transition:none;} .jk-hm .jk-c.is-hot{transform:none;} .jk-hm .h.is-hl{transform:none;} }
   .jk-hm .jk-row-on{box-shadow:inset 3px 0 0 var(--blue);}
   .jk-list{display:flex; flex-direction:column;}
   .jk-tr{display:grid; grid-template-columns:86px minmax(0,1fr) 22px 14px; gap:10px; align-items:center; padding:8px 0; border:0; border-top:1px solid #EEF0F6; background:none; font-family:var(--font); font-size:11px; color:var(--ink); text-align:left; cursor:pointer; width:100%;}
@@ -196,11 +195,11 @@
   .jkc-c.l1{background:#E4E4F8;} .jkc-c.l2{background:#C3C3F0;} .jkc-c.l3{background:#7E7CDC; color:#fff;} .jkc-c.l4{background:var(--blue); color:#fff;}
   .jkc-c.l0{cursor:default;}
   /* Opsi A (owner's choice 12 Oct 2026): sorotan silang + kartu intip saat mouse digeser */
-  .jkc-c{position:relative; transition:transform .22s cubic-bezier(.16,1,.3,1), opacity .2s ease, box-shadow .22s ease, filter .2s ease;}
+  .jkc-c{position:relative; transition:transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s ease, background-color .2s ease, color .2s ease;}
   .jkc-h, .jkc-l{transition:color .2s ease, transform .2s ease;}
-  .jkc-g.is-hov .jkc-c:not(.is-hot):not(.is-line){opacity:.38; filter:saturate(.6);}
-  .jkc-g.is-hov .jkc-c.is-line{opacity:.85;}
-  .jkc-c.is-hot{transform:translateY(-3px) scale(1.18); box-shadow:0 8px 16px -6px rgba(28,26,175,.55); z-index:1;}
+  /* Opsi 1 (owner's choice 13 Oct 2026): kotak lain tidak berubah warna; hanya kotak yang ditunjuk naik satu tingkat warna */
+  .jkc-c.is-hot{transform:translateY(-3px) scale(1.15); box-shadow:0 8px 16px -6px rgba(28,26,175,.55); z-index:1;}
+  .jkc-c.l1.is-hot{background:#C3C3F0;} .jkc-c.l2.is-hot{background:#7E7CDC; color:#fff;} .jkc-c.l3.is-hot{background:var(--blue); color:#fff;} .jkc-c.l4.is-hot{background:#0E0C6E; color:#fff;}
   .jkc-h.is-hl{color:var(--blue); font-weight:700; transform:translateY(-2px);}
   .jkc-g.is-hov .jkc-l.is-on:not(.is-hl){color:var(--ink);}
   .jkc-l.is-hl{color:var(--blue);}
@@ -223,7 +222,7 @@
   .jkc-leg{display:flex; gap:12px; flex-wrap:wrap; font-size:10px; color:var(--ink-soft); margin-top:12px; padding-top:10px; border-top:1px dashed var(--border);}
   .jkc-leg span{display:inline-flex; align-items:center; gap:5px;} .jkc-leg i{width:10px; height:10px; border-radius:3px; display:inline-block;}
   .jkc-more{margin-top:auto; padding-top:10px; border:0; background:none; font-family:var(--font); font-size:11px; font-weight:600; color:var(--blue); cursor:pointer;}
-  @media (prefers-reduced-motion: reduce){ .jkc-g.is-anim .jkc-c{animation:none;} .jkc-c, .jkc-h, .jkc-l, .jkc-peek, .jkc-peek .pa{transition:none; animation:none;} .jkc-c.is-hot{transform:none; box-shadow:0 0 0 2px var(--blue);} .jkc-h.is-hl{transform:none;} }
+  @media (prefers-reduced-motion: reduce){ .jkc-g.is-anim .jkc-c{animation:none;} .jkc-c, .jkc-h, .jkc-l, .jkc-peek, .jkc-peek .pa{transition:none; animation:none;} .jkc-c.is-hot{transform:none;} .jkc-h.is-hl{transform:none;} }
   .jk-empty{text-align:center; padding:28px 16px; font-size:11px; color:var(--ink-soft);}
   .jk-empty i{font-size:26px; opacity:.6; display:block; margin-bottom:6px;}
   .jk-leg2{display:flex; gap:12px; flex-wrap:wrap; font-size:10px; color:var(--ink-soft); margin-top:12px;}
@@ -958,7 +957,7 @@
     var first = !hc.hot; hc.hot = c;
     g.classList.remove('is-anim'); g.classList.add('is-hov');
     var r = c.dataset.r, i = c.dataset.i;
-    g.querySelectorAll('.jkc-c').forEach(function (k) { k.classList.toggle('is-hot', k === c); k.classList.toggle('is-line', k !== c && (k.dataset.r === r || k.dataset.i === i)); });
+    g.querySelectorAll('.jkc-c').forEach(function (k) { k.classList.toggle('is-hot', k === c); });
     g.querySelectorAll('.jkc-h').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.i === i); });
     g.querySelectorAll('.jkc-l[data-r]').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.r === r); });
     var d = hc.days[+r], ii = +i;
@@ -995,7 +994,7 @@
     var first = !jkWk.hot; jkWk.hot = c;
     var d = c.dataset.d, i = c.dataset.i, hr = String(+i - (+i % 2));
     g.classList.add('is-hov');
-    g.querySelectorAll('.jk-c').forEach(function (k) { k.classList.toggle('is-hot', k === c); k.classList.toggle('is-line', k !== c && (k.dataset.d === d || k.dataset.i === i)); });
+    g.querySelectorAll('.jk-c').forEach(function (k) { k.classList.toggle('is-hot', k === c); });
     g.querySelectorAll('.h').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.i === hr); });
     g.querySelectorAll('.d').forEach(function (k) { k.classList.toggle('is-hl', k.dataset.day === d); });
     var list = mgPool().filter(function (t) { return mg.free[t.id] && mg.free[t.id][+d][+i]; });
