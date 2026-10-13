@@ -470,14 +470,14 @@
         q('presensi?select=tanggal,nominal_dibayar,kontrak_tutor(tutor_id,kontrak_siswa(harga))&status=in.(diterima,visit)' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
         isHrd ? none() : q('operasional?select=tanggal,nominal' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end),
         q('presensi?select=status,terlambat,denda,kontrak_tutor(tutor_id,users!kontrak_tutor_tutor_id_fkey(nama,foto_profil_url))' + u + '&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end),
-        q('kontrak_siswa?select=id,siswa_id,status,tanggal_mulai,tanggal_selesai,siswa(nama),kontrak_tutor(id,status)' + u),
+        q('kontrak_siswa?select=id,siswa_id,status,tanggal_mulai,tanggal_selesai,siswa(nama),kontrak_tutor(id,status)&diarsipkan_at=is.null' + u),
         q('presensi?select=id,created_at&status=eq.pending' + u + '&order=created_at.asc'),
         isHrd ? none() : q('invoice?select=nominal&status=eq.belum_lunas' + u),
         q('kontrak_tutor?select=id,tutor_id,mapel,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url,tutor_profile(no_wa)),kontrak_siswa!inner(status,siswa(nama,orangtua(no_hp)),paket_belajar(nama_paket),units(nama_unit)),jadwal(id,hari,jam_mulai,jam_selesai)&status=eq.aktif&kontrak_siswa.status=eq.aktif' + u),
         q('presensi?select=kontrak_tutor_id,jam,status,tanggal' + u + '&tanggal=gte.' + presFrom + '&tanggal=lte.' + todayKey),
         q('genio_news?select=id,judul,gambar_url,tanggal_publish,tombol_kontak_url&status=eq.aktif&tanggal_publish=lte.' + nowIso + '&or=(tanggal_expire.gte.' + nowIso + ',tanggal_expire.is.null)&order=tanggal_publish.desc&limit=3'),
         isHrd ? q('users?role=eq.tutor&select=id,status,created_at&order=created_at.asc') : none(),
-        isHrd ? q('siswa?select=id&created_at=gte.' + range.start + '&created_at=lt.' + nextMonthStart) : none(),
+        isHrd ? q('siswa?select=id&diarsipkan_at=is.null&created_at=gte.' + range.start + '&created_at=lt.' + nextMonthStart) : none(),
         isHrd ? none() : q('pemasukan_lain?select=tanggal,nominal' + u + '&tanggal=gte.' + first24 + '-01&tanggal=lte.' + range.end).catch(function () { return []; })
       ]);
       if (token !== kuhState.loading) return;

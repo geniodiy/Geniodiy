@@ -776,7 +776,7 @@
     try {
       var s = genioGetSession();
       var results = await Promise.all([
-        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(id,nama,kelas,sekolah,unit_id,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url),jadwal(id,hari,jam_mulai,jam_selesai))&order=created_at.desc', s.access_token),
+        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(id,nama,kelas,sekolah,unit_id,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url),jadwal(id,hari,jam_mulai,jam_selesai))&diarsipkan_at=is.null&order=created_at.desc', s.access_token),
         supaRest('units?select=id&order=nama_unit.asc', s.access_token)
       ]);
 

@@ -363,6 +363,7 @@
         <div class="gx-note"><i class="ph ph-info" aria-hidden="true"></i><span><span data-lp="Status aktif atau nonaktif diubah lewat edit siswa." data-ls="Status aktif atau nonaktif diubah lewat edit kelompok.">Status aktif atau nonaktif diubah lewat edit siswa.</span></span></div>
       </div>
       <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline genio-del-btn" id="os-arsipBtn"><i class="ph ph-trash" aria-hidden="true"></i>Hapus</button>
         <button type="button" class="btn btn-outline" id="os-editCancelBtn">Tutup</button>
       </div>
     </div>
@@ -628,8 +629,8 @@
     try {
       var s = genioGetSession();
       var results = await Promise.all([
-        supaRest('orangtua?select=id,nama,no_hp,alamat,pic_nama&order=nama.asc', s.access_token),
-        supaRest('siswa?select=id,nama,orangtua_id,unit_id,status,kelas,sekolah,jenjang,jenis_kelamin,jumlah_siswa,units(nama_unit,jenis)', s.access_token),
+        supaRest('orangtua?select=id,nama,no_hp,alamat,pic_nama&diarsipkan_at=is.null&order=nama.asc', s.access_token),
+        supaRest('siswa?diarsipkan_at=is.null&select=id,nama,orangtua_id,unit_id,status,kelas,sekolah,jenjang,jenis_kelamin,jumlah_siswa,units(nama_unit,jenis)', s.access_token),
         supaRest('units?select=id,jenis&order=nama_unit.asc', s.access_token)
       ]);
       var ortuRows = results[0];
@@ -1056,6 +1057,12 @@
     osEditModal.hidden = false;
     requestAnimationFrame(function () { osEditModal.classList.add('show'); });
   }
+  // Hapus orang tua/sekolah (manajer, super admin): tanpa riwayat dihapus permanen bersama siswanya, ada riwayat masuk Arsip data
+  document.getElementById('os-arsipBtn').addEventListener('click', function () {
+    var ortu = osState.ortuList.find(function (o) { return o.id === osEditTargetOrtuId; });
+    if (!ortu) return;
+    genioArsipHapus({ jenis: 'ortu', id: ortu.id, nama: ortu.nama, onDone: function () { osCloseEditModal(); osLoadAll(); } });
+  });
   function osCloseEditModal() {
     osEditModal.classList.remove('show');
     setTimeout(function () { osEditModal.hidden = true; }, 280);

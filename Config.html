@@ -338,7 +338,7 @@
   .pkc-ico i.ph-duotone:before, .ops-ico i.ph-duotone:before, .pgc-ico i.ph-duotone:before, .kuh-act .ic i.ph-duotone:before,
   #ps-filterModal .pw-head-ico i.ph-duotone:before, #ps-wakilModal .pw-head-ico i.ph-duotone:before, #ps-previewModal .pv-ext-ico i.ph-duotone:before,
   .jdw-wa-action-icon i.ph-duotone:before, .pt-file-ico i.ph-duotone:before, #ps-wakilModal .pw-file-ico i.ph-duotone:before, .ops-unit-opt .ops-uico i.ph-duotone:before,
-  .prf-pe-coll .ic i.ph-duotone:before, .klc-ico i.ph-duotone:before, .klc-av.is-sek i.ph-duotone:before, .jk-ico i.ph-duotone:before{opacity:.32;}
+  .prf-pe-coll .ic i.ph-duotone:before, .klc-ico i.ph-duotone:before, .klc-av.is-sek i.ph-duotone:before, .jk-ico i.ph-duotone:before, .ar-ico i.ph-duotone:before{opacity:.32;}
   .gx-confirm h3{font-size:14px !important; font-weight:600 !important; margin:0 0 4px !important;}
   .gx-confirm p{font-size:11px; color:var(--ink-soft); margin:0 0 6px; line-height:1.5;}
   @media (prefers-reduced-motion: reduce){ .modal-overlay.show .modal-sheet.gx-sheet{animation:none;} }
@@ -644,6 +644,23 @@
   /* HRD: status presensi di tabel tampil sebagai label biasa (tanpa panah, tidak bisa diklik untuk diubah) */
   .role-hrd .ps-table-status-btn{pointer-events:none; cursor:default;}
   .role-hrd .ps-table-status-btn .ps-status-arrow{display:none;}
+
+  /* ===== Hapus dan arsip data (popup #genioArsipModal dibuat oleh genioArsipModal) ===== */
+  #genioArsipModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
+  #genioArsipModal.show{opacity:1;}
+  #genioArsipModal .modal-sheet{margin:0 auto;}
+  #genioArsipModal .gx-head-ico.is-amber{background:#FFF4E0; color:#B26A00;}
+  #genioArsipModal .gx-head-ico.is-blue{background:var(--blue-tint); color:var(--blue);}
+  .ga-stats{display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:10px 0 4px;}
+  .ga-stats span{display:inline-flex; align-items:center; gap:5px; height:24px; padding:0 9px; border-radius:999px; background:var(--surface); border:1px solid var(--border); font-size:10.5px; color:var(--ink-soft);}
+  .ga-stats b{font-weight:700; color:var(--ink);}
+  .ga-note{display:flex; gap:7px; align-items:flex-start; text-align:left; background:var(--surface); border-radius:9px; padding:8px 10px; font-size:10.5px; line-height:1.45; color:var(--ink-soft); margin:10px 0 4px;}
+  .ga-note i{color:var(--blue); font-size:13px; margin-top:1px; flex:none;}
+  .ga-load{display:flex; align-items:center; justify-content:center; gap:8px; font-size:11px; color:var(--ink-soft); padding:6px 0 10px;}
+  /* Tombol Hapus di form edit kontrak dan orang tua: hanya manajer dan super admin */
+  .gx-foot .genio-del-btn{flex:0 0 auto !important; display:inline-flex; align-items:center; justify-content:center; gap:5px; color:var(--red) !important; border-color:rgba(212,7,15,.25) !important; background:#fff !important; padding:0 12px !important;}
+  .gx-foot .genio-del-btn:hover{background:var(--red-soft) !important;}
+  .genio-del-btn[hidden], body:not(.role-manajer):not(.role-super_admin) .genio-del-btn{display:none !important;}
 
   /* ===== Avatar pengguna: foto profil kalau ada, huruf inisial kalau belum ===== */
   .genio-av-img{width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block; flex:none;}
@@ -1452,7 +1469,7 @@
   (function genioDuoIcons() {
     var SEL = ['.gx-head-ico', '.menu-row .mr-badge', '.gh-per-ic', '.ku-ico', '.pkc-ico', '.ops-ico', '.pgc-ico', '.kuh-act .ic',
       '#ps-filterModal .pw-head-ico', '#ps-wakilModal .pw-head-ico', '#ps-previewModal .pv-ext-ico',
-      '.jdw-wa-action-icon', '.pt-file-ico', '#ps-wakilModal .pw-file-ico', '.ops-unit-opt .ops-uico', '.prf-pe-coll .ic', '.klc-ico', '.klc-av.is-sek', '.jk-ico'].map(function (x) { return x + ' i.ph'; }).join(',');
+      '.jdw-wa-action-icon', '.pt-file-ico', '#ps-wakilModal .pw-file-ico', '.ops-unit-opt .ops-uico', '.prf-pe-coll .ic', '.klc-ico', '.klc-av.is-sek', '.jk-ico', '.ar-ico'].map(function (x) { return x + ' i.ph'; }).join(',');
     function swap(root) {
       if (!root || !root.querySelectorAll) return;
       var list = root.querySelectorAll(SEL);
@@ -1463,7 +1480,7 @@
       new MutationObserver(function (muts) {
         for (var m = 0; m < muts.length; m++) {
           var t = muts[m].target;
-          if (t.nodeType === 1 && t.closest && t.closest('.gx-head-ico, .mr-badge, .gh-per-ic, .ku-ico, .pkc-ico, .ops-ico, .pgc-ico, .kuh-act, .pw-head-ico, .pv-ext-ico, .jdw-wa-action-icon, .pt-file-ico, .pw-file-ico, .ops-uico, .prf-pe-coll, .klc-ico, .klc-av, .jk-ico')) { swap(t.parentNode || t); continue; }
+          if (t.nodeType === 1 && t.closest && t.closest('.gx-head-ico, .mr-badge, .gh-per-ic, .ku-ico, .pkc-ico, .ops-ico, .pgc-ico, .kuh-act, .pw-head-ico, .pv-ext-ico, .jdw-wa-action-icon, .pt-file-ico, .pw-file-ico, .ops-uico, .prf-pe-coll, .klc-ico, .klc-av, .jk-ico, .ar-ico')) { swap(t.parentNode || t); continue; }
           var add = muts[m].addedNodes;
           for (var n = 0; n < add.length; n++) if (add[n].nodeType === 1) swap(add[n].parentNode || add[n]);
         }
@@ -1714,6 +1731,125 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
     setTimeout(watch, 1500);
   })();
+
+  /* ===== Hapus dan arsip data (orang tua/sekolah, kontrak siswa) =====
+     Hanya manajer dan super admin. rpc/arsip_cek + rpc/arsip_mode memutuskan:
+     tanpa riwayat = hapus permanen; ada riwayat = diarsipkan (hilang dari daftar, jadwal berhenti, riwayat utuh,
+     bisa dipulihkan di menu Arsip data); masih ada tagihan belum lunas / presensi menunggu = ditolak dengan alasan.
+     Server menegakkan aturan yang sama (rpc/arsip_data, rpc/pulihkan_data). */
+  function genioCanArsip() { var s = genioGetSession(); return !!(s && (s.role === 'manajer' || s.role === 'super_admin')); }
+  function genioArsipModal() {
+    var m = document.getElementById('genioArsipModal');
+    if (m) return m;
+    m = document.createElement('div');
+    m.className = 'modal-overlay'; m.id = 'genioArsipModal'; m.hidden = true;
+    m.innerHTML = '<div class="modal-sheet gx-sheet gx-sm" role="dialog" aria-modal="true" aria-labelledby="ga-title">' +
+      '<div class="gx-confirm"><span class="gx-head-ico is-danger" id="ga-ico"><i class="ph ph-trash" aria-hidden="true"></i></span>' +
+      '<h3 id="ga-title">Hapus data</h3><div id="ga-body"></div></div>' +
+      '<div class="modal-actions gx-foot" style="border-top:none !important;"><button type="button" class="btn btn-outline" id="ga-cancel">Batal</button>' +
+      '<button type="button" class="btn btn-primary is-danger" id="ga-ok">Hapus</button></div></div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', function (e) { if (e.target === m) genioArsipClose(); });
+    m.querySelector('#ga-cancel').addEventListener('click', genioArsipClose);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !m.hidden) genioArsipClose(); });
+    return m;
+  }
+  function genioArsipClose() {
+    var m = document.getElementById('genioArsipModal'); if (!m) return;
+    m.classList.remove('show'); setTimeout(function () { m.hidden = true; }, 280);
+  }
+  // state: { ico: 'danger'|'amber'|'blue', icon, title, html, ok (label, kosong = tanpa tombol aksi), cancel, onOk }
+  function genioArsipSet(st) {
+    var m = genioArsipModal();
+    var ico = m.querySelector('#ga-ico');
+    ico.className = 'gx-head-ico is-' + (st.ico || 'danger');
+    ico.innerHTML = '<i class="ph ' + (st.icon || 'ph-trash') + '" aria-hidden="true"></i>';
+    m.querySelector('#ga-title').textContent = st.title;
+    m.querySelector('#ga-body').innerHTML = st.html || '';
+    var ok = m.querySelector('#ga-ok'), cancel = m.querySelector('#ga-cancel');
+    cancel.textContent = st.cancel || 'Batal';
+    if (st.ok) ok.style.removeProperty('display'); else ok.style.setProperty('display', 'none', 'important');
+    ok.disabled = !!st.busy;
+    ok.textContent = st.ok || '';
+    ok.classList.toggle('is-danger', st.ico !== 'blue');
+    ok.onclick = st.onOk || null;
+  }
+  function genioArsipShow() {
+    var m = genioArsipModal();
+    if (!m.hidden && m.classList.contains('show')) return;
+    m.hidden = false; requestAnimationFrame(function () { m.classList.add('show'); });
+  }
+  function genioArsipStats(c, jenis) {
+    var items = [];
+    if (jenis === 'ortu') { items.push([c.siswa, 'siswa']); items.push([c.kontrak, 'kontrak']); }
+    items.push([c.presensi, 'presensi'], [c.invoice, 'tagihan'], [c.kwitansi, 'kwitansi']);
+    if (jenis === 'ortu') items.push([c.pemasukan, 'pemasukan lain']);
+    var h = items.filter(function (x) { return +x[0] > 0; }).map(function (x) { return '<span><b>' + x[0] + '</b>' + x[1] + '</span>'; }).join('');
+    return h ? '<div class="ga-stats">' + h + '</div>' : '';
+  }
+  function genioArsipRpc(fn, jenis, id) {
+    var s = genioSessionOrLogin();
+    return supaRest('rpc/' + fn, s.access_token, { method: 'POST', body: JSON.stringify({ p_jenis: jenis, p_id: id }) });
+  }
+  function genioArsipTolak(alasan) {
+    genioArsipSet({ ico: 'amber', icon: 'ph-warning-circle', title: 'Belum bisa dihapus', html: '<p>' + genioEscapeHtml(alasan) + '</p>', cancel: 'Mengerti' });
+  }
+  // opts: { jenis: 'kontrak'|'ortu', id, nama, onDone(hasil) }
+  function genioArsipHapus(opts) {
+    if (!genioCanArsip()) { genioToast('Hanya manajer dan super admin yang bisa menghapus data.', 'error'); return; }
+    var nama = genioEscapeHtml(opts.nama || 'data ini');
+    genioArsipSet({ title: 'Hapus ' + (opts.nama || 'data ini') + '?', html: '<div class="ga-load"><span class="spinner"></span>Memeriksa riwayat data...</div>' });
+    genioArsipShow();
+    Promise.all([genioArsipRpc('arsip_cek', opts.jenis, opts.id), genioArsipRpc('arsip_mode', opts.jenis, opts.id)]).then(function (r) {
+      var c = r[0] || {}, mode = String(r[1] || '');
+      if (mode.indexOf('tolak:') === 0) { genioArsipTolak(mode.slice(6)); return; }
+      var isOrtu = opts.jenis === 'ortu', html, okLabel;
+      if (mode === 'hapus') {
+        html = '<p>Belum ada presensi, tagihan atau pemasukan untuk ' + nama + ', jadi data ini dihapus permanen' +
+          (isOrtu ? (+c.siswa ? ' beserta ' + c.siswa + ' siswa' + (+c.kontrak ? ' dan kontraknya' : '') : '') : ' beserta tutor dan jadwalnya') +
+          '. Tindakan ini tidak bisa dibatalkan.</p>';
+        okLabel = 'Hapus permanen';
+      } else {
+        html = '<p>' + nama.charAt(0).toUpperCase() + nama.slice(1) + ' sudah punya riwayat, jadi dipindahkan ke Arsip data: hilang dari daftar dan pilihan' +
+          (isOrtu ? ', siswa dan kontraknya ikut diarsipkan,' : '') + ' dan jadwal mengajarnya berhenti. Riwayat ini tetap utuh:</p>' +
+          genioArsipStats(c, opts.jenis) +
+          (+c.belum_ditagih ? '<div class="ga-note"><i class="ph ph-info" aria-hidden="true"></i><span>' + c.belum_ditagih + ' pertemuan belum masuk tagihan. Tagihannya tetap bisa dibuat di menu Tagihan.</span></div>' : '') +
+          '<div class="ga-note"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i><span>Bisa dipulihkan kapan saja dari menu Arsip data.</span></div>';
+        okLabel = 'Hapus';
+      }
+      genioArsipSet({ title: 'Hapus ' + (opts.nama || 'data ini') + '?', html: html, ok: okLabel, onOk: function () {
+        var ok = document.getElementById('ga-ok'); ok.disabled = true; ok.innerHTML = '<span class="spinner"></span>';
+        genioArsipRpc('arsip_data', opts.jenis, opts.id).then(function (res) {
+          res = String(res || '');
+          if (res.indexOf('tolak:') === 0) { genioArsipTolak(res.slice(6)); return; }
+          genioArsipClose();
+          genioToast(res === 'dihapus' ? 'Data dihapus permanen' : 'Dipindahkan ke Arsip data', 'success');
+          if (opts.onDone) opts.onDone(res);
+          document.dispatchEvent(new CustomEvent('genio:arsip', { detail: { jenis: opts.jenis, id: opts.id, hasil: res } }));
+        }).catch(function (err) { ok.disabled = false; ok.textContent = okLabel; genioToast(err.message || 'Gagal menghapus', 'error'); });
+      } });
+    }).catch(function (err) { genioArsipClose(); genioToast(err.message || 'Gagal memeriksa data', 'error'); });
+  }
+  // opts: { jenis, id, nama, onDone }
+  function genioArsipPulihkan(opts) {
+    if (!genioCanArsip()) return;
+    var nama = genioEscapeHtml(opts.nama || 'data ini');
+    genioArsipSet({ ico: 'blue', icon: 'ph-arrow-counter-clockwise', title: 'Pulihkan ' + (opts.nama || 'data ini') + '?',
+      html: '<p>' + nama.charAt(0).toUpperCase() + nama.slice(1) + ' kembali ke daftar dengan status seperti sebelum dihapus' +
+        (opts.jenis === 'ortu' ? ', bersama siswa dan kontrak yang ikut diarsipkan' : '') + '. Jadwal yang dulu aktif ikut aktif lagi.</p>',
+      ok: 'Pulihkan', onOk: function () {
+        var ok = document.getElementById('ga-ok'); ok.disabled = true; ok.innerHTML = '<span class="spinner"></span>';
+        genioArsipRpc('pulihkan_data', opts.jenis, opts.id).then(function (res) {
+          res = String(res || '');
+          if (res.indexOf('tolak:') === 0) { genioArsipSet({ ico: 'amber', icon: 'ph-warning-circle', title: 'Belum bisa dipulihkan', html: '<p>' + genioEscapeHtml(res.slice(6)) + '</p>', cancel: 'Mengerti' }); return; }
+          genioArsipClose();
+          genioToast('Data dipulihkan', 'success');
+          if (opts.onDone) opts.onDone(res);
+          document.dispatchEvent(new CustomEvent('genio:arsip', { detail: { jenis: opts.jenis, id: opts.id, hasil: res } }));
+        }).catch(function (err) { ok.disabled = false; ok.textContent = 'Pulihkan'; genioToast(err.message || 'Gagal memulihkan', 'error'); });
+      } });
+    genioArsipShow();
+  }
 
   /* ===== ID pendek untuk melacak data di database =====
      8 karakter awal UUID (pola sama dengan nomor INV/REC), mis. #3F2A9C1D. Chip-nya menyalin UUID lengkap,

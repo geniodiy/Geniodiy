@@ -590,7 +590,7 @@
   async function plEnsureOrtu() {
     if (pl.ortu) return pl.ortu;
     var s = genioSessionOrLogin();
-    var rows = await supaRest('orangtua?select=id,nama,pic_nama,siswa(id,nama,unit_id,status,units(nama_unit,jenis))&order=nama.asc', s.access_token);
+    var rows = await supaRest('orangtua?select=id,nama,pic_nama,siswa(id,nama,unit_id,status,units(nama_unit,jenis))&diarsipkan_at=is.null&siswa.diarsipkan_at=is.null&order=nama.asc', s.access_token);
     // Kepala unit hanya pihak yang punya siswa di unitnya
     pl.ortu = (rows || []).filter(function (o) {
       o.siswa = (o.siswa || []).filter(function (sw) { return s.role !== 'kepala_unit' || sw.unit_id === s.unit_id; });

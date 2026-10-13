@@ -577,6 +577,7 @@
         </div>
       </div>
       <div class="modal-actions gx-foot">
+        <button type="button" class="btn btn-outline genio-del-btn" id="ktr-arsipBtn" hidden><i class="ph ph-trash" aria-hidden="true"></i>Hapus</button>
         <button type="button" class="btn btn-outline" id="ktr-cancelBtn">Batal</button>
         <button type="button" class="btn btn-primary" id="ktr-saveBtn">Simpan kontrak</button>
       </div>
@@ -811,6 +812,12 @@
       });
       document.getElementById('ktr-addBtn').addEventListener('click', function () { ktrOpenModal(null); });
       document.getElementById('ktr-cancelBtn').addEventListener('click', ktrCloseModal);
+      // Hapus kontrak (manajer, super admin): tanpa riwayat dihapus permanen, ada riwayat masuk Arsip data
+      document.getElementById('ktr-arsipBtn').addEventListener('click', function () {
+        var k = ktrFindKontrak(ktrEditId); if (!k) return;
+        var sw = (k.siswa && k.siswa.nama) || 'siswa';
+        genioArsipHapus({ jenis: 'kontrak', id: k.id, nama: 'kontrak ' + sw, onDone: function () { ktrCloseModal(); ktrState.siswaOptions = []; ktrLoadAll(); } });
+      });
       document.getElementById('ktr-saveBtn').addEventListener('click', ktrSubmitForm);
       document.getElementById('ktr-siswaPickerBtn').addEventListener('click', function () { ktrOpenSelectPicker('siswa'); });
       document.getElementById('ktr-paketPickerBtn').addEventListener('click', function () { ktrOpenSelectPicker('paket'); });
@@ -953,7 +960,7 @@
     try {
       var s = genioGetSession();
       var results = await Promise.all([
-        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(nama,kelas,sekolah,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url))&order=created_at.desc', s.access_token),
+        supaRest('kontrak_siswa?select=id,nomor_kontrak,siswa_id,unit_id,paket_belajar_id,harga,tanggal_mulai,tanggal_selesai,status,siswa(nama,kelas,sekolah,orangtua(nama,no_hp)),units(nama_unit),paket_belajar(nama_paket,jenis),kontrak_tutor(id,tutor_id,mapel,fee_mengajar,uang_transport,status,durasi_menit,users!kontrak_tutor_tutor_id_fkey(nama,no_hp,foto_profil_url))&diarsipkan_at=is.null&order=created_at.desc', s.access_token),
         supaRest('units?select=id&order=nama_unit.asc', s.access_token)
       ]);
       ktrState.kontrakList = results[0];
@@ -1475,6 +1482,7 @@
     ktrEditId = k ? k.id : null;
     document.getElementById('ktr-modalTitle').textContent = k ? 'Edit kontrak' : 'Tambah kontrak';
     genioSetIdChip(document.getElementById('ktr-modalId'), k && k.id);
+    document.getElementById('ktr-arsipBtn').hidden = !k;
     var defaultTglMulai = k ? k.tanggal_mulai : new Date().toISOString().slice(0, 10);
     document.getElementById('ktr-tglMulai').value = defaultTglMulai;
     document.getElementById('ktr-tglMulaiLabel').textContent = ktrFormatTgl(defaultTglMulai);
@@ -1496,7 +1504,7 @@
     var s = genioGetSession();
     try {
       if (!ktrState.siswaOptions.length) {
-        var siswaRows = await supaRest('siswa?select=id,nama,unit_id&order=nama.asc', s.access_token);
+        var siswaRows = await supaRest('siswa?select=id,nama,unit_id&diarsipkan_at=is.null&order=nama.asc', s.access_token);
         ktrState.siswaOptions = siswaRows;
       }
       if (!ktrState.paketOptions.length) {

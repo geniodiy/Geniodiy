@@ -554,6 +554,7 @@
     <?!= include('ModuleOperasional'); ?>
     <?!= include('ModulePemasukanLain'); ?>
     <?!= include('ModulePengaturan'); ?>
+    <?!= include('ModuleArsip'); ?>
 
   </div>
 
@@ -981,7 +982,7 @@
       // tutor chalkboard-teacher, operasional receipt, unit buildings, paket belajar books, user user-gear, news newspaper, pengaturan gear, presensi check-circle,
       // pemasukan lain hand-coins, kirim laporan paper-plane-tilt, laporan keuangan chart-line-up, jadwal kosong tutor clock-user
       people: '<i class="ph ph-student" aria-hidden="true"></i>', doc: '<i class="ph ph-file-text" aria-hidden="true"></i>', calendar: '<i class="ph ph-calendar-blank" aria-hidden="true"></i>', card: '<i class="ph ph-credit-card" aria-hidden="true"></i>', person: '<i class="ph ph-chalkboard-teacher" aria-hidden="true"></i>', monitor: '<i class="ph ph-receipt" aria-hidden="true"></i>',
-      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>', coins: '<i class="ph ph-hand-coins" aria-hidden="true"></i>', send: '<i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>', report: '<i class="ph ph-chart-line-up" aria-hidden="true"></i>', clockuser: '<i class="ph ph-clock-user" aria-hidden="true"></i>'
+      home: '<i class="ph ph-buildings" aria-hidden="true"></i>', layers: '<i class="ph ph-books" aria-hidden="true"></i>', shield: '<i class="ph ph-user-gear" aria-hidden="true"></i>', news: '<i class="ph ph-newspaper" aria-hidden="true"></i>', gear: '<i class="ph ph-gear" aria-hidden="true"></i>', check: '<i class="ph ph-check-circle" aria-hidden="true"></i>', coins: '<i class="ph ph-hand-coins" aria-hidden="true"></i>', send: '<i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>', report: '<i class="ph ph-chart-line-up" aria-hidden="true"></i>', clockuser: '<i class="ph ph-clock-user" aria-hidden="true"></i>', archive: '<i class="ph ph-archive" aria-hidden="true"></i>'
     };
 
     // ===== Konfigurasi menu "Lainnya" — satu-satunya sumber data untuk:
@@ -1005,6 +1006,8 @@
         { key: 'paket-belajar', icon: 'layers', label: 'Paket Belajar' },
         { key: 'kelola-pengguna', icon: 'shield', label: 'Kelola User' },
         { key: 'genio-news', icon: 'news', label: 'Genio News' },
+        // Arsip data: orang tua dan kontrak yang dihapus padahal punya riwayat; manajer dan super admin saja (tidak ada di ROLE_MENU)
+        { key: 'arsip-data', icon: 'archive', label: 'Arsip data' },
         { key: 'pengaturan', icon: 'gear', label: 'Pengaturan' }
       ]}
     ];
@@ -1050,6 +1053,7 @@
       'paket-belajar': ['Paket Belajar', 'Master paket belajar'],
       'kelola-pengguna': ['Kelola User', 'Semua akun & role'],
       'genio-news': ['Genio News', 'Pengumuman'],
+      'arsip-data': ['Arsip data', 'Data yang dihapus, riwayat tetap utuh'],
       'pengaturan': ['Pengaturan', 'Denda, visit, dsb.']
     };
 
@@ -1140,16 +1144,16 @@
       var range = homePeriodeRangeForLainnya();
       try {
         var results = await Promise.all([
-          supaRest('kontrak_siswa?select=siswa_id', token),
-          supaRest('kontrak_siswa?select=id', token),
-          supaRest('kontrak_tutor?select=id', token),
+          supaRest('kontrak_siswa?select=siswa_id&diarsipkan_at=is.null', token),
+          supaRest('kontrak_siswa?select=id&diarsipkan_at=is.null', token),
+          supaRest('kontrak_tutor?select=id,kontrak_siswa!inner(id)&kontrak_siswa.diarsipkan_at=is.null', token),
           supaRest('invoice?select=status', token),
           supaRest('users?role=eq.tutor&select=id', token),
           supaRest('operasional?select=nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token),
           supaRest('units?select=id', token),
           supaRest('paket_belajar?select=id', token),
           supaRest('users?select=id', token),
-          supaRest('jadwal?select=id', token),
+          supaRest('jadwal?select=id,kontrak_tutor!inner(kontrak_siswa!inner(id))&kontrak_tutor.kontrak_siswa.diarsipkan_at=is.null', token),
           supaRest('pemasukan_lain?select=nominal&tanggal=gte.' + range.start + '&tanggal=lte.' + range.end, token).catch(function () { return []; })
         ]);
         var siswaRows = results[0], kontrakSiswaRows = results[1], kontrakTutorRows = results[2],
@@ -1174,6 +1178,15 @@
         lainnyaSetInfo('kelola-unit', unitRows.length + ' Unit');
         lainnyaSetInfo('paket-belajar', paketRows.length + ' Program');
         lainnyaSetInfo('kelola-pengguna', userRows2.length + ' User');
+        if (document.getElementById('mrInfo-arsip-data')) {
+          Promise.all([
+            supaRest('orangtua?select=id&diarsipkan_at=not.is.null', token),
+            supaRest('kontrak_siswa?select=id,siswa(diarsipkan_at)&diarsipkan_at=not.is.null', token)
+          ]).then(function (r) {
+            var n = (r[0] || []).length + (r[1] || []).filter(function (k) { return !(k.siswa && k.siswa.diarsipkan_at); }).length;
+            lainnyaSetInfo('arsip-data', n + ' Data');
+          }).catch(function () { lainnyaSetInfo('arsip-data', ''); });
+        }
         lainnyaSetInfo('pengaturan', '');
         lainnyaSetInfo('presensi', '');
         lainnyaKirimInfo();

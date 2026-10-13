@@ -1,0 +1,117 @@
+<!-- ===== Arsip data (manajer, super admin) =====
+     Orang tua/sekolah dan kontrak siswa yang "dihapus" padahal sudah punya riwayat. Mereka disembunyikan dari semua
+     daftar dan pilihan (kolom diarsipkan_at), jadwalnya berhenti (kontrak tutor nonaktif), tetapi presensi, invoice,
+     kwitansi, gaji dan laporan lamanya tetap utuh. Pulihkan mengembalikan status persis seperti sebelum dihapus.
+     Hapus dan pulihkan lewat genioArsipHapus / genioArsipPulihkan di Config.html (rpc/arsip_data, rpc/pulihkan_data,
+     supabase/migrations/20261013_arsip_data.sql). -->
+<style>
+  @media (min-width:900px){
+    .module-panel[data-module="arsip-data"][hidden]{ display:none !important; }
+    .module-panel[data-module="arsip-data"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
+  }
+  [data-module="arsip-data"] [hidden]{display:none !important;}
+  .ar-intro{display:flex; gap:10px; align-items:flex-start; background:#fff; border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:12px;}
+  .ar-intro .ar-ico{width:34px; height:34px;}
+  .ar-intro b{display:block; font-size:12px; font-weight:600; color:var(--ink); margin-bottom:2px;}
+  .ar-intro span{font-size:11px; color:var(--ink-soft); line-height:1.5;}
+  .ar-search{margin-bottom:12px;}
+  .ar-search input{width:100%; box-sizing:border-box; height:34px; border-radius:10px; border:1px solid var(--border); background:var(--surface); padding:0 12px; font-family:var(--font); font-size:12px; color:var(--ink);}
+  .ar-search input:focus{outline:none; border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(28,26,175,.12);}
+  .ar-sec{font-size:12px; font-weight:600; color:var(--ink); margin:16px 0 8px;}
+  .ar-sec:first-of-type{margin-top:4px;}
+  .ar-grid{display:grid; grid-template-columns:minmax(0,1fr); gap:10px;}
+  @media (min-width:900px){ .ar-grid{grid-template-columns:repeat(2, minmax(0,1fr));} }
+  .ar-card{display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--border); border-radius:14px; padding:12px 14px; min-width:0; animation:arIn .35s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 35ms);}
+  @keyframes arIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  .ar-ico{width:36px; height:36px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:17px; flex:none;}
+  .ar-txt{flex:1; min-width:0;}
+  .ar-txt b{display:block; font-size:12.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .ar-txt small{display:block; font-size:10.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;}
+  .ar-txt small.ar-when{color:var(--muted, #8A8EA5);}
+  .ar-btn{flex:none; display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:#fff; color:var(--blue); font-family:var(--font); font-size:11px; font-weight:600; cursor:pointer; transition:background .15s ease;}
+  .ar-btn:hover{background:var(--surface);}
+  .ar-empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; background:#fff; border:1px dashed var(--border); border-radius:14px; padding:22px 16px; font-size:11px; color:var(--ink-soft);}
+  .ar-empty .ar-ico{background:var(--surface); color:var(--ink-soft);}
+  .ar-empty b{font-size:12px; font-weight:600; color:var(--ink);}
+  @media (max-width:520px){ .ar-btn span{display:none;} .ar-btn{width:32px; padding:0; justify-content:center;} }
+  @media (prefers-reduced-motion: reduce){ .ar-card{animation:none;} }
+</style>
+
+<div class="module-panel" data-module="arsip-data" hidden>
+  <div class="ar-intro">
+    <span class="ar-ico"><i class="ph ph-archive" aria-hidden="true"></i></span>
+    <div><b>Data yang dihapus tapi punya riwayat</b><span>Disembunyikan dari daftar, pilihan dan jadwal. Presensi, tagihan, kwitansi, gaji dan laporan lamanya tetap tersimpan. Pulihkan untuk mengembalikan statusnya seperti sebelum dihapus.</span></div>
+  </div>
+  <div class="ar-search"><input type="text" id="ar-search" placeholder="Cari nama di arsip" autocomplete="off"></div>
+  <div id="ar-list"><div class="ar-empty"><span class="spinner"></span>Memuat arsip...</div></div>
+</div>
+
+<script>
+(function () {
+  var ar = { ortu: [], kontrak: [], q: '' };
+  var BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  function esc(s) { return genioEscapeHtml(s); }
+  function tgl(iso) { var d = new Date(iso); return isNaN(d) ? '-' : d.getDate() + ' ' + BULAN[d.getMonth()] + ' ' + d.getFullYear(); }
+  function when(r) { return 'Dihapus ' + tgl(r.diarsipkan_at) + (r.pengarsip && r.pengarsip.nama ? ' oleh ' + r.pengarsip.nama.split(' ')[0] : ''); }
+
+  async function arLoad() {
+    var list = document.getElementById('ar-list');
+    var s = genioGetSession(); if (!s) return;
+    try {
+      var r = await Promise.all([
+        supaRest('orangtua?diarsipkan_at=not.is.null&select=id,nama,pic_nama,diarsipkan_at,pengarsip:users!orangtua_diarsipkan_oleh_fkey(nama),siswa(id,nama,units(nama_unit,jenis))&order=diarsipkan_at.desc', s.access_token),
+        supaRest('kontrak_siswa?diarsipkan_at=not.is.null&select=id,nomor_kontrak,tanggal_mulai,diarsipkan_at,pengarsip:users!kontrak_siswa_diarsipkan_oleh_fkey(nama),siswa(nama,diarsipkan_at,orangtua(nama)),units(nama_unit),paket_belajar(nama_paket)&order=diarsipkan_at.desc', s.access_token)
+      ]);
+      ar.ortu = r[0] || [];
+      // Kontrak yang ikut terarsip bersama orang tuanya dipulihkan lewat orang tuanya, jadi tidak didaftar terpisah
+      ar.kontrak = (r[1] || []).filter(function (k) { return !(k.siswa && k.siswa.diarsipkan_at); });
+      arRender();
+    } catch (err) {
+      list.innerHTML = '<div class="ar-empty"><b>Gagal memuat arsip</b>' + esc(err.message) + '</div>';
+    }
+  }
+  function match(t) { return !ar.q || String(t || '').toLowerCase().indexOf(ar.q) !== -1; }
+  function arRender() {
+    var list = document.getElementById('ar-list');
+    var ortu = ar.ortu.filter(function (o) { return match(o.nama) || match(o.pic_nama) || (o.siswa || []).some(function (x) { return match(x.nama); }); });
+    var kontrak = ar.kontrak.filter(function (k) { return match(k.siswa && k.siswa.nama) || match(k.nomor_kontrak) || match(k.siswa && k.siswa.orangtua && k.siswa.orangtua.nama); });
+    if (!ar.ortu.length && !ar.kontrak.length) {
+      list.innerHTML = '<div class="ar-empty"><span class="ar-ico"><i class="ph ph-archive" aria-hidden="true"></i></span><b>Arsip masih kosong</b>Orang tua atau kontrak yang dihapus padahal sudah punya riwayat akan muncul di sini.</div>';
+      return;
+    }
+    var i = 0, h = '';
+    h += '<div class="ar-sec">Orang tua dan sekolah</div>';
+    h += ortu.length ? '<div class="ar-grid">' + ortu.map(function (o) {
+      var sw = o.siswa || [], sek = sw.some(function (x) { return x.units && x.units.jenis === 'sekolah'; });
+      var unit = sw.map(function (x) { return x.units && x.units.nama_unit; }).filter(Boolean).filter(function (v, k, a) { return a.indexOf(v) === k; }).join(', ');
+      var sub = (sw.length ? sw.length + (sek ? ' kelompok' : ' siswa') + ': ' + sw.map(function (x) { return x.nama; }).join(', ') : 'Tanpa siswa') + (unit ? ' · ' + unit : '');
+      return '<div class="ar-card" style="--i:' + (i++) + '"><span class="ar-ico"><i class="ph ' + (sek ? 'ph-buildings' : 'ph-users-three') + '" aria-hidden="true"></i></span>' +
+        '<div class="ar-txt"><b title="' + esc(o.nama) + '">' + esc(o.nama) + '</b><small title="' + esc(sub) + '">' + esc(sub) + '</small><small class="ar-when">' + esc(when(o)) + '</small></div>' +
+        '<button type="button" class="ar-btn" data-jenis="ortu" data-id="' + o.id + '" data-nama="' + esc(o.nama) + '" aria-label="Pulihkan ' + esc(o.nama) + '"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i><span>Pulihkan</span></button></div>';
+    }).join('') + '</div>' : '<div class="ar-empty">' + (ar.q ? 'Tidak ada yang cocok.' : 'Belum ada orang tua atau sekolah di arsip.') + '</div>';
+    h += '<div class="ar-sec">Kontrak siswa</div>';
+    h += kontrak.length ? '<div class="ar-grid">' + kontrak.map(function (k) {
+      var nm = (k.siswa && k.siswa.nama) || 'Siswa';
+      var sub = [k.nomor_kontrak, k.paket_belajar && k.paket_belajar.nama_paket, k.units && k.units.nama_unit].filter(Boolean).join(' · ');
+      return '<div class="ar-card" style="--i:' + (i++) + '"><span class="ar-ico"><i class="ph ph-file-text" aria-hidden="true"></i></span>' +
+        '<div class="ar-txt"><b title="' + esc(nm) + '">' + esc(nm) + '</b><small title="' + esc(sub) + '">' + esc(sub || '-') + '</small><small class="ar-when">' + esc(when(k)) + '</small></div>' +
+        '<button type="button" class="ar-btn" data-jenis="kontrak" data-id="' + k.id + '" data-nama="' + esc('kontrak ' + nm) + '" aria-label="Pulihkan kontrak ' + esc(nm) + '"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i><span>Pulihkan</span></button></div>';
+    }).join('') + '</div>' : '<div class="ar-empty">' + (ar.q ? 'Tidak ada yang cocok.' : 'Belum ada kontrak di arsip.') + '</div>';
+    genioKeepScroll(list, function () { list.innerHTML = h; });
+  }
+
+  document.getElementById('ar-search').addEventListener('input', function () { ar.q = this.value.trim().toLowerCase(); arRender(); });
+  document.getElementById('ar-list').addEventListener('click', function (e) {
+    var b = e.target.closest('.ar-btn'); if (!b) return;
+    genioArsipPulihkan({ jenis: b.dataset.jenis, id: b.dataset.id, nama: b.dataset.nama, onDone: arLoad });
+  });
+  // Arsip berubah dari menu lain (hapus kontrak atau orang tua): muat ulang kalau panel ini sedang terbuka
+  document.addEventListener('genio:arsip', function () {
+    var p = document.querySelector('.module-panel[data-module="arsip-data"]');
+    if (p && !p.hidden) arLoad();
+  });
+
+  window.genioModuleHandlers = window.genioModuleHandlers || {};
+  window.genioModuleHandlers['arsip-data'] = arLoad;
+})();
+</script>
