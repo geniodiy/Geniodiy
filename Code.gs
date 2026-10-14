@@ -419,6 +419,15 @@ function generateInvoicePdf(invoiceData) {
   }
 }
 
+// Pratinjau invoice/kuitansi di popup Tagihan: HTML yang sama persis dengan PDF (buildInvoiceHtml_), tanpa menyimpan ke Drive
+function previewInvoiceHtml(invoiceData) {
+  try {
+    return { success: true, html: buildInvoiceHtml_(invoiceData) };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
 function batchGenerateInvoicePdf(invoiceList) {
   var results = [];
   for (var i = 0; i < invoiceList.length; i++) {

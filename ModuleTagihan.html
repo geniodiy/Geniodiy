@@ -156,7 +156,7 @@
   #tg-filterModal.show, #tg-pickerModal.show, #tg-lunasModal.show, #tg-previewModal.show, #tg-confirmModal.show{opacity:1 !important; pointer-events:auto !important;}
   #tg-filterModal[hidden], #tg-pickerModal[hidden], #tg-lunasModal[hidden], #tg-previewModal[hidden], #tg-confirmModal[hidden]{display:none !important;}
   #tg-pickerModal{z-index:10000 !important;}
-  #tg-previewModal .modal-sheet.gx-sheet{max-width:580px !important;}
+  #tg-previewModal .modal-sheet.gx-sheet{max-width:720px !important;}
   #tg-previewContainer{padding:12px 0 6px;}
   .tg-sum{background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:10px 12px; margin-top:12px;}
   .tg-sum-h{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;}
@@ -187,7 +187,11 @@
   }
 
   /* Lembar cetak */
-  .tg-print-sheet{background:#fff; border:1px solid #e1e4e8; border-radius:10px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,.06); color:#24292f; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;}
+  .tg-docframe{position:relative; width:100%; overflow:hidden; background:#fff; border:1px solid var(--border); border-radius:10px; box-shadow:0 4px 16px rgba(20,22,43,.06);}
+  .tg-docframe iframe{position:absolute; top:0; left:0; border:0; transform-origin:0 0; background:#fff;}
+  .tg-doc-load{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; min-height:260px; border:1px dashed var(--border); border-radius:10px; font-size:11px; color:var(--ink-soft); text-align:center; padding:16px;}
+  .tg-doc-load.is-err{color:var(--red);}
+  .tg-doc-load .btn{height:32px; font-size:11px;}
 </style>
 
   <!-- Periode Selector (Sama Persis seperti Gaji & Presensi) -->
@@ -411,19 +415,6 @@
     return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
   }
 
-  function tgTerbilang(angka) {
-    angka = Math.floor(Math.abs(Number(angka) || 0));
-    var huruf = ['', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
-    if (angka < 12) return huruf[angka];
-    if (angka < 20) return tgTerbilang(angka - 10) + ' Belas';
-    if (angka < 100) return tgTerbilang(Math.floor(angka / 10)) + ' Puluh ' + huruf[angka % 10];
-    if (angka < 200) return 'Seratus ' + tgTerbilang(angka - 100);
-    if (angka < 1000) return tgTerbilang(Math.floor(angka / 100)) + ' Ratus ' + tgTerbilang(angka % 100);
-    if (angka < 2000) return 'Seribu ' + tgTerbilang(angka - 1000);
-    if (angka < 1000000) return tgTerbilang(Math.floor(angka / 1000)) + ' Ribu ' + tgTerbilang(angka % 1000);
-    if (angka < 1000000000) return tgTerbilang(Math.floor(angka / 1000000)) + ' Juta ' + tgTerbilang(angka % 1000000);
-    return tgTerbilang(Math.floor(angka / 1000000000)) + ' Miliar ' + tgTerbilang(angka % 1000000000);
-  }
 
   function tgFormatTgl(iso) {
     if (!iso) return '-';
@@ -1609,6 +1600,55 @@
   // PRINTABLE PREVIEW & GOOGLE DRIVE PDF GENERATION
   // =========================================================
 
+  // Data dokumen untuk Code.gs (buildInvoiceHtml_): dipakai bersama oleh pratinjau popup dan Cetak PDF, jadi tampilannya selalu sama
+  async function tgBuildPayload(g) {
+    var itemsPayload = g.children.map(function (c) {
+      var hgSatuan = c.sesi > 0 ? Math.round(c.nominal / c.sesi) : 0;
+      var tgl = tgTglList(c.pres);
+      return {
+        nama: c.nama,
+        pakets: c.pakets,
+        sesi: c.sesi,
+        hargaSatuan: hgSatuan,
+        nominal: c.nominal,
+        subtext: [c.kelas ? 'Kelas ' + c.kelas : '', g.isSekolah ? '' : c.sekolah, tgl ? 'Pertemuan ' + tgl : ''].filter(Boolean).join(' • '),
+        // Satu baris per pertemuan di PDF (gaya nota)
+        pertemuan: (c.pres || []).slice().sort(function (a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); }).map(function (p) {
+          return { tanggal: p.tanggal, mapel: (p.kontrak_tutor && p.kontrak_tutor.mapel) || '', visit: p.status === 'visit' };
+        })
+      };
+    });
+
+    var firstInv = g.invoices[0] || {};
+    var payload = {
+      id: firstInv.id || (g.extras[0] && g.extras[0].id),
+      // Biaya lain di bawah baris pertemuan les
+      extras: g.extras.map(function (e) {
+        return { tanggal: e.tanggal, kategori: (e.pemasukan_kategori && e.pemasukan_kategori.nama) || 'Biaya lain', keterangan: e.keterangan || '', jumlah: parseFloat(e.jumlah || 1), hargaSatuan: parseFloat(e.harga_satuan || 0), nominal: parseFloat(e.nominal || 0), siswa: (e.siswa && e.siswa.nama) || '' };
+      }),
+      extraNominal: g.extraNominal,
+      receiptId: (firstInv.receipt && firstInv.receipt.id) ? firstInv.receipt.id : null,
+      status: g.status,
+      docNo: tgDocNo(g, g.status === 'lunas'),
+      tambahan: tgGroupTambahan(g),
+      tambahanNote: tgTambahanNote(g),
+      ortuNama: g.ortuNama,
+      ortuHp: g.ortuHp,
+      isSekolah: !!g.isSekolah,
+      picNama: g.picNama || '',
+      unitNama: g.unitNama,
+      periode: tgState.periode,
+      periodeLabel: tgFormatPeriodeLabel(tgState.periode),
+      totalSesi: g.totalSesi,
+      totalNominal: g.totalNominal,
+      items: itemsPayload,
+      siswaList: g.children.length ? g.children.map(function (c) { return c.nama; }).join(', ') : g.extras.map(function (e) { return e.siswa && e.siswa.nama; }).filter(function (n, i, arr) { return n && arr.indexOf(n) === i; }).join(', '),
+      tanggalLunas: g.tanggalLunas ? tgFormatTgl(g.tanggalLunas) : null,
+      identitas: await genioDocIdentity()
+    };
+    return payload;
+  }
+
   async function tgProcessPrintDoc(g, btn) {
     if (!g || ((!g.invoices || !g.invoices.length) && !(g.extras || []).length)) return;
     if (btn && btn.dataset.busy === '1') return;
@@ -1635,51 +1675,8 @@
       }
       if (!existingPdfUrl) g.extras.forEach(function (e) { if (!existingPdfUrl && e.pdf_url) existingPdfUrl = e.pdf_url; });
 
-      var itemsPayload = g.children.map(function (c) {
-        var hgSatuan = c.sesi > 0 ? Math.round(c.nominal / c.sesi) : 0;
-        var tgl = tgTglList(c.pres);
-        return {
-          nama: c.nama,
-          pakets: c.pakets,
-          sesi: c.sesi,
-          hargaSatuan: hgSatuan,
-          nominal: c.nominal,
-          subtext: [c.kelas ? 'Kelas ' + c.kelas : '', g.isSekolah ? '' : c.sekolah, tgl ? 'Pertemuan ' + tgl : ''].filter(Boolean).join(' • '),
-          // Satu baris per pertemuan di PDF (gaya nota)
-          pertemuan: (c.pres || []).slice().sort(function (a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); }).map(function (p) {
-            return { tanggal: p.tanggal, mapel: (p.kontrak_tutor && p.kontrak_tutor.mapel) || '', visit: p.status === 'visit' };
-          })
-        };
-      });
-
-      var firstInv = g.invoices[0] || {};
-      var payload = {
-        id: firstInv.id || (g.extras[0] && g.extras[0].id),
-        // Biaya lain di bawah baris pertemuan les
-        extras: g.extras.map(function (e) {
-          return { tanggal: e.tanggal, kategori: (e.pemasukan_kategori && e.pemasukan_kategori.nama) || 'Biaya lain', keterangan: e.keterangan || '', jumlah: parseFloat(e.jumlah || 1), hargaSatuan: parseFloat(e.harga_satuan || 0), nominal: parseFloat(e.nominal || 0), siswa: (e.siswa && e.siswa.nama) || '' };
-        }),
-        extraNominal: g.extraNominal,
-        receiptId: (firstInv.receipt && firstInv.receipt.id) ? firstInv.receipt.id : null,
-        oldPdfUrl: existingPdfUrl,
-        status: g.status,
-        docNo: tgDocNo(g, g.status === 'lunas'),
-        tambahan: tgGroupTambahan(g),
-        tambahanNote: tgTambahanNote(g),
-        ortuNama: g.ortuNama,
-        ortuHp: g.ortuHp,
-        isSekolah: !!g.isSekolah,
-        picNama: g.picNama || '',
-        unitNama: g.unitNama,
-        periode: tgState.periode,
-        periodeLabel: tgFormatPeriodeLabel(tgState.periode),
-        totalSesi: g.totalSesi,
-        totalNominal: g.totalNominal,
-        items: itemsPayload,
-        siswaList: g.children.length ? g.children.map(function (c) { return c.nama; }).join(', ') : g.extras.map(function (e) { return e.siswa && e.siswa.nama; }).filter(function (n, i, arr) { return n && arr.indexOf(n) === i; }).join(', '),
-        tanggalLunas: g.tanggalLunas ? tgFormatTgl(g.tanggalLunas) : null,
-        identitas: await genioDocIdentity()
-      };
+      var payload = await tgBuildPayload(g);
+      payload.oldPdfUrl = existingPdfUrl;
 
       var result = await new Promise(function (resolve, reject) {
         if (window.google && google.script && google.script.run) {
@@ -1695,7 +1692,7 @@
           setTimeout(function () {
             resolve({
               success: true,
-              url: 'https://drive.google.com/file/d/genio_doc_' + firstInv.id + '/view'
+              url: 'https://drive.google.com/file/d/genio_doc_' + payload.id + '/view'
             });
           }, 700);
         }
@@ -1753,6 +1750,51 @@
     }
   }
 
+  /* Pratinjau dokumen = HTML PDF dari Code.gs (previewInvoiceHtml -> buildInvoiceHtml_, gaya A), dirender di bingkai
+     selebar A4 lalu diperkecil agar pas di popup. Hasil disimpan per isi dokumen supaya buka ulang langsung tampil. */
+  var tgPreviewCache = {}, tgPreviewSeq = 0;
+  function tgRenderPreviewDoc(g) {
+    var box = document.getElementById('tg-previewContainer');
+    var seq = ++tgPreviewSeq;
+    box.innerHTML = '<div class="tg-doc-load"><span class="spinner"></span>Menyiapkan dokumen...</div>';
+    tgBuildPayload(g).then(function (payload) {
+      var key = JSON.stringify(payload);
+      if (tgPreviewCache[key]) return tgPreviewCache[key];
+      return new Promise(function (resolve, reject) {
+        if (!(window.google && google.script && google.script.run)) { reject(new Error('Pratinjau hanya tersedia di aplikasi.')); return; }
+        google.script.run
+          .withSuccessHandler(function (res) { if (res && res.success) resolve(res.html); else reject(new Error((res && res.error) || 'Gagal menyiapkan pratinjau.')); })
+          .withFailureHandler(function (err) { reject(err); })
+          .previewInvoiceHtml(payload);
+      }).then(function (html) { tgPreviewCache[key] = html; return html; });
+    }).then(function (html) {
+      if (seq !== tgPreviewSeq) return;
+      tgShowDocFrame(box, html);
+    }).catch(function (err) {
+      if (seq !== tgPreviewSeq) return;
+      box.innerHTML = '<div class="tg-doc-load is-err">' + tgEscape((err && err.message) || 'Gagal menyiapkan pratinjau.') + '<button type="button" class="btn btn-outline" id="tg-previewRetry">Coba lagi</button></div>';
+      document.getElementById('tg-previewRetry').onclick = function () { tgRenderPreviewDoc(g); };
+    });
+  }
+  function tgShowDocFrame(box, html) {
+    // Halaman PDF punya margin lewat @page (tidak berlaku di layar): beri padding yang sama dan lebar A4
+    var css = '<style>html{background:#fff;}body{width:210mm;min-height:120mm;padding:14mm 16mm 12mm;box-sizing:border-box;margin:0;}</style>';
+    html = String(html).indexOf('</head>') > -1 ? html.replace('</head>', css + '</head>') : css + html;
+    box.innerHTML = '<div class="tg-docframe"><iframe title="Pratinjau dokumen" sandbox="allow-same-origin"></iframe></div>';
+    var wrap = box.firstChild, f = wrap.firstChild;
+    function fit() {
+      var d = f.contentDocument; if (!d || !d.documentElement) return;
+      var W = 794, sc = Math.min(1, wrap.clientWidth / W);
+      var h = Math.max(d.documentElement.scrollHeight, d.body ? d.body.scrollHeight : 0);
+      f.style.width = W + 'px'; f.style.height = h + 'px'; f.style.transform = 'scale(' + sc + ')';
+      wrap.style.height = Math.ceil(h * sc) + 'px';
+    }
+    f.addEventListener('load', function () { fit(); setTimeout(fit, 250); });
+    f.srcdoc = html;
+    if (!tgShowDocFrame.bound) { tgShowDocFrame.bound = true; window.addEventListener('resize', function () { var fr = document.querySelector('#tg-previewContainer .tg-docframe iframe'); if (fr && fr.onfit) fr.onfit(); }); }
+    f.onfit = fit;
+  }
+
   function tgOpenPreview(key) {
     var g = tgFindGroupByOrtuKey(key);
     if (!g) return;
@@ -1760,126 +1802,11 @@
 
     var isLunas = g.status === 'lunas';
     var tambahan = tgGroupTambahan(g);
-    var docTitle = isLunas ? (tambahan ? 'KUITANSI TAGIHAN TAMBAHAN' : 'KUITANSI PEMBAYARAN RESMI') : (tambahan ? 'INVOICE TAGIHAN TAMBAHAN' : 'INVOICE TAGIHAN BIMBEL');
     var popupTitle = isLunas ? (tambahan ? 'Kuitansi tagihan tambahan' : 'Kuitansi pembayaran') : (tambahan ? 'Invoice tagihan tambahan' : 'Invoice tagihan');
-    var firstInv = g.invoices[0] || {};
-    var docNo = tgDocNo(g, isLunas);
-    var tambahanNote = tgTambahanNote(g);
-
     document.getElementById('tg-previewDocTitle').textContent = popupTitle;
     document.getElementById('tg-previewDocSub').textContent = g.ortuNama + ' · periode ' + tgFormatPeriodeLabel(tgState.periode);
 
-    var stampColor = isLunas ? '#28a745' : '#ff9500';
-    var stampText = isLunas ? 'LUNAS' : 'TAGIHAN';
-
-    var lineRows = g.invoices.map(function (inv, idx) {
-      var ks = inv.kontrak_siswa || {};
-      var s = ks.siswa || {};
-      var pkt = ks.paket_belajar || {};
-      return '<tr>' +
-        '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (idx + 1) + '</td>' +
-        '<td style="padding:8px; border-bottom:1px solid #e5e5ea;">' +
-          '<div style="font-weight:500;">' + tgEscape(s.nama || 'Siswa') + ' &bull; ' + tgEscape(pkt.nama_paket || 'Bimbingan Belajar') + '</div>' +
-          '<div style="font-size:9.5px; color:#8e8e93;">' + [s.kelas ? 'Kelas ' + s.kelas : '', s.sekolah].filter(Boolean).join(' • ') + '</div>' +
-          (tgTglList(inv._pres) ? '<div style="font-size:9.5px; color:#636366; margin-top:2px;">Pertemuan ' + tgEscape(tgTglList(inv._pres)) + (tgIsTambahan(inv) ? ' · tagihan tambahan' : '') + '</div>' : '') +
-        '</td>' +
-        '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (inv.jumlah_pertemuan || 0) + ' Sesi</td>' +
-        '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea;">' + tgFormatRp(inv.harga_satuan) + '</td>' +
-        '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea; font-weight:500;">' + tgFormatRp(inv.nominal) + '</td>' +
-      '</tr>';
-    }).join('') + g.extras.map(function (e, idx) {
-      return '<tr>' +
-        '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (g.invoices.length + idx + 1) + '</td>' +
-        '<td style="padding:8px; border-bottom:1px solid #e5e5ea;"><div style="font-weight:500;">' + tgEscape(tgExtraLabel(e)) + '</div>' +
-          '<div style="font-size:9.5px; color:#8e8e93;">Biaya lain · ' + tgFormatTgl(e.tanggal) + (e.siswa && e.siswa.nama ? ' · ' + tgEscape(e.siswa.nama) : '') + '</div></td>' +
-        '<td style="padding:8px; text-align:center; border-bottom:1px solid #e5e5ea;">' + (Math.round(parseFloat(e.jumlah || 1) * 100) / 100).toLocaleString('id-ID') + '</td>' +
-        '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea;">' + tgFormatRp(e.harga_satuan) + '</td>' +
-        '<td style="padding:8px; text-align:right; border-bottom:1px solid #e5e5ea; font-weight:500;">' + tgFormatRp(e.nominal) + '</td>' +
-      '</tr>';
-    }).join('');
-
-    var childrenNames = g.children.map(function (c) { return c.nama; }).join(', ');
-
-    var html = '' +
-      '<div class="tg-print-sheet">' +
-        // Header Kop
-        '<div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #1c1c1e; padding-bottom:12px; margin-bottom:16px;">' +
-          '<div>' +
-            '<div style="font-size:18px; font-weight:600; letter-spacing:-0.3px; color:#1c1c1e;">GENIO INSTITUTE</div>' +
-            '<div style="font-size:10px; text-transform:uppercase; color:#8e8e93; letter-spacing:1px; font-weight:500; margin-top:2px;">Bimbingan Belajar &amp; Privat Berkualitas</div>' +
-            '<div style="font-size:10px; color:#636366; margin-top:3px;">Unit Cabang: ' + tgEscape(g.unitNama || 'Pusat') + '</div>' +
-          '</div>' +
-          '<div style="text-align:right;">' +
-            '<div style="font-size:13px; font-weight:600; color:' + stampColor + ';">' + docTitle + '</div>' +
-            '<div style="font-size:10px; font-family:monospace; color:#8e8e93; margin-top:2px;">No: ' + docNo + '</div>' +
-            '<div style="font-size:10px; color:#636366; margin-top:2px;">Periode: ' + tgFormatPeriodeLabel(tgState.periode) + '</div>' +
-          '</div>' +
-        '</div>' +
-
-        (tambahanNote ? '<div style="background:#EEEEFB; color:#1C1AAF; border-radius:8px; padding:8px 10px; margin-bottom:12px; font-size:10.5px;">' + tgEscape(tambahanNote) + '</div>' : '') +
-        // Metadata grid (No WA phone number)
-        '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; background:#f8f9fa; border:1px solid #ededf0; border-radius:8px; padding:10px 12px; margin-bottom:16px; font-size:11px;">' +
-          '<div>' +
-            '<div style="color:#8e8e93; font-size:9.5px; text-transform:uppercase; font-weight:500;">Orang Tua / Wali Siswa</div>' +
-            '<div style="font-weight:500; color:#1c1c1e; margin-top:2px;">' + tgEscape(g.ortuNama || '-') + '</div>' +
-            '<div style="color:#636366; font-size:10px; margin-top:1px;">' + (g.ortuAlamat ? tgEscape(g.ortuAlamat) : ('Unit Cabang: ' + tgEscape(g.unitNama || '-'))) + '</div>' +
-          '</div>' +
-          '<div>' +
-            '<div style="color:#8e8e93; font-size:9.5px; text-transform:uppercase; font-weight:500;">Daftar Siswa (' + g.children.length + ' Anak)</div>' +
-            '<div style="font-weight:500; color:#1c1c1e; margin-top:2px;">' + tgEscape(childrenNames || '-') + '</div>' +
-            '<div style="color:#636366; font-size:10px; margin-top:1px;">Total ' + g.totalSesi + ' Sesi Pertemuan</div>' +
-          '</div>' +
-        '</div>' +
-
-        // Line Item Table
-        '<table style="width:100%; border-collapse:collapse; margin-bottom:16px; font-size:11px;">' +
-          '<thead>' +
-            '<tr style="background:#1c1c1e; color:#fff;">' +
-              '<th style="padding:6px 8px; text-align:center; width:30px; font-weight:500;">No</th>' +
-              '<th style="padding:6px 8px; text-align:left; font-weight:500;">Nama Siswa &amp; Paket Belajar</th>' +
-              '<th style="padding:6px 8px; text-align:center; width:70px; font-weight:500;">Sesi</th>' +
-              '<th style="padding:6px 8px; text-align:right; width:85px; font-weight:500;">Tarif/Sesi</th>' +
-              '<th style="padding:6px 8px; text-align:right; width:95px; font-weight:500;">Subtotal</th>' +
-            '</tr>' +
-          '</thead>' +
-          '<tbody>' +
-            lineRows +
-          '</tbody>' +
-        '</table>' +
-
-        // Summary total & Terbilang
-        '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; gap:16px;">' +
-          '<div style="flex:1; background:#f8f9fa; border:1px solid #ededf0; border-radius:8px; padding:8px 10px; font-size:10.5px;">' +
-            '<div style="color:#8e8e93; font-size:9px; text-transform:uppercase; font-weight:500;">Terbilang:</div>' +
-            '<div style="font-style:italic; font-weight:500; color:#1c1c1e; margin-top:2px;"># ' + tgTerbilang(g.totalNominal) + ' Rupiah #</div>' +
-          '</div>' +
-          '<div style="width:200px; text-align:right;">' +
-            '<div style="font-size:10px; color:#8e8e93;">TOTAL PEMBAYARAN</div>' +
-            '<div style="font-size:16px; font-weight:600; color:#1c1c1e; margin-top:2px;">' + tgFormatRp(g.totalNominal) + '</div>' +
-            '<div style="display:inline-block; margin-top:4px; padding:2px 8px; border-radius:999px; font-size:9px; font-weight:600; background:' + (isLunas ? '#e8f5e9' : '#fff3e0') + '; color:' + stampColor + ';">' +
-              stampText + (isLunas && g.tanggalLunas ? ' (' + tgFormatTgl(g.tanggalLunas) + ')' : '') +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-
-        // Signatures
-        '<div style="display:flex; justify-content:space-between; margin-top:24px; padding-top:12px; font-size:10px; color:#636366; text-align:center;">' +
-          '<div style="width:140px;">' +
-            '<div>Orang Tua / Wali Siswa,</div>' +
-            '<div style="height:38px;"></div>' +
-            '<div style="border-top:1px solid #c7c7cc; padding-top:2px; font-weight:500; color:#1c1c1e;">' + tgEscape(g.ortuNama) + '</div>' +
-          '</div>' +
-          '<div style="width:140px;">' +
-            '<div>Genio Institute ' + tgEscape(g.unitNama || '') + ',</div>' +
-            '<div style="height:38px; display:flex; align-items:center; justify-content:center; color:' + stampColor + '; font-weight:600; font-size:14px; opacity:.75; transform:rotate(-6deg);">' +
-              stampText +
-            '</div>' +
-            '<div style="border-top:1px solid #c7c7cc; padding-top:2px; font-weight:500; color:#1c1c1e;">Bagian Administrasi</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-
-    document.getElementById('tg-previewContainer').innerHTML = html;
+    tgRenderPreviewDoc(g);
 
     // Drive PDF link button
     var existingPdf = null;
