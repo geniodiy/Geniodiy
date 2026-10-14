@@ -276,6 +276,9 @@
   .ktr-table-icon-btn:active{
     transform: scale(.9);
   }
+  /* Tombol edit di dalam pil tutor (tabel): ikon pensil kecil di kanan nama, satu kotak dengan nama */
+  .ktr-tutor-pill .ktr-pill-btn{background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:0 0 0 2px; display:inline-flex; align-items:center; justify-content:center; line-height:1; font-size:11px; transition:color .12s ease;}
+  .ktr-tutor-pill .ktr-pill-btn:hover{color:var(--blue);}
   .ktr-tutor-pill .ktr-del-tutor-btn:hover{
     color: #ff3b30 !important;
   }
@@ -1200,6 +1203,7 @@
           var mapelText = kt.mapel ? ' [' + ktrEscape(kt.mapel) + ']' : '';
           return '<span class="ktr-tutor-pill" style="display:inline-flex; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.5px 5px; font-size:10px; color:var(--ink); font-weight:400; white-space:nowrap; gap:3px;">' +
             '<span>' + ktrEscape(tNama) + mapelText + '</span>' +
+            '<button type="button" class="ktr-edit-tutor-btn ktr-pill-btn" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Edit tutor (' + ktrEscape(tNama) + ')" aria-label="Edit tutor ' + ktrEscape(tNama) + '"><i class="ph ph-pencil-simple" aria-hidden="true" style="pointer-events:none;"></i></button>' +
             '<button type="button" class="ktr-del-tutor-btn" data-id="' + kt.id + '" data-kontrak-id="' + k.id + '" title="Hapus Tutor (' + ktrEscape(tNama) + ')" aria-label="Hapus Tutor" style="background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:0; display:inline-flex; align-items:center; justify-content:center; line-height:1; transition:color .12s ease;">' +
               '<svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
             '</button>' +
@@ -1654,7 +1658,10 @@
       var s = genioGetSession();
       if (ktrTutorEditId) {
         await supaRest('kontrak_tutor?id=eq.' + ktrTutorEditId, s.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify(payload) });
-        genioToast('Tutor berhasil diperbarui', 'success');
+        // Jadwal ikut durasi: jam selesai setiap jadwal tutor ini = jam mulai + durasi baru
+        var nJadwal = 0;
+        try { nJadwal = await supaRest('rpc/sesuaikan_jadwal_durasi', s.access_token, { method: 'POST', body: JSON.stringify({ p_kontrak_tutor_id: ktrTutorEditId }) }); } catch (e) { nJadwal = 0; }
+        genioToast(nJadwal > 0 ? 'Tutor diperbarui, ' + nJadwal + ' jadwal ikut menyesuaikan durasi' : 'Tutor berhasil diperbarui', 'success');
       } else {
         payload.status = 'aktif';
         await supaRest('kontrak_tutor', s.access_token, { method: 'POST', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify(payload) });

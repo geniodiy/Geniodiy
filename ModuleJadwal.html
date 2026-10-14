@@ -1231,7 +1231,8 @@
   }
 
   function jdwActionButtons(r) {
-    return '<button type="button" class="jdw-table-icon-btn jdw-wa-btn" data-id="' + r.id + '" title="Hubungi lewat WhatsApp" aria-label="Hubungi lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></button>' +
+    return '<button type="button" class="jdw-table-icon-btn jdw-edit-btn" data-id="' + r.id + '" title="Edit jadwal" aria-label="Edit jadwal"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button>' +
+      '<button type="button" class="jdw-table-icon-btn jdw-wa-btn" data-id="' + r.id + '" title="Hubungi lewat WhatsApp" aria-label="Hubungi lewat WhatsApp"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i></button>' +
       '<button type="button" class="jdw-table-icon-btn jdw-del-btn" data-id="' + r.id + '" title="Hapus jadwal" aria-label="Hapus jadwal"><i class="ph ph-trash" aria-hidden="true"></i></button>';
   }
 
@@ -1312,6 +1313,9 @@
   }
 
   function jdwBindActionEvents() {
+    document.querySelectorAll('#jdw-list .jdw-edit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) { e.stopPropagation(); jdwOpenEdit(btn.dataset.id); });
+    });
     document.querySelectorAll('#jdw-list .jdw-del-btn').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
@@ -1377,9 +1381,37 @@
   /* ===== Modal Tambah Jadwal ===== */
   var jdwModal = document.getElementById('jdw-modal');
 
+  // Mode tambah (default) dan mode edit (jdwOpenEdit) memakai form yang sama
+  function jdwSetModalMode(edit) {
+    jdwState.editId = edit ? edit.id : null;
+    document.getElementById('jdw-modalTitle').textContent = edit ? 'Edit jadwal mengajar' : 'Tambah jadwal mengajar';
+    var sub = document.querySelector('#jdw-modal .gx-sub');
+    if (sub) sub.textContent = edit ? 'Ubah hari dan jam sesi. Jam selesai mengikuti durasi tutor.' : 'Atur hari dan jam sesi untuk kontrak tutor.';
+    var kb = document.getElementById('jdw-kontrakTutorBtn');
+    kb.disabled = !!edit; kb.style.opacity = edit ? '.7' : ''; kb.style.cursor = edit ? 'default' : '';
+    document.getElementById('jdw-saveBtn').textContent = edit ? 'Simpan perubahan' : 'Simpan jadwal';
+  }
+  function jdwOpenEdit(id) {
+    var r = jdwState.scheduleRows.find(function (x) { return x.id === id; });
+    if (!r) return;
+    jdwOpenModal(r.kontrakTutorId);
+    jdwSetModalMode(r);
+    if (!jdwState.selectedContractTutor || jdwState.selectedContractTutor.kontrakTutorId !== r.kontrakTutorId) {
+      jdwSelectContractTutor({ kontrakTutorId: r.kontrakTutorId, siswaNama: r.siswaNama, tutorNama: r.tutorNama, mapel: r.mapel, durasiMenit: r.durasiMenit });
+    }
+    var h = JDW_HARI_OPTIONS.find(function (o) { return o.value === r.hari; });
+    document.getElementById('jdw-hariValue').value = r.hari;
+    document.getElementById('jdw-hariLabel').textContent = h ? h.label : jdwCapitalize(r.hari);
+    document.getElementById('jdw-jamMulaiValue').value = r.jamMulai || '';
+    document.getElementById('jdw-jamMulaiLabel').textContent = r.jamMulai ? r.jamMulai + ' WIB' : 'Pilih jam...';
+    document.getElementById('jdw-jamMulaiLabel').style.color = r.jamMulai ? 'var(--ink)' : 'var(--ink-soft)';
+    jdwUpdateDurasiInfo();
+  }
+
   function jdwOpenModal(defaultKontrakTutorId) {
     document.getElementById('jdw-modalAlert').hidden = true;
     jdwState.selectedContractTutor = null;
+    jdwSetModalMode(null);
 
     if (defaultKontrakTutorId) {
       var opt = jdwState.activeContractTutors.find(function (c) { return c.kontrakTutorId === defaultKontrakTutorId; });
@@ -1463,17 +1495,26 @@
 
     try {
       var s = genioGetSession();
-      await supaRest('jadwal', s.access_token, {
-        method: 'POST',
-        headers: { 'Prefer': 'return=minimal' },
-        body: JSON.stringify({
-          kontrak_tutor_id: kontrakTutorId,
-          hari: hari,
-          jam_mulai: jamMulai,
-          jam_selesai: jamSelesai
-        })
-      });
-      genioToast('Jadwal baru berhasil ditambahkan', 'success');
+      if (jdwState.editId) {
+        await supaRest('jadwal?id=eq.' + jdwState.editId, s.access_token, {
+          method: 'PATCH',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ hari: hari, jam_mulai: jamMulai, jam_selesai: jamSelesai })
+        });
+        genioToast('Jadwal berhasil diperbarui', 'success');
+      } else {
+        await supaRest('jadwal', s.access_token, {
+          method: 'POST',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({
+            kontrak_tutor_id: kontrakTutorId,
+            hari: hari,
+            jam_mulai: jamMulai,
+            jam_selesai: jamSelesai
+          })
+        });
+        genioToast('Jadwal baru berhasil ditambahkan', 'success');
+      }
       jdwCloseModal();
       jdwLoadAll();
     } catch (err) {
@@ -1481,7 +1522,7 @@
       alertEl.hidden = false;
     } finally {
       saveBtn.disabled = false;
-      saveBtn.textContent = 'Simpan jadwal';
+      saveBtn.textContent = jdwState.editId ? 'Simpan perubahan' : 'Simpan jadwal';
     }
   }
 
