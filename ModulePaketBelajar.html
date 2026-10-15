@@ -169,6 +169,7 @@
           <div><em style="background:#7CF0C3;"></em>Paket aktif<b id="pkt-heroAktif">0</b></div>
           <div><em style="background:rgba(255,255,255,.25);"></em>Nonaktif<b id="pkt-heroNonaktif">0</b></div>
           <div><em style="background:#9DB6FF;"></em>Rata-rata harga<b id="pkt-heroAvg">Rp 0</b></div>
+          <div><em style="background:#FFC46B;"></em>Belum ada harga<b id="pkt-heroNoHarga">0</b></div>
         </div>
       </div>
       <button type="button" id="pkt-addBtn" class="pkt-hero-add-btn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah paket</button>
@@ -216,7 +217,7 @@
 
         <div class="gx-step-title"><span class="gx-step">1</span>Nama dan harga</div>
         <div class="gx-row"><label for="pkt-nama">Nama paket <em class="gx-req">wajib</em></label><input type="text" id="pkt-nama" placeholder="mis. UTBK privat intensif SMA"></div>
-        <div class="gx-row"><label for="pkt-harga">Harga per sesi <em class="gx-req">wajib</em></label><div class="pkt-money"><span>Rp</span><input type="number" id="pkt-harga" inputmode="numeric" placeholder="mis. 150000"></div></div>
+        <div class="gx-row"><label for="pkt-harga">Harga per sesi <em class="gx-opt">opsional</em></label><div class="pkt-money"><span>Rp</span><input type="number" id="pkt-harga" inputmode="numeric" placeholder="mis. 150000"></div><div class="gx-note is-amber" id="pkt-hargaNote" style="display:none; margin-top:8px;"><i class="ph ph-warning-circle" aria-hidden="true"></i><span>Kosongkan kalau harga belum ada. Paket akan bertanda "Konfirmasi harga ke manajer" sampai harganya diisi.</span></div></div>
 
         <div class="gx-step-title"><span class="gx-step">2</span>Jenjang</div>
         <div class="pkt-opt-row" id="pkt-jenjangOpts">
@@ -448,6 +449,12 @@
   function pktFormatRp(n) {
     return 'Rp ' + Math.round(n || 0).toLocaleString('id-ID');
   }
+  // Paket tanpa harga (harga_default null): harga dikonfirmasi ke manajer dulu
+  function pktHasHarga(p) { return p.harga_default != null && parseFloat(p.harga_default) > 0; }
+  function pktHargaHtml(p) {
+    return pktHasHarga(p) ? pktFormatRp(p.harga_default)
+      : '<span class="genio-noprice" title="Harga paket ini belum ada"><i class="ph ph-warning-circle" aria-hidden="true"></i>Konfirmasi harga ke manajer</span>';
+  }
 
   function pktUpdateViewToggleUI() {
     var btn = document.getElementById('pkt-viewToggleBtn');
@@ -468,7 +475,7 @@
       kode: function (p) { return (p.kode_paket || '').toLowerCase(); },
       jenjang: function (p) { return (p.jenjang || '').toLowerCase(); },
       jenis: function (p) { return (p.jenis || '').toLowerCase(); },
-      harga: function (p) { return parseFloat(p.harga_default || 0); },
+      harga: function (p) { return pktHasHarga(p) ? parseFloat(p.harga_default) : -1; },
       status: function (p) { return p.status || ''; }
     }[f] || function (p) { return (p.nama_paket || '').toLowerCase(); };
     return rows.slice().sort(function (a, b) { var x = key(a), y = key(b); return x < y ? -dir : (x > y ? dir : 0); });
@@ -509,7 +516,7 @@
         '<td>' + pktDim('jenis', p.jenis) + '</td>' +
         '<td>' + pktDim('pelaksanaan', p.pelaksanaan) + '</td>' +
         '<td>' + pktDim('mode', p.mode_belajar) + '</td>' +
-        '<td class="pkt-num">' + pktFormatRp(p.harga_default) + '</td>' +
+        '<td class="pkt-num">' + pktHargaHtml(p) + '</td>' +
         '<td>' + (isAktif ? '<span class="pkt-t-status is-on"><i></i>Aktif</span>' : '<span class="pkt-t-status is-off"><i></i>Nonaktif</span>') + '</td>' +
         '<td style="text-align:right;"><button type="button" class="pkt-t-btn pkt-edit-btn" data-id="' + p.id + '" title="Edit paket" aria-label="Edit paket"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button></td>' +
       '</tr>';
@@ -604,10 +611,11 @@
     var byJenis = {};
     aktif.forEach(function (p) {
       var k = p.jenis || 'Lainnya';
-      if (!byJenis[k]) byJenis[k] = { n: 0, sum: 0 };
-      byJenis[k].n++; byJenis[k].sum += parseFloat(p.harga_default || 0);
+      if (!byJenis[k]) byJenis[k] = { n: 0, sum: 0, nh: 0 };
+      byJenis[k].n++;
+      if (pktHasHarga(p)) { byJenis[k].nh++; byJenis[k].sum += parseFloat(p.harga_default); }
     });
-    var jenis = Object.keys(byJenis).map(function (k) { return { nama: k, n: byJenis[k].n, avg: byJenis[k].sum / byJenis[k].n }; })
+    var jenis = Object.keys(byJenis).map(function (k) { return { nama: k, n: byJenis[k].n, avg: byJenis[k].nh ? byJenis[k].sum / byJenis[k].nh : 0 }; })
       .sort(function (a, b) { return b.n - a.n || a.nama.localeCompare(b.nama); });
 
     pktCountUp(document.getElementById('pkt-heroTotal'), all.length);
@@ -618,6 +626,7 @@
     document.getElementById('pkt-heroAktif').textContent = aktif.length;
     document.getElementById('pkt-heroNonaktif').textContent = non;
     document.getElementById('pkt-heroAvg').textContent = pktFormatShort(avg);
+    document.getElementById('pkt-heroNoHarga').textContent = aktif.length - hargas.length;
 
     var pct = all.length ? Math.round(aktif.length / all.length * 100) : 0;
     document.getElementById('pkt-heroRingPct').textContent = pct + '%';
@@ -632,10 +641,10 @@
     if (!jenis.length) { barsEl.innerHTML = '<div class="pkb-u"><span class="n" style="grid-column:1/-1;">Bar per jenis muncul setelah ada paket aktif.</span></div>'; return; }
     var max = jenis[0].n;
     barsEl.innerHTML = jenis.slice(0, 5).map(function (j, i) {
-      return '<div class="pkb-u" title="' + pktEscape(j.nama) + ': ' + j.n + ' paket aktif, rata-rata ' + pktFormatRp(j.avg) + ' per sesi">' +
+      return '<div class="pkb-u" title="' + pktEscape(j.nama) + ': ' + j.n + ' paket aktif, ' + (j.avg ? 'rata-rata ' + pktFormatRp(j.avg) + ' per sesi' : 'harga belum ada') + '">' +
         '<span class="n">' + pktEscape(j.nama) + '</span>' +
         '<span class="t"><i style="width:' + Math.max(4, j.n / max * 100).toFixed(1) + '%; --i:' + i + ';"></i></span>' +
-        '<b>' + j.n + ' paket<small>' + pktFormatShort(j.avg) + '</small></b>' +
+        '<b>' + j.n + ' paket<small>' + (j.avg ? pktFormatShort(j.avg) : 'tanpa harga') + '</small></b>' +
       '</div>';
     }).join('');
     if (!PKT_REDUCED_MOTION) { barsEl.classList.remove('pkt-anim'); void barsEl.offsetWidth; barsEl.classList.add('pkt-anim'); }
@@ -653,7 +662,7 @@
       '</div>' +
       '<div class="pkc-chips">' + (chips || '<span style="font-size:10.5px; color:var(--ink-soft);">Kategori belum diisi</span>') + '</div>' +
       '<div class="pkc-foot">' +
-        '<div class="pkc-price"><span>Harga per sesi</span><b>' + pktFormatRp(p.harga_default) + '</b></div>' +
+        '<div class="pkc-price"><span>Harga per sesi</span><b>' + pktHargaHtml(p) + '</b></div>' +
         '<button type="button" class="pkt-edit-btn" data-id="' + p.id + '"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Edit paket</button>' +
       '</div>' +
     '</div>';
@@ -662,6 +671,12 @@
   /* ===== Modal Tambah/Edit ===== */
   var pktModal = document.getElementById('pkt-modal');
   var pktEditTargetId = null;
+
+  function pktSyncHargaNote() {
+    var v = document.getElementById('pkt-harga').value;
+    document.getElementById('pkt-hargaNote').style.display = v === '' ? '' : 'none';
+  }
+  document.getElementById('pkt-harga').addEventListener('input', pktSyncHargaNote);
 
   function pktResetOptGroup(groupId, value) {
     document.querySelectorAll('#' + groupId + ' .pkt-opt').forEach(function (o) {
@@ -691,6 +706,7 @@
     document.getElementById('pkt-modalTitle').textContent = pkg ? 'Edit paket' : 'Tambah paket';
     document.getElementById('pkt-nama').value = pkg ? (pkg.nama_paket || '') : '';
     document.getElementById('pkt-harga').value = pkg ? (pkg.harga_default || '') : '';
+    pktSyncHargaNote();
 
     pktResetOptGroup('pkt-jenjangOpts', pkg ? pkg.jenjang : '');
     pktResetOptGroup('pkt-jenisOpts', pkg ? pkg.jenis : '');
@@ -726,12 +742,12 @@
 
     if (!nama) { alertEl.textContent = 'Nama paket wajib diisi.'; alertEl.hidden = false; return; }
     if (!jenjang || !jenis || !pelaksanaan || !mode) { alertEl.textContent = 'Jenjang, jenis, pelaksanaan, dan mode belajar wajib dipilih.'; alertEl.hidden = false; return; }
-    if (!harga || parseFloat(harga) <= 0) { alertEl.textContent = 'Harga per sesi wajib diisi dan lebih dari 0.'; alertEl.hidden = false; return; }
+    if (harga !== '' && parseFloat(harga) <= 0) { alertEl.textContent = 'Harga per sesi harus lebih dari 0, atau kosongkan kalau belum ada.'; alertEl.hidden = false; return; }
     alertEl.hidden = true;
 
     var kode = pktGenerateKode(jenis, pelaksanaan, mode, jenjang);
     var payload = {
-      nama_paket: nama, harga_default: parseFloat(harga),
+      nama_paket: nama, harga_default: harga === '' ? null : parseFloat(harga),
       jenjang: jenjang, jenis: jenis, pelaksanaan: pelaksanaan, mode_belajar: mode,
       kode_paket: kode
     };

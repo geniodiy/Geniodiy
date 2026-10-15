@@ -444,7 +444,7 @@ Master jenis paket belajar (wajib dipilih saat membuat kontrak siswa — bukan i
 | id | uuid PK | |
 | kode_paket | text | unik, mis. `P_REG_SMA`, `P_INTENSIF_SMP`, `P_UTBK` |
 | nama_paket | text | mis. "Reguler SMA", "Intensif SMP", "Persiapan UTBK" |
-| harga_default | numeric(12,2) | **harga satuan per pertemuan**, bukan harga flat bulanan. Tetap bisa dioverride di kontrak siswa |
+| harga_default | numeric(12,2) | **harga satuan per pertemuan**, bukan harga flat bulanan. Tetap bisa dioverride di kontrak siswa. Boleh kosong (16 Okt 2026): paket tanpa harga bertanda "Konfirmasi harga ke manajer" |
 | status | text | `aktif` / `nonaktif` (paket lama tidak dihapus, cukup dinonaktifkan) |
 | jenjang | text | **[v5]** jenjang sasaran paket |
 | jenis | text | **[v5]** jenis paket (mis. reguler, intensif, persiapan ujian) |
@@ -792,7 +792,7 @@ Semua modul di bawah sudah diredesign mengikuti sistem desain v5 (highlight, tab
 | 2 | Pengaturan | Selesai | 9 Okt 2026: aturan presensi tampil sebagai alur (sesi selesai, batas lapor, denda telat) plus honor visit, diubah dengan tombol − / + atau diketik, simulasi fee Rp 150.000 ikut berubah, dan semua perubahan disimpan sekaligus lewat bar simpan. Highlight lama dihapus supaya angka tidak tampil dua kali. |
 | 3 | Kelola User + Kelola Tutor | Selesai | Tambah user dan tambah tutor, lalu tolak pendaftar dan hapus akun lewat Edge Function `admin-users` (ikut menghapus akun Auth). |
 | 4 | Data Ortu & Siswa | Selesai | Hapus permanen untuk data tanpa histori (sekarang hanya nonaktifkan, dan ini boleh tetap begitu) |
-| 5 | Paket Belajar | Selesai | |
+| 5 | Paket Belajar | Selesai | 16 Okt 2026: pelaksanaan Sekolah ditambahkan, lalu 78 paket lengkap (Olimpiade, TKA, Reguler, Internasional × SD/SMP/SMA, UTBK hanya SMA, × Privat/Kelompok/Sekolah × Luring/Daring). 44 paket berharga dari sheet PROGRAM sistem lama, 34 tanpa harga dengan tanda "Konfirmasi harga ke manajer" (tabel, kartu, pilihan paket di form kontrak). |
 | 6 | Kontrak + Jadwal | Selesai | |
 | 7 | Presensi | Selesai (sisi Manajer), sisi tutor sebagian | PDF Laporan Belajar untuk presensi diwakilkan. Halaman Presensi tutor (isi, revisi, jadwal lengkap) sudah dibuat di Fase 4a. Kirim laporan ke orang tua (satuan dan rekap, link atau file, PDF rekap) selesai 9 Okt 2026, lalu dipindah ke menu sendiri di Lainnya dengan kartu pengingat di Home kepala unit dan manajer serta pilihan Kirim di tombol + kepala unit. |
 | 8 | Tagihan | Selesai (dengan sinkron otomatis) | Template PDF baru 9 Okt 2026: invoice dan kuitansi gaya nota (Courier), satu baris per pertemuan, rekening dan tanda tangan dari Pengaturan > Identitas dokumen. |
