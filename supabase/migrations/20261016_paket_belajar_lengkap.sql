@@ -104,3 +104,10 @@ from (values
   ('USD_SMA', 'Sekolah Daring UTBK', null, 'SMA', 'UTBK', 'Sekolah', 'Daring')
 ) as v(kode, nama, harga, jenjang, jenis, pelaksanaan, mode)
 on conflict (kode_paket) do nothing;
+
+-- Bagian 4 (16 Oct 2026, owner's choice): dua kontrak yang dulu memakai IPD_SD "Persiapan UTBK" (Rangga Saputra, Rizky Maulana,
+-- Unit 1, harga kontrak Rp 150.000) dipindah ke UPL_SMA "Privat Luring UTBK". Hanya paket yang berubah; harga kontrak,
+-- presensi dan invoice tetap. Kembalikan: ganti 'UPL_SMA' dengan 'IPD_SD' di subquery pertama.
+update public.kontrak_siswa set paket_belajar_id = (select id from public.paket_belajar where kode_paket = 'UPL_SMA')
+where id in ('b863f22b-4e8b-4cbd-9fcc-1e8afc130b37', 'd230b36a-0007-44be-a9e4-206576e778a6')
+  and paket_belajar_id = (select id from public.paket_belajar where kode_paket = 'IPD_SD');
