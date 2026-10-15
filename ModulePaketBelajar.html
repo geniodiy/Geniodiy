@@ -239,6 +239,7 @@
         <div class="pkt-opt-row" id="pkt-pelaksanaanOpts">
           <label class="pkt-opt" data-val="Privat"><input type="radio" name="pkt-pelaksanaan" value="Privat">Privat</label>
           <label class="pkt-opt" data-val="Kelompok"><input type="radio" name="pkt-pelaksanaan" value="Kelompok">Kelompok (2-3 anak)</label>
+          <label class="pkt-opt" data-val="Sekolah"><input type="radio" name="pkt-pelaksanaan" value="Sekolah">Sekolah</label>
         </div>
         <div class="pkt-opt-row" id="pkt-modeOpts" style="margin-top:8px;">
           <label class="pkt-opt" data-val="Daring"><input type="radio" name="pkt-mode" value="Daring">Daring</label>
@@ -307,7 +308,7 @@
   window.genioModuleHandlers['paket-belajar'] = function () { pktInit(); };
 
   var PKT_JENIS_INISIAL = { Olimpiade: 'O', Internasional: 'I', Reguler: 'R', UTBK: 'U', TKA: 'T' };
-  var PKT_PELAKSANAAN_INISIAL = { Privat: 'P', Kelompok: 'K' };
+  var PKT_PELAKSANAAN_INISIAL = { Privat: 'P', Kelompok: 'K', Sekolah: 'S' };
   var PKT_MODE_INISIAL = { Daring: 'D', Luring: 'L' };
 
   function pktGenerateKode(jenis, pelaksanaan, mode, jenjang) {
@@ -768,7 +769,7 @@
   var PKT_FILTER_DEFS = {
     jenjang: { title: 'Pilih jenjang', allLabel: 'Semua jenjang', options: [{ value: 'SD', label: 'SD' }, { value: 'SMP', label: 'SMP' }, { value: 'SMA', label: 'SMA' }, { value: 'Lainnya', label: 'Lainnya' }] },
     jenis: { title: 'Pilih jenis', allLabel: 'Semua jenis', options: [{ value: 'Olimpiade', label: 'Olimpiade' }, { value: 'Internasional', label: 'Internasional' }, { value: 'Reguler', label: 'Reguler' }, { value: 'UTBK', label: 'UTBK' }, { value: 'TKA', label: 'TKA' }] },
-    pelaksanaan: { title: 'Pilih pelaksanaan', allLabel: 'Semua pelaksanaan', options: [{ value: 'Privat', label: 'Privat' }, { value: 'Kelompok', label: 'Kelompok' }] },
+    pelaksanaan: { title: 'Pilih pelaksanaan', allLabel: 'Semua pelaksanaan', options: [{ value: 'Privat', label: 'Privat' }, { value: 'Kelompok', label: 'Kelompok' }, { value: 'Sekolah', label: 'Sekolah' }] },
     mode: { title: 'Pilih mode belajar', allLabel: 'Semua mode', options: [{ value: 'Daring', label: 'Daring' }, { value: 'Luring', label: 'Luring' }] }
   };
   var pktPickerCurrentType = null;
