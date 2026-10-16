@@ -1,0 +1,48 @@
+-- Impor riwayat keuangan Juli - September 2026 dari sistem lama ("pemanasan", 16 Oct 2026, owner's choice)
+-- Sumber: Google Drive "[Official] DB_TRANSAKSI_2026" (sheet PRESENSI, TAGIHAN, RECEIPT, GAJI, OPERASIONAL),
+-- dicocokkan dengan laporan keuangan valid di folder lapkeu (Juli, Agustus, September). Oktober TIDAK diimpor
+-- (masih berjalan, dikelola di aplikasi baru). Dijalankan lewat execute_sql (catatan saja, data lengkap tidak di repo).
+--
+-- Aturan (jawaban owner):
+--   1. Presensi yang disetujui diimpor dengan nominal lama terkunci (fee + transport, denda, nominal_dibayar dari
+--      lock_* sistem lama), status diterima (visit -> jenis visit, status visit), tautan Drive (materi, foto, PDF
+--      laporan) tetap. Trigger trg_presensi_before_write dimatikan sementara per batch (disable; insert; enable dalam
+--      satu panggilan) agar nominal lama tidak dihitung ulang; setelahnya trigger dicek aktif ('O').
+--      PRE-261075 (KON-26175, Ulimaz, 24 Jul 08:00, slot ganda) digeser ke 11:00; Sachie JAD-26341 -> KON-26210 / Malia.
+--   2. Tagihan per kontrak per bulan (urutan 1), nominal = jumlah harga pertemuan bulan itu; semua lunas dengan
+--      kuitansi (tanggal bayar + PDF lama), kecuali piutang:
+--        Ganendra / Ibu Suci  Jul 1.375.000, Agu 530.000, Sep 405.000
+--        MAN Temanggung       Agu 2.100.000, Sep 21.525.000 (belum pernah ditagih)
+--        SMA Baitul Quran     Sep 750.000
+--        SMP Baitul Quran (KON-26234) Sep dipecah: urutan 1 lunas 1.800.000 (RCP-26170, 17 Sep), urutan 2
+--        belum lunas 1.800.000 (Tagihan tambahan).
+--      Total piutang 28.485.000.
+--   3. Slip gaji Jul - Sep sudah_dibayar (75 slip, tanggal bayar + PDF lama); PAY-26154 ganda (Syifa) dihitung sekali.
+--   4. Operasional unit 15 baris (bukti Drive tetap). Operasional pusat dan gaji manajemen di Laporan Laba Rugi
+--      tidak diimpor (nanti di Laporan Keuangan).
+--
+-- Hasil (dicek setelah impor):
+--   bulan  presensi  omset (Home)  gaji slip   invoice  piutang     operasional impor
+--   Jul    126       25.986.599    12.547.650  27       1.375.000   794.500
+--   Agu    194       23.022.500    13.313.650  48       2.630.000   410.000
+--   Sep    275       49.805.368    24.232.400  62       24.480.000  1.371.500
+--   Total 595 presensi (semua tertaut ke invoice), 137 invoice (127 lunas, 127 kuitansi), 75 slip, 15 operasional.
+--   Omset, gaji dan nominal invoice per bulan sama persis dengan lapkeu.
+--
+-- Catatan: 8 baris operasional uji coba lama (7-8 Sep 2026, Rp 4.070.000: listrik & internet, sewa ruang, ATK)
+-- masih ada di Agu/Sep dan membuat total operasional lebih besar dari lapkeu. Hapus lewat SQL Editor bila owner setuju:
+--   delete from public.operasional where created_at < '2026-09-09' and tanggal between '2026-08-01' and '2026-09-30';
+--
+-- Bentuk statement:
+--   1) invoice + receipt: with v(nomor,periode,urutan,n,harga,nominal,status,tgl,pdf) as (values ...),
+--      x as materialized (gen_random_uuid() ... where not exists invoice yang sama),
+--      ii as (insert into invoice ...), ir as (insert into receipt ... where status = 'lunas')
+--   2) presensi (12 batch ~50 baris):
+--      alter table public.presensi disable trigger trg_presensi_before_write;
+--      with v(nomor,email,mapel,tanggal,jam,materi,link,foto,pdf,visit,inp,gross,denda,net,periode,urutan,old) as (values ...),
+--      x as (... join kontrak_siswa on nomor_kontrak, users on email, kontrak_tutor on kontrak + tutor + mapel)
+--      insert into presensi (..., status, jenis, approved_at, metode_input 'mandiri', terlambat = denda > 0,
+--        nominal_sebelum_denda, denda, nominal_dibayar, invoice_id = invoice kontrak + periode + urutan)
+--      select ... where not exists (presensi dengan kontrak_tutor + tanggal + jam yang sama);
+--      alter table public.presensi enable trigger trg_presensi_before_write;
+--   3) slip_gaji (on conflict (tutor_id, periode) do nothing) + operasional (via units.nama_unit, not exists).
