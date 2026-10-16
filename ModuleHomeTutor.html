@@ -594,6 +594,8 @@
   function hmtSapaan(c) {
     var jk = String((c && c.jenis_kelamin) || '').toUpperCase();
     var t = jk === 'L' ? 'Mr.' : jk === 'P' ? 'Ms.' : 'Kak';
+    var m = c && c.nama ? String(c.nama).trim().match(/^(mr|ms|mrs)\.?\s+(\S+)/i) : null;
+    if (m) return m[0];
     return c && c.nama ? t + ' ' + String(c.nama).split(' ')[0] : t;
   }
   // "Unit 1" tetap "Unit 1", "Sleman" jadi "Unit Sleman"

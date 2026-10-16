@@ -950,7 +950,7 @@
 
   // ===== Avatar pengguna: foto profil kalau ada, huruf inisial kalau belum diunggah / gagal dimuat =====
   function genioInitials(nama, max) {
-    var parts = String(nama || '').trim().split(/\s+/).filter(Boolean);
+    var parts = String(nama || '').trim().replace(/^(mr|ms|mrs)\.?\s+/i, '').split(/\s+/).filter(Boolean);
     if (!parts.length) return '?';
     var ini = parts[0].charAt(0) + (max === 1 || !parts[1] ? '' : parts[1].charAt(0));
     return ini.toUpperCase();

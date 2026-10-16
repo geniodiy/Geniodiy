@@ -4592,7 +4592,7 @@
   function klTtd() {
     var s = genioGetSession() || {}, me = klState.me || {};
     var nama = me.nama || s.nama || '';
-    var gelar = me.jenis_kelamin === 'L' ? 'Mr. ' : me.jenis_kelamin === 'P' ? 'Ms. ' : '';
+    var gelar = /^(mr|ms|mrs)\.?\s/i.test(nama) ? '' : me.jenis_kelamin === 'L' ? 'Mr. ' : me.jenis_kelamin === 'P' ? 'Ms. ' : '';
     var jab = 'Admin';
     if (s.role === 'kepala_unit') {
       var u = String(s.unit_nama || '').trim();

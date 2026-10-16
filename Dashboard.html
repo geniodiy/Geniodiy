@@ -1107,7 +1107,7 @@
     var LAINNYA_ROLE_LABELS = { super_admin: 'Super admin', manajer: 'Manajer', hrd: 'HRD', kepala_unit: 'Kepala unit', tutor: 'Tutor' };
 
     function lainnyaInitials(nama) {
-      return (nama || '').split(' ').filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || '—';
+      return (nama || '').replace(/^(mr|ms|mrs)\.?\s+/i, '').split(' ').filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase() || '—';
     }
     function lainnyaFormatRupiah(n) {
       n = Math.round(n || 0);

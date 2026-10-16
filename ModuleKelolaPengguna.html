@@ -319,7 +319,7 @@
     return d.innerHTML;
   }
   function kpInitials(nama) {
-    return (nama || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
+    return (nama || '?').trim().replace(/^(mr|ms|mrs)\.?\s+/i, '').split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
   }
   function kpRoleChip(role) {
     var m = KP_ROLE_META[role];

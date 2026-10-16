@@ -298,7 +298,7 @@
 
   function prfInitials(nama) {
     if (!nama) return '?';
-    var parts = nama.trim().split(/\s+/);
+    var parts = nama.trim().replace(/^(mr|ms|mrs)\.?\s+/i, '').split(/\s+/);
     return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
   }
   var PRF_ADMIN_WA = '6282133131931'; // nomor admin untuk pengajuan perubahan email
