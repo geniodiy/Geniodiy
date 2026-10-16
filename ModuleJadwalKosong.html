@@ -15,9 +15,8 @@
   #jk-formModal.show, #jk-listModal.show, #jk-remindModal.show{opacity:1;}
   #jk-remindModal .modal-sheet.gx-sheet{max-width:380px !important;}
   #jk-remindModal .gx-head-ico{background:#FFF4E0 !important; color:#B86E00 !important;}
-  #jk-remindModal.is-empty .gx-body{display:none !important;}
-  #jk-remindModal.is-empty .gx-head{border-bottom:0 !important; padding-bottom:6px !important;}
-  #jk-remindModal.is-empty .gx-foot{border-top:0 !important; padding-top:8px !important;}
+  .jk-rm-tip{display:flex; gap:8px; align-items:flex-start;}
+  .jk-rm-tip i{font-size:14px; color:var(--blue); margin-top:1px; flex:none;}
   .jk-rm-sum{background:var(--surface); border-radius:10px; padding:10px 12px; font-size:11.5px; color:var(--ink); line-height:1.55;}
   .jk-rm-sum b{font-weight:700;}
   .jk-rm-sum small{display:block; font-size:10.5px; color:var(--ink-soft); margin-bottom:4px;}
@@ -604,8 +603,8 @@
     var sub = document.getElementById('jk-rmSub');
     sub.textContent = filled ? 'Diubah ' + agoText(ago) : ''; sub.hidden = !filled;
     var body = document.getElementById('jk-rmBody');
-    body.innerHTML = filled ? '<div class="jk-rm-sum">' + (sum.length ? sum.join(' · ') + '<br>' + jamText(n) + ' per minggu' : 'Belum ada jam') + '</div>' : '';
-    body.hidden = !filled; rm.classList.toggle('is-empty', !filled);
+    body.innerHTML = filled ? '<div class="jk-rm-sum">' + (sum.length ? sum.join(' · ') + '<br>' + jamText(n) + ' per minggu' : 'Belum ada jam') + '</div>'
+      : '<div class="jk-rm-sum jk-rm-tip"><i class="ph ph-info" aria-hidden="true"></i><span>Isi jadwal kosong untuk mendapatkan tawaran mengajar dari admin.</span></div>';
     document.getElementById('jk-rmAlt').textContent = filled ? 'Ubah' : 'Nanti';
     document.getElementById('jk-rmOk').textContent = filled ? 'Sudah sesuai' : 'Isi';
     rm.dataset.filled = filled ? '1' : '';
