@@ -759,10 +759,28 @@
      halaman atas (window.top) setelah pengguna mengetuk sesuatu, jadi pindah otomatis (sesi habis saat halaman dibuka lagi)
      bisa diblokir diam-diam. Karena itu dicoba dua jalan: halaman atas, lalu bingkai aplikasi ini sendiri memuat halaman
      masuk (selalu diizinkan, tanpa ketukan). Setelah masuk, Login.html memindahkan halaman atas ke dashboard seperti biasa. */
+  /* Kalau halaman atas tidak boleh diganti, halaman masuk TIDAK dimuat lewat alamat di dalam bingkai: di Safari bingkai
+     Apps Script tidak membawa cookie Google, sehingga Google menampilkan "Anda memerlukan akses" (16 Oct 2026). Sebagai
+     gantinya isi Login diambil dari server (getLoginPageHtml di Code.gs) lalu ditulis ke bingkai ini, tanpa pindah alamat. */
   function genioGoLogin() {
+    if (window.__genioOnLogin) return;
     var url = SCRIPT_URL + '?page=login';
     try { window.top.location.href = url; } catch (e) {}
-    setTimeout(function () { try { window.location.replace(url); } catch (e) { window.location.href = url; } }, 300);
+    setTimeout(function () {
+      if (window.__genioOnLogin) return;
+      var gsr = window.google && google.script && google.script.run;
+      if (!gsr) { try { window.location.replace(url); } catch (e) { window.location.href = url; } return; }
+      gsr.withSuccessHandler(function (html) {
+        if (window.__genioOnLogin || !html) return;
+        window.__genioOnLogin = true;
+        // Hentikan timer dan polling dashboard supaya tidak memanggil server lagi tanpa sesi
+        var hi = setTimeout(function () {}, 0);
+        for (var i = 1; i <= hi; i++) { clearTimeout(i); clearInterval(i); }
+        document.open(); document.write(html); document.close();
+      }).withFailureHandler(function () {
+        try { window.location.replace(url); } catch (e) { window.location.href = url; }
+      }).getLoginPageHtml();
+    }, 300);
   }
   function genioSessionExpired() {
     if (genioExpiring) return;

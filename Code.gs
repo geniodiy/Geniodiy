@@ -29,6 +29,16 @@ function doGet(e) {
 }
 
 /**
+ * Isi halaman masuk untuk ditulis langsung ke bingkai aplikasi saat sesi habis (genioGoLogin di Config.html).
+ * Dipakai karena memuat alamat /exec di dalam bingkai gagal di Safari ("Anda memerlukan akses").
+ */
+function getLoginPageHtml() {
+  var template = HtmlService.createTemplateFromFile('Login');
+  template.scriptUrl = ScriptApp.getService().getUrl();
+  return template.evaluate().getContent();
+}
+
+/**
  * ===== Upload file presensi (Dokumentasi & Catatan Pembelajaran) ke Google Drive =====
  * Dipanggil dari client lewat google.script.run. File disimpan dalam folder khusus
  * per jenis, lalu dibagikan "anyone with link, view only" supaya URL-nya bisa dipakai
