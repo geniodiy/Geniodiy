@@ -31,6 +31,9 @@
   .bio-row > label .bio-cnt{margin-left:auto; font-size:10px; color:var(--blue); font-weight:600;}
   .bio-in{width:100%; height:36px; border:1px solid var(--border); border-radius:9px; background:var(--surface); padding:0 12px; font-family:var(--font); font-size:12px; color:var(--ink); box-sizing:border-box; outline:none; transition:border-color .15s, box-shadow .15s, background .15s;}
   .bio-in::placeholder{color:#9EA2B8;}
+  .bio-sel{appearance:none; -webkit-appearance:none; cursor:pointer; padding-right:34px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8EA6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center;}
+  .bio-sel.is-empty{color:#9EA2B8;}
+  .bio-sel option{color:var(--ink);}
   .bio-in:focus{border-color:var(--blue); box-shadow:0 0 0 3px rgba(28,26,175,.12); background:#fff;}
   .bio-gender{display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:3px; background:#ECEEF5; border:1px solid #fff; border-radius:999px; box-shadow:inset 0 1px 0 rgba(255,255,255,.9);}
   .bio-gender button{height:30px; border:0; border-radius:999px; background:none; display:flex; align-items:center; justify-content:center; gap:6px; font-family:var(--font); font-size:11.5px; color:#8A8EA6; cursor:pointer; transition:background .15s, color .15s;}
@@ -120,7 +123,7 @@
           <div id="bioMapel"></div>
           <div class="bio-addrow" id="bioAddRow" hidden><input class="bio-in" type="text" id="bioAddIn" placeholder="Nama mapel" autocomplete="off"><button type="button" class="bio-btn" id="bioAddOk">Tambah</button></div>
           <div class="bio-row" style="margin-top:16px;"><label for="bioPend">Pendidikan terakhir</label><input class="bio-in" type="text" id="bioPend" placeholder="mis. S1 Pendidikan Matematika UNY" autocomplete="off">
-            <div class="bio-gender bio-stat" id="bioStat" style="margin-top:8px;"><button type="button" data-val="lulus">Sudah lulus</button><button type="button" data-val="kuliah">Masih kuliah</button></div>
+            <select class="bio-in bio-sel" id="bioStat" style="margin-top:8px;"><option value="">Status pendidikan</option><option value="lulus">Sudah lulus</option><option value="kuliah">Masih kuliah</option></select>
           </div>
         </div>
         <div class="bio-err" id="bioErr" hidden><i class="ph ph-warning-circle" aria-hidden="true"></i><span></span></div>
@@ -192,11 +195,8 @@
     syncNav();
   });
   // Status pendidikan: Sudah lulus / Masih kuliah
-  $('bioStat').addEventListener('click', function (e) {
-    var b = e.target.closest('button'); if (!b) return;
-    st.stat = b.dataset.val;
-    this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
-    syncNav();
+  $('bioStat').addEventListener('change', function () {
+    st.stat = this.value; this.classList.toggle('is-empty', !st.stat); syncNav();
   });
   ['bioWa', 'bioRek', 'bioPend'].forEach(function (id) { $(id).addEventListener('input', syncNav); });
 
@@ -309,7 +309,7 @@
       $('bioRek').value = p.no_rekening || '';
       $('bioPend').value = p.pendidikan_terakhir || '';
       st.stat = p.status_pendidikan === 'lulus' || p.status_pendidikan === 'kuliah' ? p.status_pendidikan : '';
-      document.querySelectorAll('#bioStat button').forEach(function (x) { x.classList.toggle('on', x.dataset.val === st.stat); });
+      $('bioStat').value = st.stat; $('bioStat').classList.toggle('is-empty', !st.stat);
       st.mapel = []; st.extra = [];
       (p.keahlian || []).forEach(function (k) {
         k = clean(k); if (!k) return;
