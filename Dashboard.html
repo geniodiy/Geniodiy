@@ -659,7 +659,15 @@
 
     if (IS_TUTOR) {
       // Biodata wajib (opsi B): halaman 3 langkah menutup aplikasi sampai data lengkap
-      if (window.genioBiodataTutor) window.genioBiodataTutor.check();
+      // Pengingat jadwal kosong mingguan muncul setelah biodata lengkap (langsung, atau setelah halaman biodata disimpan)
+      (function () {
+        function jkRemind() { if (window.genioJadwalKosong && window.genioJadwalKosong.remind) window.genioJadwalKosong.remind(); }
+        var bio = window.genioBiodataTutor ? window.genioBiodataTutor.check() : Promise.resolve(false);
+        Promise.resolve(bio).then(function (opened) {
+          if (opened) document.addEventListener('genio:biodata', function () { setTimeout(jkRemind, 600); }, { once: true });
+          else setTimeout(jkRemind, 1200);
+        });
+      })();
       // Tutor: dock Beranda, Presensi, Gaji, Profil (tanpa menu Lainnya)
       genioRetab('nav-home', 'home', 'Beranda', 'house');
       genioRetab('nav-lainnya', 'profil', 'Profil', 'user-circle');

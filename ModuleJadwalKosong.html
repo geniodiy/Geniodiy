@@ -11,8 +11,13 @@
     .module-panel[data-module="jadwal-kosong"]:not([hidden]){ width:94%; max-width:1500px; margin:0 auto; }
   }
   [data-module="jadwal-kosong"] [hidden]{display:none !important;}
-  #jk-formModal, #jk-listModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
-  #jk-formModal.show, #jk-listModal.show{opacity:1;}
+  #jk-formModal, #jk-listModal, #jk-remindModal{align-items:center; justify-content:center; padding:16px; opacity:0; transition:opacity .28s ease;}
+  #jk-formModal.show, #jk-listModal.show, #jk-remindModal.show{opacity:1;}
+  #jk-remindModal .modal-sheet.gx-sheet{max-width:380px !important;}
+  #jk-remindModal .gx-head-ico{background:#FFF4E0 !important; color:#B86E00 !important;}
+  .jk-rm-sum{background:var(--surface); border-radius:10px; padding:10px 12px; font-size:11.5px; color:var(--ink); line-height:1.55;}
+  .jk-rm-sum b{font-weight:700;}
+  .jk-rm-sum small{display:block; font-size:10.5px; color:var(--ink-soft); margin-bottom:4px;}
   #jk-formModal .modal-sheet.gx-sheet{max-width:440px !important;}
   @media (min-width:900px){ #jk-formModal.is-week .modal-sheet.gx-sheet{max-width:920px !important;} }
   #jk-listModal .modal-sheet.gx-sheet{max-width:420px !important;}
@@ -283,6 +288,24 @@
 </div>
 
 <!-- Popup tutor: atur jadwal kosong -->
+<!-- Pengingat mingguan untuk tutor: konfirmasi atau perbarui jadwal kosong (owner's choice 16 Oct 2026) -->
+<div class="modal-overlay" id="jk-remindModal" hidden>
+  <div class="modal-sheet gx-sheet">
+    <div class="gx-head">
+      <span class="gx-head-ico"><i class="ph ph-bell-ringing" aria-hidden="true"></i></span>
+      <div style="min-width:0;">
+        <h3 id="jk-rmTitle">Jadwal kosongmu masih sesuai?</h3>
+        <p class="gx-sub" id="jk-rmSub">Terakhir diperbarui 7 hari lalu</p>
+      </div>
+      <button type="button" class="gx-close" id="jk-rmClose" aria-label="Nanti"><i class="ph ph-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="gx-body" id="jk-rmBody"></div>
+    <div class="modal-actions gx-foot">
+      <button type="button" class="btn btn-outline" id="jk-rmAlt">Perbarui</button>
+      <button type="button" class="btn btn-primary" id="jk-rmOk">Masih sesuai</button>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="jk-formModal" hidden>
   <div class="modal-sheet gx-sheet">
     <div class="gx-head">
@@ -558,6 +581,51 @@
   });
   var wasWide = isWide();
   window.addEventListener('resize', function () { var w = isWide(); if (w !== wasWide) { wasWide = w; if (form) renderForm(); if (mg.loaded && genioIsModuleVisible('jadwal-kosong')) mgRender(false); } });
+
+  /* Pengingat mingguan (tutor): muncul saat masuk kalau jadwal kosong belum pernah diisi atau terakhir diperbarui
+     7 hari lalu atau lebih. "Masih sesuai" mencatat jadwal_kosong_at = sekarang (muncul lagi 7 hari kemudian),
+     "Perbarui"/"Isi sekarang" membuka form. Nanti (x atau ketuk luar) menunda sampai tutor masuk lagi. */
+  var REMIND_DAYS = 7;
+  var rm = document.getElementById('jk-remindModal');
+  function rmKey() { var s = genioGetSession(); return 'genio_jk_remind_' + (s && s.user_id); }
+  function rmLater() { try { sessionStorage.setItem(rmKey(), '1'); } catch (e) {} hideModal(rm); }
+  async function remind() {
+    var s = genioGetSession();
+    if (!s || s.role !== 'tutor') return;
+    try { if (sessionStorage.getItem(rmKey())) return; } catch (e) {}
+    try { await loadMine(); } catch (e) { return; }
+    var ago = daysAgo(me.at);
+    if (me.at && ago < REMIND_DAYS) return;
+    var filled = !!me.at, sum = rangesText(me.week), n = countOn(me.week);
+    document.getElementById('jk-rmTitle').textContent = filled ? 'Jadwal kosongmu masih sesuai?' : 'Isi jadwal kosong';
+    document.getElementById('jk-rmSub').textContent = filled ? 'Terakhir diperbarui ' + agoText(ago) : 'Supaya admin tahu kapan kamu bisa mengajar';
+    document.getElementById('jk-rmBody').innerHTML = filled
+      ? '<div class="jk-rm-sum"><small>Jadwal kosong sekarang</small>' + (sum.length ? sum.join(' · ') + '<br>Total <b>' + jamText(n) + '</b> per minggu' : 'Belum ada jam yang dipilih.') + '</div>'
+      : '<div class="jk-rm-sum">Cukup sekali, nanti diingatkan seminggu sekali untuk dicek.</div>';
+    document.getElementById('jk-rmAlt').textContent = filled ? 'Perbarui' : 'Nanti';
+    document.getElementById('jk-rmOk').textContent = filled ? 'Masih sesuai' : 'Isi sekarang';
+    rm.dataset.filled = filled ? '1' : '';
+    showModal(rm);
+  }
+  document.getElementById('jk-rmClose').addEventListener('click', rmLater);
+  rm.addEventListener('click', function (e) { if (e.target === rm) rmLater(); });
+  document.getElementById('jk-rmAlt').addEventListener('click', function () {
+    if (rm.dataset.filled) { try { sessionStorage.setItem(rmKey(), '1'); } catch (e) {} hideModal(rm); openForm(); } else rmLater();
+  });
+  document.getElementById('jk-rmOk').addEventListener('click', async function () {
+    try { sessionStorage.setItem(rmKey(), '1'); } catch (e) {}
+    if (!rm.dataset.filled) { hideModal(rm); openForm(); return; }
+    var btn = this; btn.disabled = true;
+    try {
+      var s = genioSessionOrLogin();
+      await supaRest('tutor_profile?user_id=eq.' + s.user_id, s.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ jadwal_kosong_at: new Date().toISOString() }) });
+      hideModal(rm);
+      genioToast('Jadwal kosong dikonfirmasi', 'success');
+      await loadMine(); cards.forEach(renderCard);
+    } catch (err) {
+      genioToast('Gagal menyimpan: ' + err.message, 'error');
+    } finally { btn.disabled = false; }
+  });
 
   /* ================= MANAJEMEN ================= */
   var mg = { loaded: false, tutors: [], free: {}, mapel: [], gender: [], day: todayIdx(), seq: 0, dd: null };
@@ -1027,6 +1095,6 @@
     sc.addEventListener('click', function () { hcPeekOff(); });
   }
 
-  window.genioJadwalKosong = { tutorCard: tutorCard, openForm: openForm, homeCard: homeCard };
+  window.genioJadwalKosong = { tutorCard: tutorCard, openForm: openForm, homeCard: homeCard, remind: remind };
 })();
 </script>

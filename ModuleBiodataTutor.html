@@ -308,10 +308,11 @@
       });
       renderBanks(); renderMapel();
       var miss = firstMissing();
-      if (!miss) return;
+      if (!miss) return false;
       $('bioHello').textContent = 'Halo, ' + String(me.nama || '').trim().split(/\s+/)[0];
       st.step = miss; render(); open();
-    } catch (e) { /* gagal memuat: jangan kunci aplikasi */ }
+      return true;
+    } catch (e) { return false; /* gagal memuat: jangan kunci aplikasi */ }
   }
   window.genioBiodataTutor = { check: check };
 })();
