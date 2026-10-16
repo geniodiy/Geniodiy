@@ -1,0 +1,34 @@
+-- Impor kontrak siswa, kontrak tutor dan jadwal dari sistem lama (16 Oct 2026, owner's choice)
+-- Sumber: Google Drive "[Official] DB_SISWA_GENIO" sheet KONTRAK (290 baris) dan
+-- "[Official] DB_TRANSAKSI_2026" sheet JADWAL (439 baris; tutor per kontrak). Dijalankan sekali lewat
+-- execute_sql dalam 3 statement (catatan saja, data lengkap tidak disimpan di repo).
+--
+-- Aturan (jawaban owner):
+--   1. Kontrak lama per mapel digabung seperti sistem baru: satu kontrak_siswa per siswa + paket + harga + status,
+--      tiap mapel/tutor jadi kontrak_tutor. nomor_kontrak = kode lama pertama (KON-26xxx).
+--   2. Kontrak aktif hanya bila masih punya jadwal aktif (atau mulai Agustus 2026+ tanpa jadwal) dan siswanya aktif;
+--      sisanya selesai, tanggal_selesai = presensi terakhir yang disetujui. Siswa aktif yang tidak punya kontrak
+--      aktif lagi dijadikan nonaktif (15 siswa).
+--   3. Status Cuti -> selesai.
+--   4. Kelompok sekolah (Unit 5) dengan paket Privat Daring -> paket Sekolah Daring (OSD_*), harga kontrak tetap.
+--   5. KON-26166 (trial gratis Keisha, Rp 0) tidak diimpor; KON-26167 Rp 118.750 (cocok dengan INV-26150 Rp 950.000 / 8 sesi).
+--   6. Giselle dan Gwyneth dilewati (kontrak di aplikasi baru lebih baru).
+-- Pemetaan program lama -> paket: P_ = Privat Luring (xPL), O_ = Privat Daring (xPD), K_ = Kelompok Luring (xKL),
+-- S_ = Sekolah Luring (xSL), huruf jenis O/T/R/C(Cambridge = Internasional I), UTBK -> UxL_SMA.
+-- Harga = harga_kesepakatan, fee_mengajar = fee_per_sesi, uang_transport = transport_default terbesar per tutor,
+-- durasi_menit = durasi; jadwal hanya baris aktif, jam_selesai = jam_mulai + durasi. Mapel dirapikan (spasi,
+-- Ipa -> IPA, PPKN -> PPKn, MatFis -> Matematika & Fisika, ...). Presensi lama tidak diimpor (Tagihan akan menagih ulang).
+-- 4 baris riwayat tutor nonaktif yang tidak diimpor (Yosa Daru Aksa, Firgi Daffa Fauzi) terlewat.
+--
+-- Hasil: 184 kontrak_siswa (100 aktif), 336 kontrak_tutor (154 aktif), 162 jadwal, 15 siswa dinonaktifkan.
+-- Total di database setelahnya: 186 kontrak (102 aktif), 339 kontrak tutor, 165 jadwal, 77 siswa aktif,
+-- 0 siswa aktif tanpa kontrak aktif; 1 kontrak aktif tanpa tutor (KON-26220 OSN SMP Kesatuan Bangsa, Nasional IPS).
+--
+-- Bentuk statement:
+--   1) with v(nomor,siswa,ortu,paket,harga,mulai,selesai,status) as (values ...)
+--      insert into kontrak_siswa (...) select ... from v join siswa s on s.nama = v.siswa
+--        join orangtua o on o.id = s.orangtua_id and o.nama = v.ortu join paket_belajar p on p.kode_paket = v.paket
+--      on conflict (nomor_kontrak) do nothing;
+--   2) with tm(i,email), v(nomor,asal,ti,mapel,fee,tr,durasi,ak), t as materialized (gen_random_uuid() ...),
+--      ikt as (insert into kontrak_tutor ...), jv(asal,ti,hari,mulai,selesai), ij as (insert into jadwal ... join t)
+--   3) update siswa set status = 'nonaktif' (15 nama + orang tua).
