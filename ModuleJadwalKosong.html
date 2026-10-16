@@ -604,7 +604,7 @@
     sub.textContent = filled ? 'Diubah ' + agoText(ago) : ''; sub.hidden = !filled;
     var body = document.getElementById('jk-rmBody');
     body.innerHTML = filled ? '<div class="jk-rm-sum">' + (sum.length ? sum.join(' · ') + '<br>' + jamText(n) + ' per minggu' : 'Belum ada jam') + '</div>'
-      : '<div class="jk-rm-sum jk-rm-tip"><i class="ph ph-info" aria-hidden="true"></i><span>Isi jadwal kosong untuk mendapatkan tawaran mengajar dari admin.</span></div>';
+      : '<div class="jk-rm-sum jk-rm-tip"><i class="ph ph-info" aria-hidden="true"></i><span>Isi jadwal kosong untuk mendapatkan tawaran mengajar tambahan.</span></div>';
     document.getElementById('jk-rmAlt').textContent = filled ? 'Ubah' : 'Nanti';
     document.getElementById('jk-rmOk').textContent = filled ? 'Sudah sesuai' : 'Isi';
     rm.dataset.filled = filled ? '1' : '';
