@@ -18,10 +18,12 @@
 -- Harga = harga_kesepakatan, fee_mengajar = fee_per_sesi, uang_transport = transport_default terbesar per tutor,
 -- durasi_menit = durasi; jadwal hanya baris aktif, jam_selesai = jam_mulai + durasi. Mapel dirapikan (spasi,
 -- Ipa -> IPA, PPKN -> PPKn, MatFis -> Matematika & Fisika, ...). Presensi lama tidak diimpor (Tagihan akan menagih ulang).
--- 4 baris riwayat tutor nonaktif yang tidak diimpor (Yosa Daru Aksa, Firgi Daffa Fauzi) terlewat.
+-- Susulan (owner): 2 tutor nonaktif sistem lama (Yosa Daru Aksa, Firgi Daffa Fauzi) dibuat sebagai akun nonaktif
+-- (kata sandi acak, tidak bisa masuk) dengan 4 kontrak_tutor nonaktif mereka: KON-26031 Bahasa Indonesia,
+-- KON-26065 Bahasa Indonesia + IFE, KON-26068 Matematika. Tanpa jadwal.
 --
--- Hasil: 184 kontrak_siswa (100 aktif), 336 kontrak_tutor (154 aktif), 162 jadwal, 15 siswa dinonaktifkan.
--- Total di database setelahnya: 186 kontrak (102 aktif), 339 kontrak tutor, 165 jadwal, 77 siswa aktif,
+-- Hasil: 184 kontrak_siswa (100 aktif), 340 kontrak_tutor (154 aktif), 162 jadwal, 15 siswa dinonaktifkan.
+-- Total di database setelahnya: 186 kontrak (102 aktif), 343 kontrak tutor, 165 jadwal, 77 siswa aktif,
 -- 0 siswa aktif tanpa kontrak aktif; 1 kontrak aktif tanpa tutor (KON-26220 OSN SMP Kesatuan Bangsa, Nasional IPS).
 --
 -- Bentuk statement:
