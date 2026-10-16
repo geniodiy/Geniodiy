@@ -1155,7 +1155,7 @@
       var range = homePeriodeRangeForLainnya();
       try {
         var results = await Promise.all([
-          supaRest('kontrak_siswa?select=siswa_id&diarsipkan_at=is.null', token),
+          supaRest('siswa?select=id&status=eq.aktif&diarsipkan_at=is.null', token),
           supaRest('kontrak_siswa?select=id&diarsipkan_at=is.null', token),
           supaRest('kontrak_tutor?select=id,kontrak_siswa!inner(id)&kontrak_siswa.diarsipkan_at=is.null', token),
           supaRest('invoice?select=status', token),
@@ -1172,9 +1172,7 @@
             unitRows = results[6], paketRows = results[7], userRows2 = results[8],
             jadwalRows = results[9] || [], plRows = results[10] || [];
 
-        var siswaSet = {};
-        siswaRows.forEach(function (r) { siswaSet[r.siswa_id] = true; });
-        lainnyaSetInfo('ortu-siswa', Object.keys(siswaSet).length + ' Siswa');
+        lainnyaSetInfo('ortu-siswa', siswaRows.length + ' Siswa');
         lainnyaSetInfo('kontrak', (kontrakSiswaRows.length + kontrakTutorRows.length) + ' Dokumen');
         lainnyaSetInfo('jadwal', jadwalRows.length + ' Sesi');
 

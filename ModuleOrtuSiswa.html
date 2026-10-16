@@ -725,7 +725,7 @@
     var aktif = siswaRows.filter(function (sw) { return sw.status === 'aktif'; }).length;
     var nonaktif = total - aktif;
     osCountUp(document.getElementById('os-heroTotal'), total);
-    document.getElementById('os-heroUnitBadge').textContent = osState.ortuList.length + ' orang tua';
+    document.getElementById('os-heroUnitBadge').textContent = osState.ortuList.filter(function (o) { return o.anak.length; }).length + ' orang tua';
     document.getElementById('os-heroSiswaAktif').textContent = aktif + ' aktif';
     document.getElementById('os-heroSiswaNonaktif').textContent = nonaktif + ' nonaktif';
 
