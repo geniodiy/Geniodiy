@@ -294,15 +294,15 @@
     <div class="gx-head">
       <span class="gx-head-ico"><i class="ph ph-bell-ringing" aria-hidden="true"></i></span>
       <div style="min-width:0;">
-        <h3 id="jk-rmTitle">Jadwal kosongmu masih sesuai?</h3>
-        <p class="gx-sub" id="jk-rmSub">Terakhir diperbarui 7 hari lalu</p>
+        <h3 id="jk-rmTitle">Cek jadwal kosong</h3>
+        <p class="gx-sub" id="jk-rmSub"></p>
       </div>
       <button type="button" class="gx-close" id="jk-rmClose" aria-label="Nanti"><i class="ph ph-x" aria-hidden="true"></i></button>
     </div>
     <div class="gx-body" id="jk-rmBody"></div>
     <div class="modal-actions gx-foot">
-      <button type="button" class="btn btn-outline" id="jk-rmAlt">Perbarui</button>
-      <button type="button" class="btn btn-primary" id="jk-rmOk">Masih sesuai</button>
+      <button type="button" class="btn btn-outline" id="jk-rmAlt">Ubah</button>
+      <button type="button" class="btn btn-primary" id="jk-rmOk">Sudah sesuai</button>
     </div>
   </div>
 </div>
@@ -597,13 +597,14 @@
     var ago = daysAgo(me.at);
     if (me.at && ago < REMIND_DAYS) return;
     var filled = !!me.at, sum = rangesText(me.week), n = countOn(me.week);
-    document.getElementById('jk-rmTitle').textContent = filled ? 'Jadwal kosongmu masih sesuai?' : 'Isi jadwal kosong';
-    document.getElementById('jk-rmSub').textContent = filled ? 'Terakhir diperbarui ' + agoText(ago) : 'Supaya admin tahu kapan kamu bisa mengajar';
-    document.getElementById('jk-rmBody').innerHTML = filled
-      ? '<div class="jk-rm-sum"><small>Jadwal kosong sekarang</small>' + (sum.length ? sum.join(' · ') + '<br>Total <b>' + jamText(n) + '</b> per minggu' : 'Belum ada jam yang dipilih.') + '</div>'
-      : '<div class="jk-rm-sum">Cukup sekali, nanti diingatkan seminggu sekali untuk dicek.</div>';
-    document.getElementById('jk-rmAlt').textContent = filled ? 'Perbarui' : 'Nanti';
-    document.getElementById('jk-rmOk').textContent = filled ? 'Masih sesuai' : 'Isi sekarang';
+    document.getElementById('jk-rmTitle').textContent = filled ? 'Cek jadwal kosong' : 'Jadwal kosong belum diisi';
+    var sub = document.getElementById('jk-rmSub');
+    sub.textContent = filled ? 'Diubah ' + agoText(ago) : ''; sub.hidden = !filled;
+    var body = document.getElementById('jk-rmBody');
+    body.innerHTML = filled ? '<div class="jk-rm-sum">' + (sum.length ? sum.join(' · ') + '<br>' + jamText(n) + ' per minggu' : 'Belum ada jam') + '</div>' : '';
+    body.hidden = !filled;
+    document.getElementById('jk-rmAlt').textContent = filled ? 'Ubah' : 'Nanti';
+    document.getElementById('jk-rmOk').textContent = filled ? 'Sudah sesuai' : 'Isi';
     rm.dataset.filled = filled ? '1' : '';
     showModal(rm);
   }
@@ -620,7 +621,7 @@
       var s = genioSessionOrLogin();
       await supaRest('tutor_profile?user_id=eq.' + s.user_id, s.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ jadwal_kosong_at: new Date().toISOString() }) });
       hideModal(rm);
-      genioToast('Jadwal kosong dikonfirmasi', 'success');
+      genioToast('Tersimpan', 'success');
       await loadMine(); cards.forEach(renderCard);
     } catch (err) {
       genioToast('Gagal menyimpan: ' + err.message, 'error');
