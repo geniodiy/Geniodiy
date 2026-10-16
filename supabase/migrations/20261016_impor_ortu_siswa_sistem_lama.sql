@@ -1,0 +1,33 @@
+-- Impor orang tua dan siswa dari sistem lama (16 Oct 2026, owner's choice)
+-- Sumber: Google Drive "[Official] DB_SISWA_GENIO" (sheet ORANG TUA + SISWA).
+-- Dijalankan sekali lewat execute_sql (catatan saja; data lengkap tidak disimpan di repo
+-- karena berisi nomor WhatsApp orang tua).
+--
+-- Aturan yang dipakai:
+--   * UNIT-1..UNIT-5 -> Unit 1..Unit 5.
+--   * Orang tua dobel (nama + WA sama) digabung; orang tua tanpa siswa dilewati (14).
+--   * Nama orang tua yang sama tetapi beda orang diberi nama anak dalam kurung,
+--     mis. "Ibu Ambar (Gavin & Kevin)", "Ibu Dewi (Kessy)".
+--   * Abimanyu -> Eyang Katon, Abrielle -> Ibu Mercy (WA dari owner).
+--   * Siswa nonaktif tetap diimpor sebagai nonaktif.
+--   * Kelas: "3 SMP" = 9, "4 SMK" = 12 SMA, TK B -> jenjang Lainnya.
+--   * Jenis kelamin ditebak dari nama, yang ragu dijawab owner; kelompok dibiarkan kosong.
+--   * Unit 5 (sekolah): orang tua = sekolah, siswa = kelompok.
+--
+-- Hasil: 89 orang tua baru, 109 siswa baru (92 aktif, 21 nonaktif setelah digabung
+-- dengan data yang sudah ada). Total: 91 orang tua, 113 siswa.
+-- Per unit: Unit 1 39, Unit 2 21, Unit 3 17, Unit 4 25, Unit 5 11.
+--
+-- Bentuk statement (satu CTE):
+--   with ov(kode,nama,hp) as (values ...),
+--   o2 as materialized (select gen_random_uuid() id, ov.* from ov
+--                       where not exists (select 1 from public.orangtua x where x.nama = ov.nama)),
+--   io as (insert into public.orangtua (id, nama, no_hp) select id, nama, hp from o2 returning id),
+--   sv(kode,nama,ortu,unit,kelas,jenjang,sekolah,status,jk) as (values ...)
+--   insert into public.siswa (nama, orangtua_id, unit_id, status, kelas, jenjang, sekolah, jenis_kelamin)
+--   select sv.nama, o2.id, u.id, sv.status, sv.kelas, sv.jenjang, sv.sekolah, sv.jk
+--   from sv join o2 on o2.nama = sv.ortu join public.units u on u.nama_unit = sv.unit
+--   where o2.id in (select id from io);
+--
+-- Susulan: Refi = P (jawaban owner).
+update public.siswa set jenis_kelamin = 'P' where nama = 'Refi' and jenis_kelamin is null;
