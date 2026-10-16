@@ -15,7 +15,7 @@
 --   * Unit 5 (sekolah): orang tua = sekolah, siswa = kelompok.
 --
 -- Hasil: 89 orang tua baru, 109 siswa baru (92 aktif, 21 nonaktif setelah digabung
--- dengan data yang sudah ada). Total: 91 orang tua, 113 siswa.
+-- dengan data yang sudah ada). Total: 91 orang tua, 113 siswa (92 orang tua setelah ibu Ambar dipisah).
 -- Per unit: Unit 1 39, Unit 2 21, Unit 3 17, Unit 4 25, Unit 5 11.
 --
 -- Bentuk statement (satu CTE):
@@ -31,3 +31,11 @@
 --
 -- Susulan: Refi = P (jawaban owner).
 update public.siswa set jenis_kelamin = 'P' where nama = 'Refi' and jenis_kelamin is null;
+
+-- Susulan: ibu Revalynna dan ibu Aleesha ternyata dua orang berbeda (owner, 16 Oct 2026).
+-- Dipisah, dan WA keduanya dikosongkan karena sheet lama hanya punya satu nomor untuk keduanya.
+with old as (select id from public.orangtua where nama = 'Ibu Ambar (Revalynna, Aleesha)'),
+nw as (insert into public.orangtua (nama, no_hp) select 'Ibu Ambar (Revalynna)', null from old returning id),
+mv as (update public.siswa s set orangtua_id = (select id from nw)
+       where s.nama = 'Revalynna Requeen' and s.orangtua_id = (select id from old) returning s.id)
+update public.orangtua set nama = 'Ibu Ambar (Aleesha)', no_hp = null where id = (select id from old);
