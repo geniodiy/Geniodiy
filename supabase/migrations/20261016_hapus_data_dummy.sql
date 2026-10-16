@@ -23,3 +23,10 @@ delete from public.orangtua where id in (select id from _o);
 delete from public.slip_gaji where tutor_id in (select id from _d);
 delete from public.users where id in (select id from _d);                   -- tutor_profile, jadwal kosong ikut (cascade)
 delete from auth.users where id in (select id from _d);                     -- akun login (identities ikut cascade)
+-- Akun Auth yatim ckfd27@gmail.com (uji 11 Sep 2026, tanpa baris public.users), lalu email tutor Finda Triarsa
+-- (finda@gmail.com) diganti ke ckfd27@gmail.com sesuai sheet lama.
+delete from auth.users where lower(email) = 'ckfd27@gmail.com' and not exists (select 1 from public.users p where p.id = auth.users.id);
+update auth.users set email = 'ckfd27@gmail.com', updated_at = now() where lower(email) = 'finda@gmail.com';
+update auth.identities set identity_data = identity_data || '{"email":"ckfd27@gmail.com"}'::jsonb, updated_at = now()
+  where provider = 'email' and user_id = (select id from auth.users where email = 'ckfd27@gmail.com');
+update public.users set email = 'ckfd27@gmail.com' where lower(email) = 'finda@gmail.com' and role = 'tutor';
