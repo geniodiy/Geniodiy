@@ -29,9 +29,10 @@
 --   Total 595 presensi (semua tertaut ke invoice), 137 invoice (127 lunas, 127 kuitansi), 75 slip, 15 operasional.
 --   Omset, gaji dan nominal invoice per bulan sama persis dengan lapkeu.
 --
--- Catatan: 8 baris operasional uji coba lama (7-8 Sep 2026, Rp 4.070.000: listrik & internet, sewa ruang, ATK)
--- masih ada di Agu/Sep dan membuat total operasional lebih besar dari lapkeu. Hapus lewat SQL Editor bila owner setuju:
---   delete from public.operasional where created_at < '2026-09-09' and tanggal between '2026-08-01' and '2026-09-30';
+-- Data uji coba: 8 baris operasional lama (7-8 Sep 2026, Rp 4.070.000: listrik & internet, sewa ruang, ATK)
+-- dihapus owner lewat SQL Editor (16 Oct 2026), sehingga operasional sama dengan spreadsheet:
+--   delete from public.operasional where tanggal between '2026-07-01' and '2026-09-30' and created_at < '2026-10-16';
+--   Setelahnya: Jul 6 baris 794.500, Agu 3 baris 410.000, Sep 6 baris 1.371.500.
 --
 -- Bentuk statement:
 --   1) invoice + receipt: with v(nomor,periode,urutan,n,harga,nominal,status,tgl,pdf) as (values ...),
