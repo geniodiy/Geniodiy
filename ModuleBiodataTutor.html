@@ -1,0 +1,318 @@
+<!-- Lengkapi biodata (tutor, opsi B, owner's choice 16 Oct 2026): halaman penuh 3 langkah yang muncul setelah tutor masuk
+     selama data wajib belum lengkap (jenis kelamin, WhatsApp, bank, nomor rekening, mapel, pendidikan terakhir).
+     Aplikasi baru bisa dipakai setelah disimpan. Isian yang sudah ada di database terisi otomatis. -->
+<style>
+  #bioGate{position:fixed; inset:0; z-index:10050; background:#F5F6FB; overflow-y:auto; -webkit-overflow-scrolling:touch; font-family:var(--font); opacity:0; transition:opacity .25s ease;}
+  #bioGate.show{opacity:1;}
+  #bioGate[hidden]{display:none !important;}
+  body.bio-open{overflow:hidden;}
+  .bio-wrap{min-height:100%; display:grid; grid-template-columns:minmax(0,1fr);}
+  .bio-side{display:none;}
+  .bio-main{padding:18px 16px 28px; max-width:480px; margin:0 auto; width:100%; box-sizing:border-box;}
+  .bio-brand{display:flex; align-items:center; gap:10px; margin-bottom:20px;}
+  .bio-brand .genio-brand-badge{width:36px; height:36px;}
+  .bio-brand-txt{display:flex; flex-direction:column; line-height:1.2; min-width:0;}
+  .bio-main h2{font-size:18px; font-weight:700; color:var(--ink); margin:0 0 14px;}
+  .bio-steps{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-bottom:14px;}
+  .bio-steps div{font-size:10.5px; color:#8A8EA6; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .bio-steps div i{display:block; height:4px; border-radius:99px; background:#E1E3EE; margin-bottom:6px; transition:background .25s ease;}
+  .bio-steps div.done{color:#14A44D;} .bio-steps div.done i{background:#14A44D;}
+  .bio-steps div.now{color:var(--ink); font-weight:600;} .bio-steps div.now i{background:var(--blue);}
+  .bio-card{background:#fff; border:1px solid var(--border); border-radius:14px; padding:16px;}
+  .bio-ct{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .bio-ico{width:34px; height:34px; border-radius:10px; background:var(--blue-tint); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:17px; flex:none;}
+  .bio-ct b{font-size:13px; font-weight:600; color:var(--ink);}
+  .bio-pane[hidden]{display:none !important;}
+  .bio-pane{animation:bioIn .25s ease both;}
+  @keyframes bioIn{from{opacity:0; transform:translateX(8px);} to{opacity:1; transform:none;}}
+  .bio-row{margin-bottom:12px;}
+  .bio-row:last-child{margin-bottom:0;}
+  .bio-row > label{display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--ink-soft); margin-bottom:5px;}
+  .bio-row > label .bio-cnt{margin-left:auto; font-size:10px; color:var(--blue); font-weight:600;}
+  .bio-in{width:100%; height:36px; border:1px solid var(--border); border-radius:9px; background:var(--surface); padding:0 12px; font-family:var(--font); font-size:12px; color:var(--ink); box-sizing:border-box; outline:none; transition:border-color .15s, box-shadow .15s, background .15s;}
+  .bio-in::placeholder{color:#9EA2B8;}
+  .bio-in:focus{border-color:var(--blue); box-shadow:0 0 0 3px rgba(28,26,175,.12); background:#fff;}
+  .bio-gender{display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:3px; background:#ECEEF5; border:1px solid #fff; border-radius:999px; box-shadow:inset 0 1px 0 rgba(255,255,255,.9);}
+  .bio-gender button{height:30px; border:0; border-radius:999px; background:none; display:flex; align-items:center; justify-content:center; gap:6px; font-family:var(--font); font-size:11.5px; color:#8A8EA6; cursor:pointer; transition:background .15s, color .15s;}
+  .bio-gender button b{width:18px; height:18px; border-radius:50%; background:#fff; font-size:9.5px; display:inline-flex; align-items:center; justify-content:center; color:#8A8EA6;}
+  .bio-gender button.on{background:#fff; color:var(--blue); font-weight:600; box-shadow:0 1px 3px rgba(20,22,60,.12);}
+  .bio-gender button.on b{background:var(--blue); color:#fff;}
+  .bio-chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:7px;}
+  .bio-chips button{font-family:var(--font); font-size:10.5px; padding:4px 9px; border-radius:999px; border:1px solid var(--border); color:var(--ink-soft); background:#fff; cursor:pointer;}
+  .bio-chips button.on{border-color:var(--blue); color:var(--blue); background:var(--blue-tint); font-weight:600;}
+  .bio-grp{font-size:10px; color:#8A8EA6; margin:12px 0 6px;}
+  .bio-grp:first-child{margin-top:0;}
+  .bio-mapel{display:flex; flex-wrap:wrap; gap:6px;}
+  .bio-mapel button{height:30px; display:inline-flex; align-items:center; gap:5px; padding:0 11px; border-radius:999px; border:1px solid var(--border); background:#fff; font-family:var(--font); font-size:11.5px; color:var(--ink); cursor:pointer; transition:background .15s, color .15s, border-color .15s;}
+  .bio-mapel button.on{background:var(--blue); border-color:var(--blue); color:#fff; font-weight:600;}
+  .bio-mapel button i{font-size:12px;}
+  .bio-mapel button.bio-add{border-style:dashed; color:var(--blue);}
+  .bio-addrow{display:flex; gap:6px; margin-top:8px;}
+  .bio-addrow[hidden]{display:none;}
+  .bio-addrow .bio-in{height:32px;}
+  .bio-addrow .bio-btn{height:32px; padding:0 12px;}
+  .bio-err{font-size:10.5px; color:var(--red); margin-top:10px; display:flex; gap:6px; align-items:flex-start;}
+  .bio-err[hidden]{display:none;}
+  .bio-nav{display:flex; gap:8px; margin-top:16px;}
+  .bio-btn{height:36px; border-radius:9px; font-family:var(--font); font-size:12px; font-weight:600; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; gap:6px; border:1px solid var(--border); background:#fff; color:var(--ink); cursor:pointer;}
+  .bio-btn.pri{background:var(--blue); border-color:var(--blue); color:#fff; flex:1;}
+  .bio-btn:disabled{opacity:.45; cursor:default;}
+  .bio-btn[hidden]{display:none;}
+  .bio-out{display:block; margin:14px auto 0; background:none; border:0; font-family:var(--font); font-size:11px; color:var(--ink-soft); text-decoration:underline; cursor:pointer;}
+  @media (min-width:900px){
+    .bio-wrap{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);}
+    .bio-side{display:flex; flex-direction:column; justify-content:center; padding:48px; background:linear-gradient(135deg,#070833 0%,#101075 55%,var(--blue) 100%); color:#fff;}
+    .bio-side-brand{display:flex; align-items:center; gap:10px;}
+    .bio-side-brand .genio-brand-badge{background:none !important; border:0; width:44px; height:44px;}
+    .bio-side-brand .genio-brand-badge img{object-fit:contain;}
+    .bio-side-brand .genio-brand-title{font-size:17px; color:#fff;}
+    .bio-side-brand .genio-brand-sub{font-size:12px; color:#fff;}
+    .bio-side h3{font-size:24px; font-weight:700; margin:28px 0 6px;}
+    .bio-side p{font-size:12px; opacity:.7; margin:0 0 22px;}
+    .bio-li{display:flex; align-items:center; gap:10px; font-size:12px; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,.06); margin-bottom:8px; max-width:340px; transition:background .2s;}
+    .bio-li i{font-size:16px; color:rgba(255,255,255,.4);}
+    .bio-li.done i{color:#7CF0C3;}
+    .bio-li.now{background:rgba(255,255,255,.14);} .bio-li.now i{color:#FFC46B;}
+    .bio-main{display:flex; flex-direction:column; justify-content:center; padding:48px;}
+    .bio-main .bio-brand{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){ #bioGate{transition:none;} .bio-pane{animation:none;} }
+</style>
+
+<div id="bioGate" hidden role="dialog" aria-modal="true" aria-labelledby="bioTitle">
+  <div class="bio-wrap">
+    <div class="bio-side">
+      <div class="bio-side-brand">
+        <span class="genio-brand-badge"><img src="<?!= include('LogoWhite'); ?>" alt="Logo Genio"></span>
+        <span class="bio-brand-txt"><span class="genio-brand-title">Genio Institute</span><span class="genio-brand-sub">Yogyakarta</span></span>
+      </div>
+      <h3 id="bioHello">Halo</h3>
+      <p>Lengkapi biodata sekali saja.</p>
+      <div class="bio-li" data-li="1"><i class="ph ph-circle" aria-hidden="true"></i>Data diri</div>
+      <div class="bio-li" data-li="2"><i class="ph ph-circle" aria-hidden="true"></i>Rekening</div>
+      <div class="bio-li" data-li="3"><i class="ph ph-circle" aria-hidden="true"></i>Mapel</div>
+    </div>
+    <div class="bio-main">
+      <div class="bio-brand">
+        <span class="genio-brand-badge"><img src="<?!= include('Logo'); ?>" alt="Logo Genio"></span>
+        <span class="bio-brand-txt"><span class="genio-brand-title"><span class="genio-text-blue">Genio</span> <span class="genio-text-red">Institute</span></span><span class="genio-brand-sub">Yogyakarta</span></span>
+      </div>
+      <h2 id="bioTitle">Lengkapi biodata</h2>
+      <div class="bio-steps" id="bioSteps"><div data-st="1"><i></i>Data diri</div><div data-st="2"><i></i>Rekening</div><div data-st="3"><i></i>Mapel</div></div>
+      <div class="bio-card">
+        <div class="bio-pane" data-pane="1">
+          <div class="bio-ct"><span class="bio-ico"><i class="ph ph-user-circle" aria-hidden="true"></i></span><b>Data diri</b></div>
+          <div class="bio-row"><label>Jenis kelamin</label>
+            <div class="bio-gender" id="bioGender"><button type="button" data-val="L"><b>L</b>Laki-laki</button><button type="button" data-val="P"><b>P</b>Perempuan</button></div>
+          </div>
+          <div class="bio-row"><label for="bioWa">WhatsApp</label><input class="bio-in" type="tel" id="bioWa" inputmode="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></div>
+        </div>
+        <div class="bio-pane" data-pane="2" hidden>
+          <div class="bio-ct"><span class="bio-ico"><i class="ph ph-wallet" aria-hidden="true"></i></span><b>Rekening gaji</b></div>
+          <div class="bio-row"><label for="bioBank">Bank</label><input class="bio-in" type="text" id="bioBank" placeholder="mis. BCA" autocomplete="off">
+            <div class="bio-chips" id="bioBankChips"></div>
+          </div>
+          <div class="bio-row"><label for="bioRek">Nomor rekening</label><input class="bio-in" type="text" id="bioRek" inputmode="numeric" placeholder="Hanya angka" autocomplete="off"></div>
+        </div>
+        <div class="bio-pane" data-pane="3" hidden>
+          <div class="bio-ct"><span class="bio-ico"><i class="ph ph-books" aria-hidden="true"></i></span><b>Mapel dan pendidikan</b></div>
+          <div class="bio-row" style="margin-bottom:6px;"><label>Mapel yang dikuasai <span class="bio-cnt" id="bioMapelCnt">0 dipilih</span></label></div>
+          <div id="bioMapel"></div>
+          <div class="bio-addrow" id="bioAddRow" hidden><input class="bio-in" type="text" id="bioAddIn" placeholder="Nama mapel" autocomplete="off"><button type="button" class="bio-btn" id="bioAddOk">Tambah</button></div>
+          <div class="bio-row" style="margin-top:16px;"><label for="bioPend">Pendidikan terakhir</label><input class="bio-in" type="text" id="bioPend" placeholder="mis. S1 Pendidikan Matematika UNY" autocomplete="off"></div>
+        </div>
+        <div class="bio-err" id="bioErr" hidden><i class="ph ph-warning-circle" aria-hidden="true"></i><span></span></div>
+        <div class="bio-nav">
+          <button type="button" class="bio-btn" id="bioBack" hidden><i class="ph ph-arrow-left" aria-hidden="true"></i>Kembali</button>
+          <button type="button" class="bio-btn pri" id="bioNext" disabled>Lanjut</button>
+        </div>
+      </div>
+      <button type="button" class="bio-out" id="bioOut">Keluar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var BANKS = ['BCA', 'BRI', 'BNI', 'Mandiri', 'BSI', 'Seabank'];
+  var MAPEL = [
+    ['Umum', ['Semua mapel SD', 'Calistung']],
+    ['Eksakta', ['Matematika', 'IPA', 'Fisika', 'Kimia', 'Biologi', 'Informatika']],
+    ['Bahasa dan sosial', ['Bahasa Indonesia', 'Bahasa Inggris', 'IPS', 'Ekonomi', 'Geografi', 'Sejarah']]
+  ];
+  var KNOWN = {}; MAPEL.forEach(function (g) { g[1].forEach(function (m) { KNOWN[m.toLowerCase()] = m; }); });
+  // Penulisan baku untuk mapel yang diketik sendiri (tidak tampil sebagai chip kecuali dipilih)
+  var ALIAS = { 'ppkn': 'PPKn', 'pkn': 'PPKn', 'ipas': 'IPAS', 'mtk': 'Matematika', 'indo': 'Bahasa Indonesia', 'inggris': 'Bahasa Inggris', 'b. inggris': 'Bahasa Inggris', 'b. indonesia': 'Bahasa Indonesia', 'jawa': 'Bahasa Jawa', 'sosio': 'Sosiologi', 'agama': 'Pendidikan Agama' };
+  function baku(v) {
+    var k = v.toLowerCase();
+    if (KNOWN[k]) return KNOWN[k];
+    if (ALIAS[k]) return ALIAS[k];
+    return v === k ? v.replace(/(^|\s)\S/g, function (c) { return c.toUpperCase(); }) : v;
+  }
+  var st = { step: 1, uid: null, hasTp: false, gender: '', mapel: [], extra: [] };
+  var gate = document.getElementById('bioGate');
+  var $ = function (id) { return document.getElementById(id); };
+
+  function digits(v) { return String(v || '').replace(/\D/g, ''); }
+  function clean(v) { return String(v || '').trim(); }
+
+  function stepValid(n) {
+    if (n === 1) return !!st.gender && digits($('bioWa').value).length >= 9;
+    if (n === 2) return !!clean($('bioBank').value) && digits($('bioRek').value).length >= 5;
+    return st.mapel.length > 0 && !!clean($('bioPend').value);
+  }
+  function firstMissing() { for (var i = 1; i <= 3; i++) if (!stepValid(i)) return i; return 0; }
+
+  function syncNav() {
+    $('bioNext').disabled = !stepValid(st.step);
+    $('bioErr').hidden = true;
+  }
+  function render() {
+    document.querySelectorAll('#bioGate .bio-pane').forEach(function (p) { p.hidden = +p.dataset.pane !== st.step; });
+    document.querySelectorAll('#bioSteps [data-st]').forEach(function (d) {
+      var n = +d.dataset.st; d.className = n < st.step ? 'done' : n === st.step ? 'now' : '';
+    });
+    document.querySelectorAll('#bioGate [data-li]').forEach(function (d) {
+      var n = +d.dataset.li, c = n < st.step ? 'done' : n === st.step ? 'now' : '';
+      d.className = 'bio-li ' + c;
+      d.querySelector('i').className = c === 'done' ? 'ph-fill ph-check-circle' : c === 'now' ? 'ph-fill ph-pencil-circle' : 'ph ph-circle';
+    });
+    $('bioBack').hidden = st.step === 1;
+    $('bioNext').textContent = st.step === 3 ? 'Simpan dan mulai' : 'Lanjut';
+    syncNav();
+  }
+
+  // Jenis kelamin
+  $('bioGender').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.gender = b.dataset.val;
+    this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+    syncNav();
+  });
+  ['bioWa', 'bioRek', 'bioPend'].forEach(function (id) { $(id).addEventListener('input', syncNav); });
+
+  // Bank: pilihan cepat mengisi kolom, kolom tetap bisa diketik
+  function renderBanks() {
+    var cur = clean($('bioBank').value).toLowerCase();
+    $('bioBankChips').innerHTML = BANKS.map(function (b) {
+      return '<button type="button" class="' + (cur === b.toLowerCase() ? 'on' : '') + '" data-bank="' + b + '">' + b + '</button>';
+    }).join('') + '<button type="button" data-bank="">Lainnya</button>';
+  }
+  $('bioBankChips').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    $('bioBank').value = b.dataset.bank; renderBanks(); syncNav();
+    if (!b.dataset.bank) $('bioBank').focus(); else $('bioRek').focus();
+  });
+  $('bioBank').addEventListener('input', function () { renderBanks(); syncNav(); });
+
+  // Mapel: chip pilihan, mapel di luar daftar tampil di kelompok Lainnya
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function chip(m) {
+    var on = st.mapel.indexOf(m) > -1;
+    return '<button type="button" class="' + (on ? 'on' : '') + '" data-m="' + esc(m) + '">' + (on ? '<i class="ph ph-check" aria-hidden="true"></i>' : '') + esc(m) + '</button>';
+  }
+  function renderMapel() {
+    var html = MAPEL.map(function (g, i) {
+      var tail = i === MAPEL.length - 1 && !st.extra.length ? '<button type="button" class="bio-add" id="bioAddBtn"><i class="ph ph-plus" aria-hidden="true"></i>Lainnya</button>' : '';
+      return '<div class="bio-grp">' + g[0] + '</div><div class="bio-mapel">' + g[1].map(chip).join('') + tail + '</div>';
+    }).join('');
+    if (st.extra.length) html += '<div class="bio-grp">Lainnya</div><div class="bio-mapel">' + st.extra.map(chip).join('') + '<button type="button" class="bio-add" id="bioAddBtn"><i class="ph ph-plus" aria-hidden="true"></i>Tambah</button></div>';
+    $('bioMapel').innerHTML = html;
+    $('bioMapelCnt').textContent = st.mapel.length + ' dipilih';
+    syncNav();
+  }
+  $('bioMapel').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'bioAddBtn') { $('bioAddRow').hidden = false; $('bioAddIn').focus(); return; }
+    var m = b.dataset.m, i = st.mapel.indexOf(m);
+    if (i > -1) st.mapel.splice(i, 1); else st.mapel.push(m);
+    renderMapel();
+  });
+  function addMapel() {
+    var v = clean($('bioAddIn').value).replace(/\s+/g, ' ');
+    if (!v) { $('bioAddRow').hidden = true; return; }
+    v = baku(v);
+    var k = KNOWN[v.toLowerCase()] || st.extra.filter(function (x) { return x.toLowerCase() === v.toLowerCase(); })[0];
+    if (!k) { k = v; st.extra.push(k); }
+    if (st.mapel.indexOf(k) < 0) st.mapel.push(k);
+    $('bioAddIn').value = ''; $('bioAddRow').hidden = true; renderMapel();
+  }
+  $('bioAddOk').addEventListener('click', addMapel);
+  $('bioAddIn').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addMapel(); } });
+
+  // Navigasi
+  $('bioBack').addEventListener('click', function () { if (st.step > 1) { st.step--; render(); } });
+  $('bioNext').addEventListener('click', function () {
+    if (!stepValid(st.step)) return;
+    if (st.step < 3) { st.step++; render(); gate.scrollTop = 0; return; }
+    save();
+  });
+  $('bioOut').addEventListener('click', function () { if (typeof genioLogout === 'function') genioLogout(); });
+
+  function showErr(msg) { var e = $('bioErr'); e.querySelector('span').textContent = msg; e.hidden = false; }
+
+  async function save() {
+    var s = genioGetSession(); if (!s) return;
+    var btn = $('bioNext'); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    var wa = digits($('bioWa').value).replace(/^62/, '0');
+    var tp = {
+      no_wa: wa, nama_bank: clean($('bioBank').value), no_rekening: digits($('bioRek').value),
+      keahlian: st.mapel.slice(), pendidikan_terakhir: clean($('bioPend').value)
+    };
+    try {
+      await supaRest('users?id=eq.' + st.uid, s.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ jenis_kelamin: st.gender, no_hp: wa }) });
+      if (st.hasTp) {
+        await supaRest('tutor_profile?user_id=eq.' + st.uid, s.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify(tp) });
+      } else {
+        tp.user_id = st.uid;
+        await supaRest('tutor_profile', s.access_token, { method: 'POST', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify(tp) });
+      }
+      close();
+      if (typeof genioToast === 'function') genioToast('Biodata tersimpan', 'success');
+      document.dispatchEvent(new CustomEvent('genio:biodata'));
+    } catch (err) {
+      btn.disabled = false; btn.textContent = 'Simpan dan mulai';
+      showErr('Gagal menyimpan. Periksa koneksi lalu coba lagi.');
+    }
+  }
+
+  function open() {
+    gate.hidden = false; document.body.classList.add('bio-open');
+    requestAnimationFrame(function () { gate.classList.add('show'); });
+  }
+  function close() {
+    gate.classList.remove('show'); document.body.classList.remove('bio-open');
+    setTimeout(function () { gate.hidden = true; }, 260);
+  }
+
+  // Dipanggil Dashboard.html saat tutor masuk
+  async function check() {
+    var s = genioGetSession(); if (!s || s.role !== 'tutor') return;
+    try {
+      var rows = await supaRest('users?id=eq.' + s.user_id + '&select=nama,jenis_kelamin,no_hp,tutor_profile(keahlian,pendidikan_terakhir,no_wa,nama_bank,no_rekening)', s.access_token);
+      var me = rows && rows[0]; if (!me) return;
+      var p = Array.isArray(me.tutor_profile) ? me.tutor_profile[0] : me.tutor_profile;
+      st.uid = s.user_id; st.hasTp = !!p; p = p || {};
+      st.gender = me.jenis_kelamin === 'L' || me.jenis_kelamin === 'P' ? me.jenis_kelamin : '';
+      document.querySelectorAll('#bioGender button').forEach(function (x) { x.classList.toggle('on', x.dataset.val === st.gender); });
+      $('bioWa').value = p.no_wa || me.no_hp || '';
+      $('bioBank').value = p.nama_bank || '';
+      $('bioRek').value = p.no_rekening || '';
+      $('bioPend').value = p.pendidikan_terakhir || '';
+      st.mapel = []; st.extra = [];
+      (p.keahlian || []).forEach(function (k) {
+        k = clean(k); if (!k) return;
+        var name = KNOWN[k.toLowerCase()];
+        if (!name) { name = k; if (st.extra.indexOf(k) < 0) st.extra.push(k); }
+        if (st.mapel.indexOf(name) < 0) st.mapel.push(name);
+      });
+      renderBanks(); renderMapel();
+      var miss = firstMissing();
+      if (!miss) return;
+      $('bioHello').textContent = 'Halo, ' + String(me.nama || '').trim().split(/\s+/)[0];
+      st.step = miss; render(); open();
+    } catch (e) { /* gagal memuat: jangan kunci aplikasi */ }
+  }
+  window.genioBiodataTutor = { check: check };
+})();
+</script>

@@ -540,6 +540,7 @@
     </div>
 
     <?!= include('ModuleProfil'); ?>
+    <?!= include('ModuleBiodataTutor'); ?>
 
     <!-- Panel kosong untuk tiap sub-modul lain otomatis dibuat oleh JS (renderLainnyaMenu) -->
     <?!= include('ModuleKelolaUnit'); ?>
@@ -657,6 +658,8 @@
     }
 
     if (IS_TUTOR) {
+      // Biodata wajib (opsi B): halaman 3 langkah menutup aplikasi sampai data lengkap
+      if (window.genioBiodataTutor) window.genioBiodataTutor.check();
       // Tutor: dock Beranda, Presensi, Gaji, Profil (tanpa menu Lainnya)
       genioRetab('nav-home', 'home', 'Beranda', 'house');
       genioRetab('nav-lainnya', 'profil', 'Profil', 'user-circle');

@@ -32,7 +32,10 @@
     }
     .brand{display:none;}
     .brand-top{display:none; align-items:center; gap:10px; font-size:13px; font-weight:500;}
-    .brand-top-name{font-family:var(--font-brand); font-weight:700;}
+    /* Lockup putih di panel biru: sama dengan lockup biru-merah (Poppins 800), skala disesuaikan dengan logo 44px */
+    .brand-top-txt{display:flex; flex-direction:column; justify-content:center; line-height:1.15; min-width:0;}
+    .brand-top-name.genio-brand-title{font-size:17px; color:#fff;}
+    .brand-top-sub.genio-brand-sub{font-size:12px; color:#fff; margin-top:1px;}
     /* Di panel biru: logo putih transparan tanpa kotak (LogoWhite.html) */
     .brand-badge-light{background:none !important; border:0; border-radius:0; width:44px; height:44px;}
     .brand-badge-light img{object-fit:contain;}
@@ -145,7 +148,7 @@
   <main class="auth">
 
     <aside class="brand">
-      <div class="brand-top"><span class="genio-brand-badge brand-badge-light"><img src="<?!= include('LogoWhite'); ?>" alt="Logo Genio"></span><span class="brand-top-name">Genio Institute</span></div>
+      <div class="brand-top"><span class="genio-brand-badge brand-badge-light"><img src="<?!= include('LogoWhite'); ?>" alt="Logo Genio"></span><span class="brand-top-txt"><span class="genio-brand-title brand-top-name">Genio Institute</span><span class="genio-brand-sub brand-top-sub">Yogyakarta</span></span></div>
       <div class="brand-copy">
         <h1>Kelola kelas dan tutor dari satu tempat.</h1>
         <p>Presensi, kontrak, dan penggajian Genio Institute, tercatat rapi setiap bulan.</p>
