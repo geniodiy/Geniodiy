@@ -119,7 +119,9 @@
           <div class="bio-row" style="margin-bottom:6px;"><label>Mapel yang dikuasai <span class="bio-cnt" id="bioMapelCnt">0 dipilih</span></label></div>
           <div id="bioMapel"></div>
           <div class="bio-addrow" id="bioAddRow" hidden><input class="bio-in" type="text" id="bioAddIn" placeholder="Nama mapel" autocomplete="off"><button type="button" class="bio-btn" id="bioAddOk">Tambah</button></div>
-          <div class="bio-row" style="margin-top:16px;"><label for="bioPend">Pendidikan terakhir</label><input class="bio-in" type="text" id="bioPend" placeholder="mis. S1 Pendidikan Matematika UNY" autocomplete="off"></div>
+          <div class="bio-row" style="margin-top:16px;"><label for="bioPend">Pendidikan terakhir</label><input class="bio-in" type="text" id="bioPend" placeholder="mis. S1 Pendidikan Matematika UNY" autocomplete="off">
+            <div class="bio-gender bio-stat" id="bioStat" style="margin-top:8px;"><button type="button" data-val="lulus">Sudah lulus</button><button type="button" data-val="kuliah">Masih kuliah</button></div>
+          </div>
         </div>
         <div class="bio-err" id="bioErr" hidden><i class="ph ph-warning-circle" aria-hidden="true"></i><span></span></div>
         <div class="bio-nav">
@@ -149,7 +151,7 @@
     if (ALIAS[k]) return ALIAS[k];
     return v === k ? v.replace(/(^|\s)\S/g, function (c) { return c.toUpperCase(); }) : v;
   }
-  var st = { step: 1, uid: null, hasTp: false, gender: '', mapel: [], extra: [] };
+  var st = { step: 1, uid: null, hasTp: false, gender: '', stat: '', mapel: [], extra: [] };
   var gate = document.getElementById('bioGate');
   var $ = function (id) { return document.getElementById(id); };
 
@@ -159,7 +161,7 @@
   function stepValid(n) {
     if (n === 1) return !!st.gender && digits($('bioWa').value).length >= 9;
     if (n === 2) return !!clean($('bioBank').value) && digits($('bioRek').value).length >= 5;
-    return st.mapel.length > 0 && !!clean($('bioPend').value);
+    return st.mapel.length > 0 && !!clean($('bioPend').value) && !!st.stat;
   }
   function firstMissing() { for (var i = 1; i <= 3; i++) if (!stepValid(i)) return i; return 0; }
 
@@ -186,6 +188,13 @@
   $('bioGender').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
     st.gender = b.dataset.val;
+    this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+    syncNav();
+  });
+  // Status pendidikan: Sudah lulus / Masih kuliah
+  $('bioStat').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.stat = b.dataset.val;
     this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
     syncNav();
   });
@@ -257,7 +266,7 @@
     var wa = digits($('bioWa').value).replace(/^62/, '0');
     var tp = {
       no_wa: wa, nama_bank: clean($('bioBank').value), no_rekening: digits($('bioRek').value),
-      keahlian: st.mapel.slice(), pendidikan_terakhir: clean($('bioPend').value)
+      keahlian: st.mapel.slice(), pendidikan_terakhir: clean($('bioPend').value), status_pendidikan: st.stat
     };
     try {
       await supaRest('users?id=eq.' + st.uid, s.access_token, { method: 'PATCH', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ jenis_kelamin: st.gender, no_hp: wa }) });
@@ -289,7 +298,7 @@
   async function check() {
     var s = genioGetSession(); if (!s || s.role !== 'tutor') return;
     try {
-      var rows = await supaRest('users?id=eq.' + s.user_id + '&select=nama,jenis_kelamin,no_hp,tutor_profile(keahlian,pendidikan_terakhir,no_wa,nama_bank,no_rekening)', s.access_token);
+      var rows = await supaRest('users?id=eq.' + s.user_id + '&select=nama,jenis_kelamin,no_hp,tutor_profile(keahlian,pendidikan_terakhir,status_pendidikan,no_wa,nama_bank,no_rekening)', s.access_token);
       var me = rows && rows[0]; if (!me) return;
       var p = Array.isArray(me.tutor_profile) ? me.tutor_profile[0] : me.tutor_profile;
       st.uid = s.user_id; st.hasTp = !!p; p = p || {};
@@ -299,6 +308,8 @@
       $('bioBank').value = p.nama_bank || '';
       $('bioRek').value = p.no_rekening || '';
       $('bioPend').value = p.pendidikan_terakhir || '';
+      st.stat = p.status_pendidikan === 'lulus' || p.status_pendidikan === 'kuliah' ? p.status_pendidikan : '';
+      document.querySelectorAll('#bioStat button').forEach(function (x) { x.classList.toggle('on', x.dataset.val === st.stat); });
       st.mapel = []; st.extra = [];
       (p.keahlian || []).forEach(function (k) {
         k = clean(k); if (!k) return;
